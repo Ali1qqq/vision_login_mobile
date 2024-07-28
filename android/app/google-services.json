@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "46598044325",
+    "project_id": "vision-educational-de149",
+    "storage_bucket": "vision-educational-de149.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:46598044325:android:e0aae0dff419f4161bab4c",
+        "android_client_info": {
+          "package_name": "com.ba3.vision_dashboard"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBFlT8CaiD58zsqpZMAKvtekcv9HPXL9nM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:46598044325:android:63a5294ae03d6f9a1bab4c",
+        "android_client_info": {
+          "package_name": "com.example.admin"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBFlT8CaiD58zsqpZMAKvtekcv9HPXL9nM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
