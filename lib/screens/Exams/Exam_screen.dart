@@ -25,7 +25,7 @@ class ExamScreen extends StatefulWidget {
 }
 
 class _ExamScreenState extends State<ExamScreen> {
-  List data = [
+/*  List data = [
     "المقرر",
     "الأستاذ",
     "التاريخ",
@@ -34,7 +34,7 @@ class _ExamScreenState extends State<ExamScreen> {
     "نسبة النجاح",
     "اضافة علامات",
     ""
-  ];
+  ];*/
 
   bool addMarks = Get.find<ExamViewModel>().addMarks;
   ExamModel? examModel = ExamModel();
@@ -85,7 +85,7 @@ class _ExamScreenState extends State<ExamScreen> {
                             const BorderRadius.all(Radius.circular(10)),
                       ),
                       child: SizedBox(
-                        height: Get.height-120,
+                        height: Get.height-180,
                         width: size + 60,
                         child: CustomPlutoGrid(
                           controller: examController,

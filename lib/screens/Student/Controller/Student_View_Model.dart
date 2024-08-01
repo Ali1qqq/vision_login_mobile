@@ -9,7 +9,6 @@ import 'package:vision_dashboard/models/Student_Model.dart';
 import 'package:vision_dashboard/screens/Exams/controller/Exam_View_Model.dart';
 
 import '../../../constants.dart';
-import '../../../controller/Wait_management_view_model.dart';
 
 import '../../../utils/To_AR.dart';
 import '../../Buses/Controller/Bus_View_Model.dart';

@@ -1,4 +1,3 @@
-import 'dart:math';
 
 import 'package:vision_dashboard/controller/account_management_view_model.dart';
 import 'package:flutter/material.dart';
@@ -56,7 +55,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           Get.width<500?Styles.headLineStyle2:  Styles.headLineStyle1,textAlign: TextAlign.center,),
                             // Text("مركز رؤية التعليمي للتدريب".tr, style: Styles.headLineStyle1,textAlign: TextAlign.center,),
                             SizedBox(height: 50,),
-                            if(controller.isSupportNfc)
+                            if(false/*controller.isSupportNfc*/)
                               Column(
                                 children: [
                                  Text("Login Using Your Card",style: TextStyle(fontSize: 22),)

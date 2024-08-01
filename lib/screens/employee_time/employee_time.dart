@@ -46,16 +46,15 @@ class _EmployeeTimeViewState extends State<EmployeeTimeView> {
         )
         .first
         .key;
-    print(" super.initState();");
-
-    getTime().then(
+    dayNameNow = thisTimesModel!.formattedTime;
+    selectedDate.text = thisTimesModel!.formattedTime;
+ /*   getTime().then(
       (value) {
         if (value != null) {
-          dayNameNow = value.formattedTime;
-          selectedDate.text = value.formattedTime;
+
         }
       },
-    );
+    );*/
   }
 
   @override
@@ -87,16 +86,12 @@ class _EmployeeTimeViewState extends State<EmployeeTimeView> {
                 child: CircularProgressIndicator(),
               )
             : SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              physics: ClampingScrollPhysics(),
-              child: GetBuilder<HomeViewModel>(builder: (hController) {
-                double size = max(
-                    MediaQuery.sizeOf(context).width -
-                        (hController.isDrawerOpen ? 240 : 120),
-                    1000) -
-                    60;
+                scrollDirection: Axis.horizontal,
+                physics: ClampingScrollPhysics(),
+                child: GetBuilder<HomeViewModel>(builder: (hController) {
+                  double size = max(Get.width - (hController.isDrawerOpen ? 240 : 100), 1000) - 60;
                   return SizedBox(
-                    width: size+60,
+                    width: size + 60,
                     child: Center(
                       child: Column(
                         children: [
@@ -117,6 +112,7 @@ class _EmployeeTimeViewState extends State<EmployeeTimeView> {
                                   child: Row(
                                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                     children: [
+                                      ///عرض دوام الموظفين
                                       Expanded(
                                         child: InkWell(
                                           onTap: () {
@@ -125,7 +121,6 @@ class _EmployeeTimeViewState extends State<EmployeeTimeView> {
                                           },
                                           child: Container(
                                             height: 50,
-                                        
                                             decoration: BoxDecoration(
                                                 color: isShowLogin ? primaryColor : Colors.transparent,
                                                 borderRadius: BorderRadius.only(
@@ -140,6 +135,8 @@ class _EmployeeTimeViewState extends State<EmployeeTimeView> {
                                           ),
                                         ),
                                       ),
+
+                                      ///عرض تسجيل الموظفين
                                       Expanded(
                                         child: InkWell(
                                           onTap: () {
@@ -172,9 +169,13 @@ class _EmployeeTimeViewState extends State<EmployeeTimeView> {
                             height: 10,
                           ),
                           if (isShowLogin)
+
+                            ///تسجيل الدوام
                             Expanded(
                               child: Container(
                                 width: Get.width,
+
+                                ///بعد تسجيل دخول الموظف يعرض له اسمه لفترة ومن ثم يختفي
                                 child: controller.loginUserPage != null
                                     ? Center(
                                         child: Text(
@@ -183,64 +184,61 @@ class _EmployeeTimeViewState extends State<EmployeeTimeView> {
                                         ),
                                       )
                                     : AnimatedCrossFade(
+                                        ///تسجيل الدخول ب اسم وكلمة مرور
                                         secondChild: Center(
                                           child: Container(
+                                            width: size / 1.3,
+                                            height: Get.height * 0.8,
                                             padding: EdgeInsets.all(defaultPadding),
                                             decoration: BoxDecoration(
                                               color: secondaryColor,
                                               borderRadius: const BorderRadius.all(Radius.circular(10)),
                                             ),
-                                            child: SizedBox(
-                                              width: size / 2,
-                                              child: Scrollbar(
-
-                                                controller: scrollController,
-                                                child: SingleChildScrollView(
-                                                  physics: ClampingScrollPhysics(),
-
-                                                  controller: scrollController,
-                                                  scrollDirection: Axis.horizontal,
-                                                  child: GetBuilder<AccountManagementViewModel>(builder: (controller) {
-                                                    return Column(
-                                                      mainAxisSize: MainAxisSize.min,
-                                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                                      children: [
-                                                        InkWell(
-                                                          onTap: () {
-                                                            showDatePicker(
-                                                              context: context,
-                                                              firstDate: DateTime(2010),
-                                                              lastDate: DateTime(2100),
-                                                            ).then((date) {
-                                                              if (date != null) {
-                                                                selectedDate.text = date.toString().split(" ")[0];
-                                                                setState(() {});
-                                                              }
-                                                            });
-                                                          },
-                                                          child: CustomTextField(
-                                                            controller: selectedDate,
-                                                            title: 'تاريخ العرض'.tr,
-                                                            enable: false,
-                                                            keyboardType: TextInputType.datetime,
-                                                            icon: Icon(
-                                                              Icons.date_range_outlined,
-                                                              color: primaryColor,
-                                                            ),
-                                                          ),
-                                                        ),
-                                                        // CustomDropDown(value: '', listValue: [], label: 'اختر اليوم', onChange: onChange)
-                                                        DataTable(columnSpacing: 0, dividerThickness: 0.3, columns: _buildDataColumns(size), rows: _buildDataRows(controller, size)),
-                                                      ],
-                                                    );
-                                                  }),
-                                                ),
-                                              ),
-                                            ),
+                                            child: GetBuilder<AccountManagementViewModel>(builder: (controller) {
+                                              return ListView(
+                                                shrinkWrap: true,
+                                                // mainAxisSize: MainAxisSize.min,
+                                                // crossAxisAlignment: CrossAxisAlignment.start,
+                                                children: [
+                                                  InkWell(
+                                                    onTap: () {
+                                                      showDatePicker(
+                                                        context: context,
+                                                        firstDate: DateTime(2010),
+                                                        lastDate: DateTime(2100),
+                                                      ).then((date) {
+                                                        if (date != null) {
+                                                          selectedDate.text = date.toString().split(" ")[0];
+                                                          setState(() {});
+                                                        }
+                                                      });
+                                                    },
+                                                    child: CustomTextField(
+                                                      controller: selectedDate,
+                                                      title: 'تاريخ العرض'.tr,
+                                                      enable: false,
+                                                      keyboardType: TextInputType.datetime,
+                                                      icon: Icon(
+                                                        Icons.date_range_outlined,
+                                                        color: primaryColor,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  // CustomDropDown(value: '', listValue: [], label: 'اختر اليوم', onChange: onChange)
+                                                  Scrollbar(
+                                                    controller: scrollController,
+                                                    child: SingleChildScrollView(
+                                                        physics: ClampingScrollPhysics(), controller: scrollController, scrollDirection: Axis.horizontal, child: DataTable(columnSpacing: 0, dividerThickness: 0.3, columns: _buildDataColumns(size), rows: _buildDataRows(controller, size))),
+                                                  )
+                                                ],
+                                              );
+                                            }),
                                           ),
                                         ),
                                         duration: Durations.short1,
                                         crossFadeState: isCard ? CrossFadeState.showFirst : CrossFadeState.showSecond,
+
+                                        ///تسجيل الدخول بالبطاقة
                                         firstChild: Column(
                                           mainAxisAlignment: MainAxisAlignment.center,
                                           children: [
@@ -260,7 +258,11 @@ class _EmployeeTimeViewState extends State<EmployeeTimeView> {
                                                   )
                                                 ],
                                               )
+
+                                            ///اذا لم يكن في وضع الارشفة
                                             else if (enableUpdate)
+
+                                              ///الجهاز لا يدعم البطاقة
                                               Center(
                                                 child: Container(
                                                   width: size / 2,
@@ -293,6 +295,8 @@ class _EmployeeTimeViewState extends State<EmployeeTimeView> {
                               ),
                             )
                           else
+
+                            /// عرض دوام الموظفين
                             Expanded(
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -460,8 +464,7 @@ class _EmployeeTimeViewState extends State<EmployeeTimeView> {
                                                   },
                                                   body: SingleChildScrollView(
                                                     physics: ClampingScrollPhysics(),
-                                                    padding: EdgeInsets.only(bottom: defaultPadding*3),
-
+                                                    padding: EdgeInsets.only(bottom: defaultPadding * 3),
                                                     scrollDirection: Axis.horizontal,
                                                     child: Column(
                                                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -575,9 +578,8 @@ class _EmployeeTimeViewState extends State<EmployeeTimeView> {
                       ),
                     ),
                   );
-                }
-              ),
-            );
+                }),
+              );
       }),
       floatingActionButton: enableUpdate && isShowLogin
           ? FloatingActionButton(
@@ -601,7 +603,7 @@ class _EmployeeTimeViewState extends State<EmployeeTimeView> {
         empData.length,
         (index) => DataColumn(
             label: Container(
-                width: size / 4,
+                width: size / 3,
                 child: Center(
                     child: Text(
                   empData[index].toString().tr,
@@ -614,10 +616,10 @@ class _EmployeeTimeViewState extends State<EmployeeTimeView> {
 
     return List.generate(employees.length, (index) {
       return DataRow(cells: [
-        dataRowItem(size / 4, employees[index].fullName.toString(), color: Colors.white),
+        dataRowItem(size / 3, employees[index].fullName.toString(), color: Colors.white),
         DataCell(Center(
           child: Container(
-            width: size / 4,
+            width: size / 3,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [

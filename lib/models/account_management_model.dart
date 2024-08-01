@@ -5,21 +5,11 @@ import 'event_record_model.dart';
 class AccountManagementModel {
   late String id, userName, password, type;
   String? serialNFC;
-  int? salary, dayOfWork,discounts;
+  int? salary, dayOfWork, discounts;
   bool? isAccepted;
   late bool isActive;
   Map<String, EmployeeTimeModel> employeeTime = {};
-  String? mobileNumber,
-      address,
-      nationality,
-      gender,
-      age,
-      jobTitle,
-      contract,
-      bus,
-      startDate,
-      salaryWithDelay,
-      fullName;
+  String? mobileNumber, address, nationality, gender, age, jobTitle, contract, bus, startDate, salaryWithDelay, fullName;
   List<dynamic>? salaryReceived;
   bool? available = false;
   List<EventRecordModel>? eventRecords;
@@ -76,10 +66,7 @@ class AccountManagementModel {
     contract = json['contract'] ?? '';
     bus = json['bus'] ?? '';
     startDate = json['startDate'] ?? '';
-    eventRecords = ((json['eventRecords'] ?? []) as List<dynamic>?)
-            ?.map((event) => EventRecordModel.fromJson(event))
-            .toList() ??
-        [];
+    eventRecords = ((json['eventRecords'] ?? []) as List<dynamic>?)?.map((event) => EventRecordModel.fromJson(event)).toList() ?? [];
   }
 
   toJson() {
@@ -96,10 +83,7 @@ class AccountManagementModel {
       if (salary != null) "salary": salary,
       if (isAccepted != null) "isAccepted": isAccepted,
       if (dayOfWork != null) "dayOfWork": dayOfWork,
-      if(employeeTime.isEmpty)
-      "employeeTime": Map.fromEntries(employeeTime.entries
-          .map((e) => MapEntry(e.key, e.value.toJson()))
-          .toList()),
+      if (employeeTime.isEmpty) "employeeTime": Map.fromEntries(employeeTime.entries.map((e) => MapEntry(e.key, e.value.toJson())).toList()),
       if (mobileNumber != null) 'mobileNumber': mobileNumber,
       if (address != null) 'address': address,
       if (nationality != null) 'nationality': nationality,
@@ -109,9 +93,7 @@ class AccountManagementModel {
       if (contract != null) 'contract': contract,
       if (bus != null) 'bus': bus,
       if (startDate != null) 'startDate': startDate!,
-      'eventRecords': eventRecords!.isNotEmpty
-          ? eventRecords!.map((event) => event.toJson()).toList()
-          : [],
+      'eventRecords': eventRecords!.isNotEmpty ? eventRecords!.map((event) => event.toJson()).toList() : [],
     };
   }
 }

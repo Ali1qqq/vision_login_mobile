@@ -1,8 +1,7 @@
-import 'package:quickalert/models/quickalert_type.dart';
-import 'package:quickalert/widgets/quickalert_dialog.dart';
 import 'package:vision_dashboard/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:vision_dashboard/controller/NFC_Card_View_model.dart';
 import 'package:vision_dashboard/controller/Wait_management_view_model.dart';
 import 'package:vision_dashboard/models/event_model.dart';
 import 'package:vision_dashboard/screens/Widgets/AppButton.dart';
@@ -10,7 +9,6 @@ import 'package:vision_dashboard/screens/Widgets/Custom_Drop_down.dart';
 
 import '../../controller/account_management_view_model.dart';
 import '../../controller/event_view_model.dart';
-import '../../controller/home_controller.dart';
 import '../../models/account_management_model.dart';
 import '../../models/event_record_model.dart';
 import '../../utils/Dialogs.dart';
@@ -23,9 +21,11 @@ class EmployeeInputForm extends StatefulWidget {
   @override
   _EmployeeInputFormState createState() => _EmployeeInputFormState();
 
-  EmployeeInputForm({this.accountManagementModel, this.enableEdit = true});
+  EmployeeInputForm({this.accountManagementModel, this.enableEdit = false});
 
   late final AccountManagementModel? accountManagementModel;
+
+  /// هي القيمة بمقرها true بس وقت استدعي الواجهة للتعديل
   final bool? enableEdit;
 }
 
@@ -45,32 +45,27 @@ class _EmployeeInputFormState extends State<EmployeeInputForm> {
   final bodyEvent = TextEditingController();
   final dayWorkController = TextEditingController();
   final editController = TextEditingController();
-  Map accountType = {
-    "user": "مستخدم".tr,
-    "admin": "مدير".tr,
-    "superAdmin": "مالك".tr,
-  };
+  final userNameController = TextEditingController();
+  final userPassController = TextEditingController();
+
+  // AccountManagementViewModel accountManagementViewModel = Get.find<AccountManagementViewModel>();
+  NfcCardViewModel cardViewModel = Get.find<NfcCardViewModel>();
+  String selectedCardId = '';
   String busValue = '';
-  String? role = '';
-  TextEditingController userNameController = TextEditingController();
-  TextEditingController userPassController = TextEditingController();
-  HomeViewModel homeViewModel = Get.find<HomeViewModel>();
-  AccountManagementViewModel accountManagementViewModel =
-      Get.find<AccountManagementViewModel>();
+  String role = '';
   EventModel? selectedEvent;
   List<EventRecordModel> eventRecords = [];
-  bool isUpdate = false;
 
   @override
   void initState() {
-    accountManagementViewModel.initNFC(typeNFC.add);
+    // accountManagementViewModel.initNFC(typeNFC.add);
     super.initState();
     init();
   }
 
   @override
   void dispose() {
-    accountManagementViewModel.disposeNFC();
+    // accountManagementViewModel.disposeNFC();
     fullNameController.dispose();
     mobileNumberController.dispose();
     addressController.dispose();
@@ -107,77 +102,38 @@ class _EmployeeInputFormState extends State<EmployeeInputForm> {
     userPassController.clear();
     editController.clear();
     eventRecords.clear();
-    accountManagementViewModel.nfcController.clear();
+    // accountManagementViewModel.nfcController.clear();
     role = '';
   }
 
   init() {
     if (widget.accountManagementModel != null) {
-      isUpdate = true;
-      fullNameController.text =
-          widget.accountManagementModel!.fullName.toString();
-      mobileNumberController.text =
-          widget.accountManagementModel!.mobileNumber.toString();
-      addressController.text =
-          widget.accountManagementModel!.address.toString();
-      nationalityController.text =
-          widget.accountManagementModel!.nationality.toString();
+      fullNameController.text = widget.accountManagementModel!.fullName.toString();
+      mobileNumberController.text = widget.accountManagementModel!.mobileNumber.toString();
+      addressController.text = widget.accountManagementModel!.address.toString();
+      nationalityController.text = widget.accountManagementModel!.nationality.toString();
       genderController.text = widget.accountManagementModel!.gender.toString();
       ageController.text = widget.accountManagementModel!.age.toString();
-      jobTitleController.text =
-          widget.accountManagementModel!.jobTitle.toString();
+      jobTitleController.text = widget.accountManagementModel!.jobTitle.toString();
       salaryController.text = widget.accountManagementModel!.salary.toString();
-      contractController.text =
-          widget.accountManagementModel!.contract.toString();
+      contractController.text = widget.accountManagementModel!.contract.toString();
       busController.text = widget.accountManagementModel!.bus.toString();
-      startDateController.text =
-          widget.accountManagementModel!.startDate.toString();
-      dayWorkController.text =
-          widget.accountManagementModel!.dayOfWork.toString();
+      startDateController.text = widget.accountManagementModel!.startDate.toString();
+      dayWorkController.text = widget.accountManagementModel!.dayOfWork.toString();
       bodyEvent.clear();
-      userNameController.text =
-          widget.accountManagementModel!.userName.toString();
-      userPassController.text =
-          widget.accountManagementModel!.password.toString();
+      userNameController.text = widget.accountManagementModel!.userName.toString();
+      userPassController.text = widget.accountManagementModel!.password.toString();
       widget.accountManagementModel!.eventRecords?.forEach(
         (element) {
           eventRecords.add(element);
         },
       );
-      accountManagementViewModel.nfcController.text =
-          widget.accountManagementModel!.serialNFC.toString();
+      print(widget.accountManagementModel!.serialNFC.toString());
+      selectedCardId = widget.accountManagementModel!.serialNFC.toString();
+      // accountManagementViewModel.nfcController.text = widget.accountManagementModel!.serialNFC.toString();
       role = widget.accountManagementModel!.type.toString();
-      busValue = Get.find<BusViewModel>()
-              .busesMap[widget.accountManagementModel!.bus]
-              ?.name ??
-          widget.accountManagementModel!.bus!;
+      busValue = Get.find<BusViewModel>().busesMap[widget.accountManagementModel!.bus]?.name ?? widget.accountManagementModel!.bus!;
     }
-  }
-
-  bool _validateFields() {
-    if (fullNameController.text.isEmpty ||
-        mobileNumberController.text.isEmpty ||
-        addressController.text.isEmpty ||
-        nationalityController.text.isEmpty ||
-        genderController.text.isEmpty ||
-        ageController.text.isEmpty ||
-        jobTitleController.text.isEmpty ||
-        salaryController.text.isEmpty ||
-        contractController.text.isEmpty ||
-        busController.text.isEmpty ||
-        startDateController.text.isEmpty ||
-        userNameController.text.isEmpty ||
-        userPassController.text.isEmpty ||
-        !isNumeric(ageController.text) ||
-        !isNumeric(salaryController.text) ||
-        !isNumeric(dayWorkController.text)) {
-      showErrorDialog(
-          "خطأ".tr,
-          "يرجى ملء جميع الحقول وتأكد من أن الحقول الرقمية تحتوي على أرقام فقط."
-              .tr);
-      return false;
-    }
-    return true;
   }
 
   @override
@@ -191,9 +147,7 @@ class _EmployeeInputFormState extends State<EmployeeInputForm> {
             Container(
               padding: EdgeInsets.all(16.0),
               alignment: Alignment.center,
-              decoration: BoxDecoration(
-                  color: secondaryColor,
-                  borderRadius: BorderRadius.circular(15)),
+              decoration: BoxDecoration(color: secondaryColor, borderRadius: BorderRadius.circular(15)),
               child: Wrap(
                 clipBehavior: Clip.hardEdge,
                 direction: Axis.horizontal,
@@ -201,16 +155,15 @@ class _EmployeeInputFormState extends State<EmployeeInputForm> {
                 spacing: 25,
                 alignment: WrapAlignment.spaceEvenly,
                 children: <Widget>[
+                  CustomTextField(controller: fullNameController, title: "الاسم الكامل".tr),
                   CustomTextField(
-                      controller: fullNameController, title: "الاسم الكامل".tr),
-                  CustomTextField(
-                      controller: mobileNumberController,
-                      title: 'رقم الموبايل'.tr,
-                      keyboardType: TextInputType.phone),
-                  CustomTextField(
-                      controller: addressController, title: 'العنوان'.tr),
-                  CustomTextField(
-                      controller: nationalityController, title: 'الجنسية'.tr),
+                    controller: mobileNumberController,
+                    title: 'رقم الموبايل'.tr,
+                    keyboardType: TextInputType.phone,
+                    isNumeric: true,
+                  ),
+                  CustomTextField(controller: addressController, title: 'العنوان'.tr),
+                  CustomTextField(controller: nationalityController, title: 'الجنسية'.tr),
                   CustomDropDown(
                     value: genderController.text.tr,
                     listValue: sexList
@@ -225,14 +178,8 @@ class _EmployeeInputFormState extends State<EmployeeInputForm> {
                       }
                     },
                   ),
-                  CustomTextField(
-                      controller: ageController,
-                      title: 'العمر'.tr,
-                      keyboardType: TextInputType.number),
-                  CustomTextField(
-                      controller: dayWorkController,
-                      title: 'عدد ايام العمل'.tr,
-                      keyboardType: TextInputType.number),
+                  CustomTextField(controller: ageController, title: 'العمر'.tr, keyboardType: TextInputType.number, isNumeric: true),
+                  CustomTextField(controller: dayWorkController, title: 'عدد ايام العمل'.tr, keyboardType: TextInputType.number, isNumeric: true),
                   CustomDropDown(
                       value: jobTitleController.text,
                       listValue: jobList
@@ -246,10 +193,7 @@ class _EmployeeInputFormState extends State<EmployeeInputForm> {
                           jobTitleController.text = value.tr;
                         }
                       }),
-                  CustomTextField(
-                      controller: salaryController,
-                      title: 'الراتب'.tr,
-                      keyboardType: TextInputType.number),
+                  CustomTextField(controller: salaryController, title: 'الراتب'.tr, keyboardType: TextInputType.number, isNumeric: true),
                   CustomDropDown(
                     value: contractController.text,
                     listValue: contractsList
@@ -300,8 +244,7 @@ class _EmployeeInputFormState extends State<EmployeeInputForm> {
                         lastDate: DateTime(2100),
                       ).then((date) {
                         if (date != null) {
-                          startDateController.text =
-                              date.toString().split(" ")[0];
+                          startDateController.text = date.toString().split(" ")[0];
                         }
                       });
                     },
@@ -316,155 +259,181 @@ class _EmployeeInputFormState extends State<EmployeeInputForm> {
                       ),
                     ),
                   ),
-                  CustomTextField(
-                      controller: userNameController,
-                      title: 'اسم المستخدم'.tr,
-                      keyboardType: TextInputType.text),
-                  CustomTextField(
-                      controller: userPassController,
-                      title: 'كلمة المرور'.tr,
-                      keyboardType: TextInputType.text),
-                  CustomTextField(
-                      controller: accountManagementViewModel.nfcController,
-                      title: 'بطاقة الدخول'.tr,
-                      isFullBorder: true,
-                      enable: false,
-                      keyboardType: TextInputType.datetime),
+                  CustomTextField(controller: userNameController, title: 'اسم المستخدم'.tr, keyboardType: TextInputType.text),
+                  CustomTextField(controller: userPassController, title: 'كلمة المرور'.tr, keyboardType: TextInputType.text,isNumeric: true,),
+                  CustomDropDown(
+                    value: selectedCardId,
+                    enable: true,
+
+                    ///get Available card (not used from user )
+                    listValue: cardViewModel.nfcCardMap.entries
+                        .where(
+                          (element) {
+                            /// اذا لم تكن البطاقة المختارة
+                            if (element.value != selectedCardId)
+                              return element.value.userId == null;
+                            else
+                              return true;
+                          },
+                        )
+                        .map(
+                          (e) => e.key,
+                        )
+                        .toList(),
+                    label: "رقم البطاقة".tr,
+                    onChange: (value) {
+                      if (value != null) {
+                        selectedCardId = value;
+                        setState(() {});
+                      }
+                    },
+                  ),
                   CustomDropDown(
                     value: role.toString(),
-                    listValue: accountType.entries
-                        .map((e) => e.value.toString().tr)
-                        .toList(),
+                    listValue: accountType.entries.map((e) => e.value.toString().tr).toList(),
                     label: "الدور".tr,
                     onChange: (_) {
-                      role = _;
+                      role = _!;
                       setState(() {});
                     },
                   ),
-                  if (isUpdate && widget.enableEdit!)
-                    CustomTextField(
-                        controller: editController,
-                        title: 'سبب التعديل'.tr,
-                        keyboardType: TextInputType.text),
-                  if (widget.enableEdit!)
-                    GetBuilder<AccountManagementViewModel>(
-                        builder: (controller) {
-                      return AppButton(
-                        text: "حفظ".tr,
-                        onPressed: () async {
-                          if (_validateFields()) {
-                            QuickAlert.show(
-                                width: Get.width / 2,
-                                context: context,
-                                type: QuickAlertType.loading,
-                                title: 'جاري التحميل'.tr,
-                                text: 'يتم العمل على الطلب'.tr,
-                                barrierDismissible: false);
-                            try {
-                              role ??= accountType.keys.first;
-                              AccountManagementModel model =
-                                  AccountManagementModel(
-                                id: !isUpdate
-                                    ? generateId("EMPLOYEE")
-                                    : widget.accountManagementModel!.id,
-                                userName: userNameController.text,
-                                fullName: fullNameController.text,
-                                password: userPassController.text,
-                                type: role!,
-                                serialNFC: accountManagementViewModel
-                                    .nfcController.text,
-                                isActive: true,
-                                isAccepted: false,
-                                salary: int.parse(salaryController.text),
-                                dayOfWork: int.parse(dayWorkController.text),
-                                mobileNumber: mobileNumberController.text,
-                                address: addressController.text,
-                                nationality: nationalityController.text,
-                                gender: genderController.text,
-                                age: ageController.text,
-                                jobTitle: jobTitleController.text,
-                                contract: contractController.text,
-                                bus: busController.text,
-                                startDate: startDateController.text,
-                                eventRecords: eventRecords,
-                                discounts:
-                                    widget.accountManagementModel?.discounts,
-                                salaryReceived: widget
-                                    .accountManagementModel?.salaryReceived,
-                              );
-                              if (busController.text.startsWith("BUS"))
-                                Get.find<BusViewModel>()
-                                    .addEmployee(busController.text, model.id);
-                              if (isUpdate) {
-                                addWaitOperation(
-                                    collectionName: accountManagementCollection,
-                                    affectedId:
-                                        widget.accountManagementModel!.id,
-                                    type: waitingListTypes.edite,
-                                    oldData:
-                                        widget.accountManagementModel!.toJson(),
-                                    newData: model.toJson(),
-                                    details: editController.text);
+                  if (widget.enableEdit!) CustomTextField(controller: editController, title: 'سبب التعديل'.tr, keyboardType: TextInputType.text),
+                  GetBuilder<AccountManagementViewModel>(builder: (controller) {
+                    return AppButton(
+                      text: "حفظ".tr,
+                      onPressed: () async {
+                        if (validateFields(requiredControllers: [
+                          userNameController,
+                          fullNameController,
+                          userPassController,
+                          addressController,
+                          nationalityController,
+                          jobTitleController,
+                          contractController,
+                          busController,
+                          startDateController,
+                          genderController,
+                          ageController,
+                          salaryController,
+                          dayWorkController,
+                          mobileNumberController,
+                        ], numericControllers: [
+                          ageController,
+                          salaryController,
+                          dayWorkController,
+                          mobileNumberController,
+                        ])) {
+                          loadingQuickAlert(context);
+                          try {
+                            AccountManagementModel model = AccountManagementModel(
+                              id: !widget.enableEdit! ? generateId("EMPLOYEE") : widget.accountManagementModel!.id,
+                              userName: userNameController.text,
+                              fullName: fullNameController.text,
+                              password: userPassController.text,
+                              type: role,
+                              serialNFC: selectedCardId,
+                              isActive: true,
+                              isAccepted: false,
+                              salary: int.parse(salaryController.text),
+                              dayOfWork: int.parse(dayWorkController.text),
+                              mobileNumber: mobileNumberController.text,
+                              address: addressController.text,
+                              nationality: nationalityController.text,
+                              gender: genderController.text,
+                              age: ageController.text,
+                              jobTitle: jobTitleController.text,
+                              contract: contractController.text,
+                              bus: busController.text,
+                              startDate: startDateController.text,
+                              eventRecords: eventRecords,
+                              discounts: widget.accountManagementModel?.discounts,
+                              salaryReceived: widget.accountManagementModel?.salaryReceived,
+                            );
 
-                                if (widget.accountManagementModel!.bus !=
-                                    busController.text) {
-                                  Get.find<BusViewModel>().deleteEmployee(
-                                      widget.accountManagementModel!.bus!,
-                                      widget.accountManagementModel!.id);
-                                }
+                            ///اذا اختار باص او حو بدون حافلة
+                            if (busController.text.startsWith("BUS")) {
+                              Get.find<BusViewModel>().addEmployee(busController.text, model.id);
+                            }
+                            if (widget.enableEdit!) {
+                              ///addWaitOperation old Value=القيمة الي جاي من الويدجت newValue = القيم الجديدة من ال controller
+                              addWaitOperation(
+                                collectionName: accountManagementCollection,
+                                affectedId: widget.accountManagementModel!.id,
+                                type: waitingListTypes.edite,
+                                oldData: widget.accountManagementModel!.toJson(),
+                                newData: model.toJson(),
+                                details: editController.text,
+                              );
+
+                              ///يشوف وقت التعديل اذا عدل البطاقة ولا لا
+                              if (widget.accountManagementModel!.serialNFC != selectedCardId) {
+                                Get.find<NfcCardViewModel>().deleteUserCard(widget.accountManagementModel!.serialNFC);
+                                Get.find<NfcCardViewModel>().setCardForEMP(
+                                  widget.accountManagementModel!.serialNFC.toString(),
+                                  widget.accountManagementModel!.id,
+                                );
                               }
 
-                              if (!isUpdate)
-                                await addWaitOperation(
-                                    collectionName: accountManagementCollection,
-                                    affectedId: model.id,
-                                    details: model.toJson(),
-                                    type: waitingListTypes.add);
-
-                              if (isUpdate) Get.back();
-                              Get.back();
-                              await controller.addAccount(model);
-                              getSuccessDialog(context);
-                              clearController();
-                            } on Exception catch (e) {
-                              await getReedOnlyError(context,
-                                  title: e.toString());
-                              print(e.toString());
-                              Get.back();
-                              Get.back();
+                              ///يشوف وقت التعديل اذا عدل الباص ولا لا
+                              if (widget.accountManagementModel!.bus != busController.text) {
+                                Get.find<BusViewModel>().deleteEmployee(
+                                  widget.accountManagementModel!.bus!,
+                                  widget.accountManagementModel!.id,
+                                );
+                              }
                             }
+                            if (!widget.enableEdit!) {
+                              ///اضافة العملية للموافقة عليها
+                              await addWaitOperation(
+                                collectionName: accountManagementCollection,
+                                affectedId: model.id,
+                                details: model.toJson().toString(),
+                                type: waitingListTypes.add,
+                              );
+                            }
+
+                            if (widget.enableEdit!) Get.back();
+                            Get.back();
+                            await controller.addAccount(model);
+                            getSuccessDialog(context);
+                            Get.find<NfcCardViewModel>().setCardForEMP(selectedCardId, model.id);
+                            clearController();
+                          } on Exception catch (e) {
+                            await getReedOnlyError(context, title: e.toString());
+                            print(e.toString());
+                            Get.back();
+                            Get.back();
                           }
-                        },
-                      );
-                    }),
+                        }
+                      },
+                    );
+                  }),
                 ],
               ),
             ),
             SizedBox(height: 16.0),
-            Container(
-              padding: EdgeInsets.all(16.0),
-              alignment: Alignment.center,
-              decoration: BoxDecoration(
-                color: secondaryColor,
-                borderRadius: BorderRadius.circular(15),
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  if (widget.enableEdit!)
+            if (widget.enableEdit!)
+              Container(
+                padding: EdgeInsets.all(16.0),
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                  color: secondaryColor,
+                  borderRadius: BorderRadius.circular(15),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
                     GetBuilder<EventViewModel>(builder: (eventController) {
                       return Wrap(
                         runAlignment: WrapAlignment.spaceAround,
                         runSpacing: 25,
                         children: [
                           CustomDropDownWithValue(
-
                             value: '',
                             mapValue: eventController.allEvents.values
                                 .toList()
                                 .where(
-                                  (element) =>
-                                      element.role == Const.eventTypeEmployee,
+                                  (element) => element.role == Const.eventTypeEmployee,
                                 )
                                 .map((e) => e)
                                 .toList(),
@@ -472,8 +441,7 @@ class _EmployeeInputFormState extends State<EmployeeInputForm> {
                             onChange: (selectedWay) {
                               if (selectedWay != null) {
                                 setState(() {});
-                                selectedEvent =
-                                    eventController.allEvents[selectedWay];
+                                selectedEvent = eventController.allEvents[selectedWay];
                               }
                             },
                           ),
@@ -492,9 +460,7 @@ class _EmployeeInputFormState extends State<EmployeeInputForm> {
                                 eventRecords.add(EventRecordModel(
                                   body: bodyEvent.text,
                                   type: selectedEvent!.name,
-                                  date: thisTimesModel!.dateTime
-                                      .toString()
-                                      .split(".")[0],
+                                  date: thisTimesModel!.dateTime.toString().split(".")[0],
                                   color: selectedEvent!.color.toString(),
                                 ));
                                 bodyEvent.clear();
@@ -504,59 +470,55 @@ class _EmployeeInputFormState extends State<EmployeeInputForm> {
                         ],
                       );
                     }),
-                  if (widget.enableEdit!) SizedBox(height: defaultPadding * 2),
-                  Text('سجل الأحداث:'.tr, style: Styles.headLineStyle1),
-                  SizedBox(height: defaultPadding),
-                  Container(
-                    padding: EdgeInsets.all(0.0),
-                    alignment: Alignment.center,
-                    child: ListView.builder(
-                      padding: EdgeInsets.zero,
-                      shrinkWrap: true,
-                      itemCount: eventRecords.length,
-                      itemBuilder: (context, index) {
-                        final record = eventRecords[index];
-                        return Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 8.0),
-                          child: Container(
-                            decoration: BoxDecoration(
-                              color: Color(int.parse(record.color))
-                                  .withOpacity(0.2),
-                              borderRadius: BorderRadius.circular(15),
-                            ),
-                            child: Padding(
-                              padding: const EdgeInsets.symmetric(
-                                  vertical: 14.0, horizontal: 10),
-                              child: Row(
-                                children: [
-                                  Text(
-                                    record.type,
-                                    style: Styles.headLineStyle1
-                                        .copyWith(color: Colors.black),
-                                  ),
-                                  SizedBox(width: 10),
-                                  Text(
-                                    record.body,
-                                    style: Styles.headLineStyle1
-                                        .copyWith(color: Colors.black),
-                                  ),
-                                  SizedBox(width: 50),
-                                  Text(
-                                    record.date,
-                                    style: Styles.headLineStyle3,
-                                  ),
-                                  Spacer(),
-                                ],
+                    if (widget.enableEdit!) SizedBox(height: defaultPadding * 2),
+                    Text('سجل الأحداث:'.tr, style: Styles.headLineStyle1),
+                    SizedBox(height: defaultPadding),
+                    Container(
+                      padding: EdgeInsets.all(0.0),
+                      alignment: Alignment.center,
+                      child: ListView.builder(
+                        padding: EdgeInsets.zero,
+                        shrinkWrap: true,
+                        itemCount: eventRecords.length,
+                        itemBuilder: (context, index) {
+                          final record = eventRecords[index];
+                          return Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 8.0),
+                            child: Container(
+                              decoration: BoxDecoration(
+                                color: Color(int.parse(record.color)).withOpacity(0.2),
+                                borderRadius: BorderRadius.circular(15),
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(vertical: 14.0, horizontal: 10),
+                                child: Row(
+                                  children: [
+                                    Text(
+                                      record.type,
+                                      style: Styles.headLineStyle1.copyWith(color: Colors.black),
+                                    ),
+                                    SizedBox(width: 10),
+                                    Text(
+                                      record.body,
+                                      style: Styles.headLineStyle1.copyWith(color: Colors.black),
+                                    ),
+                                    SizedBox(width: 50),
+                                    Text(
+                                      record.date,
+                                      style: Styles.headLineStyle3,
+                                    ),
+                                    Spacer(),
+                                  ],
+                                ),
                               ),
                             ),
-                          ),
-                        );
-                      },
+                          );
+                        },
+                      ),
                     ),
-                  ),
-                ],
-              ),
-            )
+                  ],
+                ),
+              )
           ],
         ),
       ),

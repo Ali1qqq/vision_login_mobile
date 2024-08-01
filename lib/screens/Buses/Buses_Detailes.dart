@@ -2,13 +2,13 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:quickalert/quickalert.dart';
 import 'package:vision_dashboard/controller/Wait_management_view_model.dart';
 import 'package:vision_dashboard/controller/account_management_view_model.dart';
 import 'package:vision_dashboard/models/account_management_model.dart';
 import 'package:vision_dashboard/screens/Buses/Controller/Bus_View_Model.dart';
 import 'package:vision_dashboard/screens/Student/Controller/Student_View_Model.dart';
 import 'package:vision_dashboard/screens/Widgets/AppButton.dart';
+import 'package:vision_dashboard/utils/Dialogs.dart';
 import '../../constants.dart';
 import '../../controller/home_controller.dart';
 import '../../models/Bus_Model.dart';
@@ -41,10 +41,8 @@ class _BusInputFormState extends State<BusInputForm> {
   List dataStu = ["اسم الطالب", "الرقم", "الوالد", "موجود"];
   List dataEMP = ['اسم الموظف', "العنوان", "الجنس", "موجود"];
 
-  Map<String, StudentModel> allSection =
-      Get.find<StudentViewModel>().studentMap;
-  Map<String, AccountManagementModel> allEmployee =
-      Get.find<AccountManagementViewModel>().allAccountManagement;
+  Map<String, StudentModel> allSection = Get.find<StudentViewModel>().studentMap;
+  Map<String, AccountManagementModel> allEmployee = Get.find<AccountManagementViewModel>().allAccountManagement;
 
   final ScrollController _scrollControllerStd = ScrollController();
   final ScrollController _scrollControllerEmp = ScrollController();
@@ -54,8 +52,7 @@ class _BusInputFormState extends State<BusInputForm> {
       nameController.text = widget.busModel!.name.toString();
       numberController.text = widget.busModel!.number.toString();
       typeController.text = widget.busModel!.type.toString();
-      startDateController.text =
-          widget.busModel!.startDate.toString().split(" ")[0];
+      startDateController.text = widget.busModel!.startDate.toString().split(" ")[0];
 
       allEmployee.forEach(
         (key, value) {
@@ -98,8 +95,12 @@ class _BusInputFormState extends State<BusInputForm> {
     typeController.clear();
     startDateController.clear();
     editController.clear();
-    allSection.removeWhere((key, value) => value.available==true,);
-    allEmployee.removeWhere((key, value) => value.available==true,);
+    allSection.removeWhere(
+      (key, value) => value.available == true,
+    );
+    allEmployee.removeWhere(
+      (key, value) => value.available == true,
+    );
 
     setState(() {});
   }
@@ -110,8 +111,7 @@ class _BusInputFormState extends State<BusInputForm> {
         body: SingleChildScrollView(
             physics: ClampingScrollPhysics(),
             padding: EdgeInsets.all(16.0),
-            child:
-                Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
               Container(
                 padding: EdgeInsets.all(25.0),
                 alignment: Alignment.center,
@@ -125,12 +125,9 @@ class _BusInputFormState extends State<BusInputForm> {
                   runSpacing: 50,
                   spacing: 25,
                   children: [
-                    CustomTextField(
-                        controller: nameController, title: 'اسم الحافلة'.tr),
-                    CustomTextField(
-                        controller: numberController, title: 'رقم الحافلة'.tr),
-                    CustomTextField(
-                        controller: typeController, title: 'نوع الحافلة'.tr),
+                    CustomTextField(controller: nameController, title: 'اسم الحافلة'.tr),
+                    CustomTextField(controller: numberController, title: 'رقم الحافلة'.tr),
+                    CustomTextField(controller: typeController, title: 'نوع الحافلة'.tr),
                     Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
@@ -148,8 +145,7 @@ class _BusInputFormState extends State<BusInputForm> {
                               lastDate: DateTime(2100),
                             ).then((date) {
                               if (date != null) {
-                                startDateController.text =
-                                    date.toString().split(" ")[0];
+                                startDateController.text = date.toString().split(" ")[0];
                               }
                             });
                           },
@@ -160,60 +156,42 @@ class _BusInputFormState extends State<BusInputForm> {
                         ),
                       ],
                     ),
-                    if(widget.busModel!=null)
-                    CustomTextField(
-                        controller: editController, title: 'سبب التعديل'.tr),
+                    if (widget.busModel != null) CustomTextField(controller: editController, title: 'سبب التعديل'.tr),
                     GetBuilder<BusViewModel>(builder: (busController) {
                       return AppButton(
                         text: 'حفظ'.tr,
                         onPressed: () async {
-                          QuickAlert.show(
-                              width: Get.width / 2,
-                              context: context,
-                              type: QuickAlertType.loading,
-                              title: 'جاري التحميل'.tr,
-                              text: 'يتم العمل على الطلب'.tr,
-                              barrierDismissible: false);
+                          loadingQuickAlert(context);
                           BusModel bus = BusModel(
                             name: nameController.text,
-                            busId: widget.busModel == null
-                                ? generateId("BUS")
-                                : widget.busModel!.busId!,
+                            busId: widget.busModel?.busId ?? generateId("BUS"),
                             number: numberController.text,
                             type: typeController.text,
                             employees: selectedEmployee,
                             students: selectedStudent,
-                            isAccepted: widget.busModel == null
-                                ? true:false,
+                            isAccepted: widget.busModel == null,
                             eventRecords: [],
                             expense: [],
                             startDate: DateTime.parse(startDateController.text),
                           );
-                          await busController.addBus(bus);
+                          try {
+                            await busController.addBus(bus);
 
+                            /// حذف الباص من الطلاب و الموظفين القديمين و اضافته الى الطلاب و الموظفين الجديدين
+                            await _updateBusForStudentsAndEmployees(bus);
 
-                            await Get.find<StudentViewModel>()
-                                .setBus("بدون حافلة", widget.busModel?.students??[]);
-                          await Get.find<AccountManagementViewModel>()
-                              .setBus("بدون حافلة", widget.busModel?.employees??[]);
-                            await Get.find<StudentViewModel>()
-                                .setBus(bus.busId!, selectedStudent);
-                            await Get.find<AccountManagementViewModel>()
-                                .setBus(bus.busId!, selectedEmployee);
-
-                          if (widget.busModel != null) {
-                            addWaitOperation(
-                              collectionName: busesCollection,
-                              affectedId: widget.busModel!.busId!,
-                              type: waitingListTypes.edite,
-                              details: editController.text,
-                              oldData: widget.busModel!.toJson(),
-                              newData: bus.toJson(),
-                            );
+                            /// اذا كنا في وضع التعديل
+                            if (widget.busModel != null) {
+                              await _handleBusEdit(bus);
+                              Get.back();
+                            }
+                          } catch (e) {
+                            print('Error: $e');
+                            getReedOnlyError(context, title: "حدث خطأ غير متوقع يرجى اعادة المحاولة");
+                          } finally {
+                            clearControl();
                             Get.back();
                           }
-                          clearControl();
-                          Get.back();
                         },
                       );
                     }),
@@ -231,11 +209,7 @@ class _BusInputFormState extends State<BusInputForm> {
                   borderRadius: BorderRadius.circular(15),
                 ),
                 child: GetBuilder<HomeViewModel>(builder: (controller) {
-                  double size = max(
-                          MediaQuery.sizeOf(context).width -
-                              (controller.isDrawerOpen ? 240 : 120),
-                          1000) -
-                      60;
+                  double size = max(MediaQuery.sizeOf(context).width - (controller.isDrawerOpen ? 240 : 120), 1000) - 60;
                   return SizedBox(
                       width: size + 60,
                       child: Scrollbar(
@@ -245,16 +219,11 @@ class _BusInputFormState extends State<BusInputForm> {
                           scrollDirection: Axis.horizontal,
                           child: DataTable(
                             clipBehavior: Clip.hardEdge,
-                            columns: List.generate(
-                                dataStu.length,
-                                (index) => DataColumn(
-                                    label: Container(
-                                        width: size / (dataStu.length),
-                                        child: Center(
-                                            child: Text(dataStu[index]
-                                                .toString()
-                                                .tr))))),
-                            rows: allSection.values.where((element) => element.bus=="بدون حافلة"&&element.isAccepted==true,)
+                            columns: List.generate(dataStu.length, (index) => DataColumn(label: Container(width: size / (dataStu.length), child: Center(child: Text(dataStu[index].toString().tr))))),
+                            rows: allSection.values
+                                .where(
+                                  (element) => element.bus == "بدون حافلة" && element.isAccepted == true,
+                                )
                                 .map(
                                   (e) => studentDataRow(
                                     e,
@@ -278,11 +247,7 @@ class _BusInputFormState extends State<BusInputForm> {
                   borderRadius: BorderRadius.circular(15),
                 ),
                 child: GetBuilder<HomeViewModel>(builder: (controller) {
-                  double size = max(
-                          MediaQuery.sizeOf(context).width -
-                              (controller.isDrawerOpen ? 240 : 120),
-                          1000) -
-                      60;
+                  double size = max(MediaQuery.sizeOf(context).width - (controller.isDrawerOpen ? 240 : 120), 1000) - 60;
                   return SizedBox(
                       width: size + 60,
                       child: Scrollbar(
@@ -292,16 +257,11 @@ class _BusInputFormState extends State<BusInputForm> {
                             scrollDirection: Axis.horizontal,
                             child: DataTable(
                               clipBehavior: Clip.hardEdge,
-                              columns: List.generate(
-                                  dataStu.length,
-                                  (index) => DataColumn(
-                                      label: Container(
-                                          width: size / (dataEMP.length),
-                                          child: Center(
-                                              child: Text(dataEMP[index]
-                                                  .toString()
-                                                  .tr))))),
-                              rows: allEmployee.values.where((element) => element.bus=="بدون حافلة"&&element.isAccepted==true,)
+                              columns: List.generate(dataStu.length, (index) => DataColumn(label: Container(width: size / (dataEMP.length), child: Center(child: Text(dataEMP[index].toString().tr))))),
+                              rows: allEmployee.values
+                                  .where(
+                                    (element) => element.bus == "بدون حافلة" && element.isAccepted == true,
+                                  )
                                   .map(
                                     (e) => employeeDataRow(
                                       e,
@@ -317,34 +277,42 @@ class _BusInputFormState extends State<BusInputForm> {
             ])));
   }
 
+  Future<void> _updateBusForStudentsAndEmployees(BusModel bus) async {
+    final studentViewModel = Get.find<StudentViewModel>();
+    final accountManagementViewModel = Get.find<AccountManagementViewModel>();
+    await studentViewModel.setBus("بدون حافلة", widget.busModel?.students ?? []);
+    await accountManagementViewModel.setBus("بدون حافلة", widget.busModel?.employees ?? []);
+    await studentViewModel.setBus(bus.busId!, selectedStudent);
+    await accountManagementViewModel.setBus(bus.busId!, selectedEmployee);
+  }
+
+  Future<void> _handleBusEdit(BusModel bus) async {
+    addWaitOperation(
+      collectionName: busesCollection,
+      affectedId: widget.busModel!.busId!,
+      type: waitingListTypes.edite,
+      details: editController.text,
+      oldData: widget.busModel!.toJson(),
+      newData: bus.toJson(),
+    );
+  }
+
   DataRow studentDataRow(StudentModel student, size) {
     return DataRow(
       cells: [
-        DataCell(Container(
-            alignment: Alignment.center,
-            width: size,
-            child: Text(student.studentName.toString()))),
-        DataCell(Container(
-            alignment: Alignment.center,
-            width: size,
-            child: Text(student.studentNumber.toString()))),
-        DataCell(Container(
-            alignment: Alignment.center,
-            width: size,
-            child: Text(student.parentId.toString()))),
+        DataCell(Container(alignment: Alignment.center, width: size, child: Text(student.studentName.toString()))),
+        DataCell(Container(alignment: Alignment.center, width: size, child: Text(student.studentNumber.toString()))),
+        DataCell(Container(alignment: Alignment.center, width: size, child: Text(student.parentId.toString()))),
         DataCell(Container(
           alignment: Alignment.center,
           width: size,
           child: Checkbox(
             fillColor: WidgetStateProperty.all(primaryColor),
             checkColor: Colors.white,
-            shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
             onChanged: (v) {
               student.available = v ?? false;
-              selectedStudent.contains(student.studentID)
-                  ? selectedStudent.remove(student.studentID)
-                  : selectedStudent.add(student.studentID.toString());
+              selectedStudent.contains(student.studentID) ? selectedStudent.remove(student.studentID) : selectedStudent.add(student.studentID.toString());
 
               setState(() {});
             },
@@ -358,31 +326,19 @@ class _BusInputFormState extends State<BusInputForm> {
   DataRow employeeDataRow(AccountManagementModel employee, size) {
     return DataRow(
       cells: [
-        DataCell(Container(
-            alignment: Alignment.center,
-            width: size,
-            child: Text(employee.userName.toString()))),
-        DataCell(Container(
-            alignment: Alignment.center,
-            width: size,
-            child: Text(employee.address.toString()))),
-        DataCell(Container(
-            alignment: Alignment.center,
-            width: size,
-            child: Text(employee.startDate.toString()))),
+        DataCell(Container(alignment: Alignment.center, width: size, child: Text(employee.userName.toString()))),
+        DataCell(Container(alignment: Alignment.center, width: size, child: Text(employee.address.toString()))),
+        DataCell(Container(alignment: Alignment.center, width: size, child: Text(employee.startDate.toString()))),
         DataCell(Container(
           alignment: Alignment.center,
           width: size,
           child: Checkbox(
             fillColor: WidgetStateProperty.all(primaryColor),
             checkColor: Colors.white,
-            shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
             onChanged: (v) {
               employee.available = v ?? false;
-              selectedEmployee.contains(employee.id)
-                  ? selectedEmployee.remove(employee.id)
-                  : selectedEmployee.add(employee.id.toString());
+              selectedEmployee.contains(employee.id) ? selectedEmployee.remove(employee.id) : selectedEmployee.add(employee.id.toString());
               setState(() {});
             },
             value: employee.available,

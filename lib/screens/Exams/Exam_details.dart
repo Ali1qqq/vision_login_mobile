@@ -1,7 +1,6 @@
 import 'dart:math';
 import 'dart:typed_data';
 
-import 'package:quickalert/quickalert.dart';
 import 'package:vision_dashboard/constants.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
@@ -83,14 +82,6 @@ class _ExamInputFormState extends State<ExamInputForm> {
     super.dispose();
   }
 
-  bool _validateFields() {
-    if (subjectController.text.isEmpty || professorController.text.isEmpty || dateController.text.isEmpty || examPassMarkController.text.isEmpty || examMaxMarkController.text.isEmpty || !isNumeric(examPassMarkController.text) || !isNumeric(examMaxMarkController.text)) {
-      showErrorDialog("خطأ", "يرجى ملء جميع الحقول وتأكد من أن الحقول الرقمية تحتوي على أرقام فقط.");
-      return false;
-    }
-    return true;
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -126,11 +117,13 @@ class _ExamInputFormState extends State<ExamInputForm> {
                     controller: examPassMarkController,
                     title: 'علامة النجاح'.tr,
                     enable: widget.isEdite,
+                    isNumeric: true,
                   ),
                   CustomTextField(
                     controller: examMaxMarkController,
                     title: 'العلامة الكاملة'.tr,
                     enable: widget.isEdite,
+                    isNumeric: true,
                   ),
                   InkWell(
                     onTap: () {
@@ -167,6 +160,38 @@ class _ExamInputFormState extends State<ExamInputForm> {
                     },
                   ),
                   Column(
+                    children: [
+                      buildImageSection(
+                        title: "صورة ورقة الاسئلة",
+                        tempImages: _questionImageFileTemp,
+                        networkImages: _questionImageFile ?? [],
+                        onTap: () async {
+                          FilePickerResult? result = await FilePicker.platform.pickFiles(type: FileType.image, allowMultiple: true);
+                          if (result != null) {
+                            setState(() {
+                              _questionImageFileTemp.addAll(result.files.map((file) => file.bytes!));
+                            });
+                          }
+                        },
+                        isEdit: widget.isEdite,
+                      ),
+                      buildImageSection(
+                        title: "صورة ورقة الاجابة",
+                        tempImages: _answerImageFileTemp,
+                        networkImages: _answerImageFile ?? [],
+                        onTap: () async {
+                          FilePickerResult? result = await FilePicker.platform.pickFiles(type: FileType.image, allowMultiple: true);
+                          if (result != null) {
+                            setState(() {
+                              _answerImageFileTemp.addAll(result.files.map((file) => file.bytes!));
+                            });
+                          }
+                        },
+                        isEdit: widget.isEdite,
+                      ),
+                    ],
+                  ),
+                  /*          Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text("صورة ورقة الاسئلة".tr),
@@ -186,9 +211,9 @@ class _ExamInputFormState extends State<ExamInputForm> {
                                     _.files.forEach(
                                       (element) async {
                                         _questionImageFileTemp.add(element.bytes!);
-                                        /*File(element.bytes).readAsBytes().then((value) {
+                                        */ /*File(element.bytes).readAsBytes().then((value) {
 
-                                        },);*/
+                                        },);*/ /*
                                       },
                                     );
                                     setState(() {});
@@ -324,7 +349,7 @@ class _ExamInputFormState extends State<ExamInputForm> {
                         ),
                       ),
                     ],
-                  ),
+                  ),*/
                   if (widget.isEdite && widget.examModel != null)
                     CustomTextField(
                       controller: editController,
@@ -335,36 +360,80 @@ class _ExamInputFormState extends State<ExamInputForm> {
                       return AppButton(
                         text: 'حفظ'.tr,
                         onPressed: () async {
-                          if (_validateFields()) {
-                            QuickAlert.show(width: Get.width / 2, context: context, type: QuickAlertType.loading, title: 'جاري التحميل'.tr, text: 'يتم العمل على الطلب'.tr, barrierDismissible: false);
-                            await uploadImages(_answerImageFileTemp, "Exam_answer").then(
-                              (value) => _answerImageFile!.addAll(value),
-                            );
-                            await uploadImages(_questionImageFileTemp, "Exam_question").then(
-                              (value) => _questionImageFile!.addAll(value),
-                            );
-                            final exam = ExamModel(
-                                id: examId,
-                                isDone: false,
-                                questionImage: _questionImageFile ?? [],
-                                answerImage: _answerImageFile,
-                                subject: subjectController.text,
-                                professor: professorController.text,
-                                examPassMark: examPassMarkController.text,
-                                examMaxMark: examMaxMarkController.text,
-                                date: DateTime.parse(dateController.text),
-                                marks: _selectedStudent,
-                                isAccepted: widget.examModel == null ? true : false);
-                            if (widget.examModel != null) {
-                              await studentViewModel.removeExam(widget.examModel!.id!, widget.examModel!.marks?.keys.toList() ?? []);
+                          if (!validateFields(
+                            requiredControllers: [
+                              subjectController,
+                              professorController,
+                              dateController,
+                              examPassMarkController,
+                              examMaxMarkController,
+                            ],
+                            numericControllers: [
+                              examPassMarkController,
+                              examMaxMarkController,
+                            ],
+                          )) {
+                            return; // إذا كانت البيانات غير صحيحة، نخرج من الدالة
+                          }
 
-                              addWaitOperation(collectionName: examsCollection, affectedId: examId, type: waitingListTypes.edite, details: editController.text, oldData: widget.examModel!.toJson(), newData: exam.toJson());
+                          // بدء تحميل الصور
+                          loadingQuickAlert(context);
+
+                          try {
+                            // تحميل الصور وإضافتها إلى القوائم
+                            final answerImages = await uploadImages(_answerImageFileTemp, "Exam_answer");
+                            _answerImageFile!.addAll(answerImages);
+
+                            final questionImages = await uploadImages(_questionImageFileTemp, "Exam_question");
+                            _questionImageFile!.addAll(questionImages);
+
+                            // إعداد نموذج الامتحان
+                            final exam = ExamModel(
+                              id: examId,
+                              isDone: false,
+                              questionImage: _questionImageFile ?? [],
+                              answerImage: _answerImageFile,
+                              subject: subjectController.text,
+                              professor: professorController.text,
+                              examPassMark: examPassMarkController.text,
+                              examMaxMark: examMaxMarkController.text,
+                              date: DateTime.parse(dateController.text),
+                              marks: _selectedStudent,
+                              isAccepted: widget.examModel == null,
+                            );
+
+                            // إذا كان لدينا نموذج امتحان موجود، نقوم بإزالة الامتحان القديم وتحديث السجل
+                            if (widget.examModel != null) {
+                              await studentViewModel.removeExam(
+                                widget.examModel!.id!,
+                                widget.examModel!.marks?.keys.toList() ?? [],
+                              );
+
+                              await addWaitOperation(
+                                collectionName: examsCollection,
+                                affectedId: examId,
+                                type: waitingListTypes.edite,
+                                details: editController.text,
+                                oldData: widget.examModel!.toJson(),
+                                newData: exam.toJson(),
+                              );
                             }
-                            studentViewModel.addExamToStudent(_selectedStudent.keys.toList(), examId);
+
+                            /// إضافة الامتحان إلى  الطالب
+                            await studentViewModel.addExamToStudent(_selectedStudent.keys.toList(), examId);
                             await examController.addExam(exam);
-                            if (widget.examModel != null) Get.back();
-                            clearController();
+
+                            /// إضافة الامتحان
+                            if (widget.examModel != null) {
+                              Get.back();
+                            }
                             Get.back();
+
+                            // مسح بيانات المتحكمين
+                            clearController();
+                          } catch (error) {
+                            // معالجة الأخطاء
+                            Get.snackbar("خطأ", "حدث خطأ أثناء حفظ البيانات: $error");
                           }
                         },
                       );
@@ -395,11 +464,10 @@ class _ExamInputFormState extends State<ExamInputForm> {
                         child: DataTable(
                           clipBehavior: Clip.hardEdge,
                           columns: [
-                            DataColumn(label: SizedBox(width: size / 5, child: Center(child: Text("اسم الطالب")))),
-                            DataColumn(label: SizedBox(width: size / 5, child: Center(child: Text("رقم الطالب")))),
-                            DataColumn(label: SizedBox(width: size / 5, child: Center(child: Text("تاريخ البداية")))),
-                            DataColumn(label: SizedBox(width: size / 5, child: Center(child: Text("ولي الأمر")))),
-                            DataColumn(label: SizedBox(width: size / 5, child: Center(child: Text("موجود")))),
+                            DataColumn(label: SizedBox(width: size / 4.5, child: Center(child: Text("اسم الطالب")))),
+                            DataColumn(label: SizedBox(width: size / 4.5, child: Center(child: Text("رقم الطالب")))),
+                            DataColumn(label: SizedBox(width: size / 4.5, child: Center(child: Text("ولي الأمر")))),
+                            DataColumn(label: SizedBox(width: size / 4.5, child: Center(child: Text("موجود")))),
                           ],
                           rows: studentViewModel.studentMap.values
                               .where(
@@ -413,7 +481,7 @@ class _ExamInputFormState extends State<ExamInputForm> {
                                   )
                                   .isNotEmpty) e.available = true;
 
-                              return studentDataRow(e, size / 5);
+                              return studentDataRow(e, size / 4.5);
                             },
                           ).toList(),
                         ),
@@ -493,7 +561,6 @@ class _ExamInputFormState extends State<ExamInputForm> {
       cells: [
         DataCell(SizedBox(width: size, child: Center(child: Text(student.studentName.toString())))),
         DataCell(SizedBox(width: size, child: Center(child: Text(student.studentNumber.toString())))),
-        DataCell(SizedBox(width: size, child: Center(child: Text(student.startDate.toString())))),
         DataCell(SizedBox(width: size, child: Center(child: Text(parentMap[student.parentId!]?.fullName ?? student.parentId!)))),
         DataCell(SizedBox(
           width: size,
@@ -549,6 +616,81 @@ class _ExamInputFormState extends State<ExamInputForm> {
             ),
           ),
         )),
+      ],
+    );
+  }
+
+  Widget buildImageSection({
+    required String title,
+    required List<Uint8List> tempImages,
+    required List<String> networkImages,
+    required void Function() onTap,
+    required bool isEdit,
+  }) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(title.tr),
+        SizedBox(height: 15),
+        SizedBox(
+          height: 200,
+          child: ListView.builder(
+            scrollDirection: Axis.horizontal,
+            itemCount: tempImages.length + networkImages.length + (isEdit ? 1 : 0),
+            itemBuilder: (context, index) {
+              if (isEdit && index == 0) {
+                // Button to pick images
+                return InkWell(
+                  onTap: onTap,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                    child: Container(
+                      decoration: BoxDecoration(color: Colors.grey, borderRadius: BorderRadius.circular(15)),
+                      width: 200,
+                      height: 200,
+                      child: Icon(Icons.add),
+                    ),
+                  ),
+                );
+              }
+
+              int tempImageIndex = isEdit ? index - 1 : index;
+
+              if (tempImageIndex < tempImages.length) {
+                // Display temp image
+                return Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                  child: Container(
+                    clipBehavior: Clip.hardEdge,
+                    decoration: BoxDecoration(color: Colors.grey, borderRadius: BorderRadius.circular(15)),
+                    width: 200,
+                    height: 200,
+                    child: Image.memory(
+                      tempImages[tempImageIndex],
+                      fit: BoxFit.fitHeight,
+                    ),
+                  ),
+                );
+              } else {
+                // Display network image
+                int networkImageIndex = tempImageIndex - tempImages.length;
+                return Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                  child: Container(
+                    clipBehavior: Clip.hardEdge,
+                    decoration: BoxDecoration(color: Colors.grey, borderRadius: BorderRadius.circular(15)),
+                    width: 200,
+                    height: 200,
+                    child: Image.network(
+                      networkImages[networkImageIndex],
+                      fit: BoxFit.fitHeight,
+                    ),
+                  ),
+                );
+              }
+            },
+          ),
+        ),
       ],
     );
   }

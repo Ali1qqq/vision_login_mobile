@@ -10,6 +10,7 @@ import 'package:vision_dashboard/screens/Parents/Controller/Parents_View_Model.d
 import 'package:vision_dashboard/screens/Salary/controller/Salary_View_Model.dart';
 import 'package:vision_dashboard/screens/Student/Controller/Student_View_Model.dart';
 
+import '../controller/NFC_Card_View_model.dart';
 import '../screens/Settings/Controller/Settings_View_Model.dart';
 import '../screens/Store/Controller/Store_View_Model.dart';
 import '../screens/classes/Controller/Class_View_Model.dart';
@@ -30,6 +31,7 @@ class GetBinding extends Bindings {
     Get.put(WaitManagementViewModel());
     Get.put(SettingsViewModel());
     Get.put(ClassViewModel());
+    Get.put(NfcCardViewModel());
   }
 
 }

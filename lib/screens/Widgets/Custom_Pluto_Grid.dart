@@ -6,14 +6,14 @@ import '../../constants.dart';
 import '../../controller/Wait_management_view_model.dart';
 
 class CustomPlutoGrid extends StatefulWidget {
-  CustomPlutoGrid(
-      {super.key,
-      required this.onSelected,
-      this.controller,
-      this.idName,
-      this.onRowDoubleTap,
-      this.isEmp=false,
-      });
+  CustomPlutoGrid({
+    super.key,
+    required this.onSelected,
+    this.controller,
+    this.idName,
+    this.onRowDoubleTap,
+    this.isEmp = false,
+  });
 
   @override
   State<CustomPlutoGrid> createState() => _CustomPlutoGridState();
@@ -25,11 +25,6 @@ class CustomPlutoGrid extends StatefulWidget {
 }
 
 class _CustomPlutoGridState extends State<CustomPlutoGrid> {
-
-
-
-
-
   @override
   Widget build(BuildContext context) {
     return PlutoGrid(
@@ -39,18 +34,14 @@ class _CustomPlutoGridState extends State<CustomPlutoGrid> {
       onChanged: (event) {
         print("onChanged");
       },
-      onLoaded: (PlutoGridOnLoadedEvent event) {
-
-      },
+      onLoaded: (PlutoGridOnLoadedEvent event) {},
       mode: PlutoGridMode.selectWithOneTap,
-
       onRowDoubleTap: widget.onRowDoubleTap,
       onSelected: widget.onSelected,
       configuration: PlutoGridConfiguration(
-
         style: PlutoGridStyleConfig(
             enableRowColorAnimation: true,
-            activatedColor:Colors.white.withOpacity(0.5),
+            activatedColor: Colors.white.withOpacity(0.5),
             gridBackgroundColor: Colors.transparent,
             evenRowColor: secondaryColor.withOpacity(0.5),
             cellTextStyle: Styles.headLineStyle3.copyWith(color: primaryColor),
@@ -60,11 +51,9 @@ class _CustomPlutoGridState extends State<CustomPlutoGrid> {
         localeText: PlutoGridLocaleText.arabic(),
       ),
       rowColorCallback: (PlutoRowColorContext rowColorContext) {
-
-         if( rowColorContext.row.cells['موافقة المدير']?.value == false) {
+        if (rowColorContext.row.cells['موافقة المدير']?.value == "في انتظار الموافقة" || rowColorContext.row.cells['موافقة المدير']?.value == false) {
           return Colors.green.withOpacity(0.3);
-        } else if (checkIfPendingDelete(
-            affectedId: rowColorContext.row.cells[widget.idName]?.value)) {
+        } else if (checkIfPendingDelete(affectedId: rowColorContext.row.cells[widget.idName]?.value)) {
           return Colors.red.withOpacity(0.3);
         }
         return Colors.transparent;
@@ -77,8 +66,7 @@ class _CustomPlutoGridState extends State<CustomPlutoGrid> {
   }
 }
 
-PlutoGrid CustomPlutoGrids(
-    controller, Function(PlutoGridOnSelectedEvent) onSelected, idName) {
+PlutoGrid CustomPlutoGrids(controller, Function(PlutoGridOnSelectedEvent) onSelected, idName) {
   late final PlutoGridStateManager stateManager;
 
   return PlutoGrid(
@@ -115,8 +103,7 @@ PlutoGrid CustomPlutoGrids(
       localeText: PlutoGridLocaleText.arabic(),
     ),
     rowColorCallback: (PlutoRowColorContext rowColorContext) {
-      if (checkIfPendingDelete(
-          affectedId: rowColorContext.row.cells[idName]?.value)) {
+      if (checkIfPendingDelete(affectedId: rowColorContext.row.cells[idName]?.value)) {
         return Colors.red.withOpacity(0.3);
       }
       return Colors.transparent;

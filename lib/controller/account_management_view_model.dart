@@ -400,6 +400,7 @@ class AccountManagementViewModel extends GetxController {
           )
           .firstOrNull;
     }
+    print(user?.id);
     if (user != null) {
       getTime().then(
         (timeData) async {

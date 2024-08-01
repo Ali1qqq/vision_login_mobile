@@ -1,7 +1,5 @@
 import 'dart:math';
 
-import 'package:quickalert/models/quickalert_type.dart';
-import 'package:quickalert/widgets/quickalert_dialog.dart';
 import 'package:vision_dashboard/constants.dart';
 import 'package:vision_dashboard/controller/home_controller.dart';
 import 'package:vision_dashboard/screens/Buses/Buses_View.dart';
@@ -18,7 +16,6 @@ import 'package:vision_dashboard/screens/expenses/expenses_view_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:tab_container/tab_container.dart';
-import 'package:vision_dashboard/screens/login/login_screen.dart';
 import 'package:vision_dashboard/screens/logout/logout_View.dart';
 import 'package:vision_dashboard/utils/Hive_DataBase.dart';
 

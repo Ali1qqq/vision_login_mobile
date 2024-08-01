@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:vision_dashboard/models/TimeModel.dart';
 
@@ -11,6 +12,21 @@ const bgColor = Color(0xffF6F6F4); // تخفيف لون الخلفية
 //Color(0xffc89665) 3E96F4
 const defaultPadding = 16.0;
 
+Map<String, String> cardsMap = {
+  "1": "04:5D:B0:F3:9F:61:80",
+  "2": "04:8B:BB:F8:9F:61:80",
+  "3": "04:50:49:22:5F:61:80",
+  "4": "04:2C:E1:F3:9F:61:80",
+  "5": "04:96:CA:1D:5F:61:80",
+  "6": "04:9B:32:1F:5F:61:80",
+  "7": "04:FE:59:F5:9F:61:80",
+  "8": "04:E4:CD:1F:5F:61:80",
+  "9": "04:85:80:1E:5F:61:80",
+  "10": "04:65:17:F1:9F:61:81",
+  "11": "04:D6:EE:20:5F:61:80",
+  "12": "04:B0:EE:1F:5F:61:80",
+  "13": "04:40:0E:1F:5F:61:80",
+};
 
 List<String> employeeName = [
   "",
@@ -44,7 +60,8 @@ String generateId(String type) {
   var _ = thisTimesModel!.dateTime.microsecondsSinceEpoch.toString();
   return "$type$_";
 }
-bool enableUpdate=true;
+
+bool enableUpdate = true;
 const String parentsCollection = 'Parents';
 const String classCollection = 'Class';
 const String studentCollection = 'Students';
@@ -54,7 +71,15 @@ const String salaryCollection = 'Salaries';
 const String archiveCollection = 'Archive';
 const String busesCollection = 'Buses';
 const String installmentCollection = 'Installment';
+const String nfcCardCollection = 'NfcCards';
 TimesModel? thisTimesModel;
+
+
+Map accountType = {
+  "user": "مستخدم".tr,
+  "admin": "مدير".tr,
+  "superAdmin": "مالك".tr,
+};
 
 List<String> classNameList = [
   "KG 1",
@@ -88,7 +113,6 @@ List<String> languageList = [
   "لغات",
 ];
 
-
 Map<String, String> months = {
   "يناير (1)": "01",
   "فبراير (2)": "02",
@@ -104,28 +128,22 @@ Map<String, String> months = {
   "ديسمبر (12)": "12",
 };
 
-enum waitingListTypes{
-  delete,returnInstallment,waitDiscounts,add,edite
-}
+enum waitingListTypes { delete, returnInstallment, waitDiscounts, add, edite }
 
- const accountManagementCollection = "AccountManagement";
+const accountManagementCollection = "AccountManagement";
+
 class Styles {
   static Color textColor = primaryColor;
 
-  static TextStyle textStyle = GoogleFonts.cairo(
-      color: textColor, fontSize: 16, fontWeight: FontWeight.w500);
+  static TextStyle textStyle = GoogleFonts.cairo(color: textColor, fontSize: 16, fontWeight: FontWeight.w500);
 
-  static TextStyle headLineStyle1 = GoogleFonts.cairo(
-      fontSize: 26, color: textColor, fontWeight: FontWeight.bold);
+  static TextStyle headLineStyle1 = GoogleFonts.cairo(fontSize: 26, color: textColor, fontWeight: FontWeight.bold);
 
-  static TextStyle headLineStyle2 = GoogleFonts.cairo(
-      fontSize: 21, color: textColor, fontWeight: FontWeight.bold);
+  static TextStyle headLineStyle2 = GoogleFonts.cairo(fontSize: 21, color: textColor, fontWeight: FontWeight.bold);
 
-  static TextStyle headLineStyle3 = GoogleFonts.cairo(
-      fontSize: 17, color: Colors.grey.shade500, fontWeight: FontWeight.w500);
+  static TextStyle headLineStyle3 = GoogleFonts.cairo(fontSize: 17, color: Colors.grey.shade500, fontWeight: FontWeight.w500);
 
-  static TextStyle headLineStyle4 = GoogleFonts.cairo(
-      fontSize: 14, color: Colors.grey.shade500, fontWeight: FontWeight.w500);
+  static TextStyle headLineStyle4 = GoogleFonts.cairo(fontSize: 14, color: Colors.grey.shade500, fontWeight: FontWeight.w500);
 }
 
 /*

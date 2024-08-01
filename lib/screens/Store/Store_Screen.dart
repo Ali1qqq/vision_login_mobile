@@ -8,11 +8,9 @@ import 'package:vision_dashboard/controller/home_controller.dart';
 import 'package:vision_dashboard/screens/Store/Controller/Store_View_Model.dart';
 import 'package:vision_dashboard/screens/Widgets/AppButton.dart';
 import 'package:vision_dashboard/screens/Widgets/Custom_Text_Filed.dart';
-import 'package:vision_dashboard/utils/Dialogs.dart';
 import '../../constants.dart';
 import '../../models/Store_Model.dart';
 import '../Widgets/Custom_Pluto_Grid.dart';
-import '../Widgets/Data_Row.dart';
 import '../Widgets/header.dart';
 
 class StoreScreen extends StatefulWidget {
@@ -23,7 +21,6 @@ class StoreScreen extends StatefulWidget {
 }
 
 class _StoreScreenState extends State<StoreScreen> {
-  final ScrollController _scrollController = ScrollController();
   List data = ["اسم المادة", "الكمية", "الخيارات", ""];
   String currentId = '';
 

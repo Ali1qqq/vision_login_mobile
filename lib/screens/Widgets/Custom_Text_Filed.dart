@@ -5,11 +5,13 @@ import 'package:get/get.dart';
 
 import '../../constants.dart';
 
-class CustomTextField extends StatelessWidget {
+class CustomTextField extends StatefulWidget {
   const CustomTextField({
     super.key,
     required this.controller,
-    required this.title,  this. keyboardType,this.enable,this.hint,this.onChange,this.size,this.isFullBorder,this.icon
+    required this.title,  this. keyboardType,this.enable,this.hint,this.onChange,this.size,this.isFullBorder,this.icon,
+    this.isNumeric = false,
+
   });
   final bool? isFullBorder;
 
@@ -21,26 +23,62 @@ class CustomTextField extends StatelessWidget {
   final Function(String? value)? onChange;
   final double? size;
   final Icon? icon;
+  final bool isNumeric;
+
+  @override
+  State<CustomTextField> createState() => _CustomTextFieldState();
+}
+
+class _CustomTextFieldState extends State<CustomTextField> {
+
+  @override
+  void initState() {
+    super.initState();
+    widget.controller.addListener(_convertArabicNumbersToEnglish);
+  }
+
+  @override
+  void dispose() {
+    widget.controller.removeListener(_convertArabicNumbersToEnglish);
+    super.dispose();
+  }
+
+  void _convertArabicNumbersToEnglish() {
+    if(widget.isNumeric) {
+      final text = widget.controller.text;
+      final convertedText = text.replaceAllMapped(
+        RegExp(r'[٠-٩]'),
+        (match) => (match.group(0)!.codeUnitAt(0) - 0x660).toString(),
+      );
+
+      if (text != convertedText) {
+        widget.controller.value = widget.controller.value.copyWith(
+          text: convertedText,
+          selection: TextSelection.collapsed(offset: convertedText.length),
+        );
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: max(150,size?? Get.width/4.5),
-
+      width: max(150,widget.size?? Get.width/4.5),
       child:TextFormField(
-        onChanged: onChange,
-        keyboardType: keyboardType,
-        controller: controller,
-        enabled: enable,
+        onChanged: widget.onChange,
+        keyboardType: widget.keyboardType,
+        controller: widget.controller,
+        enabled: widget.enable,
         decoration: InputDecoration(
-          labelText: title,
-          hintText: hint,
+          labelText: widget.title,
+          hintText: widget.hint,
 
-          suffixIcon:icon ,
+          suffixIcon:widget.icon ,
           labelStyle: TextStyle(color: primaryColor),
           enabledBorder: UnderlineInputBorder(
             borderSide: BorderSide(color: primaryColor),
           ),
-          disabledBorder:isFullBorder!=null? OutlineInputBorder(
+          disabledBorder:widget.isFullBorder!=null? OutlineInputBorder(
             borderSide: BorderSide(color: primaryColor,width: 2),
             borderRadius: BorderRadius.circular(10),
           ):UnderlineInputBorder(
