@@ -1,77 +1,28 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:quickalert/models/quickalert_type.dart';
-import 'package:quickalert/widgets/quickalert_dialog.dart';
 import 'package:vision_dashboard/controller/Wait_management_view_model.dart';
 import 'package:vision_dashboard/controller/home_controller.dart';
-import 'package:vision_dashboard/screens/Parents/parent_user_details.dart';
 import 'package:vision_dashboard/screens/Widgets/Custom_Pluto_Grid.dart';
-import 'package:vision_dashboard/screens/Widgets/Custom_Text_Filed.dart';
-import '../../constants.dart';
-import '../Widgets/header.dart';
-import 'Controller/Parents_View_Model.dart';
+import '../../../constants.dart';
+import '../../Widgets/header.dart';
+import '../Controller/Parents_View_Model.dart';
+import 'Widgets/BuildParentDeleteOrRestoreButton.dart';
+import 'Widgets/BuildParentEditButton.dart';
 
-class ParentUsersScreen extends StatefulWidget {
+class ParentUsersScreen extends StatelessWidget {
   const ParentUsersScreen({super.key});
-
-  @override
-  State<ParentUsersScreen> createState() => _ParentUsersScreenState();
-}
-
-class _ParentUsersScreenState extends State<ParentUsersScreen> {
-  /*final ScrollController _scrollController = ScrollController();
-
-  List data = [
-    "الاسم الكامل",
-    "العنوان",
-    "الجنسية",
-    "العمر",
-    "العمل",
-    "تاريخ البداية",
-    "رقم الام",
-    "رقم الطوارئ",
-    "سجل الأحداث",
-    "الخيارات",
-    ""
-  ];
-
-  List filterData=[
-    "الاسم الكامل",
-    "العنوان",
-    "الجنسية",
-    "العمر",
-    "العمل",
-    "تاريخ البداية",
-  ];
-  TextEditingController searchController = TextEditingController();
-  String searchValue = '';
-  int searchIndex = 0;*/
-  String currentId = '';
-
-  bool getIfDelete() {
-    return checkIfPendingDelete(affectedId: currentId);
-  }
 
   @override
   Widget build(BuildContext context) {
     return GetBuilder<ParentsViewModel>(builder: (controller) {
       return Scaffold(
-        appBar: Header(
-            context: context,
-            title: 'اولياء الامور'.tr,
-            middleText:
-                'تقوم هذه الواجه بعرض معلومات تفصيلية عن الاباء ويمكن من خلالها اضافة اب جديد او تعديل اب موجود سابقا او حذفه'
-                    .tr),
+        appBar: Header(context: context, title: 'اولياء الامور'.tr, middleText: 'تقوم هذه الواجه بعرض معلومات تفصيلية عن الاباء ويمكن من خلالها اضافة اب جديد او تعديل اب موجود سابقا او حذفه'.tr),
         body: SingleChildScrollView(
           physics: NeverScrollableScrollPhysics(),
-          padding: EdgeInsets.only(bottom: defaultPadding*3),
+          padding: EdgeInsets.only(bottom: defaultPadding * 3),
           child: GetBuilder<HomeViewModel>(builder: (hController) {
-            double size = max(
-                    MediaQuery.sizeOf(context).width -
-                        (hController.isDrawerOpen ? 240 : 120),
-                    1000) -
-                60;
+            double size = max(MediaQuery.sizeOf(context).width - (hController.isDrawerOpen ? 240 : 120), 1000) - 60;
             return Padding(
               padding: const EdgeInsets.all(8),
               child: Container(
@@ -81,14 +32,13 @@ class _ParentUsersScreenState extends State<ParentUsersScreen> {
                   borderRadius: const BorderRadius.all(Radius.circular(10)),
                 ),
                 child: SizedBox(
-                  height: Get.height-180,
+                  height: Get.height - 180,
                   width: size + 60,
                   child: CustomPlutoGrid(
                     controller: controller,
                     idName: "الرقم التسلسلي",
                     onSelected: (event) {
-                      currentId = event.row?.cells["الرقم التسلسلي"]?.value;
-                      setState(() {});
+                      controller.setCurrentId(event.row?.cells["الرقم التسلسلي"]?.value);
                     },
                   ),
                 ),
@@ -96,85 +46,16 @@ class _ParentUsersScreenState extends State<ParentUsersScreen> {
             );
           }),
         ),
-        floatingActionButton: enableUpdate &&
-                currentId != '' &&
-                controller.parentMap[currentId]!.isAccepted!
+        floatingActionButton: enableUpdate && controller.currentId != '' && controller.parentMap[controller.currentId]!.isAccepted == true
             ? GetBuilder<WaitManagementViewModel>(builder: (_) {
                 return SizedBox(
                   width: Get.width,
                   child: Wrap(
-                    // mainAxisAlignment: MainAxisAlignment.center,
                     alignment: WrapAlignment.center,
                     children: [
-                      FloatingActionButton(
-                        backgroundColor: getIfDelete()
-                            ? Colors.greenAccent.withOpacity(0.5)
-                            : Colors.red.withOpacity(0.5),
-                        onPressed: ()async {
-                          if (enableUpdate) {
-                            if (getIfDelete())
-                              _.returnDeleteOperation(
-                                  affectedId: controller
-                                      .parentMap[currentId]!.id
-                                      .toString());
-                            else {
-                              TextEditingController editController =
-                                  TextEditingController();
-
-                              QuickAlert.show(
-                                context: context,
-                                type: QuickAlertType.confirm,
-                                widget:Center(
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: CustomTextField(controller: editController, title: "سبب الحذف".tr,size: Get.width/4,),
-                                  ),
-                                ),
-                                text: 'قبول هذه العملية'.tr,
-                                title: 'هل انت متأكد ؟'.tr,
-                                onConfirmBtnTap: () async {
-
-                                  await addWaitOperation(
-                                    type: waitingListTypes.delete,
-
-                                    collectionName: parentsCollection,
-                                    affectedId:
-                                        controller.parentMap[currentId]!.id!,
-                                    details: editController.text,
-                                  );
-                                  Get.back();
-                                },
-                                onCancelBtnTap: () => Get.back(),
-                                confirmBtnText: 'نعم'.tr,
-                                cancelBtnText: 'لا'.tr,
-                                confirmBtnColor: Colors.redAccent,
-                                showCancelBtn: true,
-                              );
-                            }
-                          }
-                        },
-                        child: Icon(
-                          getIfDelete()
-                              ? Icons.restore_from_trash_outlined
-                              : Icons.delete,
-                          color: Colors.white,
-                        ),
-                      ),
-                      SizedBox(
-                        width: defaultPadding,
-                      ),
-                      if (!getIfDelete())
-                        FloatingActionButton(
-                          backgroundColor: primaryColor.withOpacity(0.5),
-                          onPressed: () {
-                            showParentInputDialog(
-                                context, controller.parentMap[currentId]!);
-                          },
-                          child: Icon(
-                            Icons.edit,
-                            color: Colors.white,
-                          ),
-                        ),
+                      BuildParentDeleteOrRestoreButton(_, controller, context),
+                      SizedBox(width: defaultPadding),
+                      if (!controller.getIfDelete()) BuildParentEditButton(context),
                     ],
                   ),
                 );
@@ -183,112 +64,8 @@ class _ParentUsersScreenState extends State<ParentUsersScreen> {
       );
     });
   }
-
-  void showParentInputDialog(BuildContext context, dynamic parent) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return Dialog(
-          backgroundColor: Colors.white,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(25.0),
-          ),
-          child: Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(25.0),
-            ),
-            height: Get.height / 2,
-            width: Get.width / 1.5,
-            child: ParentInputForm(parent: parent),
-          ),
-        );
-      },
-    );
-  }
-
-  void showEventDialog(BuildContext context, dynamic eventRecords) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return Dialog(
-          backgroundColor: Colors.white,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(25.0),
-          ),
-          child: Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(25.0),
-            ),
-            height: Get.height / 2,
-            width: Get.width / 2,
-            child: Column(
-              children: [
-                Text('سجل الأحداث', style: Styles.headLineStyle1),
-                SizedBox(height: defaultPadding),
-                ListView.builder(
-                  padding: EdgeInsets.zero,
-                  shrinkWrap: true,
-                  itemCount: eventRecords.length,
-                  itemBuilder: (context, index) {
-                    final record = eventRecords[index];
-                    return Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 8.0),
-                      child: Container(
-                        decoration: BoxDecoration(
-                          color:
-                              Color(int.parse(record.color)).withOpacity(0.2),
-                          borderRadius: BorderRadius.circular(15),
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(
-                              vertical: 14.0, horizontal: 10),
-                          child: Row(
-                            children: [
-                              SizedBox(width: 10),
-                              Text(
-                                "نوع الحدث: ",
-                                style: Styles.headLineStyle2,
-                              ),
-                              Text(
-                                record.type,
-                                style: Styles.headLineStyle1
-                                    .copyWith(color: Colors.black),
-                              ),
-                              SizedBox(width: 10),
-                              Text(
-                                "تفاصيل الحدث: ",
-                                style: Styles.headLineStyle2,
-                              ),
-                              Text(
-                                record.body,
-                                style: Styles.headLineStyle1
-                                    .copyWith(color: Colors.black),
-                              ),
-                              Spacer(),
-                              Text(
-                                "تاريخ الحدث: ",
-                                style: Styles.headLineStyle4,
-                              ),
-                              Text(
-                                record.date,
-                                style: Styles.headLineStyle3,
-                              ),
-                              SizedBox(width: 10),
-                            ],
-                          ),
-                        ),
-                      ),
-                    );
-                  },
-                ),
-              ],
-            ),
-          ),
-        );
-      },
-    );
-  }
 }
+
 /*        Wrap(
                       spacing: 25,
                       children: [

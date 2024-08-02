@@ -22,7 +22,7 @@ Future<void> main() async {
     DeviceOrientation.landscapeLeft,
   ]);*/
   await HiveDataBase.init();
-   getTime();
+  await getTime();
   runApp(MyApp());
 }
 

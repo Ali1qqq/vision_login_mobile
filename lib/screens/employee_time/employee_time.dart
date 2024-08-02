@@ -48,7 +48,7 @@ class _EmployeeTimeViewState extends State<EmployeeTimeView> {
         .key;
     dayNameNow = thisTimesModel!.formattedTime;
     selectedDate.text = thisTimesModel!.formattedTime;
- /*   getTime().then(
+    /*   getTime().then(
       (value) {
         if (value != null) {
 
@@ -59,7 +59,6 @@ class _EmployeeTimeViewState extends State<EmployeeTimeView> {
 
   @override
   void dispose() {
-
     super.dispose();
   }
 
@@ -398,8 +397,32 @@ class _EmployeeTimeViewState extends State<EmployeeTimeView> {
                                                 int indexKey = entry.key;
 
                                                 var accountModel = entry.value;
-                                                int totalLate = accountModel.employeeTime.isEmpty ? 0 : accountModel.employeeTime.values.map((e) => e.totalLate ?? 0).toList().reduce((value, element) => value + element);
-                                                int totalEarlier = accountModel.employeeTime.isEmpty ? 0 : accountModel.employeeTime.values.map((e) => e.totalEarlier ?? 0).toList().reduce((value, element) => value + element);
+                                                int totalLate = accountModel.employeeTime.values
+                                                        .where(
+                                                          (element) => element.dayName!.split("-")[1].split("-")[0] == months[selectedMonth],
+                                                        )
+                                                        .isEmpty
+                                                    ? 0
+                                                    : accountModel.employeeTime.values
+                                                        .where(
+                                                          (element) => element.dayName!.split("-")[1].split("-")[0] == months[selectedMonth],
+                                                        )
+                                                        .map((e) => e.totalLate ?? 0)
+                                                        .toList()
+                                                        .reduce((value, element) => value + element);
+                                                int totalEarlier = accountModel.employeeTime.values
+                                                        .where(
+                                                          (element) => element.dayName!.split("-")[1].split("-")[0] == months[selectedMonth],
+                                                        )
+                                                        .isEmpty
+                                                    ? 0
+                                                    : accountModel.employeeTime.values
+                                                        .where(
+                                                          (element) => element.dayName!.split("-")[1].split("-")[0] == months[selectedMonth],
+                                                        )
+                                                        .map((e) => e.totalEarlier ?? 0)
+                                                        .toList()
+                                                        .reduce((value, element) => value + element);
                                                 int totalTime = totalLate + totalEarlier;
 
                                                 return ExpansionPanel(
