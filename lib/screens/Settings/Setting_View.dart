@@ -12,10 +12,11 @@ class SettingsView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if (HiveDataBase.getAccountManagementModel()!.type != 'مالك') {
+      Get.find<EmployeeViewModel>().setCurrentId( HiveDataBase.getAccountManagementModel()!.id) ;
+      Get.find<EmployeeViewModel>(). initController() ;
+    }
     return GetBuilder<SettingsViewModel>(builder: (context) {
-      if (HiveDataBase.getAccountManagementModel()!.type != 'مالك') {
-        Get.find<EmployeeViewModel>().employeeModel = HiveDataBase.getAccountManagementModel();
-      }
       return Scaffold(
         body: AnimatedCrossFade(
           duration: Duration(milliseconds: 500),
@@ -25,21 +26,10 @@ class SettingsView extends StatelessWidget {
           ),
           secondChild: ConstrainedBox(
             constraints: BoxConstraints(maxHeight: Get.height),
-
-            ///ToDo
             child: EmployeeInputForm(),
           ),
           crossFadeState: HiveDataBase.getAccountManagementModel()!.type != 'مالك' ? CrossFadeState.showSecond : CrossFadeState.showFirst,
         ),
-        // floatingActionButton:enableUpdate?FloatingActionButton(
-        //   backgroundColor:primaryColor,
-        //   onPressed: () {
-        //     setState(() {
-        //       isAdd = !isAdd;
-        //     });
-        //   },
-        //   child: Icon(!isAdd? Icons.add:Icons.grid_view),
-        // ):Container(),
       );
     });
   }

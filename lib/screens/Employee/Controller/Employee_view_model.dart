@@ -41,8 +41,6 @@ enum UserManagementStatus {
 enum typeNFC { login, time, add }
 
 class EmployeeViewModel extends GetxController {
-
-
   final fullNameController = TextEditingController();
   final mobileNumberController = TextEditingController();
   final addressController = TextEditingController();
@@ -60,9 +58,14 @@ class EmployeeViewModel extends GetxController {
   final editController = TextEditingController();
   final userNameController = TextEditingController();
   final userPassController = TextEditingController();
+
+  /// when scan NFC Card
   TextEditingController nfcController = TextEditingController();
 
+  /// we use this in Employee time
   bool isLoading = false;
+
+  /// we use this in Employee time when expand employee time details
   List<bool> isOpen = [];
   RxMap<String, EmployeeModel> allAccountManagement = <String, EmployeeModel>{}.obs;
   final accountManagementFireStore = FirebaseFirestore.instance.collection(accountManagementCollection).withConverter<EmployeeModel>(
@@ -71,7 +74,10 @@ class EmployeeViewModel extends GetxController {
       );
   final FirebaseStorage _storage = FirebaseStorage.instance;
 
+  ///pluto header
   List<PlutoColumn> columns = [];
+
+  /// pluto data
   List<PlutoRow> rows = [];
 
   Map<String, PlutoColumnType> data = {
@@ -94,6 +100,7 @@ class EmployeeViewModel extends GetxController {
     "موافقة المدير": PlutoColumnType.text(),
   };
 
+  /// we need this for Refresh pluto grid
   GlobalKey plutoKey = GlobalKey();
 
   EmployeeViewModel() {
@@ -101,17 +108,17 @@ class EmployeeViewModel extends GetxController {
     getAllEmployee();
   }
 
-
-
   bool getIfDelete() {
     return checkIfPendingDelete(affectedId: currentId);
   }
 
+  /// Refresh pluto header when change language
   getColumns() {
     columns.clear();
     columns.addAll(toAR(data));
   }
 
+  /// we use this for cancel listener
   late StreamSubscription<QuerySnapshot<EmployeeModel>> listener;
 
   getAllEmployee() {
@@ -224,8 +231,7 @@ class EmployeeViewModel extends GetxController {
 
   adReceiveSalary(String accountId, String paySalary, String salaryDate, String constSalary, String dilaySalary, bytes) async {
     String fileName = 'signatures/$accountId/$salaryDate.png';
-    // print(dilaySalary);
-    // print(paySalary);
+
     uploadImage(bytes, fileName).then(
       (value) async {
         if (value != Error) {
@@ -350,11 +356,6 @@ class EmployeeViewModel extends GetxController {
       });
     }
   }
-
-/*  void signInUsingNFC(String cardId) {
-    print(cardId);
-    Get.offAll(() => MainScreen());
-  }*/
 
   String? loginUserPage;
 
@@ -819,8 +820,8 @@ class EmployeeViewModel extends GetxController {
     FirebaseFirestore.instance.collection(accountManagementCollection).doc(affectedId).set({"isAccepted": true}, SetOptions(merge: true));
   }
 
-  setBus(String s, List emp) async {
-    for (var employee in emp) FirebaseFirestore.instance.collection(accountManagementCollection).doc(employee).set({"bus": s}, SetOptions(merge: true));
+  setBus(String busId, List employee) async {
+    for (var employee in employee) FirebaseFirestore.instance.collection(accountManagementCollection).doc(employee).set({"bus": busId}, SetOptions(merge: true));
   }
 
   setAppend(String userId, date) {
@@ -840,25 +841,47 @@ class EmployeeViewModel extends GetxController {
     accountManagementFireStore.doc(userId).update({"employeeTime": Map.fromEntries(allAccountManagement[userId]!.employeeTime.entries.map((e) => MapEntry(e.key, e.value.toJson())).toList())});
   }
 
-  bool isAdd=false;
+  /// we use this for fold Screen
+  bool isAdd = false;
+
+  /// current row selected
   String currentId = '';
+
+  /// card id selected
   String selectedCardId = '';
+
+  /// bus id selected
   String busValue = '';
+
+  /// user role selected
   String role = '';
+
+  /// event selected when add event
   EventModel? selectedEvent = null;
+
+  /// previous events
   List<EventRecordModel> eventRecords = [];
+
+  /// Edite Employee model
   EmployeeModel? employeeModel = null;
+
+  /// change current selected id
   void setCurrentId(value) {
     currentId = value;
     update();
   }
+
+  bool enableEdit = false;
+
   /// use this to change view screen
-   foldScreen() {
+  foldScreen() {
     clearController();
-     startDateController.text = thisTimesModel!.dateTime.toString().split(" ")[0];
+    startDateController.text = thisTimesModel!.dateTime.toString().split(" ")[0];
     isAdd = !isAdd;
     update();
   }
+
+  /// when press delete
   void showDeleteConfirmationDialog(BuildContext context) {
     TextEditingController editController = TextEditingController();
     QuickAlert.show(
@@ -892,6 +915,8 @@ class EmployeeViewModel extends GetxController {
       showCancelBtn: true,
     );
   }
+
+  /// when add or edite Employee
   saveEmployee(BuildContext context) async {
     if (validateFields(requiredControllers: [
       userNameController,
@@ -998,10 +1023,8 @@ class EmployeeViewModel extends GetxController {
     }
   }
 
-  bool enableEdit = false;
-
   clearController() {
-    employeeModel=null;
+    employeeModel = null;
     selectedEvent = null;
     fullNameController.clear();
     mobileNumberController.clear();
@@ -1021,18 +1044,19 @@ class EmployeeViewModel extends GetxController {
     userPassController.clear();
     editController.clear();
     eventRecords.clear();
-    busValue='';
+    busValue = '';
     role = '';
     selectedCardId = '';
     eventRecords = [];
     update();
   }
 
+  /// init controller when edite employee
   initController() {
-employeeModel=allAccountManagement[currentId];
-enableEdit = true;
+    employeeModel = allAccountManagement[currentId];
+    enableEdit = true;
     if (employeeModel != null) {
-      selectedCardId = employeeModel!.serialNFC??'';
+      selectedCardId = employeeModel!.serialNFC ?? '';
       fullNameController.text = employeeModel!.fullName.toString();
       mobileNumberController.text = employeeModel!.mobileNumber.toString();
       addressController.text = employeeModel!.address.toString();
@@ -1054,12 +1078,12 @@ enableEdit = true;
         },
       );
 
-
       role = employeeModel!.type.toString();
       busValue = Get.find<BusViewModel>().busesMap[employeeModel!.bus]?.name ?? employeeModel!.bus!;
     }
   }
 
+  /// when press Edite button
   void showEmployeeInputDialog(BuildContext context) {
     showDialog(
       context: context,
@@ -1082,8 +1106,7 @@ enableEdit = true;
     );
   }
 
-
-  addEmployeeEvent(){
+  addEmployeeEvent() {
     eventRecords.add(EventRecordModel(
       body: bodyEvent.text,
       type: selectedEvent!.name,
