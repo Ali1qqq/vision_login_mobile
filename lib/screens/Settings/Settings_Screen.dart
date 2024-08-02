@@ -67,58 +67,48 @@ class _SettingsScreenState extends State<SettingsScreen> {
       appBar: Header(
           context: context,
           title: 'ادارة المنصة'.tr,
-          middleText:
-              "تقوم هذه الواجهة بعرض الامور الاساسية في المنصة وهي المستخدمين وامكانية اضافة او تعديل او حذف كما تعرض السجلات الممطلوب حذفها للموافقة عليها او استرجاعها كما يمكن ارشفة بيانات السنة الحالية او حذف البيانات او العودة الى نسخة سابقة"
-                  .tr),
+          middleText: "تقوم هذه الواجهة بعرض الامور الاساسية في المنصة وهي المستخدمين وامكانية اضافة او تعديل او حذف كما تعرض السجلات الممطلوب حذفها للموافقة عليها او استرجاعها كما يمكن ارشفة بيانات السنة الحالية او حذف البيانات او العودة الى نسخة سابقة".tr),
       body: SingleChildScrollView(
         padding: EdgeInsets.all(16.0),
         child: GetBuilder<HomeViewModel>(builder: (controller) {
-          double size = max(
-                  MediaQuery.sizeOf(context).width -
-                      (controller.isDrawerOpen ? 240 : 120),
-                  1000) -
-              60;
+          double size = max(MediaQuery.sizeOf(context).width - (controller.isDrawerOpen ? 240 : 120), 1000) - 60;
           return Padding(
             padding: const EdgeInsets.all(15),
-            child:
-                GetBuilder<EmployeeViewModel>(builder: (controller) {
+            child: GetBuilder<SettingsViewModel>(builder: (controller) {
               return Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   SizedBox(
                     height: defaultPadding,
                   ),
-                    Text(
-                      "تأكيد العمليات".tr,
-                      style: Styles.headLineStyle1,
+                  Text(
+                    "تأكيد العمليات".tr,
+                    style: Styles.headLineStyle1,
+                  ),
+                  Container(
+                    padding: EdgeInsets.all(defaultPadding),
+                    decoration: BoxDecoration(
+                      color: secondaryColor,
+                      borderRadius: const BorderRadius.all(Radius.circular(10)),
                     ),
-                    Container(
-                      padding: EdgeInsets.all(defaultPadding),
-                      decoration: BoxDecoration(
-                        color: secondaryColor,
-                        borderRadius:
-                            const BorderRadius.all(Radius.circular(10)),
-                      ),
-                      child: GetBuilder<WaitManagementViewModel>(
-                          builder: (controller) {
-                        return SizedBox(
-                            width: size + 60,
-                            child: Scrollbar(
+                    child: GetBuilder<WaitManagementViewModel>(builder: (controller) {
+                      return SizedBox(
+                          width: size + 60,
+                          child: Scrollbar(
+                            controller: _scrollDeleteController,
+                            child: SingleChildScrollView(
                               controller: _scrollDeleteController,
-                              child: SingleChildScrollView(
-                                controller: _scrollDeleteController,
-                                scrollDirection: Axis.horizontal,
-                                child: DataTable(
-                                  columnSpacing: 0,
-                                  dividerThickness: 0.3,
-                                  columns: _buildColumns(size, deleteData),
-                                  rows: _buildWaitRows(
-                                      size, deleteData, controller),
-                                ),
+                              scrollDirection: Axis.horizontal,
+                              child: DataTable(
+                                columnSpacing: 0,
+                                dividerThickness: 0.3,
+                                columns: _buildColumns(size, deleteData),
+                                rows: _buildWaitRows(size, deleteData, controller),
                               ),
-                            ));
-                      }),
-                    ),
+                            ),
+                          ));
+                    }),
+                  ),
                   SizedBox(
                     height: defaultPadding,
                   ),
@@ -132,8 +122,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       color: secondaryColor,
                       borderRadius: const BorderRadius.all(Radius.circular(10)),
                     ),
-                    child: GetBuilder<WaitManagementViewModel>(
-                        builder: (controller) {
+                    child: GetBuilder<WaitManagementViewModel>(builder: (controller) {
                       return SizedBox(
                         width: size + 60,
                         child: Scrollbar(
@@ -141,54 +130,26 @@ class _SettingsScreenState extends State<SettingsScreen> {
                           child: SingleChildScrollView(
                             controller: _scrollLogController,
                             scrollDirection: Axis.horizontal,
-                            child: DataTable(
-                                columnSpacing: 0,
-                                dividerThickness: 0.3,
-                                columns: List.generate(
-                                    logData.length,
-                                    (index) => DataColumn(
-                                        label: Container(
-                                            width: size / logData.length,
-                                            child: Center(
-                                                child: Text(logData[index]
-                                                    .toString()
-                                                    .tr))))),
-                                rows: [
-                                  for (var deleteModel
-                                      in controller.allWaiting.values.where(
+                            child: DataTable(columnSpacing: 0, dividerThickness: 0.3, columns: List.generate(logData.length, (index) => DataColumn(label: Container(width: size / logData.length, child: Center(child: Text(logData[index].toString().tr))))), rows: [
+                              for (var deleteModel in controller.allWaiting.values
+                                  .where(
                                     (element) => element.isAccepted != null,
-                                  ).toList().reversed)
-                                    DataRow(cells: [
-                                      dataRowItem(size / logData.length,
-                                          deleteModel.type.toString().tr),
-                                      dataRowItem(
-                                          size / logData.length,
-                                          deleteModel.date!
-                                                  .split(" ")[1]
-                                                  .split(".")[0] +
-                                              " " +
-                                              deleteModel.date!
-                                                  .split(" ")[0]
-                                                  .toString()),
-                                      dataRowItem(size / logData.length,
-                                          deleteModel.details ?? "لا يوجد".tr),
-                                      dataRowItem(size / logData.length,
-                                          _getAffectedName(deleteModel)),
-                                      dataRowItem(
-                                          size / logData.length,
-                                          deleteModel.collectionName
-                                              .toString()),
-                                      dataRowItem(
-                                        size / logData.length,
-                                        deleteModel.isAccepted!
-                                            ? 'مقبول'.tr
-                                            : 'مرفوض'.tr,
-                                        color: deleteModel.isAccepted!
-                                            ? Colors.green
-                                            : Colors.red,
-                                      ),
-                                    ]),
+                                  )
+                                  .toList()
+                                  .reversed)
+                                DataRow(cells: [
+                                  dataRowItem(size / logData.length, deleteModel.type.toString().tr),
+                                  dataRowItem(size / logData.length, deleteModel.date!.split(" ")[1].split(".")[0] + " " + deleteModel.date!.split(" ")[0].toString()),
+                                  dataRowItem(size / logData.length, deleteModel.details ?? "لا يوجد".tr),
+                                  dataRowItem(size / logData.length, _getAffectedName(deleteModel)),
+                                  dataRowItem(size / logData.length, deleteModel.collectionName.toString()),
+                                  dataRowItem(
+                                    size / logData.length,
+                                    deleteModel.isAccepted! ? 'مقبول'.tr : 'مرفوض'.tr,
+                                    color: deleteModel.isAccepted! ? Colors.green : Colors.red,
+                                  ),
                                 ]),
+                            ]),
                           ),
                         ),
                       );
@@ -227,26 +188,26 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                 onChange: (value) {
                                   if (value != null) {
                                     if (value != "الافتراضي".tr) {
-                                      controller.getOldData(value);
                                       enableUpdate = false;
-                                      controller.update();
+                                      controller.getOldData(value);
+
+
                                     } else {
-                                      controller.getDefaultData();
                                       enableUpdate = true;
-                                      controller.update();
+                                      controller.getDefaultData();
+
+
                                     }
                                   }
                                 },
                               ),
                               CustomDropDown(
-                                value: Get.locale.toString() != "en_US"
-                                    ? 'عربي'
-                                    : 'English',
+                                value: Get.locale.toString() != "en_US" ? 'عربي' : 'English',
                                 listValue: ['عربي', 'English'],
                                 label: 'اختر اللغة'.tr,
                                 onChange: (value) {
-                                  Get.find<SettingsViewModel>()
-                                      .changeLanguage(value!);
+                                  Get.find<SettingsViewModel>().changeLanguage(value!);
+
                                 },
                               )
                             ],
@@ -262,27 +223,19 @@ class _SettingsScreenState extends State<SettingsScreen> {
                               AppButton(
                                   text: "ارشفة البيانات الحالية".tr,
                                   onPressed: () async {
-                                    bool _validateYearFormat(
-                                        BuildContext context, String value) {
-
-
-                                      final yearFormat =
-                                          RegExp(r'^\d{4}-\d{4}$');
+                                    bool _validateYearFormat(BuildContext context, String value) {
+                                      final yearFormat = RegExp(r'^\d{4}-\d{4}$');
                                       if (!yearFormat.hasMatch(value)) {
                                         QuickAlert.show(
                                           cancelBtnText: "موافق".tr,
                                           context: context,
                                           type: QuickAlertType.error,
-                                          title: 'يجب أن يكون التنسيق مثل 2024-2025'
-                                              .tr,
+                                          title: 'يجب أن يكون التنسيق مثل 2024-2025'.tr,
                                           text: "يجب التأكد من البيانات".tr,
                                         );
-                                        ScaffoldMessenger.of(context)
-                                            .showSnackBar(
+                                        ScaffoldMessenger.of(context).showSnackBar(
                                           SnackBar(
-                                            content: Text(
-                                                'يجب أن يكون التنسيق مثل 2024-2025'
-                                                    .tr),
+                                            content: Text('يجب أن يكون التنسيق مثل 2024-2025'.tr),
                                           ),
                                         );
                                         return false;
@@ -290,8 +243,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                         return true;
                                     }
 
-                                    TextEditingController yearNameController =
-                                        TextEditingController();
+                                    TextEditingController yearNameController = TextEditingController();
                                     QuickAlert.show(
                                       context: context,
                                       type: QuickAlertType.confirm,
@@ -305,29 +257,18 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                       text: 'قبول هذه العملية'.tr,
                                       title: 'هل انت متأكد ؟'.tr,
                                       onConfirmBtnTap: () async {
+                                        if (_validateYearFormat(context, yearNameController.text)) {
+                                          QuickAlert.show(width: Get.width / 2, context: context, type: QuickAlertType.loading, title: 'جاري التحميل'.tr, text: 'يتم العمل على الطلب'.tr, barrierDismissible: false);
 
-
-                                          if (_validateYearFormat(
-                                              context, yearNameController.text))
-                                          {
-                                          QuickAlert.show(
-                                              width: Get.width / 2,
-                                              context: context,
-                                              type: QuickAlertType.loading,
-                                              title: 'جاري التحميل'.tr,
-                                              text: 'يتم العمل على الطلب'.tr,
-                                              barrierDismissible: false);
-
-                                          try{
+                                          try {
                                             await controller.archive(yearNameController.text);
                                             Get.back();
                                             Get.back();
-                                          } on Exception catch (e){
-                                          await  getReedOnlyError(context,title: e.toString());
+                                          } on Exception catch (e) {
+                                            await getReedOnlyError(context, title: e.toString());
                                             Get.back();
                                             Get.back();
                                           }
-
                                         }
                                       },
                                       onCancelBtnTap: () => Get.back(),
@@ -344,16 +285,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                       context: context,
                                       type: QuickAlertType.confirm,
                                       text: 'قبول هذه العملية'.tr,
-                                      title:
-                                          'سيتم حذف جميع البيانات الحالية'.tr,
+                                      title: 'سيتم حذف جميع البيانات الحالية'.tr,
                                       onConfirmBtnTap: () async {
-                                        QuickAlert.show(
-                                            width: Get.width / 2,
-                                            context: context,
-                                            type: QuickAlertType.loading,
-                                            title: 'جاري التحميل'.tr,
-                                            text: 'يتم العمل على الطلب'.tr,
-                                            barrierDismissible: false);
+                                        QuickAlert.show(width: Get.width / 2, context: context, type: QuickAlertType.loading, title: 'جاري التحميل'.tr, text: 'يتم العمل على الطلب'.tr, barrierDismissible: false);
                                         await controller.archive("s");
                                         Get.back();
                                         Get.back();
@@ -380,31 +314,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
     );
   }
 
-  void showParentInputDialog(
-      BuildContext context, dynamic accountManagementModel) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return Dialog(
-          backgroundColor: Colors.white,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(25.0),
-          ),
-          child: Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(25.0),
-            ),
-            height: Get.height / 2,
-            width: Get.width / 1.5,
-            //TODO
-            child: EmployeeInputForm(
-                ),
-          ),
-        );
-      },
-    );
-  }
-
   List<DataColumn> _buildColumns(double size, List<String> deleteData) {
     return List.generate(
       deleteData.length,
@@ -419,19 +328,15 @@ class _SettingsScreenState extends State<SettingsScreen> {
     );
   }
 
-  List<DataRow> _buildWaitRows(
-      double size, List<String> deleteData, controller) {
-    List<WaitManagementModel> deleteModel = controller.allWaiting.values
-        .where((element) => element.isAccepted == null)
-        .toList();
+  List<DataRow> _buildWaitRows(double size, List<String> deleteData, controller) {
+    List<WaitManagementModel> deleteModel = controller.allWaiting.values.where((element) => element.isAccepted == null).toList();
 
     return List.generate(
       deleteModel.length,
       (index) {
         String affectedName = _getAffectedName(deleteModel[index]);
         return DataRow(
-          cells: _buildWaitCells(
-              size, deleteData, deleteModel[index], affectedName, controller),
+          cells: _buildWaitCells(size, deleteData, deleteModel[index], affectedName, controller),
         );
       },
     );
@@ -440,135 +345,112 @@ class _SettingsScreenState extends State<SettingsScreen> {
   String _getAffectedName(WaitManagementModel model) {
     switch (model.collectionName) {
       case accountManagementCollection:
-        return Get.find<EmployeeViewModel>()
-                .allAccountManagement[model.affectedId]
-                ?.fullName ??
-            model.affectedId;
+        return Get.find<EmployeeViewModel>().allAccountManagement[model.affectedId]?.fullName ?? model.affectedId;
       case parentsCollection:
-        return Get.find<ParentsViewModel>()
-                .parentMap[model.affectedId]
-                ?.fullName ??
-            model.affectedId;
+        return Get.find<ParentsViewModel>().parentMap[model.affectedId]?.fullName ?? model.affectedId;
       case studentCollection:
-        return Get.find<StudentViewModel>()
-                .studentMap[model.affectedId]
-                ?.studentName ??
-            model.affectedId;
+        return Get.find<StudentViewModel>().studentMap[model.affectedId]?.studentName ?? model.affectedId;
       case classCollection:
-        return Get.find<ClassViewModel>()
-                .classMap[model.affectedId]
-                ?.className ??
-            model.affectedId;
+        return Get.find<ClassViewModel>().classMap[model.affectedId]?.className ?? model.affectedId;
       case installmentCollection:
-        return Get.find<StudentViewModel>()
-                .studentMap[model.relatedId]
-                ?.studentName ??
-            model.affectedId;
+        return Get.find<StudentViewModel>().studentMap[model.relatedId]?.studentName ?? model.affectedId;
       case busesCollection:
-        return Get.find<BusViewModel>().busesMap[model.affectedId]?.number ??
-            model.affectedId;
+        return Get.find<BusViewModel>().busesMap[model.affectedId]?.number ?? model.affectedId;
       case Const.expensesCollection:
-        return Get.find<ExpensesViewModel>()
-                .allExpenses[model.affectedId]
-                ?.title ??
-            model.affectedId;
+        return Get.find<ExpensesViewModel>().allExpenses[model.affectedId]?.title ?? model.affectedId;
       case storeCollection:
-        return Get.find<StoreViewModel>().storeMap[model.affectedId]?.subName ??
-            model.affectedId;
+        return Get.find<StoreViewModel>().storeMap[model.affectedId]?.subName ?? model.affectedId;
       case examsCollection:
-        return Get.find<ExamViewModel>().examMap[model.affectedId]?.subject ??
-            model.affectedId;
+        return Get.find<ExamViewModel>().examMap[model.affectedId]?.subject ?? model.affectedId;
       default:
         return "";
     }
   }
 
-  List<DataCell> _buildWaitCells(
-      double size,
-      List<String> deleteData,
-      WaitManagementModel model,
-      String affectedName,
-      WaitManagementViewModel controller) {
+  List<DataCell> _buildWaitCells(double size, List<String> deleteData, WaitManagementModel model, String affectedName, WaitManagementViewModel controller) {
     return [
       dataRowItem(size / deleteData.length, model.type.toString().tr),
       dataRowItem(size / deleteData.length, model.details ?? "لا يوجد".tr),
       dataRowItem(size / deleteData.length, affectedName),
       dataRowItem(size / deleteData.length, model.collectionName.toString()),
-      model.type == waitingListTypes.edite.name
-          ? dataRowItem(size / deleteData.length, "عرض".tr, onTap: () {
-              Map<String, Map<String, dynamic>> differences = compareMaps(
-                model.newData ?? {},
-                model.oldDate ?? {},
-              );
+      if (enableUpdate)
+        model.type == waitingListTypes.edite.name
+            ? dataRowItem(size / deleteData.length, "عرض".tr, onTap: () {
+                Map<String, Map<String, dynamic>> differences = compareMaps(
+                  model.newData ?? {},
+                  model.oldDate ?? {},
+                );
 
-              showData(context, differences, model);
-            })
-          : DataCell(
-              Container(
-                width: size / deleteData.length,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    _buildIconButton(
-                      Icons.check_circle_outline,
-                      Colors.green,
-                      "قبول".tr,
-                      () {
-                        if (enableUpdate)
-                          QuickAlert.show(
-                            context: context,
-                            type: QuickAlertType.confirm,
-                            text: 'قبول هذه العملية'.tr,
-                            title: model.collectionName == parentsCollection
-                                ? 'عند حذف ولي الامر سوف يتم حذف الاولاد الخاصة به'
-                                    .tr
-                                : 'هل انت متأكد ؟'.tr,
-                            onConfirmBtnTap: () async {
-                              await controller.doTheWait(model);
-                              Get.back();
-                            },
-                            onCancelBtnTap: () => Get.back(),
-                            confirmBtnText: 'نعم'.tr,
-                            cancelBtnText: 'لا'.tr,
-                            confirmBtnColor: Colors.redAccent,
-                            showCancelBtn: true,
-                          );
-
-                      },
-                    ),
-                    _buildIconButton(
-                      Icons.remove_circle_outline,
-                      Colors.red,
-                      "رفض".tr,
-                      () {
-                        if (enableUpdate)
-                          QuickAlert.show(
-                            context: context,
-                            type: QuickAlertType.confirm,
-                            text: 'رفض هذه العملية'.tr,
-                            title: 'هل انت متأكد ؟'.tr,
-                            onConfirmBtnTap: () {
-                              controller.undoTheDelete(model);
-                              Get.back();
-                            },
-                            onCancelBtnTap: () => Get.back(),
-                            confirmBtnText: 'نعم'.tr,
-                            cancelBtnText: 'لا'.tr,
-                            confirmBtnColor: Colors.red,
-                            showCancelBtn: true,
-                          );
-
-                      },
-                    ),
-                  ],
+                showData(context, differences, model);
+              })
+            : DataCell(
+                Container(
+                  width: size / deleteData.length,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      _buildIconButton(
+                        Icons.check_circle_outline,
+                        Colors.green,
+                        "قبول".tr,
+                        () {
+                          if (enableUpdate)
+                            QuickAlert.show(
+                              context: context,
+                              type: QuickAlertType.confirm,
+                              text: 'قبول هذه العملية'.tr,
+                              title: model.collectionName == parentsCollection ? 'عند حذف ولي الامر سوف يتم حذف الاولاد الخاصة به'.tr : 'هل انت متأكد ؟'.tr,
+                              onConfirmBtnTap: () async {
+                                await controller.doTheWait(model);
+                                Get.back();
+                              },
+                              onCancelBtnTap: () => Get.back(),
+                              confirmBtnText: 'نعم'.tr,
+                              cancelBtnText: 'لا'.tr,
+                              confirmBtnColor: Colors.redAccent,
+                              showCancelBtn: true,
+                            );
+                        },
+                      ),
+                      _buildIconButton(
+                        Icons.remove_circle_outline,
+                        Colors.red,
+                        "رفض".tr,
+                        () {
+                          if (enableUpdate)
+                            QuickAlert.show(
+                              context: context,
+                              type: QuickAlertType.confirm,
+                              text: 'رفض هذه العملية'.tr,
+                              title: 'هل انت متأكد ؟'.tr,
+                              onConfirmBtnTap: () {
+                                controller.undoTheDelete(model);
+                                Get.back();
+                              },
+                              onCancelBtnTap: () => Get.back(),
+                              confirmBtnText: 'نعم'.tr,
+                              cancelBtnText: 'لا'.tr,
+                              confirmBtnColor: Colors.red,
+                              showCancelBtn: true,
+                            );
+                        },
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-            ),
+              )
+      else
+        DataCell(Container(
+            width: size / deleteData.length,
+            child: Center(
+                child: Text(
+              "للعرض فقط ".tr,
+              style: Styles.headLineStyle4.copyWith(color: primaryColor),
+            ))))
     ];
   }
 
-  IconButton _buildIconButton(
-      IconData icon, Color color, String label, VoidCallback onPressed) {
+  IconButton _buildIconButton(IconData icon, Color color, String label, VoidCallback onPressed) {
     return IconButton(
       onPressed: onPressed,
       icon: Row(
@@ -581,8 +463,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     );
   }
 
-  showData(BuildContext context, Map<String, Map<String, dynamic>> differences,
-      WaitManagementModel waitModel) {
+  showData(BuildContext context, Map<String, Map<String, dynamic>> differences, WaitManagementModel waitModel) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -659,10 +540,7 @@ print(newDate!.values.elementAt(i).toString());*/ /*
                             Container(
                                 width: width / 5,
                                 child: Text(
-                                  differences.keys
-                                      .elementAt(index)
-                                      .toString()
-                                      .tr,
+                                  differences.keys.elementAt(index).toString().tr,
                                   /*   newDate?.entries
                                           .where(
                                             (element) {
@@ -689,9 +567,7 @@ print(newDate!.values.elementAt(i).toString());*/ /*
                             Container(
                                 width: width / 4.1,
                                 child: Text(
-                                  differences.values
-                                      .elementAt(index)['oldData']
-                                      .toString(),
+                                  differences.values.elementAt(index)['oldData'].toString(),
                                   /*    newDate?.entries
                                           .where(
                                             (element) {
@@ -709,8 +585,7 @@ print(newDate!.values.elementAt(i).toString());*/ /*
                                           .toString()
                                           .tr ??
                                       '',*/
-                                  style: Styles.headLineStyle3
-                                      .copyWith(color: primaryColor),
+                                  style: Styles.headLineStyle3.copyWith(color: primaryColor),
                                 )),
                             Spacer(),
                             Container(
@@ -722,10 +597,7 @@ print(newDate!.values.elementAt(i).toString());*/ /*
                             Container(
                                 width: width / 5,
                                 child: Text(
-                                  differences.keys
-                                      .elementAt(index)
-                                      .toString()
-                                      .tr,
+                                  differences.keys.elementAt(index).toString().tr,
                                   /* oldDate?.entries
                                           .where(
                                             (element) {
@@ -750,9 +622,7 @@ print(newDate!.values.elementAt(i).toString());*/ /*
                             Container(
                                 width: width / 4.1,
                                 child: Text(
-                                  differences.values
-                                      .elementAt(index)['newData']
-                                      .toString(),
+                                  differences.values.elementAt(index)['newData'].toString(),
                                   /*  oldDate?.entries
                                           .where(
                                             (element) {
@@ -770,8 +640,7 @@ print(newDate!.values.elementAt(i).toString());*/ /*
                                           .toString()
                                           .tr ??
                                       '',*/
-                                  style: Styles.headLineStyle3
-                                      .copyWith(color: primaryColor),
+                                  style: Styles.headLineStyle3.copyWith(color: primaryColor),
                                 )),
                           ],
                         );
@@ -798,8 +667,7 @@ print(newDate!.values.elementAt(i).toString());*/ /*
                                   title: 'هل انت متأكد ؟'.tr,
                                   onConfirmBtnTap: () {
                                     // controller.doTheWait(model);
-                                    Get.find<WaitManagementViewModel>()
-                                        .approveEdite(waitModel);
+                                    Get.find<WaitManagementViewModel>().approveEdite(waitModel);
                                     Get.back();
                                     Get.back();
                                   },
@@ -823,8 +691,7 @@ print(newDate!.values.elementAt(i).toString());*/ /*
                                   text: 'رفض هذه العملية'.tr,
                                   title: 'هل انت متأكد ؟'.tr,
                                   onConfirmBtnTap: () async {
-                                    await Get.find<WaitManagementViewModel>()
-                                        .declineEdit(waitModel);
+                                    await Get.find<WaitManagementViewModel>().declineEdit(waitModel);
                                     Get.back();
                                     Get.back();
                                   },

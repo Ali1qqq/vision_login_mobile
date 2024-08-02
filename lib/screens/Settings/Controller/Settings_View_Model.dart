@@ -246,6 +246,7 @@ class SettingsViewModel extends GetxController {
     await _storeViewModel.getOldData(value);
     await _deleteManagementViewModel.getOldData(value);
     await _busViewModel.getOldData(value);
+    update();
   }
 
   void getDefaultData() async {
@@ -259,5 +260,6 @@ class SettingsViewModel extends GetxController {
     await _storeViewModel.getAllStore();
     await _deleteManagementViewModel.getAllDeleteModel();
     await _busViewModel.getAllBuse();
+    update();
   }
 }

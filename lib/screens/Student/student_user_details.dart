@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:quickalert/models/quickalert_type.dart';
 import 'package:quickalert/widgets/quickalert_dialog.dart';
 import 'package:vision_dashboard/controller/Wait_management_view_model.dart';
+import 'package:vision_dashboard/core/Utiles/service.dart';
 import 'package:vision_dashboard/models/Installment_model.dart';
 
 import 'package:vision_dashboard/models/Student_Model.dart';
@@ -76,29 +77,7 @@ class _StudentInputFormState extends State<StudentInputForm> {
     costsController.add(TextEditingController());
   }
 
-  bool _validateFields() {
-    if (!validateNotEmpty(studentNameController.text, "اسم الطالب".tr))
-      return false;
-    if (!validateNumericField(studentNumberController.text, "رقم الطالب".tr))
-      return false;
-    if (!validateNumericField(totalPaymentController.text, "مبلغ التسجيل".tr))
-      return false;
-    if (!validateNotEmpty(ageController.text, "التولد".tr)) return false;
-    if (!validateNotEmpty(classController.text, "الصف".tr)) return false;
-    if (!validateNotEmpty(_payWay, "طريقة الدفع".tr)) return false;
-    if (!validateNotEmpty(languageController.text, "اللغة".tr)) return false;
-    if (!validateNotEmpty(busController.text, "الحافلة".tr)) return false;
-    if (!validateNotEmpty(genderController.text, "الجنس".tr)) return false;
-    if (widget.studentModel == null) if (!validateNotEmpty(
-        guardianController.text, "الوالد".tr)) return false;
-    if (_payWay == "") {
-      showErrorDialog("خطأ".tr, "يرجى اختيار طريقة الدفع".tr);
-      return false;
-    }
-    if (!validateNotEmpty(startDateController.text, "تاريخ البداية".tr))
-      return false;
-    return true;
-  }
+
 
   @override
   void initState() {
@@ -797,7 +776,9 @@ class _StudentInputFormState extends State<StudentInputForm> {
   }
 
   save(StudentViewModel controller) async {
-    if (_validateFields()) {
+    if (validateFields(requiredControllers: [
+
+    ], numericControllers: [])) {
       QuickAlert.show(
           width: Get.width / 2,
           context: context,

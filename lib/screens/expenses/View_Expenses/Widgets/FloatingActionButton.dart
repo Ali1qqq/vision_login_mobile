@@ -8,7 +8,7 @@ import 'EditButton.dart';
 
 Widget buildFloatingActionButton(BuildContext context,ExpensesViewModel controller) {
 
-  if (!enableUpdate || controller.currentId == '' || !controller.allExpenses[controller.currentId]!.isAccepted! || controller.getIfDelete()) {
+  if (!enableUpdate || controller.currentId == '' || (controller.allExpenses[controller.currentId]?.isAccepted==  true) || controller.getIfDelete()) {
     return Container();
   }
   return SizedBox(
