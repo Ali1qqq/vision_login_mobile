@@ -521,18 +521,7 @@ class EmployeeViewModel extends GetxController {
             } else {
               if (timeData.isBefore(14, 00)) {
                 totalEarlier = timeData.dateTime.copyWith(hour: 14, minute: 00, second: 0).difference(timeData.dateTime).inMinutes;
-                /*    await Get.defaultDialog(
-                    barrierDismissible: false,
-                    backgroundColor: Colors.white,
-                    title: "لقد خرجت مبكرا ",
-                    content: Container(),
-                    actions: [
-                      ElevatedButton(
-                          onPressed: () {
-                            Get.back();
-                          },
-                          child: Text("موافق"))
-                    ]);*/
+
               }
 
               user.employeeTime[timeData.formattedTime]!.isEarlierWithReason = true;
@@ -560,7 +549,7 @@ class EmployeeViewModel extends GetxController {
 
   getOldData(String value) {
     FirebaseFirestore.instance.collection(archiveCollection).doc(value).collection(accountManagementCollection)
-      ..get().then(
+      .get().then(
         (event) async {
           await Get.find<BusViewModel>().getAllWithoutListenBuse();
           plutoKey = GlobalKey();
@@ -626,7 +615,6 @@ class EmployeeViewModel extends GetxController {
                           3)
                   .floor() *
               75;
-          // print(totalLateAndEarlier);
           int totalDayOff = (accountModel.employeeTime.isEmpty
                   ? 0
                   : accountModel.employeeTime.values.where(
