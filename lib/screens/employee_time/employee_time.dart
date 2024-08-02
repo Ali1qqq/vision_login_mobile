@@ -1,6 +1,6 @@
 import 'dart:math';
 
-import 'package:vision_dashboard/controller/account_management_view_model.dart';
+import 'package:vision_dashboard/screens/Employee/Controller/Employee_view_model.dart';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -24,7 +24,7 @@ class _EmployeeTimeViewState extends State<EmployeeTimeView> {
   TextEditingController nameController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   bool isSecure = true;
-  AccountManagementViewModel accountManagementViewModel = Get.find<AccountManagementViewModel>();
+  EmployeeViewModel accountManagementViewModel = Get.find<EmployeeViewModel>();
 
   String selectedMonth = '';
   String selectedDay = '';
@@ -59,7 +59,7 @@ class _EmployeeTimeViewState extends State<EmployeeTimeView> {
 
   @override
   void dispose() {
-    accountManagementViewModel.disposeNFC();
+
     super.dispose();
   }
 
@@ -80,7 +80,7 @@ class _EmployeeTimeViewState extends State<EmployeeTimeView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: GetBuilder<AccountManagementViewModel>(builder: (controller) {
+      body: GetBuilder<EmployeeViewModel>(builder: (controller) {
         return !controller.isLoading
             ? Center(
                 child: CircularProgressIndicator(),
@@ -194,7 +194,7 @@ class _EmployeeTimeViewState extends State<EmployeeTimeView> {
                                               color: secondaryColor,
                                               borderRadius: const BorderRadius.all(Radius.circular(10)),
                                             ),
-                                            child: GetBuilder<AccountManagementViewModel>(builder: (controller) {
+                                            child: GetBuilder<EmployeeViewModel>(builder: (controller) {
                                               return ListView(
                                                 shrinkWrap: true,
                                                 // mainAxisSize: MainAxisSize.min,
@@ -611,8 +611,8 @@ class _EmployeeTimeViewState extends State<EmployeeTimeView> {
                 )))));
   }
 
-  List<DataRow> _buildDataRows(AccountManagementViewModel accountController, double size) {
-    List<AccountManagementModel> employees = accountController.allAccountManagement.values.toList();
+  List<DataRow> _buildDataRows(EmployeeViewModel accountController, double size) {
+    List<EmployeeModel> employees = accountController.allAccountManagement.values.toList();
 
     return List.generate(employees.length, (index) {
       return DataRow(cells: [

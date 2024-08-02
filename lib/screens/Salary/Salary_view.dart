@@ -6,7 +6,7 @@ import 'package:quickalert/quickalert.dart';
 import 'package:syncfusion_flutter_signaturepad/signaturepad.dart';
 
 import '../../constants.dart';
-import '../../controller/account_management_view_model.dart';
+import '../Employee/Controller/Employee_view_model.dart';
 import '../../controller/home_controller.dart';
 
 import '../Widgets/Custom_Drop_down.dart';
@@ -39,7 +39,7 @@ class _SalaryViewState extends State<SalaryView> {
     final data =
         await signatureGlobalKey.currentState!.toImage(pixelRatio: 3.0);
     final bytes = await data.toByteData(format: ui.ImageByteFormat.png);
-    await Get.find<AccountManagementViewModel>()
+    await Get.find<EmployeeViewModel>()
         .adReceiveSalary(id, paySalary, date, constSalary, dilaySalary, bytes);
 
   }
@@ -79,7 +79,7 @@ class _SalaryViewState extends State<SalaryView> {
           return Padding(
             padding: const EdgeInsets.all(8),
             child:
-                GetBuilder<AccountManagementViewModel>(builder: (controller) {
+                GetBuilder<EmployeeViewModel>(builder: (controller) {
               return Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [

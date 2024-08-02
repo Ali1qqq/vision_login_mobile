@@ -7,7 +7,7 @@ import 'package:get/get.dart';
 import 'package:vision_dashboard/constants.dart';
 import 'package:vision_dashboard/models/account_management_model.dart';
 
-import '../../../controller/account_management_view_model.dart';
+import '../../Employee/Controller/Employee_view_model.dart';
 
 class EmployeeSalaryBarChart extends StatefulWidget {
   EmployeeSalaryBarChart({super.key,required this.selectedMonth});
@@ -23,8 +23,8 @@ class EmployeeSalaryBarChart extends StatefulWidget {
 
 class EmployeeSalaryBarChartState extends State<EmployeeSalaryBarChart> {
 
-  AccountManagementViewModel accountManageVM =
-  Get.find<AccountManagementViewModel>();
+  EmployeeViewModel accountManageVM =
+  Get.find<EmployeeViewModel>();
 
   Widget bottomTitles(double value, TitleMeta meta) {
     final style = Styles.headLineStyle4;
@@ -148,7 +148,7 @@ class EmployeeSalaryBarChartState extends State<EmployeeSalaryBarChart> {
     List<BarChartGroupData> getBarChartData() {
 
       List<BarChartGroupData> data = List.generate(accountManageVM.allAccountManagement.length, (index) {
-        AccountManagementModel account=accountManageVM.allAccountManagement.values.elementAt(index);
+        EmployeeModel account=accountManageVM.allAccountManagement.values.elementAt(index);
         return   BarChartGroupData(
           x: index,
           barsSpace: barsSpace,

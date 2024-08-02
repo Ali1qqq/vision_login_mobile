@@ -1,7 +1,7 @@
 import 'dart:js' as js;
 import 'package:universal_html/html.dart';
 import 'package:get/get.dart';
-import '../account_management_view_model.dart';
+import '../../screens/Employee/Controller/Employee_view_model.dart';
 
 Future<bool> initNFCWorker(typeNFC type) async {
   bool isSupportNfc = false;
@@ -17,7 +17,7 @@ Future<bool> initNFCWorker(typeNFC type) async {
     var state = js.JsObject.fromBrowserObject(js.context['state']);
     print(state['data']);
     String serialCode = state['data'].toString();
-    AccountManagementViewModel accountManagementViewModel = Get.find<AccountManagementViewModel>();
+    EmployeeViewModel accountManagementViewModel = Get.find<EmployeeViewModel>();
     if(type==typeNFC.login){
       // accountManagementViewModel.signInUsingNFC(serialCode);
       print(serialCode);

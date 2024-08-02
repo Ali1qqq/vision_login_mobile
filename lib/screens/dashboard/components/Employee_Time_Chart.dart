@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../../constants.dart';
-import '../../../controller/account_management_view_model.dart';
+import '../../Employee/Controller/Employee_view_model.dart';
 import '../../../utils/Dialogs.dart';
 import '../../Widgets/Custom_Text_Filed.dart';
 
@@ -101,8 +101,8 @@ class _EmployeeTimeChartState extends State<EmployeeTimeChart> {
   }
 TextEditingController selectedDayController=TextEditingController();
 // String selectedDay='';
-  AccountManagementViewModel accountManagementViewModel =
-  Get.find<AccountManagementViewModel>();
+  EmployeeViewModel accountManagementViewModel =
+  Get.find<EmployeeViewModel>();
   Widget leftTitleWidgets(double value, TitleMeta meta) {
     final style = TextStyle(
       color: Colors.white,

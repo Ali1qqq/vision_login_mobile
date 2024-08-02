@@ -28,7 +28,7 @@ class _CustomPlutoGridState extends State<CustomPlutoGrid> {
   @override
   Widget build(BuildContext context) {
     return PlutoGrid(
-      key: widget.controller.key,
+      key: widget.controller.plutoKey,
       columns: widget.controller.columns,
       rows: widget.controller.rows,
       onChanged: (event) {

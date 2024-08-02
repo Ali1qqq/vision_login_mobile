@@ -2,84 +2,25 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:quickalert/models/quickalert_type.dart';
-import 'package:quickalert/widgets/quickalert_dialog.dart';
+import 'package:vision_dashboard/screens/expenses/Controller/expenses_view_model.dart';
+import '../../../constants.dart';
+import '../../../controller/home_controller.dart';
+import '../../Widgets/Custom_Pluto_Grid.dart';
+import '../../Widgets/header.dart';
+import 'Widgets/FloatingActionButton.dart';
 
-import 'package:vision_dashboard/controller/account_management_view_model.dart';
-import 'package:vision_dashboard/controller/expenses_view_model.dart';
-
-import 'package:vision_dashboard/screens/expenses/expenses_input_form.dart';
-
-import '../../constants.dart';
-import '../../controller/Wait_management_view_model.dart';
-import '../../controller/home_controller.dart';
-
-import '../../utils/const.dart';
-
-import '../Widgets/Custom_Pluto_Grid.dart';
-
-import '../Widgets/Custom_Text_Filed.dart';
-import '../Widgets/header.dart';
-
-class ExpensesScreen extends StatefulWidget {
+class ExpensesScreen extends StatelessWidget {
   const ExpensesScreen({super.key});
-
-  @override
-  State<ExpensesScreen> createState() => _ExpensesScreenState();
-}
-
-class _ExpensesScreenState extends State<ExpensesScreen> {
-/*  final ScrollController _scrollController = ScrollController();
-  List data = [
-    "الرقم التسلسلي",
-    "العنوان",
-    "المبلغ",
-    "اسم الموظف",
-    "الوصف",
-    "الفواتير المدخلة",
-    "تاريخ",
-    "العمليات",
-  ];
-  List filterData=[
-    "العنوان",
-    "اسم الموظف",
-    "تاريخ",
-  ];
-  TextEditingController searchController = TextEditingController();
-  String searchValue = '';
-  int searchIndex = 0;*/
-  String currentId = '';
-
-
-  bool getIfDelete() {
-    return checkIfPendingDelete(affectedId: currentId);
-  }
-
-  AccountManagementViewModel account = Get.find<AccountManagementViewModel>();
-
-  @override
-  void dispose() {
-    // TODO: implement dispose
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
     return GetBuilder<ExpensesViewModel>(builder: (controller) {
       return Scaffold(
-        appBar: Header(
-            context: context,
-            title: 'المصاريف'.tr,
-            middleText:
-                "تعرض هذه الواجهة معلومات عن مصاريف هذه السنة مع امكانية اضافة مصروف جديد \n ملاحظة : مصاريف الحافلات تتم اضافتها من واجهة الحافلات"
-                    .tr),
+        appBar: Header(context: context, title: 'المصاريف'.tr, middleText: "تعرض هذه الواجهة معلومات عن مصاريف هذه السنة مع امكانية اضافة مصروف جديد \n ملاحظة : مصاريف الحافلات تتم اضافتها من واجهة الحافلات".tr),
         body: SingleChildScrollView(
           physics: NeverScrollableScrollPhysics(),
           child: GetBuilder<HomeViewModel>(builder: (homeController) {
-            double size = max(
-                    Get.width - (homeController.isDrawerOpen ? 240 : 120),
-                    1000) -
-                60;
+            double size = max(Get.width - (homeController.isDrawerOpen ? 240 : 120), 1000) - 60;
             return Padding(
               padding: const EdgeInsets.all(8),
               child: Container(
@@ -89,14 +30,13 @@ class _ExpensesScreenState extends State<ExpensesScreen> {
                   borderRadius: const BorderRadius.all(Radius.circular(10)),
                 ),
                 child: SizedBox(
-                  height: Get.height-180,
+                  height: Get.height - 180,
                   width: size + 60,
                   child: CustomPlutoGrid(
                     controller: controller,
                     idName: "الرقم التسلسلي",
                     onSelected: (event) {
-                      currentId = event.row?.cells["الرقم التسلسلي"]?.value;
-                      setState(() {});
+                      controller.setCurrentId(event.row?.cells["الرقم التسلسلي"]?.value);
                     },
                   ),
                 ),
@@ -104,60 +44,49 @@ class _ExpensesScreenState extends State<ExpensesScreen> {
             );
           }),
         ),
-        floatingActionButton: enableUpdate && currentId  != ''&&controller
-            .allExpenses[currentId]!.isAccepted!&&!getIfDelete()
+
+        floatingActionButton: buildFloatingActionButton(context,controller),
+      );
+    });
+  }
+}
+
+/*     floatingActionButton: enableUpdate && currentId != '' && controller.allExpenses[currentId]!.isAccepted! && !getIfDelete()
             ? SizedBox(
-          width: Get.width,
-          child: Wrap(
-            // mainAxisAlignment: MainAxisAlignment.center,
-            alignment: WrapAlignment.center,
+                width: Get.width,
+                child: Wrap(
+                  alignment: WrapAlignment.center,
                   children: [
                     GetBuilder<WaitManagementViewModel>(builder: (_) {
                       return FloatingActionButton(
-                        backgroundColor: getIfDelete()
-                            ? Colors.greenAccent.withOpacity(0.5)
-                            : Colors.red.withOpacity(0.5),
+                        backgroundColor: getIfDelete() ? Colors.greenAccent.withOpacity(0.5) : Colors.red.withOpacity(0.5),
                         onPressed: () {
                           if (enableUpdate) {
                             if (getIfDelete())
-                              _.returnDeleteOperation(
-                                  affectedId: controller
-                                      .allExpenses[currentId]!.id
-                                      .toString());
-                            else
-                            {
-                              TextEditingController editController =
-                              TextEditingController();
+                              _.returnDeleteOperation(affectedId: controller.allExpenses[currentId]!.id.toString());
+                            else {
+                              TextEditingController editController = TextEditingController();
 
                               QuickAlert.show(
                                 context: context,
                                 type: QuickAlertType.confirm,
-                                widget:Center(
+                                widget: Center(
                                   child: Padding(
                                     padding: const EdgeInsets.all(8.0),
-                                    child: CustomTextField(controller: editController, title: "سبب الحذف".tr,size: Get.width/4,),
+                                    child: CustomTextField(
+                                      controller: editController,
+                                      title: "سبب الحذف".tr,
+                                      size: Get.width / 4,
+                                    ),
                                   ),
                                 ),
                                 text: 'قبول هذه العملية'.tr,
                                 title: 'هل انت متأكد ؟'.tr,
                                 onConfirmBtnTap: () async {
-
-                                  if (controller.allExpenses[currentId]!.busId !=
-                                      null) {
-                                    addWaitOperation(
-                                        type: waitingListTypes.delete,details: editController.text,
-                                        collectionName: Const.expensesCollection,
-                                        affectedId:
-                                        controller.allExpenses[currentId]!.id!,
-                                        relatedId:
-                                        controller.allExpenses[currentId]!.busId!);
+                                  if (controller.allExpenses[currentId]!.busId != null) {
+                                    addWaitOperation(type: waitingListTypes.delete, details: editController.text, collectionName: Const.expensesCollection, affectedId: controller.allExpenses[currentId]!.id!, relatedId: controller.allExpenses[currentId]!.busId!);
                                   } else {
-                                    addWaitOperation(
-                                        type: waitingListTypes.delete
-                                        ,details: editController.text,
-                                        collectionName: Const.expensesCollection,
-                                        affectedId:
-                                        controller.allExpenses[currentId]!.id!);
+                                    addWaitOperation(type: waitingListTypes.delete, details: editController.text, collectionName: Const.expensesCollection, affectedId: controller.allExpenses[currentId]!.id!);
                                   }
                                   Get.back();
                                 },
@@ -168,15 +97,10 @@ class _ExpensesScreenState extends State<ExpensesScreen> {
                                 showCancelBtn: true,
                               );
                             }
-
-
-
                           }
                         },
                         child: Icon(
-                          getIfDelete()
-                              ? Icons.restore_from_trash_outlined
-                              : Icons.delete,
+                          getIfDelete() ? Icons.restore_from_trash_outlined : Icons.delete,
                           color: Colors.white,
                         ),
                       );
@@ -187,9 +111,7 @@ class _ExpensesScreenState extends State<ExpensesScreen> {
                     FloatingActionButton(
                       backgroundColor: primaryColor.withOpacity(0.5),
                       onPressed: () {
-
-                        showParentInputDialog(
-                            context, controller.allExpenses[currentId]!);
+                        showParentInputDialog(context, controller.allExpenses[currentId]!);
                       },
                       child: Icon(
                         Icons.edit,
@@ -198,36 +120,9 @@ class _ExpensesScreenState extends State<ExpensesScreen> {
                     ),
                   ],
                 ),
-            )
-            : Container(),
-      );
-    });
-  }
+              )
+            : Container(),*/
 
-  void showParentInputDialog(BuildContext context, dynamic expenses) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return Dialog(
-          backgroundColor: Colors.white,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(25.0),
-          ),
-          child: Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(25.0),
-            ),
-            height: Get.height / 2,
-            width: Get.width / 1.5,
-            child: ExpensesInputForm(
-              expensesModel: expenses,
-            ),
-          ),
-        );
-      },
-    );
-  }
-}
 /*
 Column(
 crossAxisAlignment: CrossAxisAlignment.center,

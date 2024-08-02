@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:quickalert/models/quickalert_type.dart';
 import 'package:quickalert/widgets/quickalert_dialog.dart';
-import 'package:vision_dashboard/controller/account_management_view_model.dart';
-import 'package:vision_dashboard/controller/expenses_view_model.dart';
+import 'package:vision_dashboard/screens/Employee/Controller/Employee_view_model.dart';
+import 'package:vision_dashboard/screens/expenses/Controller/expenses_view_model.dart';
 import 'package:vision_dashboard/screens/Buses/Controller/Bus_View_Model.dart';
 import 'package:vision_dashboard/screens/Exams/controller/Exam_View_Model.dart';
 import 'package:vision_dashboard/screens/Parents/Controller/Parents_View_Model.dart';
@@ -13,7 +13,7 @@ import 'package:vision_dashboard/screens/Student/Controller/Student_View_Model.d
 import 'package:vision_dashboard/screens/Widgets/AppButton.dart';
 import 'package:vision_dashboard/screens/Widgets/Custom_Drop_down.dart';
 import 'package:vision_dashboard/screens/Widgets/Custom_Text_Filed.dart';
-import 'package:vision_dashboard/screens/account_management/Employee_user_details.dart';
+import 'package:vision_dashboard/screens/Employee/Edite_Add_Employee/Employee_user_details.dart';
 import 'package:vision_dashboard/screens/classes/Controller/Class_View_Model.dart';
 import 'package:vision_dashboard/utils/const.dart';
 
@@ -81,7 +81,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
           return Padding(
             padding: const EdgeInsets.all(15),
             child:
-                GetBuilder<AccountManagementViewModel>(builder: (controller) {
+                GetBuilder<EmployeeViewModel>(builder: (controller) {
               return Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -396,8 +396,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
             ),
             height: Get.height / 2,
             width: Get.width / 1.5,
+            //TODO
             child: EmployeeInputForm(
-                accountManagementModel: accountManagementModel),
+                ),
           ),
         );
       },
@@ -439,7 +440,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   String _getAffectedName(WaitManagementModel model) {
     switch (model.collectionName) {
       case accountManagementCollection:
-        return Get.find<AccountManagementViewModel>()
+        return Get.find<EmployeeViewModel>()
                 .allAccountManagement[model.affectedId]
                 ?.fullName ??
             model.affectedId;

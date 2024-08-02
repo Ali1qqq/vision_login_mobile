@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:get/get.dart';
 import 'package:nfc_manager/nfc_manager.dart';
 import 'package:vision_dashboard/constants.dart';
-import 'package:vision_dashboard/controller/account_management_view_model.dart';
+import 'package:vision_dashboard/screens/Employee/Controller/Employee_view_model.dart';
 
 
 Future<bool> initNFCWorker(typeNFC type) async {
@@ -25,7 +25,7 @@ Future<bool> initNFCWorker(typeNFC type) async {
       }
       var cardId=id.toUpperCase();
       cardId=cardsMap.entries.where((element) => element.value==cardId,).firstOrNull?.key??cardId;
-      AccountManagementViewModel accountManagementViewModel = Get.find<AccountManagementViewModel>();
+      EmployeeViewModel accountManagementViewModel = Get.find<EmployeeViewModel>();
       if(type==typeNFC.login){
         // accountManagementViewModel.signInUsingNFC(cardId);
       }else if(type==typeNFC.time){

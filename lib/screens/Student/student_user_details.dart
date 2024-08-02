@@ -16,7 +16,7 @@ import 'package:vision_dashboard/screens/Widgets/AppButton.dart';
 import 'package:vision_dashboard/screens/Widgets/Custom_Drop_down.dart';
 import 'package:vision_dashboard/screens/classes/Controller/Class_View_Model.dart';
 import '../../constants.dart';
-import '../../controller/event_view_model.dart';
+import '../event/Controller/event_view_model.dart';
 import '../../models/event_model.dart';
 import '../../utils/Dialogs.dart';
 import '../../utils/const.dart';

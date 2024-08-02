@@ -7,7 +7,7 @@ import 'package:pluto_grid/pluto_grid.dart';
 import 'package:vision_dashboard/constants.dart';
 
 import '../../../controller/Wait_management_view_model.dart';
-import '../../../controller/expenses_view_model.dart';
+import '../../expenses/Controller/expenses_view_model.dart';
 import '../../../models/Bus_Model.dart';
 import '../../../utils/To_AR.dart';
 
@@ -35,7 +35,7 @@ class BusViewModel extends GetxController {
     "موافقة المدير".tr: PlutoColumnType.text(),
   };
 
-  GlobalKey key = GlobalKey();
+  GlobalKey plutoKey = GlobalKey();
 
   BusViewModel() {
     getColumns();
@@ -51,7 +51,7 @@ class BusViewModel extends GetxController {
     listener = await buseCollectionRef.snapshots().listen((value) async {
       _busesMap.clear();
 
-      key = GlobalKey();
+      plutoKey = GlobalKey();
       rows.clear();
       // await   Get.find<ExpensesViewModel>().getAllWithoutListenExpenses();
       for (var element in value.docs) {
@@ -135,7 +135,7 @@ class BusViewModel extends GetxController {
         .then((value)async {
       _busesMap.clear();
 
-      key = GlobalKey();
+      plutoKey = GlobalKey();
       rows.clear();
       // await   Get.find<ExpensesViewModel>().getAllWithoutListenExpenses();
       for (var element in value.docs) {
@@ -194,7 +194,7 @@ class BusViewModel extends GetxController {
         .then(
       (value) {
         _busesMap.clear();
-        key = GlobalKey();
+        plutoKey = GlobalKey();
         rows.clear();
         for (var element in value.docs) {
           int total = 0;

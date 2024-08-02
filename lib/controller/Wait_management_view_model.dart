@@ -4,7 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'package:get/get.dart';
 import 'package:vision_dashboard/constants.dart';
-import 'package:vision_dashboard/controller/account_management_view_model.dart';
+import 'package:vision_dashboard/screens/Employee/Controller/Employee_view_model.dart';
 import 'package:vision_dashboard/models/Bus_Model.dart';
 import 'package:vision_dashboard/models/Parent_Model.dart';
 import 'package:vision_dashboard/screens/Buses/Controller/Bus_View_Model.dart';
@@ -61,7 +61,7 @@ class WaitManagementViewModel extends GetxController {
   }
 
   doAdd(WaitManagementModel waitModel) async {
-    Get.find<AccountManagementViewModel>().setAccepted(waitModel.affectedId);
+    Get.find<EmployeeViewModel>().setAccepted(waitModel.affectedId);
   }
 
   doReturnInstallment(WaitManagementModel waitModel) async {
@@ -93,7 +93,7 @@ class WaitManagementViewModel extends GetxController {
       case busesCollection:
         {
           Get.find<StudentViewModel>().getAllStudentWithOutListen();
-          Get.find<AccountManagementViewModel>().getAllEmployeeWithoutListen();
+          Get.find<EmployeeViewModel>().getAllEmployeeWithoutListen();
         }
     }
   }
@@ -115,16 +115,16 @@ class WaitManagementViewModel extends GetxController {
   undoTheDelete(WaitManagementModel waitModel) {
     setAcceptedDeleteOperation(waitModel, false);
     if (waitModel.type == waitingListTypes.add.name)
-      Get.find<AccountManagementViewModel>()
+      Get.find<EmployeeViewModel>()
           .deleteUnAcceptedAccount(waitModel.affectedId);
     if (waitModel.type == waitingListTypes.edite) {}
 
     update();
   }
 
-  addDeleteOperation(WaitManagementModel waitModel) {
-    getTime().then((date) {
-      waitManagementFireStore.doc(waitModel.id).set(
+  addDeleteOperation(WaitManagementModel waitModel)async {
+    getTime().then((date)async {
+    await  waitManagementFireStore.doc(waitModel.id).set(
         waitModel..date = date!.dateTime.toString(),
       );
     },);
@@ -201,11 +201,11 @@ class WaitManagementViewModel extends GetxController {
     if (waitModel.collectionName == busesCollection) {
       await Get.find<StudentViewModel>()
           .setBus("بدون حافلة", waitModel.newData?['students'] ?? []);
-      await Get.find<AccountManagementViewModel>()
+      await Get.find<EmployeeViewModel>()
           .setBus("بدون حافلة", waitModel.newData?['employees'] ?? []);
       await Get.find<StudentViewModel>()
           .setBus(waitModel.affectedId, waitModel.oldDate?['students'] ?? []);
-      await Get.find<AccountManagementViewModel>()
+      await Get.find<EmployeeViewModel>()
           .setBus(waitModel.affectedId, waitModel.oldDate?['employees'] ?? []);
     }
     if (waitModel.collectionName == examsCollection) {
@@ -233,8 +233,8 @@ addWaitOperation({
   Map<String, dynamic>? newData,
   List<String>? relatedList,
   required waitingListTypes type,
-}) {
-  Get.find<WaitManagementViewModel>().addDeleteOperation(WaitManagementModel(
+})async {
+await  Get.find<WaitManagementViewModel>().addDeleteOperation(WaitManagementModel(
     id: generateId("Wait"),
     affectedId: affectedId,
     collectionName: collectionName,

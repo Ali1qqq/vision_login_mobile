@@ -38,35 +38,8 @@ class MyApp extends StatelessWidget {
       routingCallback: (value) {
 
 
-/*        final pageIndex = Get.parameters['page'];
-        print(pageIndex);
-        HiveDataBase.setCurrentScreen(pageIndex.toString());*/
       },
-/*      routingCallback: (value) {
-        HomeViewModel homeController = Get.find<HomeViewModel>();
-     if(value?.current==AppRoutes.parentView)
-        WidgetsFlutterBinding.ensureInitialized()
-            .waitUntilFirstFrameRasterized
-            .then((value) {
-              print("value");
-              homeController.pageController.jumpToPage(1);
-              // homeController.tabController.animateTo(1);
-              homeController.update();
-            });
-        if(value?.current==AppRoutes.parentView)
-          WidgetsFlutterBinding.ensureInitialized()
-              .waitUntilFirstFrameRasterized
-              .then((value) {
-            print("value");
-            homeController.pageController.jumpToPage(1);
-            // homeController.tabController.animateTo(1);
-            homeController.update();
-          });
-        print(value?.current);
-        print(value?.args);
-        print(value?.route);
-        print(value?.current);
-      },*/
+
       translationsKeys: AppTranslation.translationKes,
 
       // locale: const Locale("en", "US"),
@@ -99,9 +72,7 @@ class MyApp extends StatelessWidget {
       getPages: AppRoutes.routes,
       initialRoute: AppRoutes.main,
 
-      // home: MainScreen(),
-      // home: LoginScreen(),
-      // home: LoginScreen(),
+
     );
   }
 }

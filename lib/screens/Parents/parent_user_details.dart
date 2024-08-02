@@ -8,7 +8,7 @@ import 'package:vision_dashboard/screens/Widgets/AppButton.dart';
 import 'package:vision_dashboard/screens/Widgets/Custom_Drop_down_with_value.dart';
 
 import '../../constants.dart';
-import '../../controller/event_view_model.dart';
+import '../event/Controller/event_view_model.dart';
 
 import '../../models/Parent_Model.dart';
 import '../../models/event_model.dart';

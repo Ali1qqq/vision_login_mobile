@@ -28,7 +28,7 @@ class ExamViewModel extends GetxController {
     "نسبة النجاح": PlutoColumnType.text(),
     "موافقة المدير": PlutoColumnType.text(),
   };
-  GlobalKey key=GlobalKey();
+  GlobalKey plutoKey=GlobalKey();
   ExamViewModel() {
     getColumns();
     getAllExam();
@@ -58,7 +58,7 @@ class ExamViewModel extends GetxController {
   getAllExam() async {
     listener=   await examCollectionRef.snapshots().listen((value) async{
       _examMap.clear();
-      key=GlobalKey();
+      plutoKey=GlobalKey();
       rows.clear();
       for (var element in value.docs) {
         _examMap[element.id] = ExamModel.fromJson(element.data());
@@ -164,7 +164,7 @@ class ExamViewModel extends GetxController {
 
     await FirebaseFirestore.instance.collection(archiveCollection).doc(value).collection(examsCollection).get().then((value)async{
       _examMap.clear();
-      key=GlobalKey();
+      plutoKey=GlobalKey();
       rows.clear();
       for (var element in value.docs) {
         _examMap[element.id] = ExamModel.fromJson(element.data());

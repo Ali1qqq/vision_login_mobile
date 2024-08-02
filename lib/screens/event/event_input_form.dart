@@ -1,7 +1,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_material_color_picker/flutter_material_color_picker.dart';
-import 'package:vision_dashboard/controller/event_view_model.dart';
+import 'package:vision_dashboard/screens/event/Controller/event_view_model.dart';
 
 import 'package:get/get.dart';
 import 'package:vision_dashboard/screens/Widgets/AppButton.dart';

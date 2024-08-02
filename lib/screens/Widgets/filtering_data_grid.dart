@@ -119,7 +119,7 @@ class _FilteringDataGridState<T> extends State<FilteringDataGrid<T>> {
                                       crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
                                         Text(
-                                          e.key.toString() == constructor.toAR().entries.last.key ? e.key.toString() + '\n' : e.key.toString() + tab,
+                                          e.key.toString() == constructor.toAR().entries.last.plutoKey ? e.plutoKey.toString() + '\n' : e.plutoKey.toString() + tab,
                                           textDirection: Get.locale.toString()!="en_US"?TextDirection.rtl:TextDirection.ltr,
                                           style: TextStyle(fontSize: 14),
                                           maxLines: null,

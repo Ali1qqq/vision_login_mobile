@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import 'package:syncfusion_flutter_signaturepad/signaturepad.dart';
 
 import '../../../constants.dart';
-import '../../../controller/account_management_view_model.dart';
+import '../Employee/Controller/Employee_view_model.dart';
 import '../../../controller/Wait_management_view_model.dart';
 import '../../../models/account_management_model.dart';
 import '../../../models/Salary_Model.dart';
@@ -46,7 +46,7 @@ final  ScrollController scrollController;
             controller: scrollController,
             scrollDirection: Axis.horizontal,
             child: GetBuilder<WaitManagementViewModel>(builder: (_) {
-              return GetBuilder<AccountManagementViewModel>(
+              return GetBuilder<EmployeeViewModel>(
                   builder: (controller) {
                     return GetBuilder<SalaryViewModel>(builder: (salaryController) {
                       return DataTable(
@@ -77,10 +77,10 @@ final  ScrollController scrollController;
                 child: Center(child: Text(columns[index].toString().tr)))));
   }
 
-  List<DataRow> _buildDataRows(AccountManagementViewModel accountController,
+  List<DataRow> _buildDataRows(EmployeeViewModel accountController,
       SalaryViewModel salaryController,context) {
 
-    List<MapEntry<String, AccountManagementModel>> employees = accountController
+    List<MapEntry<String, EmployeeModel>> employees = accountController
         .allAccountManagement.entries
         .where((element) =>
     element.value.employeeTime.keys.where((element0) => element0.toString().split("-")[1]=='${months[selectedMonth]}',).isNotEmpty
@@ -94,7 +94,7 @@ final  ScrollController scrollController;
       return List.generate(
           employees.length,
               (index) {
-            AccountManagementModel accountModel = employees[index].value;
+            EmployeeModel accountModel = employees[index].value;
             int totalLate = accountModel.employeeTime.isEmpty
                 ? 0
                 : accountModel.employeeTime.values

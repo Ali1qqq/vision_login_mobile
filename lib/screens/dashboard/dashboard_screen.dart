@@ -1,7 +1,7 @@
 import 'package:get/get.dart';
-import 'package:vision_dashboard/controller/account_management_view_model.dart';
+import 'package:vision_dashboard/screens/Employee/Controller/Employee_view_model.dart';
 import 'package:vision_dashboard/controller/Wait_management_view_model.dart';
-import 'package:vision_dashboard/controller/expenses_view_model.dart';
+import 'package:vision_dashboard/screens/expenses/Controller/expenses_view_model.dart';
 import 'package:vision_dashboard/responsive.dart';
 import 'package:vision_dashboard/screens/Salary/controller/Salary_View_Model.dart';
 import 'package:vision_dashboard/screens/Student/Controller/Student_View_Model.dart';
@@ -29,8 +29,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
   int index = 2;
   StudentViewModel _studentViewModel = Get.find<StudentViewModel>();
   ExpensesViewModel _expensesViewModel = Get.find<ExpensesViewModel>();
-  AccountManagementViewModel _accountManagementViewModel =
-      Get.find<AccountManagementViewModel>();
+  EmployeeViewModel _accountManagementViewModel =
+      Get.find<EmployeeViewModel>();
   SalaryViewModel _salaryViewModel = Get.find<SalaryViewModel>();
   WaitManagementViewModel _deleteManagementViewModel =
       Get.find<WaitManagementViewModel>();
@@ -63,7 +63,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return GetBuilder<AccountManagementViewModel>(
+    return GetBuilder<EmployeeViewModel>(
       builder: (_) {
         return Scaffold(
           appBar: Header(
@@ -115,7 +115,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                           .isNotEmpty)
                         InkWell(
                           onTap: () {
-                            HiveDataBase.setCurrentScreen("12");
+                            HiveDataBase.setCurrentScreen("13");
                             Get.offAll(MainScreen());
                           },
                           child: Stack(

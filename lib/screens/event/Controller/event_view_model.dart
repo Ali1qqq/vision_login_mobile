@@ -7,8 +7,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
 import 'package:vision_dashboard/models/event_model.dart';
 
-import '../constants.dart';
-import '../utils/const.dart';
+import '../../../constants.dart';
+import '../../../utils/const.dart';
 
 
 class EventViewModel extends GetxController{

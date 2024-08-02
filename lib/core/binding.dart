@@ -1,7 +1,7 @@
-import 'package:vision_dashboard/controller/account_management_view_model.dart';
+import 'package:vision_dashboard/screens/Employee/Controller/Employee_view_model.dart';
 import 'package:vision_dashboard/controller/Wait_management_view_model.dart';
-import 'package:vision_dashboard/controller/event_view_model.dart';
-import 'package:vision_dashboard/controller/expenses_view_model.dart';
+import 'package:vision_dashboard/screens/event/Controller/event_view_model.dart';
+import 'package:vision_dashboard/screens/expenses/Controller/expenses_view_model.dart';
 import 'package:vision_dashboard/controller/home_controller.dart';
 import 'package:get/get.dart';
 import 'package:vision_dashboard/screens/Buses/Controller/Bus_View_Model.dart';
@@ -19,7 +19,7 @@ class GetBinding extends Bindings {
   @override
   void dependencies() {
     Get.put(HomeViewModel());
-    Get.put(AccountManagementViewModel());
+    Get.put(EmployeeViewModel());
     Get.put(ExpensesViewModel());
     Get.put(EventViewModel());
     Get.put(ParentsViewModel());

@@ -57,7 +57,7 @@ List<String> employeeName = [
 ];
 
 String generateId(String type) {
-  var _ = thisTimesModel!.dateTime.microsecondsSinceEpoch.toString();
+  var _ = DateTime.now().microsecondsSinceEpoch.toString();
   return "$type$_";
 }
 

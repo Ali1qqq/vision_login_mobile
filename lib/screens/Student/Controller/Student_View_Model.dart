@@ -34,7 +34,7 @@ class StudentViewModel extends GetxController {
     "سجل الأحداث": PlutoColumnType.text(),
     "موافقة المدير": PlutoColumnType.text(),
   };
-  GlobalKey key = GlobalKey();
+  GlobalKey plutoKey = GlobalKey();
 
   StudentViewModel() {
     getColumns();
@@ -74,7 +74,7 @@ class StudentViewModel extends GetxController {
       }
       await Get.find<BusViewModel>().getAllWithoutListenBuse();
       await examViewModel.getGrade(_studentMap);
-      key = GlobalKey();
+      plutoKey = GlobalKey();
       rows.clear();
       _studentMap.forEach(
         (key, value) {
@@ -195,7 +195,7 @@ class StudentViewModel extends GetxController {
       }
       await Get.find<BusViewModel>().getAllWithoutListenBuse();
       await examViewModel.getGrade(_studentMap);
-      key = GlobalKey();
+      plutoKey = GlobalKey();
       rows.clear();
       _studentMap.forEach(
             (key, value) {

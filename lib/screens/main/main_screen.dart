@@ -19,7 +19,7 @@ import 'package:tab_container/tab_container.dart';
 import 'package:vision_dashboard/screens/logout/logout_View.dart';
 import 'package:vision_dashboard/utils/Hive_DataBase.dart';
 
-import '../account_management/Employee_View.dart';
+import '../Employee/Employee_View.dart';
 
 import '../employee_time/employee_time.dart';
 import '../event/event_view_screen.dart';

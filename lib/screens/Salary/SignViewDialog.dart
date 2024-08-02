@@ -7,7 +7,7 @@ import '../../../models/account_management_model.dart';
 import '../Widgets/Custom_Text_Filed.dart';
 import '../Widgets/AppButton.dart';
 
-AlertDialog buildSignViewDialog(String text, AccountManagementModel account,
+AlertDialog buildSignViewDialog(String text, EmployeeModel account,
     String date, GlobalKey<SfSignaturePadState> signatureGlobalKey,
     Function(String, String, String, String, String) handleSaveButtonPressed,
     VoidCallback handleClearButtonPressed) {

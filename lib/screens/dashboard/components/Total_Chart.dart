@@ -4,8 +4,8 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:vision_dashboard/constants.dart';
-import 'package:vision_dashboard/controller/account_management_view_model.dart';
-import 'package:vision_dashboard/controller/expenses_view_model.dart';
+import 'package:vision_dashboard/screens/Employee/Controller/Employee_view_model.dart';
+import 'package:vision_dashboard/screens/expenses/Controller/expenses_view_model.dart';
 import 'package:vision_dashboard/screens/Student/Controller/Student_View_Model.dart';
 
 class TotalBarChart extends StatefulWidget {
@@ -23,8 +23,8 @@ class TotalBarChart extends StatefulWidget {
 class TotalBarChartState extends State<TotalBarChart> {
   ExpensesViewModel expensesViewModel = Get.find<ExpensesViewModel>();
   StudentViewModel studentViewModel = Get.find<StudentViewModel>();
-  AccountManagementViewModel managementViewModel =
-      Get.find<AccountManagementViewModel>();
+  EmployeeViewModel managementViewModel =
+      Get.find<EmployeeViewModel>();
 
   Widget bottomTitles(double value, TitleMeta meta) {
     final style = Styles.headLineStyle4;

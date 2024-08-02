@@ -24,7 +24,7 @@ class StoreViewModel extends GetxController{
 
   };
 
-  GlobalKey key = GlobalKey();
+  GlobalKey plutoKey = GlobalKey();
   StoreViewModel(){
     getColumns();
     getAllStore();
@@ -43,7 +43,7 @@ class StoreViewModel extends GetxController{
   getAllStore()async {
     listener=   await   storeCollectionRef.snapshots().listen((value) {
       _storeMap.clear();
-      key = GlobalKey();
+      plutoKey = GlobalKey();
       rows.clear();
       for (var element in value.docs) {
         _storeMap[element.id] = StoreModel.fromJson(element.data());
@@ -95,7 +95,7 @@ class StoreViewModel extends GetxController{
     await FirebaseFirestore.instance.collection(archiveCollection).doc(value).collection(storeCollection).get().then((value) {
 
       _storeMap.clear();
-      key = GlobalKey();
+      plutoKey = GlobalKey();
       rows.clear();
       for (var element in value.docs) {
         _storeMap[element.id] = StoreModel.fromJson(element.data());

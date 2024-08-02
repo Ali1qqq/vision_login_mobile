@@ -2,14 +2,14 @@ import 'dart:ui';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
-import 'package:vision_dashboard/controller/account_management_view_model.dart';
+import 'package:vision_dashboard/screens/Employee/Controller/Employee_view_model.dart';
 import 'package:vision_dashboard/controller/Wait_management_view_model.dart';
 import 'package:vision_dashboard/core/binding.dart';
 import 'package:vision_dashboard/screens/login/login_screen.dart';
 
 import '../../../constants.dart';
-import '../../../controller/event_view_model.dart';
-import '../../../controller/expenses_view_model.dart';
+import '../../event/Controller/event_view_model.dart';
+import '../../expenses/Controller/expenses_view_model.dart';
 import '../../../utils/const.dart';
 import '../../Buses/Controller/Bus_View_Model.dart';
 import '../../Exams/controller/Exam_View_Model.dart';
@@ -19,8 +19,8 @@ import '../../Store/Controller/Store_View_Model.dart';
 import '../../Student/Controller/Student_View_Model.dart';
 
 class SettingsViewModel extends GetxController {
-  AccountManagementViewModel _accountManagementViewModel =
-      Get.find<AccountManagementViewModel>();
+  EmployeeViewModel _accountManagementViewModel =
+      Get.find<EmployeeViewModel>();
   EventViewModel _eventViewModel = Get.find<EventViewModel>();
   SalaryViewModel _salaryViewModel = Get.find<SalaryViewModel>();
   ExamViewModel _examViewModel = Get.find<ExamViewModel>();

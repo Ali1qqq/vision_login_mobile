@@ -3,7 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:vision_dashboard/controller/Wait_management_view_model.dart';
-import 'package:vision_dashboard/controller/account_management_view_model.dart';
+import 'package:vision_dashboard/screens/Employee/Controller/Employee_view_model.dart';
 import 'package:vision_dashboard/models/account_management_model.dart';
 import 'package:vision_dashboard/screens/Buses/Controller/Bus_View_Model.dart';
 import 'package:vision_dashboard/screens/Student/Controller/Student_View_Model.dart';
@@ -42,7 +42,7 @@ class _BusInputFormState extends State<BusInputForm> {
   List dataEMP = ['اسم الموظف', "العنوان", "الجنس", "موجود"];
 
   Map<String, StudentModel> allSection = Get.find<StudentViewModel>().studentMap;
-  Map<String, AccountManagementModel> allEmployee = Get.find<AccountManagementViewModel>().allAccountManagement;
+  Map<String, EmployeeModel> allEmployee = Get.find<EmployeeViewModel>().allAccountManagement;
 
   final ScrollController _scrollControllerStd = ScrollController();
   final ScrollController _scrollControllerEmp = ScrollController();
@@ -279,7 +279,7 @@ class _BusInputFormState extends State<BusInputForm> {
 
   Future<void> _updateBusForStudentsAndEmployees(BusModel bus) async {
     final studentViewModel = Get.find<StudentViewModel>();
-    final accountManagementViewModel = Get.find<AccountManagementViewModel>();
+    final accountManagementViewModel = Get.find<EmployeeViewModel>();
     await studentViewModel.setBus("بدون حافلة", widget.busModel?.students ?? []);
     await accountManagementViewModel.setBus("بدون حافلة", widget.busModel?.employees ?? []);
     await studentViewModel.setBus(bus.busId!, selectedStudent);
@@ -323,7 +323,7 @@ class _BusInputFormState extends State<BusInputForm> {
     );
   }
 
-  DataRow employeeDataRow(AccountManagementModel employee, size) {
+  DataRow employeeDataRow(EmployeeModel employee, size) {
     return DataRow(
       cells: [
         DataCell(Container(alignment: Alignment.center, width: size, child: Text(employee.userName.toString()))),

@@ -4,7 +4,7 @@ import 'package:get/get.dart';
 import 'package:pluto_grid/pluto_grid.dart';
 import 'package:vision_dashboard/constants.dart';
 import 'package:vision_dashboard/controller/Wait_management_view_model.dart';
-import 'package:vision_dashboard/controller/expenses_view_model.dart';
+import 'package:vision_dashboard/screens/expenses/Controller/expenses_view_model.dart';
 import 'package:vision_dashboard/screens/Widgets/AppButton.dart';
 import '../utils/const.dart';
 

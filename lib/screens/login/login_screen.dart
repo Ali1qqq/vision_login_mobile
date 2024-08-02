@@ -1,5 +1,5 @@
 
-import 'package:vision_dashboard/controller/account_management_view_model.dart';
+import 'package:vision_dashboard/screens/Employee/Controller/Employee_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../constants.dart';
@@ -15,7 +15,7 @@ class _LoginScreenState extends State<LoginScreen> {
   TextEditingController nameController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   bool isSecure = true;
-  AccountManagementViewModel accountManagementViewModel = Get.find<AccountManagementViewModel>();
+  EmployeeViewModel accountManagementViewModel = Get.find<EmployeeViewModel>();
 
   @override
   void initState() {
@@ -30,7 +30,7 @@ class _LoginScreenState extends State<LoginScreen> {
       textDirection: Get.locale.toString()!="en_US"?TextDirection.rtl:TextDirection.ltr,
       child: Scaffold(
         backgroundColor: secondaryColor,
-        body: GetBuilder<AccountManagementViewModel>(builder: (controller) {
+        body: GetBuilder<EmployeeViewModel>(builder: (controller) {
 
           return SafeArea(
             child: Center(

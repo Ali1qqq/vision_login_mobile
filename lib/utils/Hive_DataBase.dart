@@ -72,14 +72,14 @@ salary: salary,
   }
 
 
-  static Future<void> setAccountManagementModel(AccountManagementModel model) async {
+  static Future<void> setAccountManagementModel(EmployeeModel model) async {
     await accountManagementBox.put("accountManagement", model.toJson());
   }
 
-  static AccountManagementModel? getAccountManagementModel() {
+  static EmployeeModel? getAccountManagementModel() {
     var json = accountManagementBox.get("accountManagement");
     if (json != null) {
-      return AccountManagementModel.fromJson(json);
+      return EmployeeModel.fromJson(json);
     }
     return null;
   }

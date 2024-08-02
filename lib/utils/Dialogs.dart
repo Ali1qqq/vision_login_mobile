@@ -138,10 +138,10 @@ bool validateNumericField(String value, String fieldName) {
 Future<TimesModel?> getTime() async {
   TimesModel? timesModel;
   try {
-    final response = await http.get(Uri.parse("http://worldtimeapi.org/api/timezone/Asia/Dubai"));
+
+
+    final response = await http.get(Uri.parse("https://worldtimeapi.org/api/timezone/Asia/Dubai"));
     print("response statusCode  ${response.statusCode}");
-    // print(response.body);
-    // final response = await http.get(uri,);
     if (response.statusCode == 200) {
       timesModel = TimesModel.fromJson(jsonDecode(response.body));
     } else {
@@ -155,10 +155,8 @@ Future<TimesModel?> getTime() async {
         milliSeconds: DateTime.now().millisecond,
         dateTime: DateTime.now(),
         date: DateTime.now().toString().split(" ")[0],
-        // time:DateTime.now(). toString().split(" ")[1],
         timeZone: DateTime.now().timeZoneName,
         dayOfWeek: DateTime.now().day.toString(),
-        // dstActive: true
       );
     }
   } on Exception catch (e) {

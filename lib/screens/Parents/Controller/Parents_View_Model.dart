@@ -37,7 +37,7 @@ class ParentsViewModel extends GetxController {
     "موافقة المدير": PlutoColumnType.text(),
 
   };
-  GlobalKey key=GlobalKey();
+  GlobalKey plutoKey=GlobalKey();
 
   ParentsViewModel(){
     getColumns();
@@ -56,7 +56,7 @@ class ParentsViewModel extends GetxController {
   getAllParent()async {
     listener=   await   parentCollectionRef.snapshots().listen((value) {
       _parentMap.clear();
-      key=GlobalKey();
+      plutoKey=GlobalKey();
       rows.clear();
       for (var element in value.docs) {
         _parentMap[element.id] = ParentModel.fromJson(element.data());
@@ -109,7 +109,7 @@ class ParentsViewModel extends GetxController {
   getOldParent(String value) async{
     await   firebaseFirestore.collection(archiveCollection).doc(value).collection(parentsCollection).get().then((value) {
       _parentMap.clear();
-      key=GlobalKey();
+      plutoKey=GlobalKey();
       rows.clear();
       for (var element in value.docs) {
         _parentMap[element.id] = ParentModel.fromJson(element.data());

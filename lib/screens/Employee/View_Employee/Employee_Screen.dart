@@ -1,62 +1,22 @@
 import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:quickalert/models/quickalert_type.dart';
-import 'package:quickalert/widgets/quickalert_dialog.dart';
+import 'package:vision_dashboard/screens/Employee/Controller/Employee_view_model.dart';
+import 'package:vision_dashboard/screens/expenses/View_Expenses/Widgets/EditButton.dart';
+import '../../../constants.dart';
+import '../../../controller/Wait_management_view_model.dart';
+import '../../../controller/home_controller.dart';
+import '../../Widgets/Custom_Pluto_Grid.dart';
+import '../../Widgets/header.dart';
+import 'Widgets/Delete_Button.dart';
+import 'Widgets/Edite_Button.dart';
 
-import 'package:vision_dashboard/controller/account_management_view_model.dart';
-
-import 'package:vision_dashboard/screens/account_management/Employee_user_details.dart';
-
-import '../../constants.dart';
-import '../../controller/Wait_management_view_model.dart';
-import '../../controller/home_controller.dart';
-
-import '../../utils/Dialogs.dart';
-import '../Widgets/Custom_Pluto_Grid.dart';
-import '../Widgets/Custom_Text_Filed.dart';
-import '../Widgets/header.dart';
-
-class AccountManagementScreen extends StatefulWidget {
+class AccountManagementScreen extends StatelessWidget {
   const AccountManagementScreen({super.key});
 
   @override
-  State<AccountManagementScreen> createState() =>
-      _AccountManagementScreenState();
-}
-
-class _AccountManagementScreenState extends State<AccountManagementScreen> {
-/*  final ScrollController _scrollController = ScrollController();
-
-  List userData = [
-    "User Name",
-    "الاسم الكامل",
-    "كامة السر",
-    "الدور",
-    "الحالة",
-    "رقم الموبايل",
-    "العنوان",
-    "الجنسية",
-    "الجنس",
-    "العمر",
-    "الوظيفة",
-    "العقد",
-    "الصفوف",
-    "تاريخ البداية",
-    "سجل الاحداث",
-    "العمليات"
-  ];*/
-
-  String currentId = '';
-
-  bool getIfDelete() {
-    return checkIfPendingDelete(affectedId: currentId);
-  }
-
-  @override
   Widget build(BuildContext context) {
-    return GetBuilder<AccountManagementViewModel>(
+    return GetBuilder<EmployeeViewModel>(
       builder: (controller) {
         return Scaffold(
           appBar: Header(
@@ -70,7 +30,7 @@ class _AccountManagementScreenState extends State<AccountManagementScreen> {
             padding: EdgeInsets.all(16.0),
             child: GetBuilder<HomeViewModel>(builder: (hController) {
               double size = max(
-                      MediaQuery.sizeOf(context).width -
+                      Get.width -
                           (hController.isDrawerOpen ? 240 : 120),
                       1000) -
                   60;
@@ -89,8 +49,8 @@ class _AccountManagementScreenState extends State<AccountManagementScreen> {
                       controller: controller,
                       idName: "الرقم التسلسلي",
                       onSelected: (event) {
-                        currentId = event.row?.cells["الرقم التسلسلي"]?.value;
-                        setState(() {});
+                        controller.setCurrentId(event.row?.cells["الرقم التسلسلي"]?.value);
+
                       },
                     ),
                   ),
@@ -100,83 +60,18 @@ class _AccountManagementScreenState extends State<AccountManagementScreen> {
           ),
           floatingActionButton: GetBuilder<WaitManagementViewModel>(
             builder: (_) {
-              return enableUpdate && currentId != ''&&controller.allAccountManagement[currentId]!.isAccepted!
+              return enableUpdate && controller.currentId != ''&&controller.allAccountManagement[controller.currentId]!.isAccepted!
                   ? SizedBox(
                 width: Get.width,
                 child: Wrap(
-                  // mainAxisAlignment: MainAxisAlignment.center,
                   alignment: WrapAlignment.center,
                   children: [
-                    FloatingActionButton(
-                      backgroundColor: getIfDelete()
-                          ? Colors.greenAccent.withOpacity(0.5)
-                          : Colors.red.withOpacity(0.5),
-                      onPressed: () {
-                        if (enableUpdate) {
-                              if (checkIfPendingDelete(
-                                  affectedId:controller.allAccountManagement[currentId]!.id.toString()))
-                                _.returnDeleteOperation(affectedId:controller.allAccountManagement[currentId]!.id);
-                              else {
-                                TextEditingController editController =
-                                TextEditingController();
-
-                                QuickAlert.show(
-                                  context: context,
-                                  type: QuickAlertType.confirm,
-                                  widget:Center(
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: CustomTextField(controller: editController, title: "سبب الحذف".tr,size: Get.width/4,),
-                                    ),
-                                  ),
-                                  text: 'قبول هذه العملية'.tr,
-                                  title: 'هل انت متأكد ؟'.tr,
-                                  onConfirmBtnTap: () async {
-                                    addWaitOperation(
-                                   details: editController.text,
-                                        collectionName: accountManagementCollection,
-                                        affectedId: controller.allAccountManagement[currentId]!.id, type: waitingListTypes.delete);
-                                    Get.back();
-                                  },
-                                  onCancelBtnTap: () => Get.back(),
-                                  confirmBtnText: 'نعم'.tr,
-                                  cancelBtnText: 'لا'.tr,
-                                  confirmBtnColor: Colors.redAccent,
-                                  showCancelBtn: true,
-                                );
-                              }
-
-                            }
-                        else
-                        getReedOnlyError(context);
-
-
-                      },
-                      child: Icon(
-                        getIfDelete()
-                            ? Icons.restore_from_trash_outlined
-                            : Icons.delete,
-                        color: Colors.white,
-                      ),
-                    ),
+                    buildEmployeeDeleteButton(_, context, controller),
                     SizedBox(
                       width: defaultPadding,
                     ),
-                    if(controller.allAccountManagement[currentId]!.isAccepted==true&&!getIfDelete())
-                    FloatingActionButton(
-                      backgroundColor: primaryColor.withOpacity(0.5),
-                      onPressed: () {
-                        // if(controller.allAccountManagement[currentId]!.isAccepted==true&&!getIfDelete())
-                        showEmployeeInputDialog(
-                            context, controller.allAccountManagement[currentId]!);
-                        // else
-                        //   getReedOnlyError(context);
-                      },
-                      child: Icon(
-                        Icons.edit,
-                        color: Colors.white,
-                      ),
-                    ),
+                    if(controller.allAccountManagement[controller.currentId]!.isAccepted==true&&!controller.getIfDelete())
+                    buildEmployeeEditButton(context, controller)
                   ],
                 ),
               )
@@ -188,30 +83,9 @@ class _AccountManagementScreenState extends State<AccountManagementScreen> {
     );
   }
 
-  void showEmployeeInputDialog(
-      BuildContext context, dynamic accountManagementModel) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return Dialog(
-          backgroundColor: Colors.white,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(25.0),
-          ),
-          child: Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(25.0),
-            ),
-            height: Get.height / 2,
-            width: Get.width / 1.5,
-            child: EmployeeInputForm(
-                accountManagementModel: accountManagementModel),
-          ),
-        );
-      },
-    );
-  }
+ 
 }
+
 /*  child: Scrollbar(
                         controller: _scrollController,
                         child: SingleChildScrollView(

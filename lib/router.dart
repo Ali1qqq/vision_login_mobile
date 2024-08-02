@@ -2,6 +2,7 @@ import 'package:get/get.dart';
 
 import 'package:vision_dashboard/screens/login/login_screen.dart';
 import 'package:vision_dashboard/screens/main/main_screen.dart';
+import 'package:vision_dashboard/utils/Hive_DataBase.dart';
 
 class AppRoutes {
   static const main = '/';
@@ -21,7 +22,14 @@ class AppRoutes {
   static const Container = '/LoginScreen';
 
   static List<GetPage> routes = [
-    GetPage(name: main, page: () => LoginScreen()),
+    GetPage(name: main, page: () {
+
+      if(HiveDataBase.accountBox.get("userName")==null)
+      return LoginScreen();
+      else
+        return MainScreen();
+
+    }),
     GetPage(
       name: DashboardScreen,
       page: () {

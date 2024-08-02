@@ -2,7 +2,7 @@ import 'package:vision_dashboard/models/employee_time_model.dart';
 
 import 'event_record_model.dart';
 
-class AccountManagementModel {
+class EmployeeModel {
   late String id, userName, password, type;
   String? serialNFC;
   int? salary, dayOfWork, discounts;
@@ -14,7 +14,7 @@ class AccountManagementModel {
   bool? available = false;
   List<EventRecordModel>? eventRecords;
 
-  AccountManagementModel(
+  EmployeeModel(
       {required this.id,
       required this.userName,
       required this.password,
@@ -40,7 +40,7 @@ class AccountManagementModel {
       this.discounts,
       this.available});
 
-  AccountManagementModel.fromJson(json) {
+  EmployeeModel.fromJson(json) {
     id = json['id'] ?? '';
     userName = json['userName'] ?? '';
     password = json['password'] ?? '';

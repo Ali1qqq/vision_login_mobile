@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../../constants.dart';
-import '../../../controller/account_management_view_model.dart';
+import '../../Employee/Controller/Employee_view_model.dart';
 import 'InfoBarchart.dart';
 import 'info_card.dart';
 
@@ -18,8 +18,8 @@ class EmployeeDetailsChart extends StatefulWidget {
 
 class _EmployeeDetailsChartState extends State<EmployeeDetailsChart> {
   int touchedIndex = -1;
-  AccountManagementViewModel _accountManagementViewModel =
-      Get.find<AccountManagementViewModel>();
+  EmployeeViewModel _accountManagementViewModel =
+      Get.find<EmployeeViewModel>();
 
   @override
   Widget build(BuildContext context) {
