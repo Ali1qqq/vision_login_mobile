@@ -800,7 +800,7 @@ class EmployeeViewModel extends GetxController {
 
   int getTotalLateForUserAtMonth({required String selectedMonth, required String userId}) {
     int totalLate = 0;
-    List totalLateList = [];
+    List<int> totalLateList = [];
     if(selectedMonth!='الكل')
     totalLateList = allAccountManagement[userId]!
         .employeeTime
