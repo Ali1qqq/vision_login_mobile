@@ -169,7 +169,7 @@ class _EmployeeTimeViewState extends State<EmployeeTimeView> {
                             Expanded(
                               child: Container(
                                 width: Get.width,
-
+alignment: Alignment.center,
                                 ///بعد تسجيل دخول الموظف يعرض له اسمه لفترة ومن ثم يختفي
                                 child: controller.loginUserPage != null
                                     ? Center(
