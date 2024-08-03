@@ -332,28 +332,22 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   title.toString().tr,
                   textAlign: TextAlign.center,
                   style: AppStyles.headLineStyle2
-                      .copyWith(color: color == false ? Colors.black : color),
+                     ,
                 )),
               ),
             ),
             Text(
               body.toString(),
               style: AppStyles.headLineStyle1.copyWith(
-                  color: color == false ? Colors.black : color, fontSize: 40),
+                   fontSize: 40),
             ),
             SizedBox(
               height: 20,
             ),
-            color == false
-                ? Image.asset(
-                    png,
-                    height: 100,
-                    // color: color==false?Colors.transparent: color,
-                  )
-                : Image.asset(
+          Image.asset(
                     png,
                     height: 70,
-                    color: color,
+                    color: Colors.black,
                   ),
             SizedBox(
               height: 20,

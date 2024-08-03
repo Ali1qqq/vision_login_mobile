@@ -32,8 +32,8 @@ AppBar Header({required String  title,required String middleText,required BuildC
           child: Text(
             title,
             style:
-            Get.width<500?AppStyles.headLineStyle2.copyWith(color: primaryColor):
-            AppStyles.headLineStyle1.copyWith(color: primaryColor),
+            Get.width<500?AppStyles.headLineStyle2:
+            AppStyles.headLineStyle1,
             overflow: TextOverflow.ellipsis,
           ),
         ),
@@ -48,7 +48,7 @@ AppBar Header({required String  title,required String middleText,required BuildC
               );
 
             },
-            icon: Icon(Icons.info_outline))
+            icon: Icon(Icons.info_outline,color: primaryColor,))
       ],
     ),
     actions: [

@@ -17,11 +17,11 @@ class CustomDropDown extends StatelessWidget {
       width:size?? max(150,Get.width/4.5),
       child: DropdownButtonFormField<String>(
         decoration:  InputDecoration(
-          hintStyle:TextStyle(color: primaryColor,overflow: TextOverflow.ellipsis) ,
+          hintStyle: AppStyles.headLineStyle3.copyWith(overflow: TextOverflow.ellipsis),
           hintText: label,
           labelText: label,
           enabled: enable??true,
-          labelStyle: TextStyle(color: primaryColor,overflow: TextOverflow.ellipsis),
+          labelStyle: AppStyles.headLineStyle3.copyWith(overflow: TextOverflow.ellipsis),
           enabledBorder:isFullBorder!=null? OutlineInputBorder(
             borderSide: BorderSide(color: primaryColor,width: 2),
             borderRadius: BorderRadius.circular(10),

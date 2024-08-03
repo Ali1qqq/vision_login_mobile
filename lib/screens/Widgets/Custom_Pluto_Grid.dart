@@ -41,6 +41,7 @@ class _CustomPlutoGridState extends State<CustomPlutoGrid> {
       onSelected: widget.onSelected,
       configuration: PlutoGridConfiguration(
         style: PlutoGridStyleConfig(
+
             enableRowColorAnimation: true,
             activatedColor: Colors.white.withOpacity(0.5),
             gridBackgroundColor: Colors.transparent,
