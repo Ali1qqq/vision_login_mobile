@@ -50,13 +50,7 @@ class _EmployeeTimeViewState extends State<EmployeeTimeView> {
         .key;
     dayNameNow = thisTimesModel!.formattedTime;
     selectedDate.text = thisTimesModel!.formattedTime;
-    /*   getTime().then(
-      (value) {
-        if (value != null) {
 
-        }
-      },
-    );*/
   }
 
   @override

@@ -2,6 +2,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:ntp/ntp.dart';
 import 'package:quickalert/models/quickalert_type.dart';
 import 'package:quickalert/widgets/quickalert_dialog.dart';
 import 'package:vision_dashboard/controller/Wait_management_view_model.dart';
@@ -693,14 +694,12 @@ class _StudentInputFormState extends State<StudentInputForm> {
                         AppButton(
                           text: 'إضافة سجل حدث'.tr,
                           onPressed: () {
-                            setState(() {
+                            setState(() async{
+                              DateTime dateTime= await NTP.now();
                               eventRecords.add(EventRecordModel(
                                   body: bodyEvent.text,
                                   type: selectedEvent!.name,
-                                  date: thisTimesModel!.dateTime
-                                      .toString()
-                                      .split(" ")[0]
-                                      .toString(),
+                                  date: dateTime.toIso8601String(),
                                   color: selectedEvent!.color.toString()));
                               bodyEvent.clear();
                             });

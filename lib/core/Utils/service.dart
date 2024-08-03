@@ -51,7 +51,7 @@ bool isNumeric(String str) {
 
 
 
-Future<TimesModel?> getTime() async {
+/*Future<TimesModel?> getTime() async {
   TimesModel? timesModel;
   try {
     final response = await http.get(Uri.parse("https://worldtimeapi.org/api/timezone/Asia/Dubai"));
@@ -94,7 +94,7 @@ Future<TimesModel?> getTime() async {
   }
   thisTimesModel = timesModel;
   return timesModel;
-}
+}*/
 
 Future<List<String>> uploadImages(List<Uint8List> ImagesTempData, String folderName) async {
   List<String> imageLinkList = [];

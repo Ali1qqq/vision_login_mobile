@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'package:get/get.dart';
+import 'package:ntp/ntp.dart';
 import 'package:vision_dashboard/constants.dart';
 import 'package:vision_dashboard/screens/Employee/Controller/Employee_view_model.dart';
 import 'package:vision_dashboard/models/Bus_Model.dart';
@@ -123,11 +124,12 @@ class WaitManagementViewModel extends GetxController {
   }
 
   addDeleteOperation(WaitManagementModel waitModel)async {
-    getTime().then((date)async {
+    NTP.now().then((date)async {
     await  waitManagementFireStore.doc(waitModel.id).set(
-        waitModel..date = date!.dateTime.toString(),
+        waitModel..date = date.toIso8601String(),
       );
     },);
+
 
     update();
   }

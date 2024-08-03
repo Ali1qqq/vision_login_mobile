@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:ntp/ntp.dart';
+import 'package:vision_dashboard/models/TimeModel.dart';
 import 'package:vision_dashboard/screens/dashboard/components/Employee_Salary_BarChar.dart';
 
 import '../../../constants.dart';
@@ -21,13 +23,16 @@ class _EmployeeSalaryChartBoxState extends State<EmployeeSalaryChartBox> {
   void initState() {
     super.initState();
 
-    selectedMonth = months.entries
-        .where(
-          (element) =>
-              element.value == thisTimesModel!.month.toString().padLeft(2, "0"),
-        )
-        .first
-        .key;
+
+      selectedMonth = months.entries
+          .where(
+            (element) =>
+        element.value == thisTimesModel?.month.toString().padLeft(2, "0"),
+      )
+          .first
+          .key;
+
+
   }
 
   @override

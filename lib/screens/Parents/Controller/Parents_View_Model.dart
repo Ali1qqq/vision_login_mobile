@@ -4,12 +4,14 @@ import 'dart:typed_data';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:ntp/ntp.dart';
 import 'package:pluto_grid/pluto_grid.dart';
 import 'package:quickalert/models/quickalert_type.dart';
 import 'package:quickalert/widgets/quickalert_dialog.dart';
 import 'package:vision_dashboard/constants.dart';
 import 'package:vision_dashboard/controller/Wait_management_view_model.dart';
 import 'package:vision_dashboard/models/Parent_Model.dart';
+import 'package:vision_dashboard/models/TimeModel.dart';
 
 import '../../../core/Utils/service.dart';
 import '../../../models/event_model.dart';
@@ -288,18 +290,17 @@ class ParentsViewModel extends GetxController {
   bool isAdd = false;
 
   void addEventRecord() async {
-    final value = await getTime();
-    if (value != null) {
-      eventRecords.add(EventRecordModel(
-        body: bodyEventController.text,
-        type: selectedEvent!.name,
-        date: value.dateTime.toString().split(" ")[0],
-        color: selectedEvent!.color.toString(),
-      ));
-      bodyEventController.clear();
-      update();
+    final date = await  NTP.now();
+    final value= TimesModel.fromDateTime(date);
+    eventRecords.add(EventRecordModel(
+      body: bodyEventController.text,
+      type: selectedEvent!.name,
+      date: value.dateTime.toString().split(" ")[0],
+      color: selectedEvent!.color.toString(),
+    ));
+    bodyEventController.clear();
+    update();
     }
-  }
 
   void showParentInputDialog(
     BuildContext context,

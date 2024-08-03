@@ -5,6 +5,7 @@ import 'dart:math';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:ntp/ntp.dart';
 import 'package:vision_dashboard/core/Styling/app_colors.dart';
 import 'package:vision_dashboard/core/Styling/app_style.dart';
 
@@ -67,12 +68,20 @@ class _EmployeeTimeChartState extends State<EmployeeTimeChart> {
   void initState() {
     touchedValue = -1;
     super.initState();
-    getTime().then(
+    // getTime().then(
+    //       (value) {
+    //     if (value != null) {
+    //       // selectedDay = value.formattedTime;
+    //       selectedDayController.text = value.formattedTime;
+    //     }
+    //   },
+    // );
+    NTP.now().then(
           (value) {
-        if (value != null) {
+
           // selectedDay = value.formattedTime;
-          selectedDayController.text = value.formattedTime;
-        }
+          selectedDayController.text = value.toString().split(" ")[0];
+
       },
     );
   }

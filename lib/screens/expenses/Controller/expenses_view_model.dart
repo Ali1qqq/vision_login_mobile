@@ -330,6 +330,7 @@ class ExpensesViewModel extends GetxController {
   /// use this to change view screen
   void foldScreen() {
     clearController();
+
     dateController.text = thisTimesModel!.dateTime.toString().split(" ")[0];
 
     isAdd = !isAdd;

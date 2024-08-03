@@ -5,6 +5,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:ntp/ntp.dart';
 import 'package:pluto_grid/pluto_grid.dart';
 import 'package:quickalert/models/quickalert_type.dart';
 import 'package:quickalert/widgets/quickalert_dialog.dart';
@@ -24,6 +25,7 @@ import 'package:vision_dashboard/utils/Dialogs.dart';
 import '../../../constants.dart';
 import '../../../controller/NFC_Card_View_model.dart';
 import '../../../core/Utils/service.dart';
+import '../../../models/TimeModel.dart';
 import '../../../models/account_management_model.dart';
 import '../../../models/event_model.dart';
 import '../../../models/event_record_model.dart';
@@ -204,14 +206,6 @@ class EmployeeViewModel extends GetxController {
     accountManagementFireStore.doc(accountModel.id).set(accountModel, SetOptions(merge: true));
   }
 
-  updateAccount(EmployeeModel accountModel) {
-    accountManagementFireStore.doc(accountModel.id).update(accountModel.toJson());
-  }
-
-  deleteAccount(EmployeeModel accountModel) {
-    accountManagementFireStore.doc(accountModel.id).delete();
-  }
-
   deleteUnAcceptedAccount(String accountModelId) {
     accountManagementFireStore.doc(accountModelId).delete();
   }
@@ -275,10 +269,8 @@ class EmployeeViewModel extends GetxController {
 
   String? userName;
   String? password;
-
   String? serialNFC;
   EmployeeModel? myUserModel;
-
   UserManagementStatus? userStatus;
 
   void checkUserStatus() async {
@@ -286,22 +278,16 @@ class EmployeeViewModel extends GetxController {
       FirebaseFirestore.instance.collection(accountManagementCollection).where('userName', isEqualTo: userName).where("password", isEqualTo: password).snapshots().listen((value) async {
         if (userName == null) {
           userStatus = UserManagementStatus.first;
-          // print("1");
-          // Get.offNamed(AppRoutes.main);
         } else if (value.docs.isNotEmpty) {
-          // print("2");
-          // print(value.docs.length);
           myUserModel = EmployeeModel.fromJson(value.docs.first.data());
           HiveDataBase.setCurrentScreen("0");
-
-          await HiveDataBase.setUserData(id: myUserModel!.id, name: myUserModel!.userName, type: myUserModel!.type, serialNFC: myUserModel!.serialNFC ?? '', userName: myUserModel!.userName);
+          // await HiveDataBase.setUserData(id: myUserModel!.id, name: myUserModel!.userName, type: myUserModel!.type, serialNFC: myUserModel!.serialNFC ?? '', userName: myUserModel!.userName);
           await HiveDataBase.deleteAccountManagementModel();
           await HiveDataBase.setAccountManagementModel(myUserModel!);
 
           userStatus = UserManagementStatus.login;
           Get.offNamed(AppRoutes.DashboardScreen);
         } else if (value.docs.isEmpty) {
-          // print("3");
           if (Get.currentRoute != AppRoutes.main) {
             userStatus = UserManagementStatus.first;
             Get.offNamed(AppRoutes.main);
@@ -315,42 +301,7 @@ class EmployeeViewModel extends GetxController {
         }
         update();
       });
-    }
-    /*else if (serialNFC != null) {
-      FirebaseFirestore.instance
-          .collection(accountManagementCollection)
-          .where('serialNFC', isEqualTo: serialNFC)
-          .snapshots()
-          .listen((value) {
-        if (serialNFC == null) {
-          userStatus = UserManagementStatus.first;
-          Get.offNamed(AppRoutes.main);
-        } else if (value.docs.first.data()["isDisabled"]) {
-          Get.snackbar("خطأ", "تم إلغاء تفعيل البطاقة");
-          userStatus = UserManagementStatus.first;
-          Get.offNamed(AppRoutes.main);
-        } else if (value.docs.isNotEmpty) {
-          myUserModel =
-              AccountManagementModel.fromJson(value.docs.first.data());
-          userStatus = UserManagementStatus.login;
-          Get.offAll(() => MainScreen());
-        } else if (value.docs.isEmpty) {
-          if (Get.currentRoute != "/LoginScreen") {
-            userStatus = UserManagementStatus.first;
-            Get.offAll(() => LoginScreen());
-          } else {
-            Get.snackbar("error", "not matched");
-          }
-          userName = null;
-          password = null;
-          serialNFC = null;
-        } else {
-          userStatus = null;
-        }
-        update();
-      });
-    }*/
-    else {
+    } else {
       WidgetsFlutterBinding.ensureInitialized().waitUntilFirstFrameRasterized.then((value) {
         userStatus = UserManagementStatus.first;
         Get.offNamed(AppRoutes.main);
@@ -384,163 +335,168 @@ class EmployeeViewModel extends GetxController {
     }
     print(user?.id);
     if (user != null) {
-      getTime().then(
-        (timeData) async {
-          if (timeData != null) {
-            // print(timeData.hour);
-            if (user!.employeeTime[timeData.formattedTime] == null) {
-              if (timeData.isAfter(8, 31)) {
-                totalLate = timeData.dateTime.difference(DateTime.now().copyWith(hour: 7, minute: 41, second: 0)).inMinutes;
-                isDayOff = true;
-                isLateWithReason = false;
-                await Get.defaultDialog(
-                    barrierDismissible: false,
-                    backgroundColor: Colors.white,
-                    title: "أنت متأخر ",
-                    content: Container(
-                      child: StatefulBuilder(
-                        builder: (context, setstate) {
-                          return Column(
-                            children: [
-                              Text("تأخرت اليوم "),
-                              SizedBox(
-                                height: 10,
-                              ),
-                              Row(
-                                children: [
-                                  Checkbox(
-                                      fillColor: WidgetStatePropertyAll(primaryColor),
-                                      shape: RoundedRectangleBorder(),
-                                      value: !isLateWithReason!,
-                                      onChanged: (_) {
-                                        isLateWithReason = !_!;
-                                        setstate(() {});
-                                      }),
-                                  Text("تأخر غير مبرر")
-                                ],
-                              ),
-                              Row(
-                                children: [
-                                  Checkbox(
-                                      fillColor: WidgetStatePropertyAll(primaryColor),
-                                      shape: RoundedRectangleBorder(),
-                                      value: isLateWithReason,
-                                      onChanged: (_) {
-                                        isLateWithReason = _!;
-                                        setstate(() {});
-                                      }),
-                                  Text("تأخر مبرر"),
-                                ],
-                              ),
-                              CustomTextField(controller: lateReasonController, title: "سبب التأخر".tr),
-                            ],
-                          );
-                        },
-                      ),
-                    ),
-                    actions: [
-                      AppButton(
-                          text: "موافق",
-                          onPressed: () {
-                            Get.back();
-                          })
-                    ]);
-              } else if (timeData.isAfter(7, 40)) {
-                totalLate = timeData.dateTime.difference(DateTime.now().copyWith(hour: 7, minute: 41, second: 0)).inMinutes;
-                isLateWithReason = false;
-                await Get.defaultDialog(
-                    barrierDismissible: false,
-                    backgroundColor: Colors.white,
-                    title: "أنت متأخر ",
-                    content: Container(
-                      child: StatefulBuilder(
-                        builder: (context, setstate) {
-                          return Column(
-                            children: [
-                              Text("تأخرت اليوم "),
-                              SizedBox(
-                                height: 10,
-                              ),
-                              Row(
-                                children: [
-                                  Checkbox(
-                                      fillColor: WidgetStatePropertyAll(primaryColor),
-                                      shape: RoundedRectangleBorder(),
-                                      value: !isLateWithReason!,
-                                      onChanged: (_) {
-                                        isLateWithReason = !_!;
-                                        setstate(() {});
-                                      }),
-                                  Text("تأخر غير مبرر")
-                                ],
-                              ),
-                              Row(
-                                children: [
-                                  Checkbox(
-                                      fillColor: WidgetStatePropertyAll(primaryColor),
-                                      shape: RoundedRectangleBorder(),
-                                      value: isLateWithReason,
-                                      onChanged: (_) {
-                                        isLateWithReason = _!;
-                                        setstate(() {});
-                                      }),
-                                  Text("تأخر مبرر"),
-                                ],
-                              ),
-                              CustomTextField(controller: lateReasonController, title: "سبب التأخر".tr),
-                            ],
-                          );
-                        },
-                      ),
-                    ),
-                    actions: [
-                      AppButton(
-                          text: "موافق",
-                          onPressed: () {
-                            Get.back();
-                          })
-                    ]);
-              }
-
-              user.employeeTime[timeData.formattedTime] = EmployeeTimeModel(
-                  dayName: timeData.formattedTime,
-                  startDate: timeData.dateTime.copyWith(hour: timeData.hour, day: timeData.day, minute: timeData.minute),
-                  endDate: null,
-                  totalDate: null,
-                  isDayEnd: false,
-                  isDayOff: isDayOff,
-                  isLateWithReason: isLateWithReason,
-                  reasonOfLate: lateReasonController.text,
-                  totalLate: totalLate,
-                  isEarlierWithReason: null,
-                  reasonOfEarlier: null,
-                  totalEarlier: null);
-              loginUserPage = "اهلا بك " + user.userName;
-            } else if (user.employeeTime[timeData.formattedTime]!.isDayEnd!) {
-              loginUserPage = "لقد قمت بالخروج بالفعل " + user.userName;
-              print("You close the day already");
-            } else {
-              if (timeData.isBefore(14, 00)) {
-                totalEarlier = timeData.dateTime.copyWith(hour: 14, minute: 00, second: 0).difference(timeData.dateTime).inMinutes;
-              }
-
-              user.employeeTime[timeData.formattedTime]!.isEarlierWithReason = true;
-              user.employeeTime[timeData.formattedTime]!.totalEarlier = totalEarlier;
-              user.employeeTime[timeData.formattedTime]!.reasonOfEarlier = '';
-              loginUserPage = "وداعا " + user.userName;
-              user.employeeTime[timeData.formattedTime]!.endDate = timeData.dateTime.copyWith(hour: timeData.hour, day: timeData.day, minute: timeData.minute);
-              ;
-              user.employeeTime[timeData.formattedTime]!.isDayEnd = true;
-              user.employeeTime[timeData.formattedTime]!.totalDate = timeData.dateTime.difference(user.employeeTime[timeData.formattedTime]!.startDate!).inMinutes;
+      NTP.now().then(
+        (date) async {
+          TimesModel timeData=TimesModel.fromDateTime(date);
+          if (user!.employeeTime[timeData.formattedTime] == null) {
+            if (timeData.isBefore(7, 00)) {
+              Get.snackbar("خطأ اثناء التسجيل", "الدوام لم يبدأ بعد");
+              return;
             }
-            accountManagementFireStore.doc(user.id).update({"employeeTime": Map.fromEntries(user.employeeTime.entries.map((e) => MapEntry(e.key, e.value.toJson())).toList())});
+            if (timeData.isAfter(8, 31)) {
+              totalLate = timeData.dateTime.difference(DateTime.now().copyWith(hour: 7, minute: 41, second: 0)).inMinutes;
+              isDayOff = true;
+              isLateWithReason = false;
+              await Get.defaultDialog(
+                  barrierDismissible: false,
+                  backgroundColor: Colors.white,
+                  title: "أنت متأخر ",
+                  content: Container(
+                    child: StatefulBuilder(
+                      builder: (context, setstate) {
+                        return Column(
+                          children: [
+                            Text("تأخرت اليوم "),
+                            SizedBox(
+                              height: 10,
+                            ),
+                            Row(
+                              children: [
+                                Checkbox(
+                                    fillColor: WidgetStatePropertyAll(primaryColor),
+                                    shape: RoundedRectangleBorder(),
+                                    value: !isLateWithReason!,
+                                    onChanged: (_) {
+                                      isLateWithReason = !_!;
+                                      setstate(() {});
+                                    }),
+                                Text("تأخر غير مبرر")
+                              ],
+                            ),
+                            Row(
+                              children: [
+                                Checkbox(
+                                    fillColor: WidgetStatePropertyAll(primaryColor),
+                                    shape: RoundedRectangleBorder(),
+                                    value: isLateWithReason,
+                                    onChanged: (_) {
+                                      isLateWithReason = _!;
+                                      setstate(() {});
+                                    }),
+                                Text("تأخر مبرر"),
+                              ],
+                            ),
+                            CustomTextField(controller: lateReasonController, title: "سبب التأخر".tr),
+                          ],
+                        );
+                      },
+                    ),
+                  ),
+                  actions: [
+                    AppButton(
+                        text: "موافق",
+                        onPressed: () {
+                          Get.back();
+                        })
+                  ]);
+            } else if (timeData.isAfter(7, 40)) {
+              totalLate = timeData.dateTime.difference(DateTime.now().copyWith(hour: 7, minute: 41, second: 0)).inMinutes;
+              isLateWithReason = false;
+              await Get.defaultDialog(
+                  barrierDismissible: false,
+                  backgroundColor: Colors.white,
+                  title: "أنت متأخر ",
+                  content: Container(
+                    child: StatefulBuilder(
+                      builder: (context, setstate) {
+                        return Column(
+                          children: [
+                            Text("تأخرت اليوم "),
+                            SizedBox(
+                              height: 10,
+                            ),
+                            Row(
+                              children: [
+                                Checkbox(
+                                    fillColor: WidgetStatePropertyAll(primaryColor),
+                                    shape: RoundedRectangleBorder(),
+                                    value: !isLateWithReason!,
+                                    onChanged: (_) {
+                                      isLateWithReason = !_!;
+                                      setstate(() {});
+                                    }),
+                                Text("تأخر غير مبرر")
+                              ],
+                            ),
+                            Row(
+                              children: [
+                                Checkbox(
+                                    fillColor: WidgetStatePropertyAll(primaryColor),
+                                    shape: RoundedRectangleBorder(),
+                                    value: isLateWithReason,
+                                    onChanged: (_) {
+                                      isLateWithReason = _!;
+                                      setstate(() {});
+                                    }),
+                                Text("تأخر مبرر"),
+                              ],
+                            ),
+                            CustomTextField(controller: lateReasonController, title: "سبب التأخر".tr),
+                          ],
+                        );
+                      },
+                    ),
+                  ),
+                  actions: [
+                    AppButton(
+                        text: "موافق",
+                        onPressed: () {
+                          Get.back();
+                        })
+                  ]);
+            }
 
-            update();
-            await Future.delayed(Duration(seconds: 4));
-            loginUserPage = null;
-            update();
+            user.employeeTime[timeData.formattedTime] = EmployeeTimeModel(
+                dayName: timeData.formattedTime,
+                startDate: timeData.dateTime.copyWith(hour: timeData.hour, day: timeData.day, minute: timeData.minute),
+                endDate: null,
+                totalDate: null,
+                isDayEnd: false,
+                isDayOff: isDayOff,
+                isLateWithReason: isLateWithReason,
+                reasonOfLate: lateReasonController.text,
+                totalLate: totalLate,
+                isEarlierWithReason: null,
+                reasonOfEarlier: null,
+                totalEarlier: null);
+            loginUserPage = "اهلا بك " + user.userName;
+          } else if (user.employeeTime[timeData.formattedTime]!.isDayEnd!) {
+            loginUserPage = "لقد قمت بالخروج بالفعل " + user.userName;
+            print("You close the day already");
+          } else {
+            if (timeData.isAfter(18, 00)) {
+              return;
+            }
+            if (timeData.isBefore(14, 00)) {
+              totalEarlier = timeData.dateTime.copyWith(hour: 14, minute: 00, second: 0).difference(timeData.dateTime).inMinutes;
+            }
+
+            user.employeeTime[timeData.formattedTime]!.isEarlierWithReason = true;
+            user.employeeTime[timeData.formattedTime]!.totalEarlier = totalEarlier;
+            user.employeeTime[timeData.formattedTime]!.reasonOfEarlier = '';
+            loginUserPage = "وداعا " + user.userName;
+            user.employeeTime[timeData.formattedTime]!.endDate = timeData.dateTime.copyWith(hour: 14, day: timeData.day, minute: 00);
+            ;
+            user.employeeTime[timeData.formattedTime]!.isDayEnd = true;
+            user.employeeTime[timeData.formattedTime]!.totalDate = timeData.dateTime.difference(user.employeeTime[timeData.formattedTime]!.startDate!).inMinutes;
           }
-        },
+          accountManagementFireStore.doc(user.id).update({"employeeTime": Map.fromEntries(user.employeeTime.entries.map((e) => MapEntry(e.key, e.value.toJson())).toList())});
+
+          update();
+          await Future.delayed(Duration(seconds: 4));
+          loginUserPage = null;
+          update();
+                },
       );
     } else {
       print("Not found");
@@ -625,22 +581,6 @@ class EmployeeViewModel extends GetxController {
 
           pay += accountModel.salary! - totalDayOff - totalLateAndEarlier;
         }
-        //   AccountManagementModel accountModel = value;
-        //   int totalLate = accountModel.employeeTime.isEmpty
-        //       ? 0
-        //       : accountModel.employeeTime.values
-        //           .map((e) => e.totalLate ?? 0)
-        //           .reduce((value, element) => value + element);
-        //   int totalEarlier = accountModel.employeeTime.isEmpty
-        //       ? 0
-        //       : accountModel.employeeTime.values
-        //           .map((e) => e.totalEarlier ?? 0)
-        //           .reduce((value, element) => value + element);
-        //   int totalTime = totalLate + totalEarlier;
-        //   pay += ((accountModel.salary!) -
-        //       ((accountModel.salary! / accountModel.dayOfWork!) *
-        //           ((totalTime / 60).floor() * 0.5)));
-        // }
       },
     );
     return pay;
@@ -686,20 +626,6 @@ class EmployeeViewModel extends GetxController {
           (accountModel.salary! / accountModel.dayOfWork!).round();
 
       pay += accountModel.salary! - totalDayOff - totalLateAndEarlier;
-      // int totalLate = accountModel.employeeTime.isEmpty
-      //     ? 0
-      //     : accountModel.employeeTime.values
-      //         .map((e) => e.totalLate ?? 0)
-      //         .reduce((value, element) => value + element);
-      // int totalEarlier = accountModel.employeeTime.isEmpty
-      //     ? 0
-      //     : accountModel.employeeTime.values
-      //         .map((e) => e.totalEarlier ?? 0)
-      //         .reduce((value, element) => value + element);
-      // int totalTime = totalLate + totalEarlier;
-      // pay += ((accountModel.salary!) -
-      //     ((accountModel.salary! / accountModel.dayOfWork!) *
-      //         ((totalTime / 60).floor() * 0.5)));
     }
 
     return pay;
@@ -739,20 +665,6 @@ class EmployeeViewModel extends GetxController {
           (accountModel.salary! / accountModel.dayOfWork!).round();
 
       pay += accountModel.salary! - totalDayOff - totalLateAndEarlier;
-      // int totalLate = accountModel.employeeTime.isEmpty
-      //     ? 0
-      //     : accountModel.employeeTime.values
-      //         .map((e) => e.totalLate ?? 0)
-      //         .reduce((value, element) => value + element);
-      // int totalEarlier = accountModel.employeeTime.isEmpty
-      //     ? 0
-      //     : accountModel.employeeTime.values
-      //         .map((e) => e.totalEarlier ?? 0)
-      //         .reduce((value, element) => value + element);
-      // int totalTime = totalLate + totalEarlier;
-      // pay += ((accountModel.salary!) -
-      //     ((accountModel.salary! / accountModel.dayOfWork!) *
-      //         ((totalTime / 60).floor() * 0.5)));
     }
 
     return pay;
@@ -768,23 +680,7 @@ class EmployeeViewModel extends GetxController {
               (element) => element.key.toString() == day && element.value.isDayOff != true,
             )
             .isNotEmpty) {
-          EmployeeModel accountModel = value;
-          int totalLate = accountModel.employeeTime.isEmpty
-              ? 0
-              : accountModel.employeeTime.values
-                      .where(
-                        (element) => element.dayName == day,
-                      )
-                      .map((e) => e.totalLate ?? 0)
-                      .firstOrNull ??
-                  0;
-          /*.reduce((value, element) => value + element);*/
-          // int totalEarlier =   accountModel.employeeTime.isEmpty
-          //     ? 0
-          //     : accountModel.employeeTime.values
-          //         .map((e) => e.totalEarlier ?? 0)
-          //         .reduce((value, element) => value + element);
-          double totalTime = (totalLate + 0 * 1.0);
+          double totalTime = (getTotalLateForUserAtDay(selectedDay: day, userId: key) + 0 * 1.0);
 
           /* if (totalTime > 8)
             time.add(8);
@@ -801,23 +697,39 @@ class EmployeeViewModel extends GetxController {
   int getTotalLateForUserAtMonth({required String selectedMonth, required String userId}) {
     int totalLate = 0;
     List<int> totalLateList = [];
-    if(selectedMonth!='الكل')
-    totalLateList = allAccountManagement[userId]!
-        .employeeTime
-        .values
-        .where(
-          (element) => element.dayName!.split("-")[1].split("-")[0] == months[selectedMonth],
-        )
-        .map((e) => e.totalLate ?? 0)
-        .toList();
-    else
+    if (selectedMonth != 'الكل')
       totalLateList = allAccountManagement[userId]!
           .employeeTime
           .values
+          .where(
+            (element) => element.dayName!.split("-")[1].split("-")[0] == months[selectedMonth],
+          )
           .map((e) => e.totalLate ?? 0)
           .toList();
-    if(totalLateList.isNotEmpty)
-    totalLate = totalLateList.reduce((value, element) => value + element);
+    else
+      totalLateList = allAccountManagement[userId]!.employeeTime.values.map((e) => e.totalLate ?? 0).toList();
+    if (totalLateList.isNotEmpty) totalLate = totalLateList.reduce((value, element) => value + element);
+    return totalLate;
+  }
+
+  int getTotalLateForUserAtDay({required String selectedDay, required String userId}) {
+    int totalLate = 0;
+    List<int> totalLateList = [];
+    if (selectedDay != 'الكل')
+      totalLateList = allAccountManagement[userId]!
+          .employeeTime
+          .values
+          .where(
+            (element) {
+
+              return element.dayName!.split("-")[2] == selectedDay;
+            },
+          )
+          .map((e) => e.totalLate ?? 0)
+          .toList();
+    else
+      totalLateList = allAccountManagement[userId]!.employeeTime.values.map((e) => e.totalLate ?? 0).toList();
+    if (totalLateList.isNotEmpty) totalLate = totalLateList.reduce((value, element) => value + element);
     return totalLate;
   }
 
@@ -1116,11 +1028,12 @@ class EmployeeViewModel extends GetxController {
     );
   }
 
-  addEmployeeEvent() {
+  addEmployeeEvent() async{
+    DateTime dateTime= await NTP.now();
     eventRecords.add(EventRecordModel(
       body: bodyEvent.text,
       type: selectedEvent!.name,
-      date: thisTimesModel!.dateTime.toString().split(".")[0],
+      date: dateTime.toIso8601String(),
       color: selectedEvent!.color.toString(),
     ));
     bodyEvent.clear();

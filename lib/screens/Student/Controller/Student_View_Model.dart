@@ -3,9 +3,11 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
+import 'package:ntp/ntp.dart';
 import 'package:pluto_grid/pluto_grid.dart';
 import 'package:vision_dashboard/models/Installment_model.dart';
 import 'package:vision_dashboard/models/Student_Model.dart';
+import 'package:vision_dashboard/models/TimeModel.dart';
 import 'package:vision_dashboard/screens/Exams/controller/Exam_View_Model.dart';
 
 import '../../../constants.dart';
@@ -296,13 +298,13 @@ class StudentViewModel extends GetxController {
   }
 
   setInstallmentPay(String installmentId, String studentId, bool isPay,String imageUrl) async{
-
-
+    DateTime dateTime= await NTP.now();
+TimesModel timesModel=TimesModel.fromDateTime(dateTime);
     Map<String, InstallmentModel>? installmentRecords =
         _studentMap[studentId]!.installmentRecords;
     installmentRecords![installmentId]!.isPay = isPay;
     installmentRecords[installmentId]!.InstallmentImage = imageUrl;
-    installmentRecords[installmentId]!.payTime = thisTimesModel!.dateTime.toString();
+    installmentRecords[installmentId]!.payTime = timesModel.dateTime.toString();
     studentCollectionRef.doc(studentId).set(
         StudentModel(installmentRecords: installmentRecords).toJson(),
         SetOptions(merge: true));

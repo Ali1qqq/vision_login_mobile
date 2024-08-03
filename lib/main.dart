@@ -1,4 +1,5 @@
 import 'dart:ui';
+import 'package:ntp/ntp.dart';
 import 'package:vision_dashboard/Translate/App_Translation.dart';
 import 'package:vision_dashboard/constants.dart';
 import 'package:vision_dashboard/core/Styling/app_colors.dart';
@@ -6,6 +7,7 @@ import 'package:vision_dashboard/core/binding.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:vision_dashboard/models/TimeModel.dart';
 import 'package:vision_dashboard/router.dart';
 import 'package:vision_dashboard/screens/login/login_screen.dart';
 import 'package:vision_dashboard/utils/Hive_DataBase.dart';
@@ -22,7 +24,7 @@ Future<void> main() async {
     DeviceOrientation.landscapeLeft,
   ]);*/
   await HiveDataBase.init();
-  await getTime();
+  thisTimesModel = TimesModel.fromDateTime(await NTP.now());
   runApp(MyApp());
 }
 
@@ -30,20 +32,9 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
-      // routerDelegate: router.routerDelegate,
-      // routeInformationParser: router.routeInformationParser,
-      // routeInformationProvider: router.routeInformationProvider,
-      // routingCallback: _router.,
-
       routingCallback: (value) {
-
-
       },
-
       translationsKeys: AppTranslation.translationKes,
-
-      // locale: const Locale("en", "US"),
-      // fallbackLocale:const Locale("en", "US"),
       locale: const Locale("ar", "ar"),
       fallbackLocale: const Locale("ar", "ar"),
       textDirection: Get.locale.toString() != "en_US"

@@ -25,10 +25,9 @@ class TimesModel {
     required this.milliSeconds,
     required this.dateTime,
     required this.date,
-    // required this.time,
+
     required this.timeZone,
     required this.dayOfWeek,
-    // required this.dstActive,
   });
 
   factory TimesModel.fromJson(Map<String, dynamic> json) {
@@ -49,6 +48,23 @@ class TimesModel {
       // dstActive: json['dst'],
     );
   }
+
+  factory TimesModel.fromDateTime(DateTime dateTime) {
+    return TimesModel(
+      year: dateTime.year,
+      month: dateTime.month,
+      day: dateTime.day,
+      hour: dateTime.hour,
+      minute: dateTime.minute,
+      seconds: dateTime.second,
+      milliSeconds: dateTime.millisecond,
+      dateTime: dateTime,
+      date: dateTime.toString().split("T")[0],
+      timeZone: dateTime.timeZoneName,
+      dayOfWeek: dateTime.weekday.toString(),
+    );
+  }
+
   String get formattedTime {
     final dateTime = DateTime(year, month, day,/* hour, minute, seconds, milliSeconds*/);
     final format = DateFormat('yyyy-MM-dd');

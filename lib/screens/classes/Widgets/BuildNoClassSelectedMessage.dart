@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../../../constants.dart';
 import '../../../core/Styling/app_style.dart';
 
 Widget buildNoClassSelectedMessage() {
@@ -10,7 +9,7 @@ Widget buildNoClassSelectedMessage() {
     child: Center(
       child: Text(
         "يرجى إختيار احد الصفوف لمشاهدة تفاصيله".tr,
-        style: AppStyles.headLineStyle2.copyWith(color: blueColor),
+        style: AppStyles.headLineStyle2,
         textAlign: TextAlign.center,
       ),
     ),
