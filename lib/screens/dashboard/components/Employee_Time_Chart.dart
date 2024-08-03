@@ -5,12 +5,10 @@ import 'dart:math';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:ntp/ntp.dart';
 import 'package:vision_dashboard/core/Styling/app_colors.dart';
 import 'package:vision_dashboard/core/Styling/app_style.dart';
 
 import '../../../constants.dart';
-import '../../../core/Utils/service.dart';
 import '../../Employee/Controller/Employee_view_model.dart';
 import '../../Widgets/Custom_Text_Filed.dart';
 
@@ -76,14 +74,11 @@ class _EmployeeTimeChartState extends State<EmployeeTimeChart> {
     //     }
     //   },
     // );
-    NTP.now().then(
-          (value) {
+
 
           // selectedDay = value.formattedTime;
-          selectedDayController.text = value.toString().split(" ")[0];
+          selectedDayController.text = DateTime.now().toString().split(" ")[0];
 
-      },
-    );
   }
 TextEditingController selectedDayController=TextEditingController();
 // String selectedDay='';

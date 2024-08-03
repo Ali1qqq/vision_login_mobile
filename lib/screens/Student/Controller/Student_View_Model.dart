@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
-import 'package:ntp/ntp.dart';
 import 'package:pluto_grid/pluto_grid.dart';
 import 'package:vision_dashboard/models/Installment_model.dart';
 import 'package:vision_dashboard/models/Student_Model.dart';
@@ -298,8 +297,8 @@ class StudentViewModel extends GetxController {
   }
 
   setInstallmentPay(String installmentId, String studentId, bool isPay,String imageUrl) async{
-    DateTime dateTime= await NTP.now();
-TimesModel timesModel=TimesModel.fromDateTime(dateTime);
+    // DateTime dateTime= await NTP.now();
+TimesModel timesModel=TimesModel.fromDateTime(DateTime.now());
     Map<String, InstallmentModel>? installmentRecords =
         _studentMap[studentId]!.installmentRecords;
     installmentRecords![installmentId]!.isPay = isPay;

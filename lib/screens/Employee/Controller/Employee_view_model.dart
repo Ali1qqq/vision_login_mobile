@@ -5,7 +5,6 @@ import 'package:firebase_storage/firebase_storage.dart';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:ntp/ntp.dart';
 import 'package:pluto_grid/pluto_grid.dart';
 import 'package:quickalert/models/quickalert_type.dart';
 import 'package:quickalert/widgets/quickalert_dialog.dart';
@@ -335,10 +334,9 @@ class EmployeeViewModel extends GetxController {
     }
     print(user?.id);
     if (user != null) {
-      NTP.now().then(
-        (date) async {
-          TimesModel timeData=TimesModel.fromDateTime(date);
-          if (user!.employeeTime[timeData.formattedTime] == null) {
+   {
+          TimesModel timeData=TimesModel.fromDateTime(DateTime.now());
+          if (user.employeeTime[timeData.formattedTime] == null) {
             if (timeData.isBefore(7, 00)) {
               Get.snackbar("خطأ اثناء التسجيل", "الدوام لم يبدأ بعد");
               return;
@@ -496,8 +494,8 @@ class EmployeeViewModel extends GetxController {
           await Future.delayed(Duration(seconds: 4));
           loginUserPage = null;
           update();
-                },
-      );
+                }
+
     } else {
       print("Not found");
     }
@@ -1029,11 +1027,10 @@ class EmployeeViewModel extends GetxController {
   }
 
   addEmployeeEvent() async{
-    DateTime dateTime= await NTP.now();
     eventRecords.add(EventRecordModel(
       body: bodyEvent.text,
       type: selectedEvent!.name,
-      date: dateTime.toIso8601String(),
+      date: DateTime.now().toIso8601String(),
       color: selectedEvent!.color.toString(),
     ));
     bodyEvent.clear();

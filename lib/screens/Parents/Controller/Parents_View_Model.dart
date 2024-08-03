@@ -4,7 +4,6 @@ import 'dart:typed_data';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:ntp/ntp.dart';
 import 'package:pluto_grid/pluto_grid.dart';
 import 'package:quickalert/models/quickalert_type.dart';
 import 'package:quickalert/widgets/quickalert_dialog.dart';
@@ -290,8 +289,7 @@ class ParentsViewModel extends GetxController {
   bool isAdd = false;
 
   void addEventRecord() async {
-    final date = await  NTP.now();
-    final value= TimesModel.fromDateTime(date);
+    final value= TimesModel.fromDateTime(DateTime.now());
     eventRecords.add(EventRecordModel(
       body: bodyEventController.text,
       type: selectedEvent!.name,

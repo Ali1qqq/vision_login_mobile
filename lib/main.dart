@@ -1,5 +1,4 @@
 import 'dart:ui';
-import 'package:ntp/ntp.dart';
 import 'package:vision_dashboard/Translate/App_Translation.dart';
 import 'package:vision_dashboard/constants.dart';
 import 'package:vision_dashboard/core/Styling/app_colors.dart';
@@ -11,9 +10,8 @@ import 'package:vision_dashboard/models/TimeModel.dart';
 import 'package:vision_dashboard/router.dart';
 import 'package:vision_dashboard/screens/login/login_screen.dart';
 import 'package:vision_dashboard/utils/Hive_DataBase.dart';
-import 'core/Utils/service.dart';
 import 'firebase_options.dart';
-//flutter run -d web-server --web-port 8080 --web-hostname 0.0.0.0
+
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
@@ -24,7 +22,7 @@ Future<void> main() async {
     DeviceOrientation.landscapeLeft,
   ]);*/
   await HiveDataBase.init();
-  thisTimesModel = TimesModel.fromDateTime(await NTP.now());
+  thisTimesModel = TimesModel.fromDateTime(DateTime.now());
   runApp(MyApp());
 }
 
