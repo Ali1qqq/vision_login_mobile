@@ -49,7 +49,7 @@ class _EmployeeDetailsChartState extends State<EmployeeDetailsChart> {
           ),
           InfoCard(
             onTap: () {
-              touchedIndex == 0 ? touchedIndex = -1 : touchedIndex = 0;
+              touchedIndex == 1 ? touchedIndex = -1 : touchedIndex = 1;
               setState(() {});
             },
             title: "اداري".tr,
@@ -64,7 +64,7 @@ class _EmployeeDetailsChartState extends State<EmployeeDetailsChart> {
           ),
           InfoCard(
             onTap: () {
-              touchedIndex == 1 ? touchedIndex = -1 : touchedIndex = 1;
+              touchedIndex == 0 ? touchedIndex = -1 : touchedIndex = 0;
               setState(() {});
             },
             title: "استاذ".tr,
@@ -80,7 +80,7 @@ class _EmployeeDetailsChartState extends State<EmployeeDetailsChart> {
 
           InfoCard(
             onTap: () {
-              touchedIndex == 3 ? touchedIndex = -1 : touchedIndex = 3;
+              touchedIndex == 2 ? touchedIndex = -1 : touchedIndex = 2;
               setState(() {});
             },
             title: "سائق".tr,
