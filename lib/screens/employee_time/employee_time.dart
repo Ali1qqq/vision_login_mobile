@@ -424,8 +424,8 @@ class _EmployeeTimeViewState extends State<EmployeeTimeView> {
                                                             Container(
                                                               width: Get.width / 7,
                                                               child: Text(
-                                                                /*DateFun.minutesToTime(totalTime)*/
-                                                                controller.getTotalLateForUserAtMonth(selectedMonth: selectedMonth, userId: entry.value.id).toString(),
+                                                                DateFun.minutesToTime(controller.getTotalLateForUserAtMonth(selectedMonth: selectedMonth, userId: entry.value.id))
+                                                                .toString(),
                                                                 style: TextStyle(fontSize: Get.width < 700 ? 16 : 20),
                                                                 textAlign: TextAlign.center,
                                                               ),
