@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:quickalert/quickalert.dart';
 import 'package:vision_dashboard/controller/Wait_management_view_model.dart';
+import 'package:vision_dashboard/core/Styling/app_colors.dart';
 import 'package:vision_dashboard/core/Styling/app_style.dart';
 import 'package:vision_dashboard/models/Installment_model.dart';
 import 'package:vision_dashboard/screens/Student/Controller/Student_View_Model.dart';
@@ -71,25 +72,25 @@ class _StudyFeesViewState extends State<StudyFeesView> {
                               inkwellIndex = 0;
                               setState(() {});
                             },
-                            child: SquareWidget(title: "الدفعات القادمة", body: "${studentViewModel.getAllNunReceivePay()}", color: primaryColor, png: "assets/poor.png")),
+                            child: SquareWidget(title: "الدفعات القادمة".tr, body: "${studentViewModel.getAllNunReceivePay()}", color: AppColors.textColor, png: "assets/poor.png")),
                         InkWell(
                             onTap: () {
                               inkwellIndex = 1;
                               setState(() {});
                             },
-                            child: SquareWidget(title: "الدفعات المستلمة", body: "${studentViewModel.getAllReceivePay()}", color: blueColor, png: "assets/profit.png")),
+                            child: SquareWidget(title: "الدفعات المستلمة".tr, body: "${studentViewModel.getAllReceivePay()}", color: AppColors.textColor, png: "assets/profit.png")),
                         InkWell(
                             onTap: () {
                               inkwellIndex = 2;
                               setState(() {});
                             },
-                            child: SquareWidget(title: "الدفعات المتأخرة", body: "${studentViewModel.getAllNunReceivePayThisMonth()}", color: Colors.redAccent, png: "assets/late-payment.png")),
+                            child: SquareWidget(title: "الدفعات المتأخرة".tr, body: "${studentViewModel.getAllNunReceivePayThisMonth()}", color: Colors.redAccent, png: "assets/late-payment.png")),
                         InkWell(
                             onTap: () {
                               inkwellIndex = 3;
                               setState(() {});
                             },
-                            child: SquareWidget(title: "الاجمالي", body: "${studentViewModel.getAllTotalPay()}", color: Colors.black, png: "assets/budget.png")),
+                            child: SquareWidget(title: "الاجمالي".tr, body: "${studentViewModel.getAllTotalPay()}", color: Colors.black, png: "assets/budget.png")),
                       ],
                     ),
                   ),
@@ -115,150 +116,7 @@ class _StudyFeesViewState extends State<StudyFeesView> {
                               columns: List.generate(data.length, (index) => DataColumn(label: Container(width: size / data.length, child: Center(child: Text(data[index].toString().tr))))),
                               rows: generateDataRows(inkwellIndex, size, data, studentViewModel, parentsViewModel)
 
-                              /*[
-                                      ...List.generate(
-                                        parentController.parentMap.values
-                                            .where(
-                                              (element) {
 
-                                                if(inkwellIndex==0)
-                                            return    element.children?.where((element) =>  studentController
-                                                    .studentMap[element]!.installmentRecords?.entries.where((element0) {
-                                              return  element0.value.isPay!=true;
-                                                    },).isNotEmpty??false,).toList().isNotEmpty??false;
-                                                else  if(inkwellIndex==1)
-                                                  return    element.children?.where((element) =>  studentController
-                                                      .studentMap[element]!.installmentRecords?.entries.where((element0) {
-                                                    return  element0.value.isPay==true;
-                                                  },).isNotEmpty??false,).toList().isNotEmpty??false;
-                                                else  if(inkwellIndex==2)
-                                                  return    element.children?.where((element) =>  studentController
-                                                      .studentMap[element]!.installmentRecords?.entries.where((element0) {
-                                                    return  int.parse(element0.value.installmentDate!) <= DateTime.now().month &&
-                                                        element0.value.isPay != true;
-                                                  },).isNotEmpty??false,).toList().isNotEmpty??false;
-                                                else
-                                                return (element.children?.length ?? 0) >
-                                                  0;
-                                              },
-                                            )
-                                            .length,
-                                        (index) {
-                                          ParentModel parent =
-                                              parentController.parentMap.values
-                                                  .where(
-                                                    (element) {
-
-                                                  if(inkwellIndex==0)
-                                                    return    element.children?.where((element) =>  studentController
-                                                        .studentMap[element]!.installmentRecords?.entries.where((element0) {
-                                                      return  element0.value.isPay!=true;
-                                                    },).isNotEmpty??false,).toList().isNotEmpty??false;
-                                                  else  if(inkwellIndex==1)
-                                                    return    element.children?.where((element) =>  studentController
-                                                        .studentMap[element]!.installmentRecords?.entries.where((element0) {
-                                                      return  element0.value.isPay==true;
-                                                    },).isNotEmpty??false,).toList().isNotEmpty??false;
-                                                  else  if(inkwellIndex==2)
-                                                    return    element.children?.where((element) =>  studentController
-                                                        .studentMap[element]!.installmentRecords?.entries.where((element0) {
-                                                      return  int.parse(element0.value.installmentDate!) <= DateTime.now().month &&
-                                                          element0.value.isPay != true;
-                                                    },).isNotEmpty??false,).toList().isNotEmpty??false;
-                                                  else
-                                                    return (element.children?.length ?? 0) >
-                                                        0;
-                                                },
-                                                  )
-                                                  .toList()[index];
-                                          int payment = 0;
-                                          int totalPayment = 0;
-                                          for (var pat in parent.children
-                                              ?.map((e) => studentController
-                                                  .studentMap[e]!.totalPayment)
-                                              .toList()??[0]) {
-                                            totalPayment += (pat??0);
-                                          }
-                                          for (var pat in parent.children
-                                              ?.map((e) => studentController
-                                                  .studentMap[e]
-                                                  ?.installmentRecords
-                                                  ?.values
-                                                  .where(
-                                                    (element) =>
-                                                        element.isPay == true,
-                                                  )
-                                                  .toList())
-                                              .toList()??[])
-
-                                          {
-                                            for (var pay in pat ?? []) {
-                                              payment += int.parse(
-                                                  pay.installmentCost.toString());
-                                            }
-                                          }
-                                          return DataRow(
-                                              color: WidgetStatePropertyAll(
-                                                  studentController
-                                                          .chekaIfHaveLateInstallment(
-                                                              parent.id!)
-                                                      ? Colors.redAccent
-                                                          .withOpacity(0.2)
-                                                      : Colors.transparent),
-                                              cells: [
-                                                dataRowItem(size / data.length,
-                                                    parent.fullName.toString()),
-                                                dataRowItem(
-                                                    size / data.length,
-                                                    parent.children
-                                                        ?.map(
-                                                          (e) => studentController
-                                                              .studentMap[e]!
-                                                              .studentName,
-                                                        )
-                                                        .toString()),
-                                                dataRowItem(size / data.length,
-                                                    "$payment درهم ".toString()),
-                                                dataRowItem(size / data.length,
-                                                    "$totalPayment درهم"),
-                                                dataRowItem(size / data.length,
-                                                    "${totalPayment - payment} درهم"),
-                                                dataRowItem(
-                                                    size / data.length,
-                                                    payment - totalPayment >= 0
-                                                        ? "تم استلام كامل المبلغ".tr
-                                                        : "اضافة دفعة".tr,
-                                                    color: payment - totalPayment >=
-                                                            0
-                                                        ? blueColor
-                                                        : Colors.green, onTap: () {
-                                                  Map<String,
-                                                          List<InstallmentModel>>
-                                                      instalmentStudent = {};
-
-                                                  for (var child
-                                                      in parent.children!) {
-                                                    //studentController.studentMap[child]!.studentName!
-                                                    instalmentStudent[child] = [];
-                                                    studentController
-                                                        .studentMap[child]!
-                                                        .installmentRecords!
-                                                        .values
-                                                        .forEach(
-                                                      (element) {
-                                                        instalmentStudent[child]!
-                                                            .add(element);
-                                                      },
-                                                    );
-                                                  }
-
-                                                  showInstallmentDialog(
-                                                      context, instalmentStudent);
-                                                }),
-                                              ]);
-                                        },
-                                      )
-                                    ]*/
                               ),
                         ),
                       ),

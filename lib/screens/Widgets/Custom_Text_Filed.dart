@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:vision_dashboard/core/Styling/app_style.dart';
 
 import '../../constants.dart';
 
@@ -74,9 +75,9 @@ class _CustomTextFieldState extends State<CustomTextField> {
           hintText: widget.hint,
 
           suffixIcon:widget.icon ,
-          labelStyle: TextStyle(color: primaryColor),
+          labelStyle: AppStyles.headLineStyle4.copyWith(color: Colors.black54),
           enabledBorder: UnderlineInputBorder(
-            borderSide: BorderSide(color: primaryColor),
+            borderSide: BorderSide(color:primaryColor),
           ),
           disabledBorder:widget.isFullBorder!=null? OutlineInputBorder(
             borderSide: BorderSide(color: primaryColor,width: 2),

@@ -42,7 +42,6 @@ class _LoginScreenState extends State<LoginScreen> {
                   Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-
                       SizedBox(height: 100,),
                       Container(
                         width: (Get.width),
@@ -54,7 +53,6 @@ class _LoginScreenState extends State<LoginScreen> {
                             Text("تسجيل الدخول الى لوحة التحكم \n ".tr+"مركز رؤية التعليمي للتدريب".tr, style:
 
                           Get.width<500?AppStyles.headLineStyle2:  AppStyles.headLineStyle1,textAlign: TextAlign.center,),
-                            // Text("مركز رؤية التعليمي للتدريب".tr, style: Styles.headLineStyle1,textAlign: TextAlign.center,),
                             SizedBox(height: 50,),
                             if(false/*controller.isSupportNfc*/)
                               Column(
@@ -96,14 +94,6 @@ class _LoginScreenState extends State<LoginScreen> {
                                           isSecure=!isSecure;
                                           setState(() {});
                                         },
-                                       /* onLongPressDown: (_) {
-                                          isSecure = false;
-                                          setState(() {});
-                                        },
-                                        onLongPressUp: () {
-                                          isSecure = true;
-                                          setState(() {});
-                                        },*/
                                         child: Container(
                                           padding: EdgeInsets.all(defaultPadding * 0.75),
                                           margin: EdgeInsets.symmetric(horizontal: defaultPadding / 2),

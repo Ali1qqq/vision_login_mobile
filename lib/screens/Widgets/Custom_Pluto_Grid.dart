@@ -41,15 +41,15 @@ class _CustomPlutoGridState extends State<CustomPlutoGrid> {
       onSelected: widget.onSelected,
       configuration: PlutoGridConfiguration(
         style: PlutoGridStyleConfig(
-
             enableRowColorAnimation: true,
+            columnTextStyle: AppStyles.headLineStyle2,
             activatedColor: Colors.white.withOpacity(0.5),
             gridBackgroundColor: Colors.transparent,
-            evenRowColor: secondaryColor.withOpacity(0.5),
             cellTextStyle: AppStyles.headLineStyle3,
             gridPopupBorderRadius: BorderRadius.all(Radius.circular(15)),
             gridBorderRadius: BorderRadius.all(Radius.circular(15)),
-            gridBorderColor: Colors.transparent),
+            gridBorderColor: Colors.transparent
+        ),
         localeText: PlutoGridLocaleText.arabic(),
       ),
       rowColorCallback: (PlutoRowColorContext rowColorContext) {
@@ -62,7 +62,8 @@ class _CustomPlutoGridState extends State<CustomPlutoGrid> {
       },
       createFooter: (stateManager) {
         stateManager.setPageSize(40, notify: false); // default 40
-        return PlutoPagination(stateManager);
+
+        return PlutoPagination(stateManager,);
       },
     );
   }

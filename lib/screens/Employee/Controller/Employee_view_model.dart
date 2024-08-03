@@ -117,6 +117,8 @@ class EmployeeViewModel extends GetxController {
   /// Refresh pluto header when change language
   getColumns() {
     columns.clear();
+    if (HiveDataBase.getAccountManagementModel()?.type != "مالك") data.remove("كامة السر");
+
     columns.addAll(toAR(data));
   }
 
@@ -131,6 +133,7 @@ class EmployeeViewModel extends GetxController {
         await Get.find<BusViewModel>().getAllWithoutListenBuse();
         plutoKey = GlobalKey();
         rows.clear();
+        int index=HiveDataBase.getAccountManagementModel()?.type == "مالك"?4:3;
         allAccountManagement = Map<String, EmployeeModel>.fromEntries(event.docs.toList().map((i) {
           rows.add(
             PlutoRow(
@@ -138,20 +141,21 @@ class EmployeeViewModel extends GetxController {
                 data.keys.elementAt(0): PlutoCell(value: i.id),
                 data.keys.elementAt(1): PlutoCell(value: i.data().userName),
                 data.keys.elementAt(2): PlutoCell(value: i.data().fullName),
+                if (HiveDataBase.getAccountManagementModel()?.type == "مالك")
                 data.keys.elementAt(3): PlutoCell(value: i.data().password),
-                data.keys.elementAt(4): PlutoCell(value: i.data().type),
-                data.keys.elementAt(5): PlutoCell(value: i.data().isActive == true ? "فعال".tr : "غير فعال".tr),
-                data.keys.elementAt(6): PlutoCell(value: i.data().mobileNumber),
-                data.keys.elementAt(7): PlutoCell(value: i.data().address),
-                data.keys.elementAt(8): PlutoCell(value: i.data().nationality),
-                data.keys.elementAt(9): PlutoCell(value: i.data().gender),
-                data.keys.elementAt(10): PlutoCell(value: i.data().age),
-                data.keys.elementAt(11): PlutoCell(value: i.data().jobTitle),
-                data.keys.elementAt(12): PlutoCell(value: i.data().contract),
-                data.keys.elementAt(13): PlutoCell(value: Get.find<BusViewModel>().busesMap[i.data().bus.toString()]?.name ?? i.data().bus),
-                data.keys.elementAt(14): PlutoCell(value: i.data().startDate),
-                data.keys.elementAt(15): PlutoCell(value: i.data().eventRecords?.length.toString()),
-                data.keys.elementAt(16): PlutoCell(value: i.data().isAccepted == true ? "تمت الموافقة".tr : "في انتظار الموافقة".tr),
+                  data.keys.elementAt(index): PlutoCell(value: i.data().type),
+                data.keys.elementAt(index+1): PlutoCell(value: i.data().isActive == true ? "فعال".tr : "غير فعال".tr),
+                data.keys.elementAt(index+2): PlutoCell(value: i.data().mobileNumber),
+                data.keys.elementAt(index+3): PlutoCell(value: i.data().address),
+                data.keys.elementAt(index+4): PlutoCell(value: i.data().nationality),
+                data.keys.elementAt(index+5): PlutoCell(value: i.data().gender),
+                data.keys.elementAt(index+6): PlutoCell(value: i.data().age),
+                data.keys.elementAt(index+7): PlutoCell(value: i.data().jobTitle),
+                data.keys.elementAt(index+8): PlutoCell(value: i.data().contract),
+                data.keys.elementAt(index+9): PlutoCell(value: Get.find<BusViewModel>().busesMap[i.data().bus.toString()]?.name ?? i.data().bus),
+                data.keys.elementAt(index+10): PlutoCell(value: i.data().startDate),
+                data.keys.elementAt(index+11): PlutoCell(value: i.data().eventRecords?.length.toString()),
+                data.keys.elementAt(index+12): PlutoCell(value: i.data().isAccepted == true ? "تمت الموافقة".tr : "في انتظار الموافقة".tr),
               },
             ),
           );
@@ -279,6 +283,10 @@ class EmployeeViewModel extends GetxController {
           userStatus = UserManagementStatus.first;
         } else if (value.docs.isNotEmpty) {
           myUserModel = EmployeeModel.fromJson(value.docs.first.data());
+          if(myUserModel?.isAccepted==false) {
+            Get.snackbar("خطأ", "هذا المستخدم غير فعال ");
+            return;
+          }
           HiveDataBase.setCurrentScreen("0");
           // await HiveDataBase.setUserData(id: myUserModel!.id, name: myUserModel!.userName, type: myUserModel!.type, serialNFC: myUserModel!.serialNFC ?? '', userName: myUserModel!.userName);
           await HiveDataBase.deleteAccountManagementModel();
@@ -334,168 +342,167 @@ class EmployeeViewModel extends GetxController {
     }
     print(user?.id);
     if (user != null) {
-   {
-          TimesModel timeData=TimesModel.fromDateTime(DateTime.now());
-          if (user.employeeTime[timeData.formattedTime] == null) {
-            if (timeData.isBefore(7, 00)) {
-              Get.snackbar("خطأ اثناء التسجيل", "الدوام لم يبدأ بعد");
-              return;
-            }
-            if (timeData.isAfter(8, 31)) {
-              totalLate = timeData.dateTime.difference(DateTime.now().copyWith(hour: 7, minute: 41, second: 0)).inMinutes;
-              isDayOff = true;
-              isLateWithReason = false;
-              await Get.defaultDialog(
-                  barrierDismissible: false,
-                  backgroundColor: Colors.white,
-                  title: "أنت متأخر ",
-                  content: Container(
-                    child: StatefulBuilder(
-                      builder: (context, setstate) {
-                        return Column(
-                          children: [
-                            Text("تأخرت اليوم "),
-                            SizedBox(
-                              height: 10,
-                            ),
-                            Row(
-                              children: [
-                                Checkbox(
-                                    fillColor: WidgetStatePropertyAll(primaryColor),
-                                    shape: RoundedRectangleBorder(),
-                                    value: !isLateWithReason!,
-                                    onChanged: (_) {
-                                      isLateWithReason = !_!;
-                                      setstate(() {});
-                                    }),
-                                Text("تأخر غير مبرر")
-                              ],
-                            ),
-                            Row(
-                              children: [
-                                Checkbox(
-                                    fillColor: WidgetStatePropertyAll(primaryColor),
-                                    shape: RoundedRectangleBorder(),
-                                    value: isLateWithReason,
-                                    onChanged: (_) {
-                                      isLateWithReason = _!;
-                                      setstate(() {});
-                                    }),
-                                Text("تأخر مبرر"),
-                              ],
-                            ),
-                            CustomTextField(controller: lateReasonController, title: "سبب التأخر".tr),
-                          ],
-                        );
-                      },
-                    ),
-                  ),
-                  actions: [
-                    AppButton(
-                        text: "موافق",
-                        onPressed: () {
-                          Get.back();
-                        })
-                  ]);
-            } else if (timeData.isAfter(7, 40)) {
-              totalLate = timeData.dateTime.difference(DateTime.now().copyWith(hour: 7, minute: 41, second: 0)).inMinutes;
-              isLateWithReason = false;
-              await Get.defaultDialog(
-                  barrierDismissible: false,
-                  backgroundColor: Colors.white,
-                  title: "أنت متأخر ",
-                  content: Container(
-                    child: StatefulBuilder(
-                      builder: (context, setstate) {
-                        return Column(
-                          children: [
-                            Text("تأخرت اليوم "),
-                            SizedBox(
-                              height: 10,
-                            ),
-                            Row(
-                              children: [
-                                Checkbox(
-                                    fillColor: WidgetStatePropertyAll(primaryColor),
-                                    shape: RoundedRectangleBorder(),
-                                    value: !isLateWithReason!,
-                                    onChanged: (_) {
-                                      isLateWithReason = !_!;
-                                      setstate(() {});
-                                    }),
-                                Text("تأخر غير مبرر")
-                              ],
-                            ),
-                            Row(
-                              children: [
-                                Checkbox(
-                                    fillColor: WidgetStatePropertyAll(primaryColor),
-                                    shape: RoundedRectangleBorder(),
-                                    value: isLateWithReason,
-                                    onChanged: (_) {
-                                      isLateWithReason = _!;
-                                      setstate(() {});
-                                    }),
-                                Text("تأخر مبرر"),
-                              ],
-                            ),
-                            CustomTextField(controller: lateReasonController, title: "سبب التأخر".tr),
-                          ],
-                        );
-                      },
-                    ),
-                  ),
-                  actions: [
-                    AppButton(
-                        text: "موافق",
-                        onPressed: () {
-                          Get.back();
-                        })
-                  ]);
-            }
-
-            user.employeeTime[timeData.formattedTime] = EmployeeTimeModel(
-                dayName: timeData.formattedTime,
-                startDate: timeData.dateTime.copyWith(hour: timeData.hour, day: timeData.day, minute: timeData.minute),
-                endDate: null,
-                totalDate: null,
-                isDayEnd: false,
-                isDayOff: isDayOff,
-                isLateWithReason: isLateWithReason,
-                reasonOfLate: lateReasonController.text,
-                totalLate: totalLate,
-                isEarlierWithReason: null,
-                reasonOfEarlier: null,
-                totalEarlier: null);
-            loginUserPage = "اهلا بك " + user.userName;
-          } else if (user.employeeTime[timeData.formattedTime]!.isDayEnd!) {
-            loginUserPage = "لقد قمت بالخروج بالفعل " + user.userName;
-            print("You close the day already");
-          } else {
-            if (timeData.isAfter(18, 00)) {
-              return;
-            }
-            if (timeData.isBefore(14, 00)) {
-              totalEarlier = timeData.dateTime.copyWith(hour: 14, minute: 00, second: 0).difference(timeData.dateTime).inMinutes;
-            }
-
-            user.employeeTime[timeData.formattedTime]!.isEarlierWithReason = true;
-            user.employeeTime[timeData.formattedTime]!.totalEarlier = totalEarlier;
-            user.employeeTime[timeData.formattedTime]!.reasonOfEarlier = '';
-            loginUserPage = "وداعا " + user.userName;
-            user.employeeTime[timeData.formattedTime]!.endDate = timeData.dateTime.copyWith(hour: 14, day: timeData.day, minute: 00);
-            ;
-            user.employeeTime[timeData.formattedTime]!.isDayEnd = true;
-            user.employeeTime[timeData.formattedTime]!.totalDate = timeData.dateTime.difference(user.employeeTime[timeData.formattedTime]!.startDate!).inMinutes;
+      {
+        TimesModel timeData = TimesModel.fromDateTime(DateTime.now());
+        if (user.employeeTime[timeData.formattedTime] == null) {
+          if (timeData.isBefore(7, 00)) {
+            Get.snackbar("خطأ اثناء التسجيل", "الدوام لم يبدأ بعد");
+            return;
           }
-          accountManagementFireStore.doc(user.id).update({"employeeTime": Map.fromEntries(user.employeeTime.entries.map((e) => MapEntry(e.key, e.value.toJson())).toList())});
+          if (timeData.isAfter(8, 31)) {
+            totalLate = timeData.dateTime.difference(DateTime.now().copyWith(hour: 7, minute: 41, second: 0)).inMinutes;
+            isDayOff = true;
+            isLateWithReason = false;
+            await Get.defaultDialog(
+                barrierDismissible: false,
+                backgroundColor: Colors.white,
+                title: "أنت متأخر ",
+                content: Container(
+                  child: StatefulBuilder(
+                    builder: (context, setstate) {
+                      return Column(
+                        children: [
+                          Text("تأخرت اليوم "),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          Row(
+                            children: [
+                              Checkbox(
+                                  fillColor: WidgetStatePropertyAll(primaryColor),
+                                  shape: RoundedRectangleBorder(),
+                                  value: !isLateWithReason!,
+                                  onChanged: (_) {
+                                    isLateWithReason = !_!;
+                                    setstate(() {});
+                                  }),
+                              Text("تأخر غير مبرر")
+                            ],
+                          ),
+                          Row(
+                            children: [
+                              Checkbox(
+                                  fillColor: WidgetStatePropertyAll(primaryColor),
+                                  shape: RoundedRectangleBorder(),
+                                  value: isLateWithReason,
+                                  onChanged: (_) {
+                                    isLateWithReason = _!;
+                                    setstate(() {});
+                                  }),
+                              Text("تأخر مبرر"),
+                            ],
+                          ),
+                          CustomTextField(controller: lateReasonController, title: "سبب التأخر".tr),
+                        ],
+                      );
+                    },
+                  ),
+                ),
+                actions: [
+                  AppButton(
+                      text: "موافق",
+                      onPressed: () {
+                        Get.back();
+                      })
+                ]);
+          } else if (timeData.isAfter(7, 40)) {
+            totalLate = timeData.dateTime.difference(DateTime.now().copyWith(hour: 7, minute: 41, second: 0)).inMinutes;
+            isLateWithReason = false;
+            await Get.defaultDialog(
+                barrierDismissible: false,
+                backgroundColor: Colors.white,
+                title: "أنت متأخر ",
+                content: Container(
+                  child: StatefulBuilder(
+                    builder: (context, setstate) {
+                      return Column(
+                        children: [
+                          Text("تأخرت اليوم "),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          Row(
+                            children: [
+                              Checkbox(
+                                  fillColor: WidgetStatePropertyAll(primaryColor),
+                                  shape: RoundedRectangleBorder(),
+                                  value: !isLateWithReason!,
+                                  onChanged: (_) {
+                                    isLateWithReason = !_!;
+                                    setstate(() {});
+                                  }),
+                              Text("تأخر غير مبرر")
+                            ],
+                          ),
+                          Row(
+                            children: [
+                              Checkbox(
+                                  fillColor: WidgetStatePropertyAll(primaryColor),
+                                  shape: RoundedRectangleBorder(),
+                                  value: isLateWithReason,
+                                  onChanged: (_) {
+                                    isLateWithReason = _!;
+                                    setstate(() {});
+                                  }),
+                              Text("تأخر مبرر"),
+                            ],
+                          ),
+                          CustomTextField(controller: lateReasonController, title: "سبب التأخر".tr),
+                        ],
+                      );
+                    },
+                  ),
+                ),
+                actions: [
+                  AppButton(
+                      text: "موافق",
+                      onPressed: () {
+                        Get.back();
+                      })
+                ]);
+          }
 
-          update();
-          await Future.delayed(Duration(seconds: 4));
-          loginUserPage = null;
-          update();
-                }
+          user.employeeTime[timeData.formattedTime] = EmployeeTimeModel(
+              dayName: timeData.formattedTime,
+              startDate: timeData.dateTime.copyWith(hour: timeData.hour, day: timeData.day, minute: timeData.minute),
+              endDate: null,
+              totalDate: null,
+              isDayEnd: false,
+              isDayOff: isDayOff,
+              isLateWithReason: isLateWithReason,
+              reasonOfLate: lateReasonController.text,
+              totalLate: totalLate,
+              isEarlierWithReason: null,
+              reasonOfEarlier: null,
+              totalEarlier: null);
+          loginUserPage = "اهلا بك " + user.userName;
+        } else if (user.employeeTime[timeData.formattedTime]!.isDayEnd!) {
+          loginUserPage = "لقد قمت بالخروج بالفعل " + user.userName;
+          print("You close the day already");
+        } else {
+          if (timeData.isAfter(18, 00)) {
+            return;
+          }
+          if (timeData.isBefore(14, 00)) {
+            totalEarlier = timeData.dateTime.copyWith(hour: 14, minute: 00, second: 0).difference(timeData.dateTime).inMinutes;
+          }
 
+          user.employeeTime[timeData.formattedTime]!.isEarlierWithReason = true;
+          user.employeeTime[timeData.formattedTime]!.totalEarlier = totalEarlier;
+          user.employeeTime[timeData.formattedTime]!.reasonOfEarlier = '';
+          loginUserPage = "وداعا " + user.userName;
+          user.employeeTime[timeData.formattedTime]!.endDate = timeData.dateTime.copyWith(hour: 14, day: timeData.day, minute: 00);
+          ;
+          user.employeeTime[timeData.formattedTime]!.isDayEnd = true;
+          user.employeeTime[timeData.formattedTime]!.totalDate = timeData.dateTime.difference(user.employeeTime[timeData.formattedTime]!.startDate!).inMinutes;
+        }
+        accountManagementFireStore.doc(user.id).update({"employeeTime": Map.fromEntries(user.employeeTime.entries.map((e) => MapEntry(e.key, e.value.toJson())).toList())});
+
+        update();
+        await Future.delayed(Duration(seconds: 4));
+        loginUserPage = null;
+        update();
+      }
     } else {
       print("Not found");
     }
@@ -719,7 +726,6 @@ class EmployeeViewModel extends GetxController {
           .values
           .where(
             (element) {
-
               return element.dayName!.split("-")[2] == selectedDay;
             },
           )
@@ -1026,7 +1032,7 @@ class EmployeeViewModel extends GetxController {
     );
   }
 
-  addEmployeeEvent() async{
+  addEmployeeEvent() async {
     eventRecords.add(EventRecordModel(
       body: bodyEvent.text,
       type: selectedEvent!.name,
