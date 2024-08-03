@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:vision_dashboard/core/Styling/app_style.dart';
 
 import '../../constants.dart';
 
@@ -26,13 +27,13 @@ class SquareWidget extends StatelessWidget {
                     child: Text(
                       title.toString().tr,
                       textAlign: TextAlign.center,
-                      style: Styles.headLineStyle2.copyWith(color:color==false?Colors.black: color),
+                      style: AppStyles.headLineStyle2.copyWith(color:color==false?Colors.black: color),
                     )),
               ),
             ),
             Text(
               body,
-              style: Styles.headLineStyle1.copyWith(color: color==false?Colors.black: color, fontSize: 40),
+              style: AppStyles.headLineStyle1.copyWith(color: color==false?Colors.black: color, fontSize: 40),
             ),
             SizedBox(
               height: 20,

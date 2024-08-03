@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:vision_dashboard/constants.dart';
 import 'package:vision_dashboard/controller/home_controller.dart';
+import 'package:vision_dashboard/core/Styling/app_style.dart';
 import 'package:vision_dashboard/screens/Buses/Buses_View.dart';
 import 'package:vision_dashboard/screens/Exams/Exam_View.dart';
 import 'package:vision_dashboard/screens/Parents/Parents_View.dart';
@@ -173,7 +174,7 @@ class _MainScreenState extends State<MainScreen>
                         fontWeight: FontWeight.w700,
                         fontSize: 15.0,
                       ),
-                      unselectedTextStyle: Styles.headLineStyle1.copyWith(
+                      unselectedTextStyle: AppStyles.headLineStyle1.copyWith(
                         color: primaryColor,
                         fontSize: 13.0,
                       ),
@@ -239,6 +240,7 @@ class DrawerListTile extends StatelessWidget {
                   Flexible(
                     child: Text(
                       title,
+                      style: AppStyles.headLineStyle3,
                       overflow: TextOverflow.ellipsis,
                     ),
 

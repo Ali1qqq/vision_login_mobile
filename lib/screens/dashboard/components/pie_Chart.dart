@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:vision_dashboard/screens/Widgets/Filled_Container_Color.dart';
 
 import '../../../constants.dart';
+import '../../../core/Styling/app_style.dart';
 
 class PieChartWidget extends StatefulWidget {
   const PieChartWidget({super.key});
@@ -24,7 +25,7 @@ class _PieChartWidgetState extends State<PieChartWidget> {
             padding: const EdgeInsets.all(8.0),
             child: Row(
               children: [
-                Text("عدد الطلاب",style: Styles.headLineStyle2.copyWith(color: Colors.white),),
+                Text("عدد الطلاب",style: AppStyles.headLineStyle2.copyWith(color: Colors.white),),
                 Spacer(),
                 Expanded(
 
@@ -39,12 +40,12 @@ class _PieChartWidgetState extends State<PieChartWidget> {
                           Text(
                             "ذكور",
                             textAlign: TextAlign.center,
-                            style: Styles.headLineStyle3.copyWith(color: Colors.white),
+                            style: AppStyles.headLineStyle3.copyWith(color: Colors.white),
                           ),
                           SizedBox(width: 10,),
                           Text(
                             "٩٧٨",
-                            style: Styles.headLineStyle3.copyWith(color: Colors.white),
+                            style: AppStyles.headLineStyle3.copyWith(color: Colors.white),
                           ),
 
                         ],
@@ -57,12 +58,12 @@ class _PieChartWidgetState extends State<PieChartWidget> {
                           Text(
                             "اناث",
                             textAlign: TextAlign.center,
-                            style: Styles.headLineStyle3.copyWith(color: Colors.white),
+                            style: AppStyles.headLineStyle3.copyWith(color: Colors.white),
                           ),
                           SizedBox(width: 10,),
                           Text(
                             "٨٩١",
-                            style: Styles.headLineStyle3.copyWith(color: Colors.white),
+                            style: AppStyles.headLineStyle3.copyWith(color: Colors.white),
                           ),
 
                         ],

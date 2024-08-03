@@ -3,6 +3,7 @@ import 'package:vision_dashboard/screens/Employee/Controller/Employee_view_model
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../constants.dart';
+import '../../core/Styling/app_style.dart';
 
 
 class LoginScreen extends StatefulWidget {
@@ -52,7 +53,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           children: [
                             Text("تسجيل الدخول الى لوحة التحكم \n ".tr+"مركز رؤية التعليمي للتدريب".tr, style:
 
-                          Get.width<500?Styles.headLineStyle2:  Styles.headLineStyle1,textAlign: TextAlign.center,),
+                          Get.width<500?AppStyles.headLineStyle2:  AppStyles.headLineStyle1,textAlign: TextAlign.center,),
                             // Text("مركز رؤية التعليمي للتدريب".tr, style: Styles.headLineStyle1,textAlign: TextAlign.center,),
                             SizedBox(height: 50,),
                             if(false/*controller.isSupportNfc*/)
@@ -68,7 +69,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                     controller: nameController,
                                     decoration: InputDecoration(
                                       hintText: "اسم المستخدم".tr,
-                                      hintStyle: Styles.headLineStyle2,
+                                      hintStyle: AppStyles.headLineStyle2,
                                       fillColor: bgColor,
                                       filled: true,
                                       border: OutlineInputBorder(
@@ -83,7 +84,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                     obscureText: isSecure,
                                     decoration: InputDecoration(
                                       hintText: "كلمة المرور".tr,
-                                      hintStyle: Styles.headLineStyle2,
+                                      hintStyle: AppStyles.headLineStyle2,
                                       fillColor: bgColor,
                                       filled: true,
                                       border: OutlineInputBorder(

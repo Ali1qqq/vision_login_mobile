@@ -2,6 +2,7 @@ import 'package:get/get.dart';
 import 'package:quickalert/quickalert.dart';
 import 'package:vision_dashboard/controller/home_controller.dart';
 import 'package:flutter/material.dart';
+import 'package:vision_dashboard/core/Styling/app_style.dart';
 
 import '../../constants.dart';
 
@@ -31,8 +32,8 @@ AppBar Header({required String  title,required String middleText,required BuildC
           child: Text(
             title,
             style:
-            Get.width<500?Styles.headLineStyle2.copyWith(color: primaryColor):
-            Styles.headLineStyle1.copyWith(color: primaryColor),
+            Get.width<500?AppStyles.headLineStyle2.copyWith(color: primaryColor):
+            AppStyles.headLineStyle1.copyWith(color: primaryColor),
             overflow: TextOverflow.ellipsis,
           ),
         ),

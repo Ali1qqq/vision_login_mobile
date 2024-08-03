@@ -3,6 +3,8 @@ import 'package:get/get.dart';
 import 'package:vision_dashboard/models/ClassModel.dart';
 
 import '../../../constants.dart';
+import '../../../core/Styling/app_colors.dart';
+import '../../../core/Styling/app_style.dart';
 import '../../Student/Controller/Student_View_Model.dart';
 import '../Controller/Class_View_Model.dart';
 
@@ -19,7 +21,7 @@ Widget buildLanguageSpecificStudentList(StudentViewModel studentController, Stri
       child: Center(
         child: Text(
           "لايوجد طلاب".tr,
-          style: Styles.headLineStyle2.copyWith(color: blueColor),
+          style: AppStyles.headLineStyle2.copyWith(color:  AppColors.textColor),
         ),
       ),
     );
@@ -44,7 +46,7 @@ Widget buildLanguageSpecificStudentList(StudentViewModel studentController, Stri
                 child: Center(
                   child: Text(
                     student.studentName!,
-                    style: Styles.headLineStyle3.copyWith(color: blueColor),
+                    style: AppStyles.headLineStyle3.copyWith(color:  AppColors.textColor),
                   ),
                 ),
               ),

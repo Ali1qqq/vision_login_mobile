@@ -5,7 +5,7 @@ import 'package:get/get.dart';
 import 'package:quickalert/models/quickalert_type.dart';
 import 'package:quickalert/widgets/quickalert_dialog.dart';
 import 'package:vision_dashboard/controller/Wait_management_view_model.dart';
-import 'package:vision_dashboard/core/Utiles/service.dart';
+import 'package:vision_dashboard/core/Styling/app_style.dart';
 import 'package:vision_dashboard/models/Installment_model.dart';
 
 import 'package:vision_dashboard/models/Student_Model.dart';
@@ -17,9 +17,9 @@ import 'package:vision_dashboard/screens/Widgets/AppButton.dart';
 import 'package:vision_dashboard/screens/Widgets/Custom_Drop_down.dart';
 import 'package:vision_dashboard/screens/classes/Controller/Class_View_Model.dart';
 import '../../constants.dart';
+import '../../core/Utils/service.dart';
 import '../event/Controller/event_view_model.dart';
 import '../../models/event_model.dart';
-import '../../utils/Dialogs.dart';
 import '../../utils/const.dart';
 import '../Widgets/Custom_Text_Filed.dart';
 
@@ -407,7 +407,7 @@ class _StudentInputFormState extends State<StudentInputForm> {
                       child: Column(
                         children: [
                           SizedBox(height: defaultPadding * 2),
-                          Text('سجل الدفعات:'.tr, style: Styles.headLineStyle1),
+                          Text('سجل الدفعات:'.tr, style: AppStyles.headLineStyle1),
                           SizedBox(
                             height: defaultPadding,
                           ),
@@ -522,7 +522,7 @@ class _StudentInputFormState extends State<StudentInputForm> {
                                   ),
                                   Text(
                                     "اضافة".tr,
-                                    style: Styles.headLineStyle3,
+                                    style: AppStyles.headLineStyle3,
                                   ),
                                 ],
                               )),
@@ -710,7 +710,7 @@ class _StudentInputFormState extends State<StudentInputForm> {
                     );
                   }),
                   SizedBox(height: defaultPadding * 2),
-                  Text('سجل الأحداث'.tr, style: Styles.headLineStyle1),
+                  Text('سجل الأحداث'.tr, style: AppStyles.headLineStyle1),
                   SizedBox(
                     height: defaultPadding,
                   ),
@@ -736,7 +736,7 @@ class _StudentInputFormState extends State<StudentInputForm> {
                                 children: [
                                   Text(
                                     record.type,
-                                    style: Styles.headLineStyle1
+                                    style: AppStyles.headLineStyle1
                                         .copyWith(color: Colors.black),
                                   ),
                                   SizedBox(
@@ -744,7 +744,7 @@ class _StudentInputFormState extends State<StudentInputForm> {
                                   ),
                                   Text(
                                     record.body,
-                                    style: Styles.headLineStyle1
+                                    style: AppStyles.headLineStyle1
                                         .copyWith(color: Colors.black),
                                   ),
                                   SizedBox(
@@ -752,7 +752,7 @@ class _StudentInputFormState extends State<StudentInputForm> {
                                   ),
                                   Text(
                                     record.date,
-                                    style: Styles.headLineStyle3,
+                                    style: AppStyles.headLineStyle3,
                                   ),
                                   Spacer(),
                                 ],

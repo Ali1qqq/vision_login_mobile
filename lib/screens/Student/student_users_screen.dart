@@ -15,6 +15,7 @@ import 'package:vision_dashboard/utils/Dialogs.dart';
 
 import '../../constants.dart';
 import '../../controller/home_controller.dart';
+import '../../core/Styling/app_style.dart';
 import '../../models/Student_Model.dart';
 
 import '../Widgets/Custom_Pluto_Grid.dart';
@@ -266,22 +267,22 @@ class _StudentScreenState extends State<StudentScreen> {
                   children: [
                     SizedBox(
                         width:width/4 ,
-                        child: Text("المادة: ",style: Styles.headLineStyle3,overflow: TextOverflow.ellipsis,)),
+                        child: Text("المادة: ",style: AppStyles.headLineStyle3,overflow: TextOverflow.ellipsis,)),
                     SizedBox(
                       width:width/4 ,
                       child: Text(
                           exam.examMap[student.stdExam![index]]!.subject!,
-                          style: Styles.headLineStyle2.copyWith(fontSize: 16),overflow: TextOverflow.ellipsis
+                          style: AppStyles.headLineStyle2.copyWith(fontSize: 16),overflow: TextOverflow.ellipsis
                       ),
                     ),
 
                     SizedBox(
-                      width:width/4 , child:  Text("العلامة: ",style: Styles.headLineStyle3,overflow: TextOverflow.ellipsis),),
+                      width:width/4 , child:  Text("العلامة: ",style: AppStyles.headLineStyle3,overflow: TextOverflow.ellipsis),),
                     SizedBox(
                       width:width/4 ,
                       child: Text(
                           "${(double.parse(exam.examMap[student.stdExam![index]]!.marks![student.studentID]!) * double.parse(exam.examMap[student.stdExam![index]]!.examMaxMark!)) / 100}",
-                          style: Styles.headLineStyle2.copyWith(fontSize: 16),overflow: TextOverflow.ellipsis
+                          style: AppStyles.headLineStyle2.copyWith(fontSize: 16),overflow: TextOverflow.ellipsis
                       ),
                     ),
                     // Spacer(),
@@ -325,12 +326,12 @@ class _StudentScreenState extends State<StudentScreen> {
                     children: [
                       Container(
                           width: Get.width/12,
-                          child: Text("الاسم الكامل: ",style: Styles.headLineStyle3.copyWith(color: Colors.white),maxLines: 1,overflow: TextOverflow.ellipsis,)),
+                          child: Text("الاسم الكامل: ",style: AppStyles.headLineStyle3.copyWith(color: Colors.white),maxLines: 1,overflow: TextOverflow.ellipsis,)),
                       SizedBox(
 
                         child: Text(
                           parentModel.fullName.toString(),
-                          style: Styles.headLineStyle2.copyWith(fontSize: 16),
+                          style: AppStyles.headLineStyle2.copyWith(fontSize: 16),
                           overflow: TextOverflow.ellipsis,
                         ),
                       ),
@@ -341,12 +342,12 @@ class _StudentScreenState extends State<StudentScreen> {
                     children: [
                       Container(
                           width: Get.width/12,
-                          child: Text("العنوان: ",style: Styles.headLineStyle3.copyWith(color: Colors.white),maxLines: 1,overflow: TextOverflow.ellipsis,)),
+                          child: Text("العنوان: ",style: AppStyles.headLineStyle3.copyWith(color: Colors.white),maxLines: 1,overflow: TextOverflow.ellipsis,)),
                       SizedBox(
 
                         child: Text(
                           parentModel.address.toString(),
-                          style: Styles.headLineStyle2.copyWith(fontSize: 16),
+                          style: AppStyles.headLineStyle2.copyWith(fontSize: 16),
                           overflow: TextOverflow.ellipsis,
                         ),
                       ),
@@ -356,10 +357,10 @@ class _StudentScreenState extends State<StudentScreen> {
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       Container(
-                          width: Get.width/12,child: Text("الجنسية: ",style: Styles.headLineStyle3.copyWith(color: Colors.white),maxLines: 1,overflow: TextOverflow.ellipsis)),
+                          width: Get.width/12,child: Text("الجنسية: ",style: AppStyles.headLineStyle3.copyWith(color: Colors.white),maxLines: 1,overflow: TextOverflow.ellipsis)),
                       Text(
                         parentModel.nationality.toString(),
-                        style: Styles.headLineStyle2.copyWith(fontSize: 16),
+                        style: AppStyles.headLineStyle2.copyWith(fontSize: 16),
                       ),
                     ],
                   ),
@@ -367,10 +368,10 @@ class _StudentScreenState extends State<StudentScreen> {
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       Container(
-                        width: Get.width/12,child:Text("العمر: ",style: Styles.headLineStyle3.copyWith(color: Colors.white),maxLines: 1,overflow: TextOverflow.ellipsis)),
+                        width: Get.width/12,child:Text("العمر: ",style: AppStyles.headLineStyle3.copyWith(color: Colors.white),maxLines: 1,overflow: TextOverflow.ellipsis)),
                       Text(
                         parentModel.age.toString(),
-                        style: Styles.headLineStyle2.copyWith(fontSize: 16),
+                        style: AppStyles.headLineStyle2.copyWith(fontSize: 16),
                       ),
                     ],
                   ),
@@ -378,10 +379,10 @@ class _StudentScreenState extends State<StudentScreen> {
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       Container(
-                        width: Get.width/12,child: Text("العمل: ",style: Styles.headLineStyle3.copyWith(color: Colors.white),maxLines: 1,overflow: TextOverflow.ellipsis)),
+                        width: Get.width/12,child: Text("العمل: ",style: AppStyles.headLineStyle3.copyWith(color: Colors.white),maxLines: 1,overflow: TextOverflow.ellipsis)),
                       Text(
                         parentModel.work.toString(),
-                        style: Styles.headLineStyle2.copyWith(fontSize: 16),
+                        style: AppStyles.headLineStyle2.copyWith(fontSize: 16),
                       ),
                     ],
                   ),
@@ -389,10 +390,10 @@ class _StudentScreenState extends State<StudentScreen> {
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       Container(
-                        width: Get.width/12,child:Text("رقم الام: ",style: Styles.headLineStyle3.copyWith(color: Colors.white),maxLines: 1,overflow: TextOverflow.ellipsis)),
+                        width: Get.width/12,child:Text("رقم الام: ",style: AppStyles.headLineStyle3.copyWith(color: Colors.white),maxLines: 1,overflow: TextOverflow.ellipsis)),
                       Text(
                         parentModel.motherPhone.toString(),
-                        style: Styles.headLineStyle2.copyWith(fontSize: 16),
+                        style: AppStyles.headLineStyle2.copyWith(fontSize: 16),
                       ),
                     ],
                   ),
@@ -400,10 +401,10 @@ class _StudentScreenState extends State<StudentScreen> {
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       Container(
-                        width: Get.width/12,child:Text("رقم الطوارئ: ",style: Styles.headLineStyle3.copyWith(color: Colors.white),maxLines: 1,overflow: TextOverflow.ellipsis)),
+                        width: Get.width/12,child:Text("رقم الطوارئ: ",style: AppStyles.headLineStyle3.copyWith(color: Colors.white),maxLines: 1,overflow: TextOverflow.ellipsis)),
                       Text(
                         parentModel.emergencyPhone.toString(),
-                        style: Styles.headLineStyle2.copyWith(fontSize: 16),
+                        style: AppStyles.headLineStyle2.copyWith(fontSize: 16),
                       ),
                     ],
                   ),

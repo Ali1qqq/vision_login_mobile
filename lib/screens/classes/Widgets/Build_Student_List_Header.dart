@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../../constants.dart';
+import '../../../core/Styling/app_colors.dart';
+import '../../../core/Styling/app_style.dart';
 
 Widget buildStudentListHeader() {
   return Row(
@@ -12,7 +14,7 @@ Widget buildStudentListHeader() {
           child: Center(
             child: Text(
               "عربي".tr,
-              style: Styles.headLineStyle2.copyWith(color: blueColor),
+              style: AppStyles.headLineStyle2.copyWith(color:  AppColors.textColor),
             ),
           ),
         ),
@@ -28,7 +30,7 @@ Widget buildStudentListHeader() {
           child: Center(
             child: Text(
               "لغات".tr,
-              style: Styles.headLineStyle2.copyWith(color: blueColor),
+              style: AppStyles.headLineStyle2.copyWith(color:  AppColors.textColor),
             ),
           ),
         ),

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:quickalert/models/quickalert_type.dart';
 import 'package:quickalert/widgets/quickalert_dialog.dart';
+import 'package:vision_dashboard/core/Styling/app_style.dart';
 import 'package:vision_dashboard/screens/Employee/Controller/Employee_view_model.dart';
 import 'package:vision_dashboard/screens/expenses/Controller/expenses_view_model.dart';
 import 'package:vision_dashboard/controller/home_controller.dart';
@@ -289,7 +290,7 @@ class _BusesScreenState extends State<BusesScreen> {
                       children: [
                         Text(
                           title,
-                          style: Styles.headLineStyle3.copyWith(
+                          style: AppStyles.headLineStyle3.copyWith(
                             fontWeight: FontWeight.bold,
                             color: Colors.white,
                           ),
@@ -300,7 +301,7 @@ class _BusesScreenState extends State<BusesScreen> {
                             itemBuilder(context, index),
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
-                            style: Styles.headLineStyle2.copyWith(
+                            style: AppStyles.headLineStyle2.copyWith(
                               color: primaryColor,
                             ),
                           ),

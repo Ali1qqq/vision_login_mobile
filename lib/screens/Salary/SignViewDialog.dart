@@ -4,6 +4,7 @@ import 'package:syncfusion_flutter_signaturepad/signaturepad.dart';
 
 import '../../../constants.dart';
 import '../../../models/account_management_model.dart';
+import '../../core/Styling/app_style.dart';
 import '../Widgets/Custom_Text_Filed.dart';
 import '../Widgets/AppButton.dart';
 
@@ -26,7 +27,7 @@ AlertDialog buildSignViewDialog(String text, EmployeeModel account,
           children: [
             Text(
               "يرجى التوقيع من قبل الموظف".tr,
-              style: Styles.headLineStyle1,
+              style: AppStyles.headLineStyle1,
             ),
             SizedBox(
               height: defaultPadding,

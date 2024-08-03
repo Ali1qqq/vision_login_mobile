@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:quickalert/models/quickalert_type.dart';
 import 'package:quickalert/widgets/quickalert_dialog.dart';
 import 'package:vision_dashboard/constants.dart';
+import 'package:vision_dashboard/core/Styling/app_style.dart';
 import '../screens/Widgets/AppButton.dart';
 
 getReedOnlyError(BuildContext context, {String title = "هذا العنصر للعرض فقط"}) {
@@ -25,7 +26,7 @@ loadingQuickAlert(
 
 
 getConfirmDialog(BuildContext context, {String title = "هل انت متأكد؟", required VoidCallback onConfirm}) {
-  QuickAlert.show(context: context, type: QuickAlertType.confirm, title: title.tr, onCancelBtnTap: () => Get.back(), onConfirmBtnTap: onConfirm, confirmBtnText: "نعم".tr, cancelBtnText: "لا".tr, cancelBtnTextStyle: Styles.headLineStyle2);
+  QuickAlert.show(context: context, type: QuickAlertType.confirm, title: title.tr, onCancelBtnTap: () => Get.back(), onConfirmBtnTap: onConfirm, confirmBtnText: "نعم".tr, cancelBtnText: "لا".tr, cancelBtnTextStyle: AppStyles.headLineStyle2);
 }
 
 getSuccessDialog(
@@ -44,7 +45,7 @@ getSuccessDialog(
 void showErrorDialog(String title, String message) {
   Get.defaultDialog(
     title: title,
-    titleStyle: Styles.headLineStyle2,
+    titleStyle: AppStyles.headLineStyle2,
     backgroundColor: secondaryColor,
     middleText: message,
     confirmTextColor: Colors.white,

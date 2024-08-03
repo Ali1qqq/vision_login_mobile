@@ -8,6 +8,8 @@ import 'package:vision_dashboard/screens/Widgets/AppButton.dart';
 import 'package:vision_dashboard/utils/Dialogs.dart';
 import '../../constants.dart';
 import '../../controller/home_controller.dart';
+import '../../core/Styling/app_colors.dart';
+import '../../core/Styling/app_style.dart';
 import '../../models/account_management_model.dart';
 import '../../utils/Hive_DataBase.dart';
 import '../../utils/minutesToTime.dart';
@@ -246,7 +248,7 @@ class _EmployeeTimeViewState extends State<EmployeeTimeView> {
                                                 children: [
                                                   Text(
                                                     "تسجيل الدوام".tr,
-                                                    style: Styles.headLineStyle1,
+                                                    style: AppStyles.headLineStyle1,
                                                   ),
                                                   SizedBox(
                                                     height: 50,
@@ -397,33 +399,6 @@ class _EmployeeTimeViewState extends State<EmployeeTimeView> {
                                                 int indexKey = entry.key;
 
                                                 var accountModel = entry.value;
-                                                int totalLate = accountModel.employeeTime.values
-                                                        .where(
-                                                          (element) => element.dayName!.split("-")[1].split("-")[0] == months[selectedMonth],
-                                                        )
-                                                        .isEmpty
-                                                    ? 0
-                                                    : accountModel.employeeTime.values
-                                                        .where(
-                                                          (element) => element.dayName!.split("-")[1].split("-")[0] == months[selectedMonth],
-                                                        )
-                                                        .map((e) => e.totalLate ?? 0)
-                                                        .toList()
-                                                        .reduce((value, element) => value + element);
-                                                int totalEarlier = accountModel.employeeTime.values
-                                                        .where(
-                                                          (element) => element.dayName!.split("-")[1].split("-")[0] == months[selectedMonth],
-                                                        )
-                                                        .isEmpty
-                                                    ? 0
-                                                    : accountModel.employeeTime.values
-                                                        .where(
-                                                          (element) => element.dayName!.split("-")[1].split("-")[0] == months[selectedMonth],
-                                                        )
-                                                        .map((e) => e.totalEarlier ?? 0)
-                                                        .toList()
-                                                        .reduce((value, element) => value + element);
-                                                int totalTime = totalLate + totalEarlier;
 
                                                 return ExpansionPanel(
                                                   headerBuilder: (BuildContext context, bool isExpanded) {
@@ -449,7 +424,8 @@ class _EmployeeTimeViewState extends State<EmployeeTimeView> {
                                                             Container(
                                                               width: Get.width / 7,
                                                               child: Text(
-                                                                DateFun.minutesToTime(totalTime),
+                                                                /*DateFun.minutesToTime(totalTime)*/
+                                                                controller.getTotalLateForUserAtMonth(selectedMonth: selectedMonth, userId: entry.value.id).toString(),
                                                                 style: TextStyle(fontSize: Get.width < 700 ? 16 : 20),
                                                                 textAlign: TextAlign.center,
                                                               ),
@@ -536,11 +512,6 @@ class _EmployeeTimeViewState extends State<EmployeeTimeView> {
                                                                   dataRowItem(size / data.length, j.dayName.toString()),
                                                                   dataRowItem(size / data.length, j.isDayOff == true ? "غائب".tr : DateFun.dateToMinAndHour(j.startDate!)),
                                                                   dataRowItem(
-                                                                      color: j.isDayOff != true
-                                                                          ? j.endDate == null
-                                                                              ? Colors.teal
-                                                                              : primaryColor
-                                                                          : primaryColor,
                                                                       size / data.length,
                                                                       j.isDayOff == true
                                                                           ? "غائب".tr
@@ -572,7 +543,7 @@ class _EmployeeTimeViewState extends State<EmployeeTimeView> {
                                                                             width: Get.height / 2,
                                                                             child: Text(
                                                                               j.reasonOfLate.toString(),
-                                                                              style: Styles.headLineStyle2.copyWith(color: Colors.white),
+                                                                              style: AppStyles.headLineStyle2.copyWith(color: AppColors.textColor),
                                                                             ),
                                                                           ),
                                                                         ),
@@ -630,7 +601,7 @@ class _EmployeeTimeViewState extends State<EmployeeTimeView> {
                 child: Center(
                     child: Text(
                   empData[index].toString().tr,
-                  style: Styles.headLineStyle1,
+                  style: AppStyles.headLineStyle1,
                 )))));
   }
 
@@ -649,7 +620,7 @@ class _EmployeeTimeViewState extends State<EmployeeTimeView> {
                 if (employees[index].employeeTime.values.where((element) => element.dayName == selectedDate.text && element.endDate != null).isNotEmpty)
                   Text(
                     "تم الانتهاء".tr,
-                    style: Styles.headLineStyle3.copyWith(color: primaryColor),
+                    style: AppStyles.headLineStyle3.copyWith(color: AppColors.textColor),
                   )
                 else if (selectedDate.text == dayNameNow)
                   AppButton(
@@ -669,7 +640,7 @@ class _EmployeeTimeViewState extends State<EmployeeTimeView> {
                 else
                   Text(
                     "لم يسجل الخروج".tr,
-                    style: Styles.headLineStyle3.copyWith(color: primaryColor),
+                    style: AppStyles.headLineStyle3.copyWith(color: AppColors.textColor),
                   ),
                 if (employees[index].employeeTime.values.where((element) => element.dayName == selectedDate.text.split(' ')[0]).isEmpty)
                   AppButton(

@@ -6,6 +6,7 @@ import 'package:vision_dashboard/constants.dart';
 import 'package:vision_dashboard/screens/Widgets/AppButton.dart';
 import 'package:vision_dashboard/screens/main/main_screen.dart';
 
+import '../../core/Styling/app_style.dart';
 import '../../utils/Hive_DataBase.dart';
 import '../Widgets/header.dart';
 import '../login/login_screen.dart';
@@ -35,7 +36,7 @@ class _LogoutViewState extends State<LogoutView> {
 
             Image.asset("assets/logotPng.png",height: 150),
             SizedBox(height: defaultPadding,),
-            Text("هل انت متأكد؟".tr,style: Styles.headLineStyle1,),
+            Text("هل انت متأكد؟".tr,style: AppStyles.headLineStyle1,),
             SizedBox(height: defaultPadding,),
             Row(
               crossAxisAlignment: CrossAxisAlignment.center,

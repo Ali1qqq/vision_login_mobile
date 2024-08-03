@@ -8,6 +8,8 @@ import 'package:vision_dashboard/screens/Employee/Controller/Employee_view_model
 import 'package:vision_dashboard/screens/expenses/Controller/expenses_view_model.dart';
 import 'package:vision_dashboard/screens/Student/Controller/Student_View_Model.dart';
 
+import '../../../core/Styling/app_style.dart';
+
 class TotalBarChart extends StatefulWidget {
   TotalBarChart({super.key, required this.index});
 
@@ -27,7 +29,7 @@ class TotalBarChartState extends State<TotalBarChart> {
       Get.find<EmployeeViewModel>();
 
   Widget bottomTitles(double value, TitleMeta meta) {
-    final style = Styles.headLineStyle4;
+    final style = AppStyles.headLineStyle4;
     String text;
     switch (value.toInt()) {
       case 0:
@@ -80,7 +82,7 @@ class TotalBarChartState extends State<TotalBarChart> {
     if (value == meta.max) {
       return Container();
     }
-    final style = Styles.headLineStyle4;
+    final style = AppStyles.headLineStyle4;
     return SideTitleWidget(
       axisSide: meta.axisSide,
       child: Text(

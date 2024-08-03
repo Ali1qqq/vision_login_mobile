@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:vision_dashboard/models/TimeModel.dart';
 
 const primaryColor = Color(0xff3E96F4);
@@ -132,7 +131,7 @@ enum waitingListTypes { delete, returnInstallment, waitDiscounts, add, edite }
 
 const accountManagementCollection = "AccountManagement";
 
-class Styles {
+/*class Styles {
   static Color textColor = primaryColor;
 
   static TextStyle textStyle = GoogleFonts.cairo(color: textColor, fontSize: 16, fontWeight: FontWeight.w500);
@@ -144,7 +143,7 @@ class Styles {
   static TextStyle headLineStyle3 = GoogleFonts.cairo(fontSize: 17, color: Colors.grey.shade500, fontWeight: FontWeight.w500);
 
   static TextStyle headLineStyle4 = GoogleFonts.cairo(fontSize: 14, color: Colors.grey.shade500, fontWeight: FontWeight.w500);
-}
+}*/
 
 /*
 import 'package:flutter/material.dart';

@@ -9,6 +9,7 @@ import 'package:vision_dashboard/models/ClassModel.dart';
 
 import '../../../constants.dart';
 import '../../../controller/Wait_management_view_model.dart';
+import '../../../core/Styling/app_style.dart';
 import '../../Student/student_user_details.dart';
 import '../../Widgets/AppButton.dart';
 import '../../Widgets/Custom_Text_Filed.dart';
@@ -167,7 +168,7 @@ class ClassViewModel extends GetxController {
               children: [
                 Text(
                   className,
-                  style: Styles.headLineStyle1,
+                  style: AppStyles.headLineStyle1,
                   textAlign: TextAlign.center,
                 ),
                 SizedBox(height: 20),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:vision_dashboard/core/Styling/app_style.dart';
 
 import '../../../constants.dart';
 import '../../../models/ClassModel.dart';
@@ -22,7 +23,7 @@ Widget buildAddClassButton(BuildContext context, ClassViewModel classController)
         child: Center(
           child: Text(
             "اضافة".tr,
-            style: Styles.headLineStyle2.copyWith(color: Colors.white),
+            style: AppStyles.headLineStyle2.copyWith(color: Colors.white),
           ),
         ),
       ),

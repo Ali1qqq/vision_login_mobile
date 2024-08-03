@@ -13,7 +13,6 @@ import 'package:vision_dashboard/screens/Student/Controller/Student_View_Model.d
 import 'package:vision_dashboard/screens/Widgets/AppButton.dart';
 import 'package:vision_dashboard/screens/Widgets/Custom_Drop_down.dart';
 import 'package:vision_dashboard/screens/Widgets/Custom_Text_Filed.dart';
-import 'package:vision_dashboard/screens/Employee/Edite_Add_Employee/Employee_user_details.dart';
 import 'package:vision_dashboard/screens/classes/Controller/Class_View_Model.dart';
 import 'package:vision_dashboard/utils/const.dart';
 
@@ -21,6 +20,7 @@ import '../../constants.dart';
 import '../../controller/Wait_management_view_model.dart';
 import '../../controller/home_controller.dart';
 
+import '../../core/Styling/app_style.dart';
 import '../../models/delete_management_model.dart';
 import '../../utils/Dialogs.dart';
 import '../Widgets/Data_Row.dart';
@@ -83,7 +83,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   ),
                   Text(
                     "تأكيد العمليات".tr,
-                    style: Styles.headLineStyle1,
+                    style: AppStyles.headLineStyle1,
                   ),
                   Container(
                     padding: EdgeInsets.all(defaultPadding),
@@ -114,7 +114,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   ),
                   Text(
                     "سجلات العمليات".tr,
-                    style: Styles.headLineStyle1,
+                    style: AppStyles.headLineStyle1,
                   ),
                   Container(
                     padding: EdgeInsets.all(defaultPadding),
@@ -160,7 +160,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   ),
                   Text(
                     "الارشفة وحذف البيانات".tr,
-                    style: Styles.headLineStyle1,
+                    style: AppStyles.headLineStyle1,
                   ),
                   Container(
                     width: Get.width,
@@ -445,7 +445,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             child: Center(
                 child: Text(
               "للعرض فقط ".tr,
-              style: Styles.headLineStyle4.copyWith(color: primaryColor),
+              style: AppStyles.headLineStyle4.copyWith(color: primaryColor),
             ))))
     ];
   }
@@ -495,13 +495,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         children: [
                           Text(
                             "البيانات القديمة".tr,
-                            style: Styles.headLineStyle1,
+                            style: AppStyles.headLineStyle1,
                             overflow: TextOverflow.ellipsis,
                             maxLines: 2,
                           ),
                           Text(
                             "البيانات الجديدة".tr,
-                            style: Styles.headLineStyle1,
+                            style: AppStyles.headLineStyle1,
                             overflow: TextOverflow.ellipsis,
                             maxLines: 2,
                           ),
@@ -561,7 +561,7 @@ print(newDate!.values.elementAt(i).toString());*/ /*
                                           .tr ??
                                       '',*/
                                   overflow: TextOverflow.ellipsis,
-                                  style: Styles.headLineStyle3,
+                                  style: AppStyles.headLineStyle3,
                                 )),
                             Text(":"),
                             Container(
@@ -585,7 +585,7 @@ print(newDate!.values.elementAt(i).toString());*/ /*
                                           .toString()
                                           .tr ??
                                       '',*/
-                                  style: Styles.headLineStyle3.copyWith(color: primaryColor),
+                                  style: AppStyles.headLineStyle3.copyWith(color: primaryColor),
                                 )),
                             Spacer(),
                             Container(
@@ -616,7 +616,7 @@ print(newDate!.values.elementAt(i).toString());*/ /*
                                           .tr ??
                                       '',*/
                                   overflow: TextOverflow.ellipsis,
-                                  style: Styles.headLineStyle3,
+                                  style: AppStyles.headLineStyle3,
                                 )),
                             Text(":"),
                             Container(
@@ -640,7 +640,7 @@ print(newDate!.values.elementAt(i).toString());*/ /*
                                           .toString()
                                           .tr ??
                                       '',*/
-                                  style: Styles.headLineStyle3.copyWith(color: primaryColor),
+                                  style: AppStyles.headLineStyle3.copyWith(color: primaryColor),
                                 )),
                           ],
                         );

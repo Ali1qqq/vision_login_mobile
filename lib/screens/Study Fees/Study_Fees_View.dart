@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:quickalert/quickalert.dart';
 import 'package:vision_dashboard/controller/Wait_management_view_model.dart';
+import 'package:vision_dashboard/core/Styling/app_style.dart';
 import 'package:vision_dashboard/models/Installment_model.dart';
 import 'package:vision_dashboard/screens/Student/Controller/Student_View_Model.dart';
 import 'package:vision_dashboard/screens/Widgets/AppButton.dart';
@@ -13,7 +14,7 @@ import 'package:vision_dashboard/utils/Image_OverLay.dart';
 
 import '../../constants.dart';
 import '../../controller/home_controller.dart';
-import '../../core/Utiles/service.dart';
+import '../../core/Utils/service.dart';
 import '../../models/Parent_Model.dart';
 import '../../utils/Dialogs.dart';
 import '../Parents/Controller/Parents_View_Model.dart';
@@ -348,7 +349,7 @@ class _StudyFeesViewState extends State<StudyFeesView> {
                 shrinkWrap: true,
                 padding: EdgeInsets.all(10),
                 children: [
-                  Center(child: Text('سجل الدفعات'.tr, style: Styles.headLineStyle1)),
+                  Center(child: Text('سجل الدفعات'.tr, style: AppStyles.headLineStyle1)),
                   SizedBox(
                     height: defaultPadding,
                   ),
@@ -384,7 +385,7 @@ class _StudyFeesViewState extends State<StudyFeesView> {
                                       if (index == 0)
                                         Text(
                                           studentController.studentMap[installmentStudent.keys.elementAt(parentIndex)]!.studentName!,
-                                          style: Styles.headLineStyle2,
+                                          style: AppStyles.headLineStyle2,
                                         ),
                                       if (index == 0)
                                         SizedBox(

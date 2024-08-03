@@ -10,7 +10,7 @@ import 'package:quickalert/widgets/quickalert_dialog.dart';
 import 'package:vision_dashboard/screens/Employee/Controller/Employee_view_model.dart';
 import 'package:vision_dashboard/models/expenses_model.dart';
 import '../../../constants.dart';
-import '../../../core/Utiles/service.dart';
+import '../../../core/Utils/service.dart';
 import '../../Buses/Controller/Bus_View_Model.dart';
 import '../../Widgets/Custom_Text_Filed.dart';
 import '../../../utils/Dialogs.dart';

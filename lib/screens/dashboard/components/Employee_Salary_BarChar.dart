@@ -7,6 +7,7 @@ import 'package:get/get.dart';
 import 'package:vision_dashboard/constants.dart';
 import 'package:vision_dashboard/models/account_management_model.dart';
 
+import '../../../core/Styling/app_style.dart';
 import '../../Employee/Controller/Employee_view_model.dart';
 
 class EmployeeSalaryBarChart extends StatefulWidget {
@@ -27,7 +28,7 @@ class EmployeeSalaryBarChartState extends State<EmployeeSalaryBarChart> {
   Get.find<EmployeeViewModel>();
 
   Widget bottomTitles(double value, TitleMeta meta) {
-    final style = Styles.headLineStyle4;
+    final style = AppStyles.headLineStyle4;
     String text;
 
     if (value < accountManageVM.allAccountManagement.length) {
@@ -45,7 +46,7 @@ class EmployeeSalaryBarChartState extends State<EmployeeSalaryBarChart> {
     if (value == meta.max) {
       return Container();
     }
-    final style = Styles.headLineStyle4;
+    final style = AppStyles.headLineStyle4;
     return SideTitleWidget(
       axisSide: meta.axisSide,
       child: Text(

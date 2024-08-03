@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../constants.dart';
+import '../../core/Styling/app_style.dart';
 
 class CustomDropDown extends StatelessWidget {
    CustomDropDown({super.key,required this.value,required this.listValue,required this.label,required this.onChange,this.isFullBorder,this.size,this.enable=true});
@@ -39,7 +40,7 @@ class CustomDropDown extends StatelessWidget {
         value:value==''? null:value,
         iconEnabledColor: Colors.blue,
 
-        hint: Text(label,style: Styles.headLineStyle4.copyWith(color: primaryColor.withOpacity(0.4)),overflow: TextOverflow.ellipsis),
+        hint: Text(label,style: AppStyles.headLineStyle4.copyWith(color: primaryColor.withOpacity(0.4)),overflow: TextOverflow.ellipsis),
         onChanged: onChange,
         items: listValue.map((e) {
           return DropdownMenuItem(

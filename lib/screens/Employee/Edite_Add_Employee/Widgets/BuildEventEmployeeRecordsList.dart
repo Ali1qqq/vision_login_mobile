@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:vision_dashboard/screens/Employee/Controller/Employee_view_model.dart';
 
-import '../../../../constants.dart';
+import '../../../../core/Styling/app_style.dart';
 import '../../../../models/event_record_model.dart';
 
 Widget buildEventRecordsList(EmployeeViewModel controller) {
@@ -41,17 +41,17 @@ Widget _buildRecordDetails(EventRecordModel record) {
     children: [
       Text(
         record.type,
-        style: Styles.headLineStyle1.copyWith(color: Colors.black),
+        style: AppStyles.headLineStyle1.copyWith(color: Colors.black),
       ),
       SizedBox(width: 10),
       Text(
         record.body,
-        style: Styles.headLineStyle1.copyWith(color: Colors.black),
+        style: AppStyles.headLineStyle1.copyWith(color: Colors.black),
       ),
       SizedBox(width: 50),
       Text(
         record.date,
-        style: Styles.headLineStyle3,
+        style: AppStyles.headLineStyle3,
       ),
     ],
   );

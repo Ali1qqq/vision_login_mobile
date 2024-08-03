@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:typed_data';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pluto_grid/pluto_grid.dart';
@@ -12,7 +11,7 @@ import 'package:vision_dashboard/constants.dart';
 import 'package:vision_dashboard/controller/Wait_management_view_model.dart';
 import 'package:vision_dashboard/models/Parent_Model.dart';
 
-import '../../../core/Utiles/service.dart';
+import '../../../core/Utils/service.dart';
 import '../../../models/event_model.dart';
 import '../../../models/event_record_model.dart';
 import '../../../utils/Dialogs.dart';

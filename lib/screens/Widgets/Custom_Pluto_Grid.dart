@@ -4,6 +4,7 @@ import 'package:pluto_grid/pluto_grid.dart';
 
 import '../../constants.dart';
 import '../../controller/Wait_management_view_model.dart';
+import '../../core/Styling/app_style.dart';
 
 class CustomPlutoGrid extends StatefulWidget {
   CustomPlutoGrid({
@@ -44,7 +45,7 @@ class _CustomPlutoGridState extends State<CustomPlutoGrid> {
             activatedColor: Colors.white.withOpacity(0.5),
             gridBackgroundColor: Colors.transparent,
             evenRowColor: secondaryColor.withOpacity(0.5),
-            cellTextStyle: Styles.headLineStyle3.copyWith(color: primaryColor),
+            cellTextStyle: AppStyles.headLineStyle3,
             gridPopupBorderRadius: BorderRadius.all(Radius.circular(15)),
             gridBorderRadius: BorderRadius.all(Radius.circular(15)),
             gridBorderColor: Colors.transparent),
@@ -66,47 +67,3 @@ class _CustomPlutoGridState extends State<CustomPlutoGrid> {
   }
 }
 
-PlutoGrid CustomPlutoGrids(controller, Function(PlutoGridOnSelectedEvent) onSelected, idName) {
-  late final PlutoGridStateManager stateManager;
-
-  return PlutoGrid(
-    columns: controller.columns,
-    rows: controller.rows,
-    onChanged: (event) {
-      print("object");
-    },
-    onRowDoubleTap: (event) {
-      print("object");
-      // stateManager.notifyListeners();
-    },
-    onLoaded: (PlutoGridOnLoadedEvent event) {
-      stateManager = event.stateManager;
-      stateManager.setShowColumnFilter(true);
-    },
-    mode: PlutoGridMode.selectWithOneTap,
-    onSelected: onSelected,
-    configuration: PlutoGridConfiguration(
-      shortcut: PlutoGridShortcut(
-        actions: {
-          // LogicalKeySet(LogicalKeyboardKey.control, LogicalKeyboardKey.keyN):PlutoGridShortcutAction(),
-        },
-      ),
-      style: PlutoGridStyleConfig(
-          enableRowColorAnimation: true,
-          activatedColor: Colors.white.withOpacity(0.5),
-          gridBackgroundColor: Colors.transparent,
-          evenRowColor: secondaryColor.withOpacity(0.5),
-          cellTextStyle: Styles.headLineStyle3.copyWith(color: primaryColor),
-          gridPopupBorderRadius: BorderRadius.all(Radius.circular(15)),
-          gridBorderRadius: BorderRadius.all(Radius.circular(15)),
-          gridBorderColor: Colors.transparent),
-      localeText: PlutoGridLocaleText.arabic(),
-    ),
-    rowColorCallback: (PlutoRowColorContext rowColorContext) {
-      if (checkIfPendingDelete(affectedId: rowColorContext.row.cells[idName]?.value)) {
-        return Colors.red.withOpacity(0.3);
-      }
-      return Colors.transparent;
-    },
-  );
-}

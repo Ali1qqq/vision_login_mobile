@@ -5,11 +5,12 @@ import 'dart:math';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:vision_dashboard/core/Styling/app_colors.dart';
+import 'package:vision_dashboard/core/Styling/app_style.dart';
 
 import '../../../constants.dart';
-import '../../../core/Utiles/service.dart';
+import '../../../core/Utils/service.dart';
 import '../../Employee/Controller/Employee_view_model.dart';
-import '../../../utils/Dialogs.dart';
 import '../../Widgets/Custom_Text_Filed.dart';
 
 class EmployeeTimeChart extends StatefulWidget {
@@ -25,16 +26,16 @@ class EmployeeTimeChart extends StatefulWidget {
     Color? averageLineColor,
     Color? tooltipBgColor,
     Color? tooltipTextColor,
-  })  : lineColor = lineColor ?? primaryColor,
+  })  : lineColor = lineColor ??  primaryColor,
         indicatorLineColor =
-            indicatorLineColor ?? primaryColor.withOpacity(0.2),
+            indicatorLineColor ?? AppColors.textColor.withOpacity(0.2),
         indicatorTouchedLineColor = indicatorTouchedLineColor ?? primaryColor,
         indicatorSpotStrokeColor =
             indicatorSpotStrokeColor ?? primaryColor.withOpacity(0.5),
         indicatorTouchedSpotStrokeColor =
-            indicatorTouchedSpotStrokeColor ?? primaryColor,
-        bottomTextColor = bottomTextColor ?? primaryColor.withOpacity(0.2),
-        bottomTouchedTextColor = bottomTouchedTextColor ?? primaryColor,
+            indicatorTouchedSpotStrokeColor ??  primaryColor,
+        bottomTextColor = bottomTextColor ?? AppColors.textColor.withOpacity(0.2),
+        bottomTouchedTextColor = bottomTouchedTextColor ?? AppColors.textColor,
         averageLineColor = averageLineColor ?? primaryColor.withOpacity(0.8),
         tooltipBgColor = tooltipBgColor ?? primaryColor,
         tooltipTextColor = tooltipTextColor ?? Colors.black;
@@ -50,32 +51,7 @@ class EmployeeTimeChart extends StatefulWidget {
   final Color tooltipBgColor;
   final Color tooltipTextColor;
 
- /* List<double> get yValues => [
-        6.0,
-        8.0,
-        7.9,
-        8.0,
-        7.4,
-        8.0,
-        8.0,
-        7.7,
-        8.0,
-        8.0,
-        7.9,
-        7.9,
-        7.1,
-        8.0,
-        8.0,
-        8.0,
-        8.0,
-        8.0,
-        7.0,
-        8.0,
-        8.0,
-        8.0,
-        6.0,
-        8.0
-      ];*/
+
 
   @override
   State createState() => _EmployeeTimeChartState();
@@ -105,10 +81,7 @@ TextEditingController selectedDayController=TextEditingController();
   EmployeeViewModel accountManagementViewModel =
   Get.find<EmployeeViewModel>();
   Widget leftTitleWidgets(double value, TitleMeta meta) {
-    final style = TextStyle(
-      color: Colors.white,
-      fontSize: 14,
-    );
+    final style = AppStyles.headLineStyle4;
     String text;
     switch (value) {
       case 0:
@@ -161,7 +134,7 @@ TextEditingController selectedDayController=TextEditingController();
     final style = TextStyle(
       color: isTouched
           ? widget.bottomTouchedTextColor
-          : Colors.white.withOpacity(0.6),
+          : Colors.black.withOpacity(0.6),
       fontWeight: FontWeight.bold,
     );
   if (double.parse(meta.formattedValue)% 1 != 0||double.parse(meta.formattedValue)== 0) {

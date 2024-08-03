@@ -23,7 +23,7 @@ import 'package:vision_dashboard/utils/Dialogs.dart';
 
 import '../../../constants.dart';
 import '../../../controller/NFC_Card_View_model.dart';
-import '../../../core/Utiles/service.dart';
+import '../../../core/Utils/service.dart';
 import '../../../models/account_management_model.dart';
 import '../../../models/event_model.dart';
 import '../../../models/event_record_model.dart';
@@ -522,7 +522,6 @@ class EmployeeViewModel extends GetxController {
             } else {
               if (timeData.isBefore(14, 00)) {
                 totalEarlier = timeData.dateTime.copyWith(hour: 14, minute: 00, second: 0).difference(timeData.dateTime).inMinutes;
-
               }
 
               user.employeeTime[timeData.formattedTime]!.isEarlierWithReason = true;
@@ -549,41 +548,40 @@ class EmployeeViewModel extends GetxController {
   }
 
   getOldData(String value) {
-    FirebaseFirestore.instance.collection(archiveCollection).doc(value).collection(accountManagementCollection)
-      .get().then(
-        (event) async {
-          await Get.find<BusViewModel>().getAllWithoutListenBuse();
-          plutoKey = GlobalKey();
-          rows.clear();
-          allAccountManagement = Map<String, EmployeeModel>.fromEntries(event.docs.toList().map((i) {
-            rows.add(
-              PlutoRow(
-                cells: {
-                  data.keys.elementAt(0): PlutoCell(value: i.id),
-                  data.keys.elementAt(1): PlutoCell(value: i.data()["userName"]),
-                  data.keys.elementAt(2): PlutoCell(value: i.data()["fullName"]),
-                  data.keys.elementAt(3): PlutoCell(value: i.data()["password"]),
-                  data.keys.elementAt(4): PlutoCell(value: i.data()["type"]),
-                  data.keys.elementAt(5): PlutoCell(value: i.data()["isActive"]),
-                  data.keys.elementAt(6): PlutoCell(value: i.data()["mobileNumber"]),
-                  data.keys.elementAt(7): PlutoCell(value: i.data()["address"]),
-                  data.keys.elementAt(8): PlutoCell(value: i.data()["nationality"]),
-                  data.keys.elementAt(9): PlutoCell(value: i.data()["gender"]),
-                  data.keys.elementAt(10): PlutoCell(value: i.data()["age"]),
-                  data.keys.elementAt(11): PlutoCell(value: i.data()["jobTitle"]),
-                  data.keys.elementAt(12): PlutoCell(value: i.data()["contract"]),
-                  data.keys.elementAt(13): PlutoCell(value: Get.find<BusViewModel>().busesMap[i.data()["bus"].toString()]?.name ?? i.data()["bus"]),
-                  data.keys.elementAt(14): PlutoCell(value: i.data()["startDate"]),
-                  data.keys.elementAt(15): PlutoCell(value: i.data()["eventRecords"]?.length.toString()),
-                  data.keys.elementAt(16): PlutoCell(value: i.data()["isAccepted"] == true ? "تمت الموافقة".tr : "في انتظار الموافقة".tr),
-                },
-              ),
-            );
-            return MapEntry(i.id.toString(), EmployeeModel.fromJson(i.data()));
-          })).obs;
-          update();
-        },
-      );
+    FirebaseFirestore.instance.collection(archiveCollection).doc(value).collection(accountManagementCollection).get().then(
+      (event) async {
+        await Get.find<BusViewModel>().getAllWithoutListenBuse();
+        plutoKey = GlobalKey();
+        rows.clear();
+        allAccountManagement = Map<String, EmployeeModel>.fromEntries(event.docs.toList().map((i) {
+          rows.add(
+            PlutoRow(
+              cells: {
+                data.keys.elementAt(0): PlutoCell(value: i.id),
+                data.keys.elementAt(1): PlutoCell(value: i.data()["userName"]),
+                data.keys.elementAt(2): PlutoCell(value: i.data()["fullName"]),
+                data.keys.elementAt(3): PlutoCell(value: i.data()["password"]),
+                data.keys.elementAt(4): PlutoCell(value: i.data()["type"]),
+                data.keys.elementAt(5): PlutoCell(value: i.data()["isActive"]),
+                data.keys.elementAt(6): PlutoCell(value: i.data()["mobileNumber"]),
+                data.keys.elementAt(7): PlutoCell(value: i.data()["address"]),
+                data.keys.elementAt(8): PlutoCell(value: i.data()["nationality"]),
+                data.keys.elementAt(9): PlutoCell(value: i.data()["gender"]),
+                data.keys.elementAt(10): PlutoCell(value: i.data()["age"]),
+                data.keys.elementAt(11): PlutoCell(value: i.data()["jobTitle"]),
+                data.keys.elementAt(12): PlutoCell(value: i.data()["contract"]),
+                data.keys.elementAt(13): PlutoCell(value: Get.find<BusViewModel>().busesMap[i.data()["bus"].toString()]?.name ?? i.data()["bus"]),
+                data.keys.elementAt(14): PlutoCell(value: i.data()["startDate"]),
+                data.keys.elementAt(15): PlutoCell(value: i.data()["eventRecords"]?.length.toString()),
+                data.keys.elementAt(16): PlutoCell(value: i.data()["isAccepted"] == true ? "تمت الموافقة".tr : "في انتظار الموافقة".tr),
+              },
+            ),
+          );
+          return MapEntry(i.id.toString(), EmployeeModel.fromJson(i.data()));
+        })).obs;
+        update();
+      },
+    );
   }
 
   double getAllSalariesAtMonth(String month) {
@@ -798,6 +796,29 @@ class EmployeeViewModel extends GetxController {
     );
 
     return time;
+  }
+
+  int getTotalLateForUserAtMonth({required String selectedMonth, required String userId}) {
+    int totalLate = 0;
+    List totalLateList = [];
+    if(selectedMonth!='الكل')
+    totalLateList = allAccountManagement[userId]!
+        .employeeTime
+        .values
+        .where(
+          (element) => element.dayName!.split("-")[1].split("-")[0] == months[selectedMonth],
+        )
+        .map((e) => e.totalLate ?? 0)
+        .toList();
+    else
+      totalLateList = allAccountManagement[userId]!
+          .employeeTime
+          .values
+          .map((e) => e.totalLate ?? 0)
+          .toList();
+    if(totalLateList.isNotEmpty)
+    totalLate = totalLateList.reduce((value, element) => value + element);
+    return totalLate;
   }
 
   void addCard({required String cardId}) {

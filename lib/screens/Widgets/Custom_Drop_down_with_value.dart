@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:vision_dashboard/models/event_model.dart';
 
 import '../../constants.dart';
+import '../../core/Styling/app_style.dart';
 
 class CustomDropDownWithValue extends StatelessWidget {
   CustomDropDownWithValue({super.key,required this.value,required this.mapValue,required this.label,required this.onChange,this.isFullBorder});
@@ -34,7 +35,7 @@ class CustomDropDownWithValue extends StatelessWidget {
         ),
         value:value==''? null:value,
         iconEnabledColor: Colors.blue,
-        hint: Text(label,style: Styles.headLineStyle4.copyWith(color: primaryColor.withOpacity(0.4)),),
+        hint: Text(label,style: AppStyles.headLineStyle4.copyWith(color: primaryColor.withOpacity(0.4)),),
         onChanged: onChange,
         items:  mapValue.map((e) {
           return DropdownMenuItem(

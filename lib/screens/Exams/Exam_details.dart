@@ -15,7 +15,8 @@ import 'package:vision_dashboard/screens/Widgets/Custom_Drop_down.dart';
 import 'package:vision_dashboard/utils/Dialogs.dart';
 
 import '../../controller/home_controller.dart';
-import '../../core/Utiles/service.dart';
+import '../../core/Styling/app_style.dart';
+import '../../core/Utils/service.dart';
 import '../../models/Exam_model.dart';
 import '../Widgets/Custom_Text_Filed.dart';
 
@@ -507,7 +508,7 @@ class _ExamInputFormState extends State<ExamInputForm> {
                   children: [
                     Text(
                       "الطلاب المختارين".tr,
-                      style: Styles.headLineStyle1,
+                      style: AppStyles.headLineStyle1,
                     ),
                     SizedBox(
                       height: defaultPadding,

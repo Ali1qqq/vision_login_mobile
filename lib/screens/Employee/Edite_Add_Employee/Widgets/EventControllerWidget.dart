@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_state_manager/src/simple/get_state.dart';
 import 'package:vision_dashboard/screens/Employee/Controller/Employee_view_model.dart';
 import 'package:vision_dashboard/screens/Employee/Edite_Add_Employee/Widgets/BuildEventEmployeeRecordsList.dart';
 import 'package:vision_dashboard/screens/Employee/Edite_Add_Employee/Widgets/EmployeeEventDropDown.dart';
 import '../../../../constants.dart';
+import '../../../../core/Styling/app_style.dart';
 import '../../../Widgets/AppButton.dart';
 import '../../../Widgets/Custom_Text_Filed.dart';
 import '../../../event/Controller/event_view_model.dart';
@@ -48,7 +48,7 @@ class EmployeeEventContainer extends StatelessWidget {
             );
           }),
           SizedBox(height: defaultPadding * 2),
-          Text('سجل الأحداث:'.tr, style: Styles.headLineStyle1),
+          Text('سجل الأحداث:'.tr, style: AppStyles.headLineStyle1),
           SizedBox(height: defaultPadding),
           buildEventRecordsList(empController),
         ],

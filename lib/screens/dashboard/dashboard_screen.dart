@@ -12,6 +12,7 @@ import 'package:flutter/material.dart';
 
 
 import '../../constants.dart';
+import '../../core/Styling/app_style.dart';
 import '../../utils/Hive_DataBase.dart';
 import '../Widgets/Custom_Drop_down.dart';
 import '../Widgets/header.dart';
@@ -146,7 +147,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                           )
                                           .length
                                           .toString(),
-                                      style: Styles.headLineStyle4
+                                      style: AppStyles.headLineStyle4
                                           .copyWith(color: Colors.white),
                                     ),
                                   )),
@@ -330,14 +331,14 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     child: Text(
                   title.toString().tr,
                   textAlign: TextAlign.center,
-                  style: Styles.headLineStyle2
+                  style: AppStyles.headLineStyle2
                       .copyWith(color: color == false ? Colors.black : color),
                 )),
               ),
             ),
             Text(
               body.toString(),
-              style: Styles.headLineStyle1.copyWith(
+              style: AppStyles.headLineStyle1.copyWith(
                   color: color == false ? Colors.black : color, fontSize: 40),
             ),
             SizedBox(

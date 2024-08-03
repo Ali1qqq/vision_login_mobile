@@ -4,6 +4,7 @@ import 'package:vision_dashboard/screens/Parents/Controller/Parents_View_Model.d
 
 import '../../../../constants.dart';
 
+import '../../../../core/Styling/app_style.dart';
 import 'BuildParentEventForm.dart';
 import 'BuildParentEventRecordsList.dart';
 
@@ -24,7 +25,7 @@ class ParentEventContainer extends StatelessWidget {
         children: [
           BuildParentEventForm(parentsViewModel),
           SizedBox(height: defaultPadding * 2),
-          Text('سجل الأحداث:'.tr, style: Styles.headLineStyle1),
+          Text('سجل الأحداث:'.tr, style: AppStyles.headLineStyle1),
           SizedBox(height: defaultPadding),
           BuildParentEventRecordsList(parentsViewModel),
         ],

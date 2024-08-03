@@ -1,12 +1,14 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:vision_dashboard/core/Styling/app_colors.dart';
 import 'package:vision_dashboard/models/ClassModel.dart';
 import 'package:swipe_to/swipe_to.dart';
 import 'package:vision_dashboard/screens/classes/Controller/Class_View_Model.dart';
 import '../../constants.dart';
 import '../../controller/Wait_management_view_model.dart';
 import '../../controller/home_controller.dart';
+import '../../core/Styling/app_style.dart';
 import 'Widgets/BuildAddClassButton.dart';
 import 'Widgets/BuildNoClassSelectedMessage.dart';
 import 'Widgets/BuildStudentLists.dart';
@@ -153,9 +155,9 @@ class _ClassesViewState extends State<ClassesView> {
 
   TextStyle determineTileTextStyle(ClassModel currentClass) {
     if (selectedClass?.classId == currentClass.classId) {
-      return Styles.headLineStyle2.copyWith(color: Colors.white);
+      return AppStyles.headLineStyle2.copyWith(color: Colors.white);
     }
-    return Styles.headLineStyle2.copyWith(color: blueColor);
+    return AppStyles.headLineStyle2.copyWith(color: AppColors.textColor);
   }
 
   Widget buildHeader() {
@@ -164,7 +166,7 @@ class _ClassesViewState extends State<ClassesView> {
       child: Center(
         child: Text(
           "الصفوف".tr,
-          style: Styles.headLineStyle2.copyWith(color: blueColor),
+          style: AppStyles.headLineStyle2.copyWith(color:  AppColors.textColor),
         ),
       ),
     );

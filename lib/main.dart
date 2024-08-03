@@ -1,15 +1,15 @@
 import 'dart:ui';
 import 'package:vision_dashboard/Translate/App_Translation.dart';
 import 'package:vision_dashboard/constants.dart';
+import 'package:vision_dashboard/core/Styling/app_colors.dart';
 import 'package:vision_dashboard/core/binding.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:vision_dashboard/router.dart';
 import 'package:vision_dashboard/screens/login/login_screen.dart';
 import 'package:vision_dashboard/utils/Hive_DataBase.dart';
-import 'core/Utiles/service.dart';
+import 'core/Utils/service.dart';
 import 'firebase_options.dart';
 //flutter run -d web-server --web-port 8080 --web-hostname 0.0.0.0
 Future<void> main() async {
@@ -53,7 +53,48 @@ class MyApp extends StatelessWidget {
       scrollBehavior: AppScrollBehavior(),
       debugShowCheckedModeBanner: false,
       title: 'مركز رؤية التعليمي للتدريب',
-      theme: ThemeData.light().copyWith(
+      theme: ThemeData(
+        iconTheme: IconThemeData(
+            color: Colors.white
+        ),
+        floatingActionButtonTheme: FloatingActionButtonThemeData(
+            // backgroundColor: primaryColor,
+            // foregroundColor: Colors.white
+        ),
+        colorScheme: ColorScheme.fromSeed(seedColor: primaryColor),
+        elevatedButtonTheme: ElevatedButtonThemeData(
+          style: ButtonStyle(
+            // backgroundColor: WidgetStateProperty.all<Color>(primaryColor),
+            // foregroundColor: WidgetStateProperty.all<Color>(Colors.white),
+          ),
+        ),
+        buttonTheme: ButtonThemeData(
+          // buttonColor: Colors.white,
+          // textTheme: ButtonTextTheme.normal,
+        ),
+        fontFamily: 'Poppins',
+        canvasColor: secondaryColor,
+        scaffoldBackgroundColor: bgColor,
+        textTheme: TextTheme(
+          bodySmall: TextStyle(color: AppColors.textColor),
+          bodyLarge: TextStyle(color: AppColors.textColor),
+          bodyMedium: TextStyle(color: AppColors.textColor),
+          labelSmall: TextStyle(color: AppColors.textColor),
+          labelLarge: TextStyle(color: AppColors.textColor),
+          labelMedium: TextStyle(color: AppColors.textColor),
+          displayLarge: TextStyle(color: AppColors.textColor),
+          titleSmall: TextStyle(color: AppColors.textColor),
+          titleLarge: TextStyle(color: AppColors.textColor),
+          titleMedium: TextStyle(color: AppColors.textColor),
+          displayMedium: TextStyle(color: AppColors.textColor),
+          displaySmall: TextStyle(color: AppColors.textColor),
+          headlineLarge: TextStyle(color: AppColors.textColor),
+          headlineMedium: TextStyle(color: AppColors.textColor),
+          headlineSmall: TextStyle(color: AppColors.textColor),
+        ),
+      ),
+
+      /* theme: ThemeData.light().copyWith(
         scaffoldBackgroundColor: Colors.transparent,
         textTheme: GoogleFonts.cairoTextTheme(
           Theme.of(context).textTheme.apply(
@@ -62,7 +103,7 @@ class MyApp extends StatelessWidget {
               ),
         ),
         canvasColor: secondaryColor,
-      ),
+      ),*/
       unknownRoute: GetPage(
         name: '/unknown',
 

@@ -1,6 +1,8 @@
  import 'package:flutter/material.dart';
+import 'package:vision_dashboard/core/Styling/app_style.dart';
 
 import '../../constants.dart';
+import '../../core/Styling/app_colors.dart';
 
 dataRowItem(size, text, {onTap, color}) {
     return DataCell(
@@ -13,8 +15,8 @@ dataRowItem(size, text, {onTap, color}) {
               text,
               textAlign: TextAlign.center,
               style: color == null
-                  ? Styles.headLineStyle4.copyWith(color: primaryColor)
-                  : Styles.headLineStyle4.copyWith(color: color),
+                  ? AppStyles.headLineStyle4.copyWith(color:  AppColors.textColor)
+                  : AppStyles.headLineStyle4.copyWith(color:  color),
             ))),
       ),
     );
