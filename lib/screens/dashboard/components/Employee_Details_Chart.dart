@@ -56,7 +56,7 @@ class _EmployeeDetailsChartState extends State<EmployeeDetailsChart> {
             amountOfEmployee:
                 _accountManagementViewModel.allAccountManagement.values
                     .where(
-                      (element) => element.jobTitle == 'مدير/ه',
+                      (element) => element.jobTitle == 'اداري',
                     )
                     .length
                     .toString(),
@@ -71,27 +71,13 @@ class _EmployeeDetailsChartState extends State<EmployeeDetailsChart> {
             amountOfEmployee:
                 _accountManagementViewModel.allAccountManagement.values
                     .where(
-                      (element) => element.jobTitle == 'مدرس/ه',
+                      (element) => element.jobTitle?.startsWith("مدرس")??false,
                     )
                     .length
                     .toString(),
             color: primaryColor,
           ),
-          InfoCard(
-            onTap: () {
-              touchedIndex == 2 ? touchedIndex = -1 : touchedIndex = 2;
-              setState(() {});
-            },
-            title: "موظف مكتبي".tr,
-            amountOfEmployee:
-                _accountManagementViewModel.allAccountManagement.values
-                    .where(
-                      (element) => element.jobTitle == 'موظف/ه اداري/ه',
-                    )
-                    .length
-                    .toString(),
-            color: blueColor,
-          ),
+
           InfoCard(
             onTap: () {
               touchedIndex == 3 ? touchedIndex = -1 : touchedIndex = 3;
@@ -113,35 +99,14 @@ class _EmployeeDetailsChartState extends State<EmployeeDetailsChart> {
   }
 
   List<PieChartSectionData> paiChartSelectionData() {
-    return List.generate(4, (i) {
+    return List.generate(3, (i) {
       final isTouched = i == touchedIndex;
       final fontSize = isTouched ? 25.0 : 16.0;
       double radius = isTouched ? 50.0 : 30;
       const shadows = [Shadow(color: Colors.black, blurRadius: 2)];
       switch (i) {
+
         case 0:
-          return PieChartSectionData(
-            color: Colors.redAccent,
-            value: _accountManagementViewModel.allAccountManagement.values
-                    .where(
-                      (element) => element.jobTitle == 'مدير/ه',
-                    )
-                    .length *
-                1.0,
-            title: _accountManagementViewModel.allAccountManagement.isEmpty
-                ? ''
-                : '${((_accountManagementViewModel.allAccountManagement.values.where(
-                      (element) => element.jobTitle == 'مدير/ه',
-                    ).length / _accountManagementViewModel.allAccountManagement.length) * 100).round()}%',
-            radius: radius,
-            titleStyle: TextStyle(
-              fontSize: fontSize,
-              fontWeight: FontWeight.bold,
-              color: Colors.white,
-              shadows: shadows,
-            ),
-          );
-        case 1:
           return PieChartSectionData(
             color: primaryColor,
             value: _accountManagementViewModel.allAccountManagement.values
@@ -153,7 +118,29 @@ class _EmployeeDetailsChartState extends State<EmployeeDetailsChart> {
             title: _accountManagementViewModel.allAccountManagement.isEmpty
                 ? ''
                 : '${((_accountManagementViewModel.allAccountManagement.values.where(
-                  (element) => element.jobTitle == 'مدرس/ه',
+                  (element) =>element.jobTitle?.startsWith("مدرس")??false
+            ).length / _accountManagementViewModel.allAccountManagement.length) * 100).round()}%',
+            radius: radius,
+            titleStyle: TextStyle(
+              fontSize: fontSize,
+              fontWeight: FontWeight.bold,
+              color: Colors.white,
+              shadows: shadows,
+            ),
+          );
+        case 1:
+          return PieChartSectionData(
+            color: blueColor,
+            value: _accountManagementViewModel.allAccountManagement.values
+                .where(
+                  (element) => element.jobTitle == 'اداري',
+            )
+                .length *
+                1.0,
+            title: _accountManagementViewModel.allAccountManagement.isEmpty
+                ? ''
+                : '${((_accountManagementViewModel.allAccountManagement.values.where(
+                  (element) => element.jobTitle == 'اداري',
             ).length / _accountManagementViewModel.allAccountManagement.length) * 100).round()}%',
             radius: radius,
             titleStyle: TextStyle(
@@ -164,28 +151,6 @@ class _EmployeeDetailsChartState extends State<EmployeeDetailsChart> {
             ),
           );
         case 2:
-          return PieChartSectionData(
-            color: blueColor,
-            value: _accountManagementViewModel.allAccountManagement.values
-                .where(
-                  (element) => element.jobTitle == 'موظف/ه اداري/ه',
-            )
-                .length *
-                1.0,
-            title: _accountManagementViewModel.allAccountManagement.isEmpty
-                ? ''
-                : '${((_accountManagementViewModel.allAccountManagement.values.where(
-                  (element) => element.jobTitle == 'موظف/ه اداري/ه',
-            ).length / _accountManagementViewModel.allAccountManagement.length) * 100).round()}%',
-            radius: radius,
-            titleStyle: TextStyle(
-              fontSize: fontSize,
-              fontWeight: FontWeight.bold,
-              color: Colors.white,
-              shadows: shadows,
-            ),
-          );
-        case 3:
           return PieChartSectionData(
             color: Colors.cyan,
             value: _accountManagementViewModel.allAccountManagement.values
