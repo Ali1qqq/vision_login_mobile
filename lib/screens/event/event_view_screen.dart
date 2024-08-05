@@ -30,15 +30,15 @@ class _EventViewScreenState extends State<EventViewScreen> {
         ),
         crossFadeState: isAdd ? CrossFadeState.showSecond : CrossFadeState.showFirst,
       ),
-      floatingActionButton:enableUpdate?FloatingActionButton(
-        backgroundColor:primaryColor,
-        onPressed: () {
-          setState(() {
-            isAdd = !isAdd;
-          });
-        },
-        child: Icon(!isAdd? Icons.add:Icons.grid_view,color: Colors.white,),
-      ):Container(),
+      // floatingActionButton:enableUpdate?FloatingActionButton(
+      //   backgroundColor:primaryColor,
+      //   onPressed: () {
+      //     setState(() {
+      //       isAdd = !isAdd;
+      //     });
+      //   },
+      //   child: Icon(!isAdd? Icons.add:Icons.grid_view,color: Colors.white,),
+      // ):Container(),
 
     );
   }

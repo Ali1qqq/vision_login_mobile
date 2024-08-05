@@ -5,13 +5,16 @@ import 'package:vision_dashboard/controller/NFC_Card_View_model.dart';
 import 'package:vision_dashboard/core/Styling/app_style.dart';
 import 'package:vision_dashboard/core/Utils/Strings.dart';
 import 'package:vision_dashboard/screens/Employee/Controller/Employee_view_model.dart';
+import 'package:vision_dashboard/screens/Employee/Edite_Add_Employee/Widgets/AddIdImageButton.dart';
 import 'package:vision_dashboard/screens/Employee/Edite_Add_Employee/Widgets/EventControllerWidget.dart';
+import 'package:vision_dashboard/screens/Employee/Edite_Add_Employee/Widgets/IdImageListWidget.dart';
 import 'package:vision_dashboard/screens/Widgets/AppButton.dart';
 import 'package:vision_dashboard/screens/Widgets/Custom_Drop_down.dart';
 import 'package:vision_dashboard/screens/Widgets/Insert_shape_Widget.dart';
 import '../../Buses/Controller/Bus_View_Model.dart';
 import '../../Widgets/Custom_Text_Filed.dart';
 import '../../Widgets/header.dart';
+import '../../expenses/Input_Edit_Expenses/Widgets/AddImageButton.dart';
 
 class EmployeeInputForm extends StatelessWidget {
   final NfcCardViewModel cardViewModel = Get.find<NfcCardViewModel>();
@@ -189,6 +192,24 @@ class EmployeeInputForm extends StatelessWidget {
                         empController.role = _!;
                         empController.update();
                       },
+                    ),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text("صورة الهوية".tr),
+                        SizedBox(height: 15),
+                        SizedBox(
+                          height: 150,
+                          child: ListView(
+                            scrollDirection: Axis.horizontal,
+                            children: [
+                              buildAddIdImageButton(empController),
+                              ...buildIdImageList(empController.imagesTempData, empController, true),
+                              ...buildIdImageList(empController.imageLinkList, empController, false),
+                            ],
+                          ),
+                        ),
+                      ],
                     ),
                     if (empController.enableEdit) CustomTextField(controller: empController.editController, title: 'سبب التعديل'.tr, keyboardType: TextInputType.text),
                     GetBuilder<EmployeeViewModel>(builder: (controller) {

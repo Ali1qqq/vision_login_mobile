@@ -18,7 +18,9 @@ class CustomPlutoGrid extends StatefulWidget {
   final bool isEmp;
 }
 
+
 class _CustomPlutoGridState extends State<CustomPlutoGrid> {
+  bool canColor=true;
   @override
   Widget build(BuildContext context) {
     return PlutoGrid(
@@ -28,7 +30,9 @@ class _CustomPlutoGridState extends State<CustomPlutoGrid> {
       onChanged: (event) {
         print("onChanged");
       },
-      onLoaded: (PlutoGridOnLoadedEvent event) {},
+      onLoaded: (PlutoGridOnLoadedEvent event) {
+        
+      },
       mode: PlutoGridMode.selectWithOneTap,
       onRowDoubleTap: widget.onRowDoubleTap,
       onSelected: widget.onSelected,
@@ -45,14 +49,20 @@ class _CustomPlutoGridState extends State<CustomPlutoGrid> {
         localeText: PlutoGridLocaleText.arabic(),
       ),
       rowColorCallback: (PlutoRowColorContext rowColorContext) {
+
         if (rowColorContext.row.cells['موافقة المدير']?.value == "في انتظار الموافقة" || rowColorContext.row.cells['موافقة المدير']?.value == false) {
-          widget.selectedColor = Colors.green.withOpacity(0.3);
           return Colors.green.withOpacity(0.3);
         } else if (checkIfPendingDelete(affectedId: rowColorContext.row.cells[widget.idName]?.value)) {
-          widget.selectedColor = Colors.red.withOpacity(0.3);
           return Colors.red.withOpacity(0.3);
+        }else if(rowColorContext.row.cells['اللون']!=null ) {
+          if(canColor) {
+            widget.controller.selectedColor=Color(int.parse(rowColorContext.row.cells['اللون']!.value.toString())).withOpacity(0.5);
+            canColor=false;
+          }
+          return Color(int.parse(rowColorContext.row.cells['اللون']!.value.toString())).withOpacity(0.2);
+
         }
-        widget.selectedColor = Colors.transparent;
+        // widget.controller.selectedColor = Colors.transparent;
         return Colors.transparent;
       },
       createFooter: (stateManager) {

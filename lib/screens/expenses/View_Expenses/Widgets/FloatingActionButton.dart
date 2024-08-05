@@ -7,10 +7,7 @@ import 'DeleteOrRestoreButton.dart';
 import 'EditButton.dart';
 
 Widget buildFloatingActionButton(BuildContext context,ExpensesViewModel controller) {
-print(enableUpdate);
-print( controller.currentId );
-print(controller.allExpenses[controller.currentId]?.isAccepted==  true);
-print(controller.getIfDelete());
+
   if (!(!enableUpdate || controller.currentId == '' || controller.allExpenses[controller.currentId]?.isAccepted==  true || controller.getIfDelete())) {
     return Container();
   }

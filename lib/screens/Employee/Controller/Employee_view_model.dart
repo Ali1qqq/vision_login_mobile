@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:typed_data';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -78,6 +79,15 @@ class EmployeeViewModel extends GetxController {
 
   ///pluto header
   List<PlutoColumn> columns = [];
+
+
+  /// this for image already have in Edite Expenses model
+  List imageLinkList = [];
+
+
+  /// this for image upload from user (we save it temporary before we upload it )
+  List<Uint8List> imagesTempData = [];
+
 
   /// pluto data
   List<PlutoRow> rows = [];
@@ -351,7 +361,7 @@ class EmployeeViewModel extends GetxController {
             Get.snackbar("خطأ اثناء التسجيل", "الدوام لم يبدأ بعد");
             return;
           }
-          if (timeData.isAfter(8, 31)) {
+          if (timeData.isAfter(8, 00)) {
             totalLate = timeData.dateTime.difference(DateTime.now().copyWith(hour: 7, minute: 41, second: 0)).inMinutes;
             isDayOff = true;
             isLateWithReason = false;
@@ -869,6 +879,9 @@ class EmployeeViewModel extends GetxController {
     ])) {
       loadingQuickAlert(context);
       try {
+        await uploadImages(imagesTempData, "expenses").then(
+              (value) => imageLinkList.addAll(value),
+        );
         EmployeeModel model = EmployeeModel(
           id: !enableEdit ? generateId("EMPLOYEE") : employeeModel!.id,
           userName: userNameController.text,
@@ -876,6 +889,7 @@ class EmployeeViewModel extends GetxController {
           password: userPassController.text,
           type: role,
           serialNFC: selectedCardId,
+          idImages: imageLinkList.map((e) => e.toString(),).toList(),
           isActive: true,
           isAccepted: false,
           salary: int.parse(salaryController.text),
@@ -976,6 +990,8 @@ class EmployeeViewModel extends GetxController {
     role = '';
     selectedCardId = '';
     eventRecords = [];
+    imageLinkList.clear();
+    imagesTempData.clear();
     update();
   }
 
@@ -998,6 +1014,7 @@ class EmployeeViewModel extends GetxController {
       startDateController.text = employeeModel!.startDate.toString();
       dayWorkController.text = employeeModel!.dayOfWork.toString();
       bodyEvent.clear();
+      imageLinkList=employeeModel!.idImages??[];
       userNameController.text = employeeModel!.userName.toString();
       userPassController.text = employeeModel!.password.toString();
       employeeModel!.eventRecords?.forEach(

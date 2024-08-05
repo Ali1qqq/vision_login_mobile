@@ -11,34 +11,37 @@ class EmployeeModel {
   Map<String, EmployeeTimeModel> employeeTime = {};
   String? mobileNumber, address, nationality, gender, age, jobTitle, contract, bus, startDate, salaryWithDelay, fullName;
   List<dynamic>? salaryReceived;
+  List<String>? idImages;
   bool? available = false;
   List<EventRecordModel>? eventRecords;
 
-  EmployeeModel(
-      {required this.id,
-      required this.userName,
-      required this.password,
-      required this.type,
-      required this.serialNFC,
-      required this.isActive,
-      required this.salary,
-      required this.dayOfWork,
-      this.mobileNumber,
-      this.address,
-      this.nationality,
-      this.gender,
-      this.age,
-      this.jobTitle,
-      this.contract,
-      this.bus,
-      this.startDate,
-      this.eventRecords,
-      this.salaryReceived,
-      this.salaryWithDelay,
-      this.fullName,
-      this.isAccepted,
-      this.discounts,
-      this.available});
+  EmployeeModel({
+    required this.id,
+    required this.userName,
+    required this.password,
+    required this.type,
+    required this.serialNFC,
+    required this.isActive,
+    required this.salary,
+    required this.dayOfWork,
+    this.mobileNumber,
+    this.address,
+    this.nationality,
+    this.gender,
+    this.age,
+    this.jobTitle,
+    this.contract,
+    this.bus,
+    this.startDate,
+    this.eventRecords,
+    this.salaryReceived,
+    this.salaryWithDelay,
+    this.fullName,
+    this.isAccepted,
+    this.discounts,
+    this.available,
+    this.idImages,
+  });
 
   EmployeeModel.fromJson(json) {
     id = json['id'] ?? '';
@@ -48,6 +51,7 @@ class EmployeeModel {
     fullName = json['fullName'] ?? '';
     serialNFC = json['serialNFC'] ?? '';
     salary = json['salary'] ?? 0;
+    idImages = json['idImages'] ?? [];
     discounts = json['discounts'] ?? 0;
     salaryReceived = json['salaryReceived'] ?? [] ?? '';
     dayOfWork = json['dayOfWork'] ?? 0;
@@ -89,6 +93,7 @@ class EmployeeModel {
       if (nationality != null) 'nationality': nationality,
       if (gender != null) 'gender': gender,
       if (age != null) 'age': age,
+      if (idImages != null) 'idImages': idImages,
       if (jobTitle != null) 'jobTitle': jobTitle,
       if (contract != null) 'contract': contract,
       if (bus != null) 'bus': bus,

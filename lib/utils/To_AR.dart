@@ -12,7 +12,7 @@ List<PlutoColumn> toAR(Map<String, PlutoColumnType> data) {
       enableColumnDrag: false,
       enableEditingMode: false,
 
-      hide: entry.key == data.keys.first,
+      hide: entry.key == data.keys.first||entry.key=="اللون",
     );
   }).toList();
 
