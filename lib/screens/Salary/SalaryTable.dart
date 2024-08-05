@@ -8,7 +8,6 @@ import '../../../controller/Wait_management_view_model.dart';
 import '../../../models/account_management_model.dart';
 import '../../../models/Salary_Model.dart';
 import '../Widgets/Data_Row.dart';
-import 'SignViewDialog.dart';
 import 'controller/Salary_View_Model.dart';
 
 enum TableType { Payable, Received }
@@ -121,7 +120,7 @@ final  ScrollController scrollController;
                 "تسليم الراتب".tr,
                 color: Colors.green,
                 onTap: () {
-                  showDialog(
+              /*    showDialog(
                     context: context,
                     builder: (context) => buildSignViewDialog(
                         ((accountModel.salary!) -
@@ -130,7 +129,7 @@ final  ScrollController scrollController;
                             .toString(),
                         accountModel,
                         "${thisTimesModel!.year}-${months[selectedMonth]}",signatureGlobalKey,handleSaveButtonPressed,handleClearButtonPressed),
-                  );
+                  );*/
                 },
               ),
             ]);

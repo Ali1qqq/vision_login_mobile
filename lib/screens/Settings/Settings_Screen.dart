@@ -137,9 +137,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                   )
                                   .toList()
                                   .reversed)
+
+                                ///TODO:fix time issue
                                 DataRow(cells: [
                                   dataRowItem(size / logData.length, deleteModel.type.toString().tr),
-                                  dataRowItem(size / logData.length, deleteModel.date!.split(" ")[1].split(".")[0] + " " + deleteModel.date!.split(" ")[0].toString()),
+                                  dataRowItem(size / logData.length, deleteModel.date!.toString()),
                                   dataRowItem(size / logData.length, deleteModel.details ?? "لا يوجد".tr),
                                   dataRowItem(size / logData.length, _getAffectedName(deleteModel)),
                                   dataRowItem(size / logData.length, deleteModel.collectionName.toString()),

@@ -8,6 +8,7 @@ import 'package:vision_dashboard/models/Installment_model.dart';
 import 'package:vision_dashboard/models/Student_Model.dart';
 import 'package:vision_dashboard/models/TimeModel.dart';
 import 'package:vision_dashboard/screens/Exams/controller/Exam_View_Model.dart';
+import 'package:vision_dashboard/screens/Study%20Fees/Controller/Study_Fees_View_Model.dart';
 
 import '../../../constants.dart';
 
@@ -65,6 +66,8 @@ class StudentViewModel extends GetxController {
   }
 
   late StreamSubscription<QuerySnapshot<Map<String, dynamic>>> listener;
+  Color selectedColor=secondaryColor;
+
 
   getAllStudent() async {
     listener = await studentCollectionRef.snapshots().listen((value) async {
@@ -75,6 +78,7 @@ class StudentViewModel extends GetxController {
       }
       await Get.find<BusViewModel>().getAllWithoutListenBuse();
       await examViewModel.getGrade(_studentMap);
+      selectedColor=secondaryColor;
       plutoKey = GlobalKey();
       rows.clear();
       _studentMap.forEach(
@@ -105,6 +109,7 @@ class StudentViewModel extends GetxController {
           );
         },
       );
+      Get.find<StudyFeesViewModel>().getParentFees();
       update();
     });
   }

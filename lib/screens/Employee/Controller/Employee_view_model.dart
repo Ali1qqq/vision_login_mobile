@@ -124,6 +124,7 @@ class EmployeeViewModel extends GetxController {
 
   /// we use this for cancel listener
   late StreamSubscription<QuerySnapshot<EmployeeModel>> listener;
+  Color selectedColor=secondaryColor;
 
   getAllEmployee() {
     listener = accountManagementFireStore.snapshots().listen(
@@ -131,9 +132,10 @@ class EmployeeViewModel extends GetxController {
         isLoading = false;
         update();
         await Get.find<BusViewModel>().getAllWithoutListenBuse();
+        selectedColor=secondaryColor;
         plutoKey = GlobalKey();
         rows.clear();
-        int index=HiveDataBase.getAccountManagementModel()?.type == "مالك"?4:3;
+        int index = HiveDataBase.getAccountManagementModel()?.type == "مالك" ? 4 : 3;
         allAccountManagement = Map<String, EmployeeModel>.fromEntries(event.docs.toList().map((i) {
           rows.add(
             PlutoRow(
@@ -141,21 +143,20 @@ class EmployeeViewModel extends GetxController {
                 data.keys.elementAt(0): PlutoCell(value: i.id),
                 data.keys.elementAt(1): PlutoCell(value: i.data().userName),
                 data.keys.elementAt(2): PlutoCell(value: i.data().fullName),
-                if (HiveDataBase.getAccountManagementModel()?.type == "مالك")
-                data.keys.elementAt(3): PlutoCell(value: i.data().password),
-                  data.keys.elementAt(index): PlutoCell(value: i.data().type),
-                data.keys.elementAt(index+1): PlutoCell(value: i.data().isActive == true ? "فعال".tr : "غير فعال".tr),
-                data.keys.elementAt(index+2): PlutoCell(value: i.data().mobileNumber),
-                data.keys.elementAt(index+3): PlutoCell(value: i.data().address),
-                data.keys.elementAt(index+4): PlutoCell(value: i.data().nationality),
-                data.keys.elementAt(index+5): PlutoCell(value: i.data().gender),
-                data.keys.elementAt(index+6): PlutoCell(value: i.data().age),
-                data.keys.elementAt(index+7): PlutoCell(value: i.data().jobTitle),
-                data.keys.elementAt(index+8): PlutoCell(value: i.data().contract),
-                data.keys.elementAt(index+9): PlutoCell(value: Get.find<BusViewModel>().busesMap[i.data().bus.toString()]?.name ?? i.data().bus),
-                data.keys.elementAt(index+10): PlutoCell(value: i.data().startDate),
-                data.keys.elementAt(index+11): PlutoCell(value: i.data().eventRecords?.length.toString()),
-                data.keys.elementAt(index+12): PlutoCell(value: i.data().isAccepted == true ? "تمت الموافقة".tr : "في انتظار الموافقة".tr),
+                if (HiveDataBase.getAccountManagementModel()?.type == "مالك") data.keys.elementAt(3): PlutoCell(value: i.data().password),
+                data.keys.elementAt(index): PlutoCell(value: i.data().type),
+                data.keys.elementAt(index + 1): PlutoCell(value: i.data().isActive == true ? "فعال".tr : "غير فعال".tr),
+                data.keys.elementAt(index + 2): PlutoCell(value: i.data().mobileNumber),
+                data.keys.elementAt(index + 3): PlutoCell(value: i.data().address),
+                data.keys.elementAt(index + 4): PlutoCell(value: i.data().nationality),
+                data.keys.elementAt(index + 5): PlutoCell(value: i.data().gender),
+                data.keys.elementAt(index + 6): PlutoCell(value: i.data().age),
+                data.keys.elementAt(index + 7): PlutoCell(value: i.data().jobTitle),
+                data.keys.elementAt(index + 8): PlutoCell(value: i.data().contract),
+                data.keys.elementAt(index + 9): PlutoCell(value: Get.find<BusViewModel>().busesMap[i.data().bus.toString()]?.name ?? i.data().bus),
+                data.keys.elementAt(index + 10): PlutoCell(value: i.data().startDate),
+                data.keys.elementAt(index + 11): PlutoCell(value: i.data().eventRecords?.length.toString()),
+                data.keys.elementAt(index + 12): PlutoCell(value: i.data().isAccepted == true ? "تمت الموافقة".tr : "في انتظار الموافقة".tr),
               },
             ),
           );
@@ -163,12 +164,13 @@ class EmployeeViewModel extends GetxController {
         })).obs;
         isOpen = List.generate(allAccountManagement.length, (index) => false);
         isLoading = true;
+        Get.find<SalaryViewModel>().getEmployeeSalaryPluto();
         update();
       },
     );
   }
 
-  getAllEmployeeWithoutListen() {
+  getAllEmployeeWithoutListen() async {
     accountManagementFireStore.get().then(
       (event) async {
         await Get.find<BusViewModel>().getAllWithoutListenBuse();
@@ -283,7 +285,7 @@ class EmployeeViewModel extends GetxController {
           userStatus = UserManagementStatus.first;
         } else if (value.docs.isNotEmpty) {
           myUserModel = EmployeeModel.fromJson(value.docs.first.data());
-          if(myUserModel?.isAccepted==false) {
+          if (myUserModel?.isAccepted == false) {
             Get.snackbar("خطأ", "هذا المستخدم غير فعال ");
             return;
           }
@@ -1041,5 +1043,9 @@ class EmployeeViewModel extends GetxController {
     ));
     bodyEvent.clear();
     update();
+  }
+
+  clearDiscount(String affectedId) {
+    FirebaseFirestore.instance.collection(accountManagementCollection).doc(affectedId).set({"discounts": 0}, SetOptions(merge: true));
   }
 }

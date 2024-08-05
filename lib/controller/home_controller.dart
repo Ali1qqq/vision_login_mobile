@@ -30,7 +30,7 @@ class HomeViewModel extends GetxController {
 
    changeCurrentScreen(int index) {
      HiveDataBase.setCurrentScreen(index.toString());
-     currentScreenIndex=int.parse(HiveDataBase.getUserData().currentScreen);
+     currentScreenIndex=index;
      update();
    }
 

@@ -46,8 +46,11 @@ class AccountManagementScreen extends StatelessWidget {
                     width: size + 60,
                     child: CustomPlutoGrid(
                       controller: controller,
+                      selectedColor: controller.selectedColor,
                       idName: "الرقم التسلسلي",
                       onSelected: (event) {
+                        controller.selectedColor=Colors.white.withOpacity(0.5);
+
                         controller.setCurrentId(event.row?.cells["الرقم التسلسلي"]?.value);
 
                       },

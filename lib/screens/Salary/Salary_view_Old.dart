@@ -13,14 +13,14 @@ import '../Widgets/Custom_Drop_down.dart';
 import '../Widgets/header.dart';
 import 'SalaryTable.dart';
 
-class SalaryView extends StatefulWidget {
-  const SalaryView({super.key});
+class SalaryViewOld extends StatefulWidget {
+  const SalaryViewOld({super.key});
 
   @override
-  State<SalaryView> createState() => _SalaryViewState();
+  State<SalaryViewOld> createState() => _SalaryViewOldState();
 }
 
-class _SalaryViewState extends State<SalaryView> {
+class _SalaryViewOldState extends State<SalaryViewOld> {
   final GlobalKey<SfSignaturePadState> signatureGlobalKey = GlobalKey();
 
   void _handleClearButtonPressed() {

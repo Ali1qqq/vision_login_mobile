@@ -16,6 +16,7 @@ class ExamViewModel extends GetxController {
       FirebaseFirestore.instance.collection(examsCollection);
   List<PlutoColumn> columns = [];
   List<PlutoRow> rows = [];
+  Color selectedColor=secondaryColor;
 
   Map<String, PlutoColumnType> data = {
     "الرقم التسلسلي": PlutoColumnType.text(),
@@ -57,6 +58,7 @@ class ExamViewModel extends GetxController {
 
   getAllExam() async {
     listener=   await examCollectionRef.snapshots().listen((value) async{
+      selectedColor=secondaryColor;
       _examMap.clear();
       plutoKey=GlobalKey();
       rows.clear();

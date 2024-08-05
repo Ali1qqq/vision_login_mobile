@@ -10,9 +10,7 @@ import 'package:vision_dashboard/core/Styling/app_colors.dart';
 import 'package:vision_dashboard/core/Styling/app_style.dart';
 import 'package:vision_dashboard/models/Installment_model.dart';
 import 'package:vision_dashboard/screens/Student/Controller/Student_View_Model.dart';
-import 'package:vision_dashboard/screens/Study%20Fees/Controller/Study_Fees_View_Model.dart';
 import 'package:vision_dashboard/screens/Widgets/AppButton.dart';
-import 'package:vision_dashboard/screens/Widgets/Insert_shape_Widget.dart';
 import 'package:vision_dashboard/utils/Image_OverLay.dart';
 
 import '../../constants.dart';
@@ -21,35 +19,44 @@ import '../../core/Utils/service.dart';
 import '../../models/Parent_Model.dart';
 import '../../utils/Dialogs.dart';
 import '../Parents/Controller/Parents_View_Model.dart';
-import '../Widgets/Custom_Pluto_Grid.dart';
 import '../Widgets/Custom_Text_Filed.dart';
 import '../Widgets/Square_Widget.dart';
-import '../Widgets/View_shape_Widget.dart';
 import '../Widgets/expanded_data_row.dart';
 import '../Widgets/header.dart';
 
-class StudyFeesView extends StatefulWidget {
-  const StudyFeesView({super.key});
+class StudyFeesViewOld extends StatefulWidget {
+  const StudyFeesViewOld({super.key});
 
   @override
-  State<StudyFeesView> createState() => _StudyFeesViewState();
+  State<StudyFeesViewOld> createState() => _StudyFeesViewOldState();
 }
 
-class _StudyFeesViewState extends State<StudyFeesView> {
-  int inkwellIndex = 3;
+class _StudyFeesViewOldState extends State<StudyFeesViewOld> {
+  List data = [
+    "الاسم الكامل",
+    "الاولاد",
+    "المستلم",
+    "المبلغ الكامل",
+    "المستحق",
+    "الحالة",
+  ];
+  final ScrollController _scrollController = ScrollController();
 
-  StudentViewModel studentViewModel = Get.find<StudentViewModel>();
+  int inkwellIndex = 3;
+  ParentsViewModel parentsViewModel = Get.find<ParentsViewModel>();
+
+  // StudentViewModel studentViewModel = Get.find<StudentViewModel>();
 
   @override
   Widget build(BuildContext context) {
-    return GetBuilder<StudyFeesViewModel>(builder: (controller) {
-
+    return GetBuilder<StudentViewModel>(builder: (studentViewModel) {
       return Scaffold(
         appBar: Header(context: context, title: 'الرسوم الدراسية'.tr, middleText: "تعرض هذه الواجهة اجمالي ادفعات المستلمة من الطلاب و اجمالي الدفعات الخير مستلمة واجمالي الدفعات المتأخرة عن الدفع عن هذا الشهر مع جدول يوضح تفاصيل الدفعات لكل اب مع امكانية استلام دفعة او التراجع عنها".tr),
         body: SingleChildScrollView(
-
-            child:  Padding(
-              padding: const EdgeInsets.all(16),
+          child: GetBuilder<HomeViewModel>(builder: (controller) {
+            double size = max(MediaQuery.sizeOf(context).width - (controller.isDrawerOpen ? 240 : 120), 1000) - 60;
+            return Padding(
+              padding: const EdgeInsets.all(8),
               child: Column(
                 children: [
                   SizedBox(
@@ -62,22 +69,25 @@ class _StudyFeesViewState extends State<StudyFeesView> {
                       children: [
                         InkWell(
                             onTap: () {
-                              controller.setInkwellIndex(0);
+                              inkwellIndex = 0;
+                              setState(() {});
                             },
                             child: SquareWidget(title: "الدفعات القادمة".tr, body: "${studentViewModel.getAllNunReceivePay()}", color: AppColors.textColor, png: "assets/poor.png")),
                         InkWell(
                             onTap: () {
-                              controller.setInkwellIndex(1);
+                              inkwellIndex = 1;
+                              setState(() {});
                             },
                             child: SquareWidget(title: "الدفعات المستلمة".tr, body: "${studentViewModel.getAllReceivePay()}", color: AppColors.textColor, png: "assets/profit.png")),
                         InkWell(
                             onTap: () {
-                              controller.setInkwellIndex(2);
+                              inkwellIndex = 2;
+                              setState(() {});
                             },
                             child: SquareWidget(title: "الدفعات المتأخرة".tr, body: "${studentViewModel.getAllNunReceivePayThisMonth()}", color: Colors.redAccent, png: "assets/late-payment.png")),
                         InkWell(
                             onTap: () {
-                              controller.setInkwellIndex(3);
+                              inkwellIndex = 3;
                               setState(() {});
                             },
                             child: SquareWidget(title: "الاجمالي".tr, body: "${studentViewModel.getAllTotalPay()}", color: Colors.black, png: "assets/budget.png")),
@@ -87,42 +97,36 @@ class _StudyFeesViewState extends State<StudyFeesView> {
                   SizedBox(
                     height: defaultPadding * 2,
                   ),
-                  ViewShapeWidget(
-                    titleWidget: Text(
-                      "معلومات الدفعات",
-                      style: AppStyles.headLineStyle1,
+                  Container(
+                    padding: EdgeInsets.all(defaultPadding),
+                    decoration: BoxDecoration(
+                      color: secondaryColor,
+                      borderRadius: const BorderRadius.all(Radius.circular(10)),
                     ),
-                    bodyWidget: SizedBox(
-                      height: Get.height - 180,
-                      width:Get.width,
-                      child: CustomPlutoGrid(
-                        controller: controller,
-                        selectedColor: controller.selectedColor,
-                        idName: "الرقم التسلسلي",
-                        onSelected: (event) {
-                          controller.selectedColor=Colors.white.withOpacity(0.5);
-                          controller.setCurrentId(event.row?.cells["الرقم التسلسلي"]?.value);
-                        },
+                    child: SizedBox(
+                      width: size + 60,
+                      child: Scrollbar(
+                        controller: _scrollController,
+                        child: SingleChildScrollView(
+                          controller: _scrollController,
+                          scrollDirection: Axis.horizontal,
+                          child: DataTable(
+                              columnSpacing: 0,
+                              dividerThickness: 0.3,
+                              columns: List.generate(data.length, (index) => DataColumn(label: Container(width: size / data.length, child: Center(child: Text(data[index].toString().tr))))),
+                              rows: generateDataRows(inkwellIndex, size, data, studentViewModel, parentsViewModel)
+
+
+                              ),
+                        ),
                       ),
                     ),
                   ),
                 ],
               ),
-            )
-
+            );
+          }),
         ),
-        floatingActionButton: controller.currentId != ''
-            ? FloatingActionButton(
-                onPressed: () {
-                  controller.showInstallmentDialogForParent(context);
-                },
-                backgroundColor: primaryColor,
-                child: Icon(
-                  Icons.remove_red_eye_outlined,
-                  color: Colors.white,
-                ),
-              )
-            : SizedBox(),
       );
     });
   }
@@ -324,6 +328,7 @@ class _StudyFeesViewState extends State<StudyFeesView> {
                                                     ),
                                                   ),
                                                 ),
+
                                               if (installment[index].isPay == true)
                                                 ImageOverlay(
                                                   imageUrl: imageURL!,
@@ -380,6 +385,8 @@ class _StudyFeesViewState extends State<StudyFeesView> {
                                                               addWaitOperation(type: waitingListTypes.returnInstallment, collectionName: installmentCollection, affectedId: installment[index].installmentId!, relatedId: installmentStudent.keys.elementAt(parentIndex));
                                                             },
                                                           );
+
+
                                                       },
                                                     ),
                                                   );
@@ -403,6 +410,7 @@ class _StudyFeesViewState extends State<StudyFeesView> {
                       child: AppButton(
                     text: "حفظ".tr,
                     onPressed: () {
+
                       Get.back();
                     },
                   )),

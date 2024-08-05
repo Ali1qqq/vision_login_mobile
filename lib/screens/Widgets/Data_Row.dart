@@ -1,7 +1,6 @@
  import 'package:flutter/material.dart';
 import 'package:vision_dashboard/core/Styling/app_style.dart';
 
-import '../../constants.dart';
 import '../../core/Styling/app_colors.dart';
 
 dataRowItem(size, text, {onTap, color}) {

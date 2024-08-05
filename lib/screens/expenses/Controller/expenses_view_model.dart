@@ -111,6 +111,7 @@ class ExpensesViewModel extends GetxController {
 
   /// this for cancel listener
   late StreamSubscription<QuerySnapshot<ExpensesModel>> listener;
+  Color selectedColor=secondaryColor;
 
   getAllExpenses() {
     final acc = Get.find<EmployeeViewModel>();
@@ -118,6 +119,7 @@ class ExpensesViewModel extends GetxController {
       (event) {
         plutoKey = GlobalKey();
         rows.clear();
+        selectedColor=secondaryColor;
         allExpenses = Map<String, ExpensesModel>.fromEntries(event.docs.toList().map((i) {
           rows.add(
             PlutoRow(

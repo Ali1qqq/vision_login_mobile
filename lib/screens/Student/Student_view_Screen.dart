@@ -17,10 +17,8 @@ class _StudentViewState extends State<StudentView> {
   bool isAdd=false;
 
   @override
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
-
       body: AnimatedCrossFade(
         duration: Duration(milliseconds: 500),
         firstChild: ConstrainedBox(

@@ -48,7 +48,7 @@ class EmployeeModel {
     fullName = json['fullName'] ?? '';
     serialNFC = json['serialNFC'] ?? '';
     salary = json['salary'] ?? 0;
-    discounts = json['salary'] ?? 0;
+    discounts = json['discounts'] ?? 0;
     salaryReceived = json['salaryReceived'] ?? [] ?? '';
     dayOfWork = json['dayOfWork'] ?? 0;
     isActive = json['isActive'] ?? true;

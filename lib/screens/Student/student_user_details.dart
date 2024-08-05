@@ -15,6 +15,8 @@ import 'package:vision_dashboard/screens/Parents/Controller/Parents_View_Model.d
 import 'package:vision_dashboard/screens/Student/Controller/Student_View_Model.dart';
 import 'package:vision_dashboard/screens/Widgets/AppButton.dart';
 import 'package:vision_dashboard/screens/Widgets/Custom_Drop_down.dart';
+import 'package:vision_dashboard/screens/Widgets/Insert_shape_Widget.dart';
+import 'package:vision_dashboard/screens/Widgets/header.dart';
 import 'package:vision_dashboard/screens/classes/Controller/Class_View_Model.dart';
 import '../../constants.dart';
 import '../../core/Utils/service.dart';
@@ -77,8 +79,6 @@ class _StudentInputFormState extends State<StudentInputForm> {
     costsController.add(TextEditingController());
   }
 
-
-
   @override
   void initState() {
     // TODO: implement initState
@@ -93,9 +93,7 @@ class _StudentInputFormState extends State<StudentInputForm> {
       studentNameController.text = widget.studentModel!.studentName ?? '';
       studentNumberController.text = widget.studentModel!.studentNumber ?? '';
       busController.text = widget.studentModel!.bus ?? '';
-      busValue =
-          Get.find<BusViewModel>().busesMap[widget.studentModel!.bus]?.name ??
-              widget.studentModel!.bus!;
+      busValue = Get.find<BusViewModel>().busesMap[widget.studentModel!.bus]?.name ?? widget.studentModel!.bus!;
       genderController.text = widget.studentModel!.gender ?? '';
 
       ageController.text = widget.studentModel!.StudentBirthDay ?? '';
@@ -104,44 +102,30 @@ class _StudentInputFormState extends State<StudentInputForm> {
       startDateController.text = widget.studentModel!.startDate ?? '';
       busController.text = widget.studentModel!.bus ?? '';
       guardianController.text = widget.studentModel!.parentId!;
-      parentName = Get.find<ParentsViewModel>()
-              .parentMap[widget.studentModel!.parentId!]
-              ?.fullName ??
-          "";
+      parentName = Get.find<ParentsViewModel>().parentMap[widget.studentModel!.parentId!]?.fullName ?? "";
       languageController.text = widget.studentModel!.stdLanguage ?? '';
-      totalPaymentController.text =
-          widget.studentModel!.totalPayment.toString();
-      installmentCount =
-          widget.studentModel?.installmentRecords?.values.length ?? 0;
+      totalPaymentController.text = widget.studentModel!.totalPayment.toString();
+      installmentCount = widget.studentModel?.installmentRecords?.values.length ?? 0;
 
       print(widget.studentModel?.installmentRecords?.values.length);
       monthsController = List.generate(
         widget.studentModel?.installmentRecords?.values.length ?? 0,
-        (index) => TextEditingController()
-          ..text = widget.studentModel!.installmentRecords!.values
-              .elementAt(index)
-              .installmentDate
-              .toString(),
+        (index) => TextEditingController()..text = widget.studentModel!.installmentRecords!.values.elementAt(index).installmentDate.toString(),
       );
       costsController = List.generate(
         widget.studentModel?.installmentRecords?.length ?? 0,
-        (index) => TextEditingController()
-          ..text = widget.studentModel!.installmentRecords!.values
-              .elementAt(index)
-              .installmentCost
-              .toString(),
+        (index) => TextEditingController()..text = widget.studentModel!.installmentRecords!.values.elementAt(index).installmentCost.toString(),
       );
       eventRecords = widget.studentModel!.eventRecords ?? [];
       _contracts = widget.studentModel!.contractsImage ?? [];
-    }
-    else{
-       addInstalment();
+    } else {
+      addInstalment();
     }
   }
 
   int installmentCount = 0;
 
-  clearController() async{
+  clearController() async {
     eventRecords.clear();
     studentNameController.clear();
     studentNumberController.clear();
@@ -161,180 +145,171 @@ class _StudentInputFormState extends State<StudentInputForm> {
     busValue = '';
     _contracts.clear();
     _contractsTemp.clear();
-    installmentCount=0;
+    installmentCount = 0;
     monthsController.clear();
     costsController.clear();
-  await  addInstalment();
+    await addInstalment();
     setState(() {});
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: Header(title: "اضافة طالب جديد".tr, middleText: "", context: context),
+      backgroundColor: bgColor,
+
       body: SingleChildScrollView(
         padding: EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Container(
-              padding: EdgeInsets.all(16.0),
-              alignment: Alignment.center,
-              decoration: BoxDecoration(
-                color: secondaryColor,
-                borderRadius: BorderRadius.circular(15),
-              ),
-              child: Wrap(
-                clipBehavior: Clip.hardEdge,
-                direction: Axis.horizontal,
-                alignment: WrapAlignment.spaceEvenly,
-                runSpacing: 50,
-                spacing: 25,
-                children: <Widget>[
-                  CustomTextField(
-                      controller: studentNameController,
-                      title: "اسم الطالب".tr),
-                  CustomDropDown(
-                    value: parentName,
-                    listValue: Get.find<ParentsViewModel>()
-                        .parentMap
-                        .values
-                        .map(
-                          (e) => e.fullName!,
-                        )
-                        .toList(),
-                    label: 'ولي الأمر'.tr,
-                    onChange: (value) {
-                      if (value != null) {
-                        parentName = value;
-                        guardianController.text = Get.find<ParentsViewModel>()
-                            .parentMap
-                            .values
-                            .where(
-                              (element) => element.fullName == value,
-                            )
-                            .first
-                            .id!;
-                      }
-                    },
-                  ),
-                  CustomTextField(
-                      controller: studentNumberController,
-                      title: 'رقم الطالب'.tr,
-                      keyboardType: TextInputType.phone),
-                  CustomDropDown(
-                    value: genderController.text,
-                    listValue: sexList,
-                    label: 'الجنس'.tr,
-                    onChange: (value) {
-                      if (value != null) {
-                        genderController.text = value;
-                      }
-                    },
-                  ),
-                  InkWell(
-                    onTap: () {
-                      showDatePicker(
-                        context: context,
-                        firstDate: DateTime(2010),
-                        lastDate: DateTime(2100),
-                      ).then((date) {
-                        if (date != null) {
-                          ageController.text = date.toString().split(" ")[0];
+            InsertShapeWidget(
+                titleWidget: Text(
+                  "معلومات الطالب".tr,
+                  style: AppStyles.headLineStyle4,
+                ),
+                bodyWidget: Wrap(
+                  clipBehavior: Clip.hardEdge,
+                  direction: Axis.horizontal,
+                  alignment: WrapAlignment.spaceEvenly,
+                  runSpacing: 50,
+                  spacing: 25,
+                  children: <Widget>[
+                    CustomTextField(controller: studentNameController, title: "اسم الطالب".tr),
+                    CustomDropDown(
+                      value: parentName,
+                      listValue: Get.find<ParentsViewModel>()
+                          .parentMap
+                          .values
+                          .map(
+                            (e) => e.fullName!,
+                          )
+                          .toList(),
+                      label: 'ولي الأمر'.tr,
+                      onChange: (value) {
+                        if (value != null) {
+                          parentName = value;
+                          guardianController.text = Get.find<ParentsViewModel>()
+                              .parentMap
+                              .values
+                              .where(
+                                (element) => element.fullName == value,
+                              )
+                              .first
+                              .id!;
                         }
-                      });
-                    },
-                    child: CustomTextField(
-                      controller: ageController,
-                      title: 'الميلاد'.tr,
-                      enable: false,
-                      keyboardType: TextInputType.datetime,
-                      icon: Icon(
-                        Icons.date_range_outlined,
-                        color: primaryColor,
+                      },
+                    ),
+                    CustomTextField(controller: studentNumberController, title: 'رقم الطالب'.tr, keyboardType: TextInputType.phone),
+                    CustomDropDown(
+                      value: genderController.text,
+                      listValue: sexList,
+                      label: 'الجنس'.tr,
+                      onChange: (value) {
+                        if (value != null) {
+                          genderController.text = value;
+                        }
+                      },
+                    ),
+                    InkWell(
+                      onTap: () {
+                        showDatePicker(
+                          context: context,
+                          firstDate: DateTime(2010),
+                          lastDate: DateTime(2100),
+                        ).then((date) {
+                          if (date != null) {
+                            ageController.text = date.toString().split(" ")[0];
+                          }
+                        });
+                      },
+                      child: CustomTextField(
+                        controller: ageController,
+                        title: 'الميلاد'.tr,
+                        enable: false,
+                        keyboardType: TextInputType.datetime,
+                        icon: Icon(
+                          Icons.date_range_outlined,
+                          color: primaryColor,
+                        ),
                       ),
                     ),
-                  ),
-                  CustomDropDown(
-                    value: classController.text,
-                    listValue: classViewModel.classMap.values
-                        .map(
-                          (e) => e.className!,
-                        )
-                        .toList(),
-                    label: 'الصف'.tr,
-                    onChange: (value) {
-                      if (value != null) {
-                        classController.text = value;
-                        setState(() {});
-                      }
-                    },
-                  ),
-                  CustomDropDown(
-                    value: languageController.text,
-                    listValue: languageList,
-                    label: 'اللغة'.tr,
-                    onChange: (value) {
-                      if (value != null) {
-                        languageController.text = value;
-                      }
-                    },
-                  ),
-                  CustomDropDown(
-                    value: busValue,
-                    listValue: Get.find<BusViewModel>()
-                            .busesMap
-                            .values
-                            .map(
-                              (e) => e.name!,
-                            )
-                            .toList() +
-                        ['بدون حافلة'],
-                    label: 'الحافلة'.tr,
-                    onChange: (value) {
-                      if (value != null) {
-                        busValue = value;
-                        final busViewController = Get.find<BusViewModel>();
-                        if (busViewController.busesMap.isNotEmpty) {
-                          busController.text = busViewController.busesMap.values
-                                  .where(
-                                    (element) => element.name == value,
-                                  )
-                                  .firstOrNull
-                                  ?.busId ??
-                              value;
-                        } else
-                          busController.text = value;
-                      }
-                    },
-                  ),
-                  CustomTextField(
-                      controller: totalPaymentController,
-                      title: 'مبلغ التسجيل'.tr,
-                      keyboardType: TextInputType.phone),
-                  CustomDropDown(
-                    value: _payWay.tr,
-                    listValue: _payWays
-                        .map(
-                          (e) => e.toString().tr,
-                        )
-                        .toList(),
-                    label: "طريقة الدفع".tr,
-                    onChange: (selectedWay) async {
-                      if (selectedWay != null) {
-                        _payWay = selectedWay;
-                        if (selectedWay != 'اقساط'.tr)
-                          {
-                            print("object");
-                            monthsController[0].text=DateTime.now().month.toString().padLeft(2,"0");
-                            costsController.first=totalPaymentController;
-                            print(monthsController[0].text);
-                          }else{
-                          monthsController[0].text='';
-                          costsController.first=TextEditingController();
+                    CustomDropDown(
+                      value: classController.text,
+                      listValue: classViewModel.classMap.values
+                          .map(
+                            (e) => e.className!,
+                          )
+                          .toList(),
+                      label: 'الصف'.tr,
+                      onChange: (value) {
+                        if (value != null) {
+                          classController.text = value;
+                          setState(() {});
                         }
+                      },
+                    ),
+                    CustomDropDown(
+                      value: languageController.text,
+                      listValue: languageList,
+                      label: 'اللغة'.tr,
+                      onChange: (value) {
+                        if (value != null) {
+                          languageController.text = value;
+                        }
+                      },
+                    ),
+                    CustomDropDown(
+                      value: busValue,
+                      listValue: Get.find<BusViewModel>()
+                              .busesMap
+                              .values
+                              .map(
+                                (e) => e.name!,
+                              )
+                              .toList() +
+                          ['بدون حافلة'],
+                      label: 'الحافلة'.tr,
+                      onChange: (value) {
+                        if (value != null) {
+                          busValue = value;
+                          final busViewController = Get.find<BusViewModel>();
+                          if (busViewController.busesMap.isNotEmpty) {
+                            busController.text = busViewController.busesMap.values
+                                    .where(
+                                      (element) => element.name == value,
+                                    )
+                                    .firstOrNull
+                                    ?.busId ??
+                                value;
+                          } else
+                            busController.text = value;
+                        }
+                      },
+                    ),
+                    CustomTextField(controller: totalPaymentController, title: 'مبلغ التسجيل'.tr, keyboardType: TextInputType.phone),
+                    CustomDropDown(
+                      value: _payWay.tr,
+                      listValue: _payWays
+                          .map(
+                            (e) => e.toString().tr,
+                          )
+                          .toList(),
+                      label: "طريقة الدفع".tr,
+                      onChange: (selectedWay) async {
+                        if (selectedWay != null) {
+                          _payWay = selectedWay;
+                          if (selectedWay != 'اقساط'.tr) {
+                            print("object");
+                            monthsController[0].text = DateTime.now().month.toString().padLeft(2, "0");
+                            costsController.first = totalPaymentController;
+                            print(monthsController[0].text);
+                          } else {
+                            monthsController[0].text = '';
+                            costsController.first = TextEditingController();
+                          }
 
-
-                      /*  if (selectedWay == 'اقساط'.tr) {
+                          /*  if (selectedWay == 'اقساط'.tr) {
                           _payWay = selectedWay;
 
                           await addInstalment();
@@ -347,36 +322,10 @@ class _StudentInputFormState extends State<StudentInputForm> {
                           costsController.clear();
                           setState(() {});
                         }*/
-
-                      }
-                      setState(() {});
-                    },
-                  ),
-                  InkWell(
-                    onTap: () {
-                      showDatePicker(
-                        context: context,
-                        firstDate: DateTime(2010),
-                        lastDate: DateTime(2100),
-                      ).then((date) {
-                        if (date != null) {
-                          startDateController.text =
-                              date.toString().split(" ")[0];
                         }
-                      });
-                    },
-                    child: CustomTextField(
-                      controller: startDateController,
-                      title: 'تاريخ البداية'.tr,
-                      enable: false,
-                      keyboardType: TextInputType.datetime,
-                      icon: Icon(
-                        Icons.date_range_outlined,
-                        color: primaryColor,
-                      ),
+                        setState(() {});
+                      },
                     ),
-                  ),
-                  if (widget.studentModel != null)
                     InkWell(
                       onTap: () {
                         showDatePicker(
@@ -385,14 +334,13 @@ class _StudentInputFormState extends State<StudentInputForm> {
                           lastDate: DateTime(2100),
                         ).then((date) {
                           if (date != null) {
-                            endDateController.text =
-                                date.toString().split(" ")[0];
+                            startDateController.text = date.toString().split(" ")[0];
                           }
                         });
                       },
                       child: CustomTextField(
-                        controller: endDateController,
-                        title: 'تاريخ النهاية'.tr,
+                        controller: startDateController,
+                        title: 'تاريخ البداية'.tr,
                         enable: false,
                         keyboardType: TextInputType.datetime,
                         icon: Icon(
@@ -401,7 +349,30 @@ class _StudentInputFormState extends State<StudentInputForm> {
                         ),
                       ),
                     ),
-
+                    if (widget.studentModel != null)
+                      InkWell(
+                        onTap: () {
+                          showDatePicker(
+                            context: context,
+                            firstDate: DateTime(2010),
+                            lastDate: DateTime(2100),
+                          ).then((date) {
+                            if (date != null) {
+                              endDateController.text = date.toString().split(" ")[0];
+                            }
+                          });
+                        },
+                        child: CustomTextField(
+                          controller: endDateController,
+                          title: 'تاريخ النهاية'.tr,
+                          enable: false,
+                          keyboardType: TextInputType.datetime,
+                          icon: Icon(
+                            Icons.date_range_outlined,
+                            color: primaryColor,
+                          ),
+                        ),
+                      ),
                     SizedBox(
                       width: Get.width / 2,
                       child: Column(
@@ -418,25 +389,13 @@ class _StudentInputFormState extends State<StudentInputForm> {
                               shrinkWrap: true,
                               itemCount: installmentCount,
                               itemBuilder: (context, index) {
-                                bool cantEdite = widget.studentModel != null
-                                    ? widget.studentModel!.installmentRecords!
-                                            .values
-                                            .toList()[index]
-                                            .isPay ??
-                                        false
-                                    : false;
+                                bool cantEdite = widget.studentModel != null ? widget.studentModel!.installmentRecords!.values.toList()[index].isPay ?? false : false;
                                 return Padding(
-                                  padding:
-                                      const EdgeInsets.symmetric(vertical: 8.0),
+                                  padding: const EdgeInsets.symmetric(vertical: 8.0),
                                   child: Container(
-                                    decoration: BoxDecoration(
-                                        color: Colors.white.withOpacity(0.5),
-                                        borderRadius: BorderRadius.circular(15),
-                                        border: Border.all(
-                                            width: 2.0, color: primaryColor)),
+                                    decoration: BoxDecoration(color: Colors.white.withOpacity(0.5), borderRadius: BorderRadius.circular(15), border: Border.all(width: 2.0, color: primaryColor)),
                                     child: Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          vertical: 14.0, horizontal: 10),
+                                      padding: const EdgeInsets.symmetric(vertical: 14.0, horizontal: 10),
                                       child: Row(
                                         children: [
                                           Spacer(),
@@ -444,51 +403,36 @@ class _StudentInputFormState extends State<StudentInputForm> {
                                               ? CustomTextField(
                                                   enable: !cantEdite,
                                                   isFullBorder: !cantEdite,
-                                                  controller:
-                                                      TextEditingController()
-                                                        ..text = months.entries
-                                                                .where(
-                                                                  (element) =>
-                                                                      element
-                                                                          .value ==
-                                                                      monthsController[
-                                                                              index]
-                                                                          .text,
-                                                                )
-                                                                .firstOrNull
-                                                                ?.key ??
-                                                            '',
+                                                  controller: TextEditingController()
+                                                    ..text = months.entries
+                                                            .where(
+                                                              (element) => element.value == monthsController[index].text,
+                                                            )
+                                                            .firstOrNull
+                                                            ?.key ??
+                                                        '',
                                                   title: "الشهر".tr,
                                                   size: Get.width / 5.5,
-                                                  keyboardType:
-                                                      TextInputType.number,
+                                                  keyboardType: TextInputType.number,
                                                 )
                                               : CustomDropDown(
                                                   value: months.entries
                                                           .where(
                                                             (element) {
-                                                              if(monthsController.isEmpty)
-                                                                return false;
-                                                              return element.value ==
-                                                                monthsController[
-                                                                        index]
-                                                                    .text;
+                                                              if (monthsController.isEmpty) return false;
+                                                              return element.value == monthsController[index].text;
                                                             },
                                                           )
                                                           .firstOrNull
                                                           ?.key ??
                                                       '',
-                                                  listValue: months.keys
-                                                      .map((e) => e.toString())
-                                                      .toList(),
+                                                  listValue: months.keys.map((e) => e.toString()).toList(),
                                                   label: "الشهر".tr,
                                                   size: Get.width / 5.5,
                                                   isFullBorder: true,
                                                   onChange: (value) {
                                                     if (value != null) {
-                                                      monthsController[index]
-                                                              .text =
-                                                          months[value]!;
+                                                      monthsController[index].text = months[value]!;
                                                     }
                                                   },
                                                 ),
@@ -529,7 +473,7 @@ class _StudentInputFormState extends State<StudentInputForm> {
                           SizedBox(
                             height: defaultPadding,
                           ),
-                       /*   GetBuilder<StudentViewModel>(builder: (controller) {
+                          /*   GetBuilder<StudentViewModel>(builder: (controller) {
                             return AppButton(
                               text: "حفظ".tr,
                               onPressed: () async {
@@ -540,101 +484,84 @@ class _StudentInputFormState extends State<StudentInputForm> {
                         ],
                       ),
                     ),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text("صورة العقد".tr),
-                      SizedBox(
-                        height: 15,
-                      ),
-                      SizedBox(
-                        height: 200,
-                        child: ListView(
-                          scrollDirection: Axis.horizontal,
-                          children: [
-                            InkWell(
-                              onTap: () async {
-                                FilePickerResult? _ = await FilePicker.platform
-                                    .pickFiles(
-                                        type: FileType.image,
-                                        allowMultiple: true);
-                                if (_ != null) {
-                                  _.files.forEach(
-                                    (element) async {
-                                      _contractsTemp.add(element.bytes!);
-                                    },
-                                  );
-                                  setState(() {});
-                                }
-                              },
-                              child: Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 8.0),
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                      color: Colors.grey,
-                                      borderRadius: BorderRadius.circular(15)),
-                                  height: 200,
-                                  width: 200,
-                                  child: Icon(Icons.add),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text("صورة العقد".tr),
+                        SizedBox(
+                          height: 15,
+                        ),
+                        SizedBox(
+                          height: 200,
+                          child: ListView(
+                            scrollDirection: Axis.horizontal,
+                            children: [
+                              InkWell(
+                                onTap: () async {
+                                  FilePickerResult? _ = await FilePicker.platform.pickFiles(type: FileType.image, allowMultiple: true);
+                                  if (_ != null) {
+                                    _.files.forEach(
+                                      (element) async {
+                                        _contractsTemp.add(element.bytes!);
+                                      },
+                                    );
+                                    setState(() {});
+                                  }
+                                },
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                                  child: Container(
+                                    decoration: BoxDecoration(color: Colors.grey, borderRadius: BorderRadius.circular(15)),
+                                    height: 200,
+                                    width: 200,
+                                    child: Icon(Icons.add),
+                                  ),
                                 ),
                               ),
-                            ),
-                            ...List.generate(
-                              _contractsTemp.length,
-                              (index) {
-                                return Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 8.0),
-                                  child: Container(
-                                      clipBehavior: Clip.hardEdge,
-                                      decoration: BoxDecoration(
-                                          color: Colors.grey,
-                                          borderRadius:
-                                              BorderRadius.circular(15)),
-                                      width: 200,
-                                      height: 200,
-                                      child: Image.memory(
-                                        (_contractsTemp[index]),
-                                        height: 200,
+                              ...List.generate(
+                                _contractsTemp.length,
+                                (index) {
+                                  return Padding(
+                                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                                    child: Container(
+                                        clipBehavior: Clip.hardEdge,
+                                        decoration: BoxDecoration(color: Colors.grey, borderRadius: BorderRadius.circular(15)),
                                         width: 200,
-                                        fit: BoxFit.fitHeight,
-                                      )),
-                                );
-                              },
-                            ),
-                            ...List.generate(
-                              _contracts.length,
-                              (index) {
-                                return Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 8.0),
-                                  child: Container(
-                                      clipBehavior: Clip.hardEdge,
-                                      decoration: BoxDecoration(
-                                          color: Colors.grey,
-                                          borderRadius:
-                                              BorderRadius.circular(15)),
-                                      width: 200,
-                                      height: 200,
-                                      child: Image.network(
-                                        _contracts[index],
                                         height: 200,
+                                        child: Image.memory(
+                                          (_contractsTemp[index]),
+                                          height: 200,
+                                          width: 200,
+                                          fit: BoxFit.fitHeight,
+                                        )),
+                                  );
+                                },
+                              ),
+                              ...List.generate(
+                                _contracts.length,
+                                (index) {
+                                  return Padding(
+                                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                                    child: Container(
+                                        clipBehavior: Clip.hardEdge,
+                                        decoration: BoxDecoration(color: Colors.grey, borderRadius: BorderRadius.circular(15)),
                                         width: 200,
-                                        fit: BoxFit.fitHeight,
-                                      )),
-                                );
-                              },
-                            ),
-                          ],
+                                        height: 200,
+                                        child: Image.network(
+                                          _contracts[index],
+                                          height: 200,
+                                          width: 200,
+                                          fit: BoxFit.fitHeight,
+                                        )),
+                                  );
+                                },
+                              ),
+                            ],
+                          ),
                         ),
-                      ),
-                    ],
-                  ),
-                  if(widget.studentModel!=null)
-                    CustomTextField(
-                        controller: editController, title: 'سبب التعديل'.tr),
-
+                      ],
+                    ),
+                    if (widget.studentModel != null) CustomTextField(controller: editController, title: 'سبب التعديل'.tr),
                     GetBuilder<StudentViewModel>(builder: (controller) {
                       return AppButton(
                         text: "حفظ".tr,
@@ -643,11 +570,19 @@ class _StudentInputFormState extends State<StudentInputForm> {
                         },
                       );
                     }),
-                ],
+                  ],
+                )),
+/*            Container(
+              padding: EdgeInsets.all(16.0),
+              alignment: Alignment.center,
+              decoration: BoxDecoration(
+                color: secondaryColor,
+                borderRadius: BorderRadius.circular(15),
               ),
-            ),
+              child:,
+            ),*/
             SizedBox(
-              height: defaultPadding * 2,
+              height: defaultPadding ,
             ),
             Container(
               padding: EdgeInsets.all(16.0),
@@ -670,8 +605,7 @@ class _StudentInputFormState extends State<StudentInputForm> {
                           listValue: eventController.allEvents.values
                               .toList()
                               .where(
-                                (element) =>
-                                    element.role == Const.eventTypeStudent,
+                                (element) => element.role == Const.eventTypeStudent,
                               )
                               .map((e) => e.name)
                               .toList(),
@@ -684,22 +618,14 @@ class _StudentInputFormState extends State<StudentInputForm> {
                           },
                         ),
                         SizedBox(width: 16.0),
-                        CustomTextField(
-                            controller: bodyEvent,
-                            title: 'الوصف'.tr,
-                            enable: true,
-                            keyboardType: TextInputType.text),
+                        CustomTextField(controller: bodyEvent, title: 'الوصف'.tr, enable: true, keyboardType: TextInputType.text),
                         SizedBox(width: 16.0),
                         AppButton(
                           text: 'إضافة سجل حدث'.tr,
                           onPressed: () {
-                            setState(() async{
+                            setState(() async {
                               // DateTime dateTime= await NTP.now();
-                              eventRecords.add(EventRecordModel(
-                                  body: bodyEvent.text,
-                                  type: selectedEvent!.name,
-                                  date: DateTime.now().toIso8601String(),
-                                  color: selectedEvent!.color.toString()));
+                              eventRecords.add(EventRecordModel(body: bodyEvent.text, type: selectedEvent!.name, date: DateTime.now().toIso8601String(), color: selectedEvent!.color.toString()));
                               bodyEvent.clear();
                             });
                           },
@@ -723,27 +649,21 @@ class _StudentInputFormState extends State<StudentInputForm> {
                         return Padding(
                           padding: const EdgeInsets.symmetric(vertical: 8.0),
                           child: Container(
-                            decoration: BoxDecoration(
-                                color: Color(int.parse(record.color))
-                                    .withOpacity(0.2),
-                                borderRadius: BorderRadius.circular(15)),
+                            decoration: BoxDecoration(color: Color(int.parse(record.color)).withOpacity(0.2), borderRadius: BorderRadius.circular(15)),
                             child: Padding(
-                              padding: const EdgeInsets.symmetric(
-                                  vertical: 14.0, horizontal: 10),
+                              padding: const EdgeInsets.symmetric(vertical: 14.0, horizontal: 10),
                               child: Row(
                                 children: [
                                   Text(
                                     record.type,
-                                    style: AppStyles.headLineStyle1
-                                        .copyWith(color: Colors.black),
+                                    style: AppStyles.headLineStyle1.copyWith(color: Colors.black),
                                   ),
                                   SizedBox(
                                     width: 10,
                                   ),
                                   Text(
                                     record.body,
-                                    style: AppStyles.headLineStyle1
-                                        .copyWith(color: Colors.black),
+                                    style: AppStyles.headLineStyle1.copyWith(color: Colors.black),
                                   ),
                                   SizedBox(
                                     width: 50,
@@ -774,32 +694,16 @@ class _StudentInputFormState extends State<StudentInputForm> {
   }
 
   save(StudentViewModel controller) async {
-    if (validateFields(requiredControllers: [
-
-    ], numericControllers: [])) {
-      QuickAlert.show(
-          width: Get.width / 2,
-          context: context,
-          type: QuickAlertType.loading,
-          title: 'جاري التحميل'.tr,
-          text: 'يتم العمل على الطلب'.tr,
-          barrierDismissible: false);
-      print( monthsController.length);
+    if (validateFields(requiredControllers: [], numericControllers: [])) {
+      QuickAlert.show(width: Get.width / 2, context: context, type: QuickAlertType.loading, title: 'جاري التحميل'.tr, text: 'يتم العمل على الطلب'.tr, barrierDismissible: false);
+      print(monthsController.length);
       for (int index = 0; index < monthsController.length; index++) {
-        String insId = widget.studentModel != null
-            ? widget.studentModel!.installmentRecords!.values
-                .toList()[index]
-                .installmentId!
-            : generateId("INSTALLMENT");
+        String insId = widget.studentModel != null ? widget.studentModel!.installmentRecords!.values.toList()[index].installmentId! : generateId("INSTALLMENT");
         instalmentMap[insId] = InstallmentModel(
           installmentCost: costsController[index].text,
           installmentDate: monthsController[index].text,
           installmentId: insId,
-          isPay: widget.studentModel != null
-              ? widget.studentModel!.installmentRecords!.values
-                  .toList()[index]
-                  .isPay!
-              : false,
+          isPay: widget.studentModel != null ? widget.studentModel!.installmentRecords!.values.toList()[index].isPay! : false,
         );
       }
 
@@ -808,9 +712,7 @@ class _StudentInputFormState extends State<StudentInputForm> {
       );
       final student = StudentModel(
         stdExam: widget.studentModel?.stdExam,
-        studentID: widget.studentModel == null
-            ? generateId("STD")
-            : widget.studentModel!.studentID!,
+        studentID: widget.studentModel == null ? generateId("STD") : widget.studentModel!.studentID!,
         parentId: guardianController.text,
         stdLanguage: languageController.text,
         isAccepted: widget.studentModel == null ? true : false,
@@ -829,27 +731,15 @@ class _StudentInputFormState extends State<StudentInputForm> {
         eventRecords: eventRecords,
         installmentRecords: instalmentMap,
       );
-      if (busController.text.startsWith("BUS"))
-    await  Get.find<BusViewModel>().addStudent(
-          busController.text, student.studentID!);
+      if (busController.text.startsWith("BUS")) await Get.find<BusViewModel>().addStudent(busController.text, student.studentID!);
       if (widget.studentModel != null) {
-        addWaitOperation(
-            collectionName: studentCollection,
-            affectedId: widget.studentModel!.studentID!,
-            type: waitingListTypes.edite,
-            oldData: widget.studentModel!.toJson(),
-            newData: student.toJson(),
-            details: editController.text);
+        addWaitOperation(collectionName: studentCollection, affectedId: widget.studentModel!.studentID!, type: waitingListTypes.edite, oldData: widget.studentModel!.toJson(), newData: student.toJson(), details: editController.text);
 
         if (widget.studentModel!.parentId != guardianController.text) {
-
-          Get.find<ParentsViewModel>().deleteStudent(
-              widget.studentModel!.parentId!, widget.studentModel!.studentID!);
+          Get.find<ParentsViewModel>().deleteStudent(widget.studentModel!.parentId!, widget.studentModel!.studentID!);
         }
         if (widget.studentModel!.bus != busController.text) {
-
-          Get.find<BusViewModel>().deleteStudent(
-              widget.studentModel!.bus!, widget.studentModel!.studentID!);
+          Get.find<BusViewModel>().deleteStudent(widget.studentModel!.bus!, widget.studentModel!.studentID!);
         }
       }
       await controller.addStudent(student);

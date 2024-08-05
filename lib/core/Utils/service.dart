@@ -1,14 +1,10 @@
-import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 
-import '../../constants.dart';
-import '../../models/TimeModel.dart';
 import '../../utils/Dialogs.dart';
-import 'package:http/http.dart' as http;
 
 bool validateFields({
   required List<TextEditingController> requiredControllers,

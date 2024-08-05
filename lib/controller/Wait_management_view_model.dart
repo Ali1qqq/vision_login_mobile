@@ -54,6 +54,8 @@ class WaitManagementViewModel extends GetxController {
     else if (waitModel.type == waitingListTypes.returnInstallment.name)
       doReturnInstallment(waitModel);
     if (waitModel.type == waitingListTypes.add.name) doAdd(waitModel);
+    if (waitModel.type == waitingListTypes.waitDiscounts.name) clearDiscount(waitModel);
+
     update();
 
 
@@ -221,6 +223,10 @@ class WaitManagementViewModel extends GetxController {
         .set(waitModel.oldDate!, SetOptions(merge: true));
     setAcceptedDeleteOperation(waitModel, false);
   }
+
+   clearDiscount(WaitManagementModel waitModel) {
+     Get.find<EmployeeViewModel>().clearDiscount(waitModel.affectedId);
+   }
 
 }
 

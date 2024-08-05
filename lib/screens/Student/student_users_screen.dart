@@ -101,8 +101,10 @@ class _StudentScreenState extends State<StudentScreen> {
                   width: size + 60,
                   child: CustomPlutoGrid(
                     controller: controller,
+                    selectedColor:  controller.selectedColor,
                     idName: "الرقم التسلسلي",
                     onSelected: (event) {
+                      controller.selectedColor=Colors.white.withOpacity(0.5);
                       currentId = event.row?.cells["الرقم التسلسلي"]?.value;
                       setState(() {});
                     },

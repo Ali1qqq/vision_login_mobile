@@ -8,9 +8,12 @@ import 'package:vision_dashboard/models/account_management_model.dart';
 import 'package:vision_dashboard/screens/Buses/Controller/Bus_View_Model.dart';
 import 'package:vision_dashboard/screens/Student/Controller/Student_View_Model.dart';
 import 'package:vision_dashboard/screens/Widgets/AppButton.dart';
+import 'package:vision_dashboard/screens/Widgets/Insert_shape_Widget.dart';
+import 'package:vision_dashboard/screens/Widgets/header.dart';
 import 'package:vision_dashboard/utils/Dialogs.dart';
 import '../../constants.dart';
 import '../../controller/home_controller.dart';
+import '../../core/Styling/app_style.dart';
 import '../../models/Bus_Model.dart';
 import '../../models/Student_Model.dart';
 import '../../models/event_record_model.dart';
@@ -108,18 +111,18 @@ class _BusInputFormState extends State<BusInputForm> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        backgroundColor: bgColor,
+        appBar: Header(title: "اضافة حافلة جديدة", middleText: "", context: context),
         body: SingleChildScrollView(
             physics: ClampingScrollPhysics(),
             padding: EdgeInsets.all(16.0),
             child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              Container(
-                padding: EdgeInsets.all(25.0),
-                alignment: Alignment.center,
-                decoration: BoxDecoration(
-                  color: secondaryColor,
-                  borderRadius: BorderRadius.circular(15),
+              InsertShapeWidget(
+                titleWidget: Text(
+                  "معلومات الحافلة",
+                  style: AppStyles.headLineStyle1,
                 ),
-                child: Wrap(
+                bodyWidget: Wrap(
                   clipBehavior: Clip.hardEdge,
                   direction: Axis.horizontal,
                   runSpacing: 50,
@@ -201,78 +204,74 @@ class _BusInputFormState extends State<BusInputForm> {
               SizedBox(
                 height: defaultPadding,
               ),
-              Container(
-                padding: EdgeInsets.all(16.0),
-                alignment: Alignment.center,
-                decoration: BoxDecoration(
-                  color: secondaryColor,
-                  borderRadius: BorderRadius.circular(15),
-                ),
-                child: GetBuilder<HomeViewModel>(builder: (controller) {
-                  double size = max(MediaQuery.sizeOf(context).width - (controller.isDrawerOpen ? 240 : 120), 1000) - 60;
-                  return SizedBox(
-                      width: size + 60,
-                      child: Scrollbar(
-                        controller: _scrollControllerStd,
-                        child: SingleChildScrollView(
+              GetBuilder<HomeViewModel>(builder: (controller) {
+                double size = max(MediaQuery.sizeOf(context).width - (controller.isDrawerOpen ? 240 : 120), 1000) - 60;
+                return InsertShapeWidget(
+                    titleWidget: Text(
+                      "طلاب بدون حافلة",
+                      style: AppStyles.headLineStyle1,
+                    ),
+                    bodyWidget: SizedBox(
+                        width: size ,
+                        child: Scrollbar(
                           controller: _scrollControllerStd,
-                          scrollDirection: Axis.horizontal,
-                          child: DataTable(
-                            clipBehavior: Clip.hardEdge,
-                            columns: List.generate(dataStu.length, (index) => DataColumn(label: Container(width: size / (dataStu.length), child: Center(child: Text(dataStu[index].toString().tr))))),
-                            rows: allSection.values
-                                .where(
-                                  (element) => element.bus == "بدون حافلة" && element.isAccepted == true,
-                                )
-                                .map(
-                                  (e) => studentDataRow(
-                                    e,
-                                    size / (dataStu.length),
-                                  ),
-                                )
-                                .toList(),
-                          ),
-                        ),
-                      ));
-                }),
-              ),
-              SizedBox(
-                height: defaultPadding,
-              ),
-              Container(
-                padding: EdgeInsets.all(16.0),
-                alignment: Alignment.center,
-                decoration: BoxDecoration(
-                  color: secondaryColor,
-                  borderRadius: BorderRadius.circular(15),
-                ),
-                child: GetBuilder<HomeViewModel>(builder: (controller) {
-                  double size = max(MediaQuery.sizeOf(context).width - (controller.isDrawerOpen ? 240 : 120), 1000) - 60;
-                  return SizedBox(
-                      width: size + 60,
-                      child: Scrollbar(
-                          controller: _scrollControllerEmp,
                           child: SingleChildScrollView(
-                            controller: _scrollControllerEmp,
+                            controller: _scrollControllerStd,
                             scrollDirection: Axis.horizontal,
                             child: DataTable(
                               clipBehavior: Clip.hardEdge,
-                              columns: List.generate(dataStu.length, (index) => DataColumn(label: Container(width: size / (dataEMP.length), child: Center(child: Text(dataEMP[index].toString().tr))))),
-                              rows: allEmployee.values
+                              columns: List.generate(dataStu.length, (index) => DataColumn(label: Container(width: size / (dataStu.length), child: Center(child: Text(dataStu[index].toString().tr))))),
+                              rows: allSection.values
                                   .where(
                                     (element) => element.bus == "بدون حافلة" && element.isAccepted == true,
                                   )
                                   .map(
-                                    (e) => employeeDataRow(
+                                    (e) => studentDataRow(
                                       e,
-                                      size / (dataEMP.length),
+                                      size / (dataStu.length),
                                     ),
                                   )
                                   .toList(),
                             ),
-                          )));
-                }),
+                          ),
+                        )));
+              }),
+              SizedBox(
+                height: defaultPadding,
               ),
+              GetBuilder<HomeViewModel>(builder: (controller) {
+                double size = max(MediaQuery.sizeOf(context).width - (controller.isDrawerOpen ? 240 : 120), 1000) - 60;
+
+                return InsertShapeWidget(
+                    titleWidget: Text(
+                      "موظفين بدون حافلة",
+                      style: AppStyles.headLineStyle1,
+                    ),
+                    bodyWidget: SizedBox(
+                        width: size + 60,
+                        child: Scrollbar(
+                            controller: _scrollControllerEmp,
+                            child: SingleChildScrollView(
+                              controller: _scrollControllerEmp,
+                              scrollDirection: Axis.horizontal,
+                              child: DataTable(
+                                clipBehavior: Clip.hardEdge,
+                                columns: List.generate(dataStu.length, (index) => DataColumn(label: Container(width: size / (dataEMP.length), child: Center(child: Text(dataEMP[index].toString().tr))))),
+                                rows: allEmployee.values
+                                    .where(
+                                      (element) => element.bus == "بدون حافلة" && element.isAccepted == true,
+                                )
+                                    .map(
+                                      (e) => employeeDataRow(
+                                    e,
+                                    size / (dataEMP.length),
+                                  ),
+                                )
+                                    .toList(),
+                              ),
+                            ))));
+
+              }),
               SizedBox(height: 16.0),
             ])));
   }

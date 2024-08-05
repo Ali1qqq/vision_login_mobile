@@ -39,12 +39,14 @@ class StoreViewModel extends GetxController{
   Map<String, StoreModel> get storeMap => _storeMap;
 
   late StreamSubscription<QuerySnapshot<Map<String, dynamic>>> listener;
+  Color selectedColor=secondaryColor;
 
   getAllStore()async {
     listener=   await   storeCollectionRef.snapshots().listen((value) {
       _storeMap.clear();
       plutoKey = GlobalKey();
       rows.clear();
+      selectedColor=secondaryColor;
       for (var element in value.docs) {
         _storeMap[element.id] = StoreModel.fromJson(element.data());
         rows.add(

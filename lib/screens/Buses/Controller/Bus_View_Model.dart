@@ -46,11 +46,12 @@ class BusViewModel extends GetxController {
 
   Map<String, BusModel> get busesMap => _busesMap;
   late StreamSubscription<QuerySnapshot<Map<String, dynamic>>> listener;
+  Color selectedColor=secondaryColor;
 
   getAllBuse() async {
     listener = await buseCollectionRef.snapshots().listen((value) async {
       _busesMap.clear();
-
+      selectedColor=secondaryColor;
       plutoKey = GlobalKey();
       rows.clear();
       // await   Get.find<ExpensesViewModel>().getAllWithoutListenExpenses();

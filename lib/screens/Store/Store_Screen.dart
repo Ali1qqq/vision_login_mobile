@@ -61,6 +61,7 @@ class _StoreScreenState extends State<StoreScreen> {
                       controller: controller,
                       idName: "الرقم التسلسلي",
                       onSelected: (event) {
+                        controller.selectedColor=Colors.white.withOpacity(0.5);
                         currentId = event.row?.cells["الرقم التسلسلي"]?.value;
                         setState(() {});
                       },

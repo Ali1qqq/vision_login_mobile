@@ -12,6 +12,8 @@ import 'package:vision_dashboard/screens/Parents/Controller/Parents_View_Model.d
 import 'package:vision_dashboard/screens/Student/Controller/Student_View_Model.dart';
 import 'package:vision_dashboard/screens/Widgets/AppButton.dart';
 import 'package:vision_dashboard/screens/Widgets/Custom_Drop_down.dart';
+import 'package:vision_dashboard/screens/Widgets/Insert_shape_Widget.dart';
+import 'package:vision_dashboard/screens/Widgets/header.dart';
 import 'package:vision_dashboard/utils/Dialogs.dart';
 
 import '../../controller/home_controller.dart';
@@ -87,113 +89,111 @@ class _ExamInputFormState extends State<ExamInputForm> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+       backgroundColor: bgColor,
+      appBar: Header(title: "اضافة امتحان جديد".tr, middleText: "", context: context),
       body: SingleChildScrollView(
         padding: EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Container(
-              padding: EdgeInsets.all(16.0),
-              alignment: Alignment.center,
-              decoration: BoxDecoration(
-                color: secondaryColor,
-                borderRadius: BorderRadius.circular(15),
-              ),
-              child: Wrap(
-                clipBehavior: Clip.hardEdge,
-                alignment: WrapAlignment.spaceEvenly,
-                runSpacing: 25,
-                spacing: 25,
-                children: <Widget>[
-                  CustomTextField(
-                    controller: subjectController,
-                    title: 'المقرر'.tr,
-                    enable: widget.isEdite,
-                  ),
-                  CustomTextField(
-                    controller: professorController,
-                    title: 'الاستاذ'.tr,
-                    enable: widget.isEdite,
-                  ),
-                  CustomTextField(
-                    controller: examPassMarkController,
-                    title: 'علامة النجاح'.tr,
-                    enable: widget.isEdite,
-                    isNumeric: true,
-                  ),
-                  CustomTextField(
-                    controller: examMaxMarkController,
-                    title: 'العلامة الكاملة'.tr,
-                    enable: widget.isEdite,
-                    isNumeric: true,
-                  ),
-                  InkWell(
-                    onTap: () {
-                      if (widget.isEdite)
-                        showDatePicker(
-                          context: context,
-                          firstDate: DateTime(2010),
-                          lastDate: DateTime(2100),
-                        ).then((date) {
-                          if (date != null) {
-                            dateController.text = date.toString().split(" ")[0];
-                          }
-                        });
-                    },
-                    child: CustomTextField(
-                      controller: dateController,
-                      title: 'تاريخ البداية'.tr,
-                      enable: false,
-                      keyboardType: TextInputType.datetime,
-                      icon: Icon(
-                        Icons.date_range_outlined,
-                        color: primaryColor,
-                      ),
+            InsertShapeWidget(         titleWidget: Text(
+        "معلومات الامتحان",
+          style: AppStyles.headLineStyle1,
+        ), bodyWidget: Wrap(
+              clipBehavior: Clip.hardEdge,
+              alignment: WrapAlignment.spaceEvenly,
+              runSpacing: 25,
+              spacing: 25,
+              children: <Widget>[
+                CustomTextField(
+                  controller: subjectController,
+                  title: 'المقرر'.tr,
+                  enable: widget.isEdite,
+                ),
+                CustomTextField(
+                  controller: professorController,
+                  title: 'الاستاذ'.tr,
+                  enable: widget.isEdite,
+                ),
+                CustomTextField(
+                  controller: examPassMarkController,
+                  title: 'علامة النجاح'.tr,
+                  enable: widget.isEdite,
+                  isNumeric: true,
+                ),
+                CustomTextField(
+                  controller: examMaxMarkController,
+                  title: 'العلامة الكاملة'.tr,
+                  enable: widget.isEdite,
+                  isNumeric: true,
+                ),
+                InkWell(
+                  onTap: () {
+                    if (widget.isEdite)
+                      showDatePicker(
+                        context: context,
+                        firstDate: DateTime(2010),
+                        lastDate: DateTime(2100),
+                      ).then((date) {
+                        if (date != null) {
+                          dateController.text = date.toString().split(" ")[0];
+                        }
+                      });
+                  },
+                  child: CustomTextField(
+                    controller: dateController,
+                    title: 'تاريخ البداية'.tr,
+                    enable: false,
+                    keyboardType: TextInputType.datetime,
+                    icon: Icon(
+                      Icons.date_range_outlined,
+                      color: primaryColor,
                     ),
                   ),
-                  CustomDropDown(
-                    value: _selectedClass,
-                    enable: widget.isEdite,
-                    listValue: classNameList,
-                    label: 'اختر الصف'.tr,
-                    onChange: (value) {
-                      if (value != null) _selectedClass = value;
-                      setState(() {});
-                    },
-                  ),
-                  Column(
-                    children: [
-                      buildImageSection(
-                        title: "صورة ورقة الاسئلة",
-                        tempImages: _questionImageFileTemp,
-                        networkImages: _questionImageFile ?? [],
-                        onTap: () async {
-                          FilePickerResult? result = await FilePicker.platform.pickFiles(type: FileType.image, allowMultiple: true);
-                          if (result != null) {
-                            setState(() {
-                              _questionImageFileTemp.addAll(result.files.map((file) => file.bytes!));
-                            });
-                          }
-                        },
-                        isEdit: widget.isEdite,
-                      ),
-                      buildImageSection(
-                        title: "صورة ورقة الاجابة",
-                        tempImages: _answerImageFileTemp,
-                        networkImages: _answerImageFile ?? [],
-                        onTap: () async {
-                          FilePickerResult? result = await FilePicker.platform.pickFiles(type: FileType.image, allowMultiple: true);
-                          if (result != null) {
-                            setState(() {
-                              _answerImageFileTemp.addAll(result.files.map((file) => file.bytes!));
-                            });
-                          }
-                        },
-                        isEdit: widget.isEdite,
-                      ),
-                    ],
-                  ),
-                  /*          Column(
+                ),
+                CustomDropDown(
+                  value: _selectedClass,
+                  enable: widget.isEdite,
+                  listValue: classNameList,
+                  label: 'اختر الصف'.tr,
+                  onChange: (value) {
+                    if (value != null) _selectedClass = value;
+                    setState(() {});
+                  },
+                ),
+                Column(
+                  children: [
+                    buildImageSection(
+                      title: "صورة ورقة الاسئلة",
+                      tempImages: _questionImageFileTemp,
+                      networkImages: _questionImageFile ?? [],
+                      onTap: () async {
+                        FilePickerResult? result = await FilePicker.platform.pickFiles(type: FileType.image, allowMultiple: true);
+                        if (result != null) {
+                          setState(() {
+                            _questionImageFileTemp.addAll(result.files.map((file) => file.bytes!));
+                          });
+                        }
+                      },
+                      isEdit: widget.isEdite,
+                    ),
+                    buildImageSection(
+                      title: "صورة ورقة الاجابة",
+                      tempImages: _answerImageFileTemp,
+                      networkImages: _answerImageFile ?? [],
+                      onTap: () async {
+                        FilePickerResult? result = await FilePicker.platform.pickFiles(type: FileType.image, allowMultiple: true);
+                        if (result != null) {
+                          setState(() {
+                            _answerImageFileTemp.addAll(result.files.map((file) => file.bytes!));
+                          });
+                        }
+                      },
+                      isEdit: widget.isEdite,
+                    ),
+                  ],
+                ),
+                /*          Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text("صورة ورقة الاسئلة".tr),
@@ -352,97 +352,97 @@ class _ExamInputFormState extends State<ExamInputForm> {
                       ),
                     ],
                   ),*/
-                  if (widget.isEdite && widget.examModel != null)
-                    CustomTextField(
-                      controller: editController,
-                      title: "سبب التعديل",
-                    ),
-                  if (widget.isEdite)
-                    GetBuilder<ExamViewModel>(builder: (examController) {
-                      return AppButton(
-                        text: 'حفظ'.tr,
-                        onPressed: () async {
-                          if (!validateFields(
-                            requiredControllers: [
-                              subjectController,
-                              professorController,
-                              dateController,
-                              examPassMarkController,
-                              examMaxMarkController,
-                            ],
-                            numericControllers: [
-                              examPassMarkController,
-                              examMaxMarkController,
-                            ],
-                          )) {
-                            return; // إذا كانت البيانات غير صحيحة، نخرج من الدالة
-                          }
+                if (widget.isEdite && widget.examModel != null)
+                  CustomTextField(
+                    controller: editController,
+                    title: "سبب التعديل",
+                  ),
+                if (widget.isEdite)
+                  GetBuilder<ExamViewModel>(builder: (examController) {
+                    return AppButton(
+                      text: 'حفظ'.tr,
+                      onPressed: () async {
+                        if (!validateFields(
+                          requiredControllers: [
+                            subjectController,
+                            professorController,
+                            dateController,
+                            examPassMarkController,
+                            examMaxMarkController,
+                          ],
+                          numericControllers: [
+                            examPassMarkController,
+                            examMaxMarkController,
+                          ],
+                        )) {
+                          return; // إذا كانت البيانات غير صحيحة، نخرج من الدالة
+                        }
 
-                          // بدء تحميل الصور
-                          loadingQuickAlert(context);
+                        // بدء تحميل الصور
+                        loadingQuickAlert(context);
 
-                          try {
-                            // تحميل الصور وإضافتها إلى القوائم
-                            final answerImages = await uploadImages(_answerImageFileTemp, "Exam_answer");
-                            _answerImageFile!.addAll(answerImages);
+                        try {
+                          // تحميل الصور وإضافتها إلى القوائم
+                          final answerImages = await uploadImages(_answerImageFileTemp, "Exam_answer");
+                          _answerImageFile!.addAll(answerImages);
 
-                            final questionImages = await uploadImages(_questionImageFileTemp, "Exam_question");
-                            _questionImageFile!.addAll(questionImages);
+                          final questionImages = await uploadImages(_questionImageFileTemp, "Exam_question");
+                          _questionImageFile!.addAll(questionImages);
 
-                            // إعداد نموذج الامتحان
-                            final exam = ExamModel(
-                              id: examId,
-                              isDone: false,
-                              questionImage: _questionImageFile ?? [],
-                              answerImage: _answerImageFile,
-                              subject: subjectController.text,
-                              professor: professorController.text,
-                              examPassMark: examPassMarkController.text,
-                              examMaxMark: examMaxMarkController.text,
-                              date: DateTime.parse(dateController.text),
-                              marks: _selectedStudent,
-                              isAccepted: widget.examModel == null,
+                          // إعداد نموذج الامتحان
+                          final exam = ExamModel(
+                            id: examId,
+                            isDone: false,
+                            questionImage: _questionImageFile ?? [],
+                            answerImage: _answerImageFile,
+                            subject: subjectController.text,
+                            professor: professorController.text,
+                            examPassMark: examPassMarkController.text,
+                            examMaxMark: examMaxMarkController.text,
+                            date: DateTime.parse(dateController.text),
+                            marks: _selectedStudent,
+                            isAccepted: widget.examModel == null,
+                          );
+
+                          // إذا كان لدينا نموذج امتحان موجود، نقوم بإزالة الامتحان القديم وتحديث السجل
+                          if (widget.examModel != null) {
+                            await studentViewModel.removeExam(
+                              widget.examModel!.id!,
+                              widget.examModel!.marks?.keys.toList() ?? [],
                             );
 
-                            // إذا كان لدينا نموذج امتحان موجود، نقوم بإزالة الامتحان القديم وتحديث السجل
-                            if (widget.examModel != null) {
-                              await studentViewModel.removeExam(
-                                widget.examModel!.id!,
-                                widget.examModel!.marks?.keys.toList() ?? [],
-                              );
-
-                              await addWaitOperation(
-                                collectionName: examsCollection,
-                                affectedId: examId,
-                                type: waitingListTypes.edite,
-                                details: editController.text,
-                                oldData: widget.examModel!.toJson(),
-                                newData: exam.toJson(),
-                              );
-                            }
-
-                            /// إضافة الامتحان إلى  الطالب
-                            await studentViewModel.addExamToStudent(_selectedStudent.keys.toList(), examId);
-                            await examController.addExam(exam);
-
-                            /// إضافة الامتحان
-                            if (widget.examModel != null) {
-                              Get.back();
-                            }
-                            Get.back();
-
-                            // مسح بيانات المتحكمين
-                            clearController();
-                          } catch (error) {
-                            // معالجة الأخطاء
-                            Get.snackbar("خطأ", "حدث خطأ أثناء حفظ البيانات: $error");
+                            await addWaitOperation(
+                              collectionName: examsCollection,
+                              affectedId: examId,
+                              type: waitingListTypes.edite,
+                              details: editController.text,
+                              oldData: widget.examModel!.toJson(),
+                              newData: exam.toJson(),
+                            );
                           }
-                        },
-                      );
-                    }),
-                ],
-              ),
-            ),
+
+                          /// إضافة الامتحان إلى  الطالب
+                          await studentViewModel.addExamToStudent(_selectedStudent.keys.toList(), examId);
+                          await examController.addExam(exam);
+
+                          /// إضافة الامتحان
+                          if (widget.examModel != null) {
+                            Get.back();
+                          }
+                          Get.back();
+
+                          // مسح بيانات المتحكمين
+                          clearController();
+                        } catch (error) {
+                          // معالجة الأخطاء
+                          Get.snackbar("خطأ", "حدث خطأ أثناء حفظ البيانات: $error");
+                        }
+                      },
+                    );
+                  }),
+              ],
+            ),),
+      
             SizedBox(
               height: defaultPadding,
             ),

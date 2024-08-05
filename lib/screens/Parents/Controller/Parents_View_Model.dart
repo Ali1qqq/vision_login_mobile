@@ -78,6 +78,7 @@ class ParentsViewModel extends GetxController {
 
   getAllParent() async {
     listener = await parentCollectionRef.snapshots().listen((value) {
+      selectedColor=secondaryColor;
       _parentMap.clear();
       plutoKey = GlobalKey();
       rows.clear();
@@ -105,7 +106,7 @@ class ParentsViewModel extends GetxController {
       update();
     });
   }
-
+  Color selectedColor=secondaryColor;
   addParent(ParentModel parentModel) {
     parentCollectionRef.doc(parentModel.id).set(parentModel.toJson(), SetOptions(merge: true));
     update();

@@ -90,7 +90,10 @@ class _ExamScreenState extends State<ExamScreen> {
                         child: CustomPlutoGrid(
                           controller: examController,
                           idName: "الرقم التسلسلي",
+                          selectedColor: examController.selectedColor,
                           onSelected: (event) {
+                            examController.selectedColor=Colors.white.withOpacity(0.5);
+
                             currentId =
                                 event.row?.cells["الرقم التسلسلي"]?.value;
                             setState(() {});

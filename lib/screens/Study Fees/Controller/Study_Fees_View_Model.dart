@@ -1,168 +1,109 @@
 import 'dart:math';
+import 'dart:typed_data';
 
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:quickalert/quickalert.dart';
-import 'package:vision_dashboard/controller/Wait_management_view_model.dart';
-import 'package:vision_dashboard/core/Styling/app_colors.dart';
-import 'package:vision_dashboard/core/Styling/app_style.dart';
-import 'package:vision_dashboard/models/Installment_model.dart';
-import 'package:vision_dashboard/screens/Student/Controller/Student_View_Model.dart';
-import 'package:vision_dashboard/screens/Study%20Fees/Controller/Study_Fees_View_Model.dart';
-import 'package:vision_dashboard/screens/Widgets/AppButton.dart';
-import 'package:vision_dashboard/screens/Widgets/Insert_shape_Widget.dart';
-import 'package:vision_dashboard/utils/Image_OverLay.dart';
+import 'package:pluto_grid/pluto_grid.dart';
+import 'package:quickalert/models/quickalert_type.dart';
+import 'package:quickalert/widgets/quickalert_dialog.dart';
+import 'package:vision_dashboard/screens/Parents/Controller/Parents_View_Model.dart';
 
-import '../../constants.dart';
-import '../../controller/home_controller.dart';
-import '../../core/Utils/service.dart';
-import '../../models/Parent_Model.dart';
-import '../../utils/Dialogs.dart';
-import '../Parents/Controller/Parents_View_Model.dart';
-import '../Widgets/Custom_Pluto_Grid.dart';
-import '../Widgets/Custom_Text_Filed.dart';
-import '../Widgets/Square_Widget.dart';
-import '../Widgets/View_shape_Widget.dart';
-import '../Widgets/expanded_data_row.dart';
-import '../Widgets/header.dart';
+import '../../../constants.dart';
+import '../../../controller/Wait_management_view_model.dart';
+import '../../../core/Styling/app_style.dart';
+import '../../../core/Utils/service.dart';
+import '../../../models/Installment_model.dart';
+import '../../../models/Parent_Model.dart';
+import '../../../utils/Dialogs.dart';
+import '../../../utils/Image_OverLay.dart';
+import '../../../utils/To_AR.dart';
+import '../../Student/Controller/Student_View_Model.dart';
+import '../../Widgets/AppButton.dart';
+import '../../Widgets/Custom_Text_Filed.dart';
 
-class StudyFeesView extends StatefulWidget {
-  const StudyFeesView({super.key});
+class StudyFeesViewModel extends GetxController {
+  Map<String, PlutoColumnType> data = {
+    "الرقم التسلسلي": PlutoColumnType.text(),
+    "الاسم الكامل": PlutoColumnType.text(),
+    "الاولاد": PlutoColumnType.text(),
+    "المستلم": PlutoColumnType.text(),
+    "المتأخر": PlutoColumnType.text(),
+    "المستحق": PlutoColumnType.text(),
+    "كامل المبلغ": PlutoColumnType.text(),
+  };
+  GlobalKey plutoKey = GlobalKey();
+  String currentId = '';
 
-  @override
-  State<StudyFeesView> createState() => _StudyFeesViewState();
-}
+  Color selectedColor=secondaryColor;
 
-class _StudyFeesViewState extends State<StudyFeesView> {
+  void setCurrentId(value) {
+    currentId = value;
+    update();
+  }
+
+  ///pluto header
+  List<PlutoColumn> columns = [];
+
+  /// pluto data
+  List<PlutoRow> rows = [];
+
+  StudyFeesViewModel() {
+    getColumns();
+  }
+
+  /// Refresh pluto header when change language
+  getColumns() {
+    columns.clear();
+    columns.addAll(toAR(data));
+  }
+
+  ParentsViewModel parentController = Get.find<ParentsViewModel>();
   int inkwellIndex = 3;
 
-  StudentViewModel studentViewModel = Get.find<StudentViewModel>();
+  setInkwellIndex(index) {
+    inkwellIndex = index;
+    getParentFees();
+    update();
+  }
+  ParentsViewModel parentsViewModel = Get.find<ParentsViewModel>();
 
-  @override
-  Widget build(BuildContext context) {
-    return GetBuilder<StudyFeesViewModel>(builder: (controller) {
+  StudentViewModel studentController = Get.find<StudentViewModel>();
 
-      return Scaffold(
-        appBar: Header(context: context, title: 'الرسوم الدراسية'.tr, middleText: "تعرض هذه الواجهة اجمالي ادفعات المستلمة من الطلاب و اجمالي الدفعات الخير مستلمة واجمالي الدفعات المتأخرة عن الدفع عن هذا الشهر مع جدول يوضح تفاصيل الدفعات لكل اب مع امكانية استلام دفعة او التراجع عنها".tr),
-        body: SingleChildScrollView(
+  getParentFees() {
+    rows.clear();
+    selectedColor=secondaryColor;
+    plutoKey = GlobalKey();
+    parentController.parentMap.values.forEach((parent) {
+      if (filterParentsByIndex(parent, studentController)) {
+        int totalPayment = calculateTotalPayment(parent, studentController);
+        int payment = calculatePayment(parent, studentController);
+        int latPayment = calculateLatePayment(parent, studentController);
 
-            child:  Padding(
-              padding: const EdgeInsets.all(16),
-              child: Column(
-                children: [
-                  SizedBox(
-                    width: Get.width,
-                    child: Wrap(
-                      direction: Axis.horizontal,
-                      alignment: MediaQuery.sizeOf(context).width < 800 ? WrapAlignment.center : WrapAlignment.spaceEvenly,
-                      runSpacing: 25,
-                      spacing: 10,
-                      children: [
-                        InkWell(
-                            onTap: () {
-                              controller.setInkwellIndex(0);
-                            },
-                            child: SquareWidget(title: "الدفعات القادمة".tr, body: "${studentViewModel.getAllNunReceivePay()}", color: AppColors.textColor, png: "assets/poor.png")),
-                        InkWell(
-                            onTap: () {
-                              controller.setInkwellIndex(1);
-                            },
-                            child: SquareWidget(title: "الدفعات المستلمة".tr, body: "${studentViewModel.getAllReceivePay()}", color: AppColors.textColor, png: "assets/profit.png")),
-                        InkWell(
-                            onTap: () {
-                              controller.setInkwellIndex(2);
-                            },
-                            child: SquareWidget(title: "الدفعات المتأخرة".tr, body: "${studentViewModel.getAllNunReceivePayThisMonth()}", color: Colors.redAccent, png: "assets/late-payment.png")),
-                        InkWell(
-                            onTap: () {
-                              controller.setInkwellIndex(3);
-                              setState(() {});
-                            },
-                            child: SquareWidget(title: "الاجمالي".tr, body: "${studentViewModel.getAllTotalPay()}", color: Colors.black, png: "assets/budget.png")),
-                      ],
-                    ),
-                  ),
-                  SizedBox(
-                    height: defaultPadding * 2,
-                  ),
-                  ViewShapeWidget(
-                    titleWidget: Text(
-                      "معلومات الدفعات",
-                      style: AppStyles.headLineStyle1,
-                    ),
-                    bodyWidget: SizedBox(
-                      height: Get.height - 180,
-                      width:Get.width,
-                      child: CustomPlutoGrid(
-                        controller: controller,
-                        selectedColor: controller.selectedColor,
-                        idName: "الرقم التسلسلي",
-                        onSelected: (event) {
-                          controller.selectedColor=Colors.white.withOpacity(0.5);
-                          controller.setCurrentId(event.row?.cells["الرقم التسلسلي"]?.value);
-                        },
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            )
-
-        ),
-        floatingActionButton: controller.currentId != ''
-            ? FloatingActionButton(
-                onPressed: () {
-                  controller.showInstallmentDialogForParent(context);
-                },
-                backgroundColor: primaryColor,
-                child: Icon(
-                  Icons.remove_red_eye_outlined,
-                  color: Colors.white,
-                ),
-              )
-            : SizedBox(),
-      );
+        rows.add(PlutoRow(
+          cells: {
+            data.keys.elementAt(0): PlutoCell(value: parent.id.toString()),
+            data.keys.elementAt(1): PlutoCell(value: parent.fullName.toString()),
+            data.keys.elementAt(2): PlutoCell(value: parent.children?.map((e) => studentController.studentMap[e]?.studentName).toString()),
+            data.keys.elementAt(3): PlutoCell(value: "$payment درهم"),
+            data.keys.elementAt(4): PlutoCell(value: "$latPayment درهم"),
+            data.keys.elementAt(5): PlutoCell(value: "${totalPayment - payment} درهم"),
+            data.keys.elementAt(6): PlutoCell(value: "${totalPayment} درهم"),
+          },
+        ));
+      }
     });
+    update();
   }
 
-  List<DataRow> generateDataRows(int inkwellIndex, double size, List data, StudentViewModel studentController, ParentsViewModel parentController) {
-    return parentController.parentMap.values.where((parent) => filterParentsByIndex(parent, inkwellIndex, studentController)).map((parent) {
-      int totalPayment = calculateTotalPayment(parent, studentController);
-      int payment = calculatePayment(parent, studentController);
-
-      return DataRow(
-        color: WidgetStatePropertyAll(
-          studentController.chekaIfHaveLateInstallment(parent.id ?? "") ? Colors.redAccent.withOpacity(0.2) : Colors.transparent,
-        ),
-        cells: [
-          dataRowItem(size / data.length, parent.fullName.toString()),
-          dataRowItem(
-            size / data.length,
-            parent.children?.map((e) => studentController.studentMap[e]?.studentName).toString(),
-          ),
-          dataRowItem(size / data.length, "$payment درهم"),
-          dataRowItem(size / data.length, "$totalPayment درهم"),
-          dataRowItem(size / data.length, "${totalPayment - payment} درهم"),
-          dataRowItem(
-            size / data.length,
-            payment - totalPayment >= 0 ? "تم استلام كامل المبلغ".tr : "اضافة دفعة".tr,
-            color: payment - totalPayment >= 0 ? blueColor : Colors.green,
-            onTap: () => showInstallmentDialogForParent(context, parent, studentController),
-          ),
-        ],
-      );
-    }).toList();
-  }
-
-  bool filterParentsByIndex(ParentModel parent, int inkwellIndex, StudentViewModel studentController) {
+  bool filterParentsByIndex(ParentModel parent, StudentViewModel studentController) {
+    print(inkwellIndex);
     if (inkwellIndex == 0) {
       return parent.children?.any((child) => studentController.studentMap[child]?.installmentRecords?.values.any((record) => record.isPay != true) ?? false) ?? false;
     } else if (inkwellIndex == 1) {
       return parent.children?.any((child) => studentController.studentMap[child]?.installmentRecords?.values.any((record) => record.isPay == true) ?? false) ?? false;
     } else if (inkwellIndex == 2) {
-      return parent.children?.any((child) => studentController.studentMap[child]?.installmentRecords?.values.any((record) => int.parse(record.installmentDate ?? '0') <= thisTimesModel!.month && record.isPay != true) ?? false) ?? false;
+      return parent.children?.any((child) => studentController.studentMap[child]?.installmentRecords?.values.any((record) => int.parse(record.installmentDate!) <= thisTimesModel!.month && record.isPay != true) ?? false) ?? false;
     } else {
       return (parent.children?.length ?? 0) > 0;
     }
@@ -176,10 +117,21 @@ class _StudyFeesViewState extends State<StudyFeesView> {
     return parent.children?.expand((child) => studentController.studentMap[child]?.installmentRecords?.values.where((record) => record.isPay == true) ?? [InstallmentModel(installmentCost: "0")]).fold(0, (sum, record) => (sum ?? 0) + int.parse(record.installmentCost.toString())) ?? 0;
   }
 
-  void showInstallmentDialogForParent(BuildContext context, ParentModel parent, StudentViewModel studentController) {
+  int calculateLatePayment(ParentModel parent, StudentViewModel studentController) {
+    return parent.children
+            ?.expand((child) =>
+                studentController.studentMap[child]?.installmentRecords?.values.where(
+                  (record) => record.isPay != true && int.parse(record.installmentDate!) <= thisTimesModel!.month,
+                ) ??
+                [InstallmentModel(installmentCost: "0")])
+            .fold(0, (sum, record) => (sum ?? 0) + int.parse(record.installmentCost.toString())) ??
+        0;
+  }
+
+   showInstallmentDialogForParent(BuildContext context) {
     Map<String, List<InstallmentModel>> instalmentStudent = {};
 
-    for (var child in parent.children ?? []) {
+    for (var child in parentsViewModel.parentMap[currentId]?.children ?? []) {
       instalmentStudent[child] = studentController.studentMap[child]?.installmentRecords?.values.toList() ?? [];
     }
 
@@ -230,7 +182,6 @@ class _StudyFeesViewState extends State<StudyFeesView> {
                               Uint8List? _contractsTemp;
                               String? imageURL = installment[index].InstallmentImage;
                               return StatefulBuilder(builder: (BuildContext context, StateSetter setState) {
-                                print(Get.width / 10);
                                 return Padding(
                                   padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 10),
                                   child: Column(

@@ -1,6 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:vision_dashboard/models/TimeModel.dart';
+import 'package:vision_dashboard/screens/Buses/Buses_View.dart';
+import 'package:vision_dashboard/screens/Employee/Employee_View.dart';
+import 'package:vision_dashboard/screens/Exams/Exam_View.dart';
+import 'package:vision_dashboard/screens/Parents/Parents_View.dart';
+import 'package:vision_dashboard/screens/Salary/SalaryView.dart';
+import 'package:vision_dashboard/screens/Settings/Setting_View.dart';
+import 'package:vision_dashboard/screens/Store/Store_View.dart';
+import 'package:vision_dashboard/screens/Student/Student_view_Screen.dart';
+import 'package:vision_dashboard/screens/Study%20Fees/Study_Fees_View.dart';
+import 'package:vision_dashboard/screens/Study%20Fees/Study_Fees_ViewOld.dart';
+import 'package:vision_dashboard/screens/classes/classes_view.dart';
+import 'package:vision_dashboard/screens/dashboard/dashboard_screen.dart';
+import 'package:vision_dashboard/screens/employee_time/employee_time.dart';
+import 'package:vision_dashboard/screens/event/event_view_screen.dart';
+import 'package:vision_dashboard/screens/expenses/expenses_view_screen.dart';
+import 'package:vision_dashboard/screens/logout/logout_View.dart';
+import 'package:vision_dashboard/utils/Hive_DataBase.dart';
 
 const primaryColor = Color(0xff3E96F4);
 const secondaryColor = Color(0xffCCC7BF);
@@ -129,6 +146,161 @@ List<String> jobList = [
   "مدرس لغة أجنبية"
 ];
 
+List<({String name, String img, Widget widget})> allData = [
+  (
+  name: "لوحة التحكم",
+  img: "assets/dashIcon/dash.png",
+  widget: !(HiveDataBase.getAccountManagementModel()!.type != 'مستخدم')
+      ? Container(
+    child: Center(
+      child: Text("غير مسموح الوصول".tr),
+    ),
+  )
+      : DashboardScreen(),
+  ),
+  (
+  name: "أولياء الامور",
+  img: "assets/dashIcon/family (1).png",
+  widget: !(HiveDataBase.getAccountManagementModel()!.type != 'مستخدم')
+      ? Container(
+    child: Center(
+      child: Text("غير مسموح الوصول".tr),
+    ),
+  )
+      : ParentsView(),
+  ),
+  (
+  name: "الطلاب",
+  img: "assets/dashIcon/student.png",
+  widget: !(HiveDataBase.getAccountManagementModel()!.type != 'مستخدم')
+      ? Container(
+    child: Center(
+      child: Text("غير مسموح الوصول".tr),
+    ),
+  )
+      : StudentView(),
+  ),
+  (
+  name: "الصفوف",
+  img: "assets/dashIcon/class.png",
+  widget: !(HiveDataBase.getAccountManagementModel()!.type != 'مستخدم')
+      ? Container(
+    child: Center(
+      child: Text("غير مسموح الوصول".tr),
+    ),
+  )
+      : ClassesView(),
+  ),
+  (
+  name: "الدوام",
+  img: "assets/dashIcon/time.png",
+  widget: EmployeeTimeView(),
+  ),
+  (
+  name: "الامتحانات",
+  img: "assets/dashIcon/checklist.png",
+  widget: !(HiveDataBase.getAccountManagementModel()!.type != 'مستخدم')
+      ? Container(
+    child: Center(
+      child: Text("غير مسموح الوصول".tr),
+    ),
+  )
+      : ExamView(),
+  ),
+  (
+  name: "الموظفين",
+  img: "assets/dashIcon/employee.png",
+  widget: !(HiveDataBase.getAccountManagementModel()!.type != 'مستخدم')
+      ? Container(
+    child: Center(
+      child: Text("غير مسموح الوصول".tr),
+    ),
+  )
+      : EmployeeView(),
+  ),
+  (
+  name: "الرواتب",
+  img: "assets/dashIcon/salary.png",
+  widget: !(HiveDataBase.getAccountManagementModel()!.type != 'مستخدم')
+      ? Container(
+    child: Center(
+      child: Text("غير مسموح الوصول".tr),
+    ),
+  )
+      : SalaryView(),
+  ),
+  (
+  name: "الحافلات",
+  img: "assets/dashIcon/bus.png",
+  widget: !(HiveDataBase.getAccountManagementModel()!.type != 'مستخدم')
+      ? Container(
+    child: Center(
+      child: Text("غير مسموح الوصول".tr),
+    ),
+  )
+      : BusesView(),
+  ),
+  (
+  name: "الرسوم الدراسية",
+  img: "assets/dashIcon/accounting.png",
+  widget: !(HiveDataBase.getAccountManagementModel()!.type != 'مستخدم')
+      ? Container(
+    child: Center(
+      child: Text("غير مسموح الوصول".tr),
+    ),
+  )
+      : StudyFeesView(),
+  ),
+  (
+  name: "الأحداث",
+  img: "assets/dashIcon/events.png",
+  widget: !(HiveDataBase.getAccountManagementModel()!.type != 'مستخدم')
+      ? Container(
+    child: Center(
+      child: Text("غير مسموح الوصول".tr),
+    ),
+  )
+      : EventViewScreen(),
+  ),
+  (
+  name: "المصاريف",
+  img: "assets/dashIcon/audit.png",
+  widget: !(HiveDataBase.getAccountManagementModel()!.type != 'مستخدم')
+      ? Container(
+    child: Center(
+      child: Text("غير مسموح الوصول".tr),
+    ),
+  )
+      : ExpensesViewScreen(),
+  ),
+  (
+  name: "المستودع",
+  img: "assets/dashIcon/groceries.png",
+  widget: !(HiveDataBase.getAccountManagementModel()!.type != 'مستخدم')
+      ? Container(
+    child: Center(
+      child: Text("غير مسموح الوصول".tr),
+    ),
+  )
+      : StoreViewPage(),
+  ),
+  (
+  name: "ادارة المنصة",
+  img: "assets/dashIcon/setting.png",
+  widget: !(HiveDataBase.getAccountManagementModel()!.type != 'مستخدم')
+      ? Container(
+    child: Center(
+      child: Text("غير مسموح الوصول".tr),
+    ),
+  )
+      : SettingsView(),
+  ),
+  (
+  name: "تسجيل الخروج",
+  img: "assets/dashIcon/logout.png",
+  widget: LogoutView(),
+  ),
+];
 List<String> contractsList = ['دوام جزئي', 'دوام كلي', 'اون لاين'];
 List<String> languageList = [
   "عربي",
