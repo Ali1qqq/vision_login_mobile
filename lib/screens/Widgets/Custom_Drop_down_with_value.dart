@@ -14,35 +14,38 @@ class CustomDropDownWithValue extends StatelessWidget {
   Widget build(BuildContext context) {
     return  SizedBox(
       width: max(150,Get.width/4.5),
-      child: DropdownButtonFormField<String>(
-        decoration:  InputDecoration(
-          labelText: label,
-          labelStyle: TextStyle(color: primaryColor),
-          enabledBorder:isFullBorder!=null? OutlineInputBorder(
-            borderSide: BorderSide(color: primaryColor,width: 2),
-            borderRadius: BorderRadius.circular(10),
-          ):UnderlineInputBorder(
-            borderSide: BorderSide(color: primaryColor),
-          ),
-          disabledBorder:UnderlineInputBorder(
-            borderSide: BorderSide(color: primaryColor),
-          ),
-          focusedBorder: OutlineInputBorder(
-            borderSide: BorderSide(color: primaryColor,width: 2),
-            borderRadius: BorderRadius.circular(10),
-          ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(label,style:  AppStyles.headLineStyle4,),
+          SizedBox(height: 10,),
+          DropdownButtonFormField<String>(
+            decoration:  InputDecoration(
+              // labelText: label,
+              // labelStyle: TextStyle(color: primaryColor),
+              enabledBorder:OutlineInputBorder(
+                borderSide: BorderSide(color: primaryColor),
+              ),
+              disabledBorder:OutlineInputBorder(
+                borderSide: BorderSide(color: Colors.grey),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderSide: BorderSide(color: Colors.grey,width: 2),
+              ),
 
-        ),
-        value:value==''? null:value,
-        iconEnabledColor: Colors.blue,
-        hint: Text(label,style: AppStyles.headLineStyle4.copyWith(color: primaryColor.withOpacity(0.4)),),
-        onChanged: onChange,
-        items:  mapValue.map((e) {
-          return DropdownMenuItem(
-            value: e.id,
-            child: Text(e.name),
-          );
-        }).toList(),
+            ),
+            value:value==''? null:value,
+            iconEnabledColor: Colors.blue,
+            hint: Text(label,style: AppStyles.headLineStyle4.copyWith(color: primaryColor.withOpacity(0.4)),),
+            onChanged: onChange,
+            items:  mapValue.map((e) {
+              return DropdownMenuItem(
+                value: e.id,
+                child: Text(e.name),
+              );
+            }).toList(),
+          ),
+        ],
       ),
     );
   }

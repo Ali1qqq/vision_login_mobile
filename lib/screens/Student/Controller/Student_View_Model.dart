@@ -26,7 +26,7 @@ class StudentViewModel extends GetxController {
     "اسم الطالب": PlutoColumnType.text(),
     "رقم الطالب": PlutoColumnType.text(),
     "الجنس": PlutoColumnType.text(),
-    "التولد": PlutoColumnType.text(),
+    "الميلاد": PlutoColumnType.text(),
     "الصف": PlutoColumnType.text(),
     "تاريخ البداية": PlutoColumnType.text(),
     "الحافلة": PlutoColumnType.text(),

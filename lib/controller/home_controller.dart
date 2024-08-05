@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../utils/Hive_DataBase.dart';
+
 
 class HomeViewModel extends GetxController {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
@@ -8,7 +10,7 @@ class HomeViewModel extends GetxController {
   int menuIndex = 0;
   bool isDrawerOpen= false;
   bool isLoading=false;
-
+  int currentScreenIndex=int.parse(HiveDataBase.getUserData().currentScreen);
   changeIsLoading(){
     isLoading=!isLoading;
     update();
@@ -25,5 +27,11 @@ class HomeViewModel extends GetxController {
     isDrawerOpen=!isDrawerOpen;
     update();
   }
+
+   changeCurrentScreen(int index) {
+     HiveDataBase.setCurrentScreen(index.toString());
+     currentScreenIndex=int.parse(HiveDataBase.getUserData().currentScreen);
+     update();
+   }
 
 }

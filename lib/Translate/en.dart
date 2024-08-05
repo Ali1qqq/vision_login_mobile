@@ -63,7 +63,7 @@ Map<String, String> en = {
   "حذف": "Delete",
   "رقم الطالب": "Student Number",
   "الجنس": "Gender",
-  "التولد": "Date of Birth",
+  "الميلاد": "Date of Birth",
   "الصف": "Grade",
   "الشعبة": "Class",
   "الحافلة": "Bus",

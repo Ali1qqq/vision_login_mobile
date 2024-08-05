@@ -65,32 +65,33 @@ class _CustomTextFieldState extends State<CustomTextField> {
   Widget build(BuildContext context) {
     return SizedBox(
       width: max(150,widget.size?? Get.width/4.5),
-      child:TextFormField(
-        onChanged: widget.onChange,
-        keyboardType: widget.keyboardType,
-        controller: widget.controller,
-        enabled: widget.enable,
-        decoration: InputDecoration(
-          labelText: widget.title,
-          hintText: widget.hint,
+      child:Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(widget.title,style:  AppStyles.headLineStyle4,),
+          SizedBox(height: 10,),
+          TextFormField(
+            onChanged: widget.onChange,
+            keyboardType: widget.keyboardType,
+            controller: widget.controller,
+            enabled: widget.enable,
+            decoration: InputDecoration(
+              hintText: widget.hint,
+              suffixIcon:widget.icon ,
+              enabledBorder: OutlineInputBorder(
+                borderSide: BorderSide(color:Colors.grey),
+              ),
+              disabledBorder:OutlineInputBorder(
+                borderSide: BorderSide(color: Colors.grey),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderSide: BorderSide(color: Colors.grey,width: 2),
+                // borderRadius: BorderRadius.circular(10),
+              ),
 
-          suffixIcon:widget.icon ,
-          labelStyle: AppStyles.headLineStyle4.copyWith(color: Colors.black54),
-          enabledBorder: UnderlineInputBorder(
-            borderSide: BorderSide(color:primaryColor),
+            ),
           ),
-          disabledBorder:widget.isFullBorder!=null? OutlineInputBorder(
-            borderSide: BorderSide(color: primaryColor,width: 2),
-            borderRadius: BorderRadius.circular(10),
-          ):UnderlineInputBorder(
-            borderSide: BorderSide(color: primaryColor),
-          ),
-          focusedBorder: OutlineInputBorder(
-            borderSide: BorderSide(color: primaryColor,width: 2),
-            borderRadius: BorderRadius.circular(10),
-          ),
-
-        ),
+        ],
       ),
     );
   }

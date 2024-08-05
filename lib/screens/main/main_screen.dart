@@ -31,29 +31,52 @@ class MainScreen extends StatefulWidget {
   State<MainScreen> createState() => _MainScreenState();
 }
 
-class _MainScreenState extends State<MainScreen>
-    with SingleTickerProviderStateMixin {
-
+class _MainScreenState extends State<MainScreen> with SingleTickerProviderStateMixin {
+  int screenIndex = 0;
   List<({String name, String img, Widget widget})> allData = [
     (
       name: "لوحة التحكم",
       img: "assets/dashIcon/dash.png",
-      widget:!(HiveDataBase.getAccountManagementModel()!.type!='مستخدم')?  Container(child: Center(child: Text("غير مسموح الوصل".tr),),):DashboardScreen(),
+      widget: !(HiveDataBase.getAccountManagementModel()!.type != 'مستخدم')
+          ? Container(
+              child: Center(
+                child: Text("غير مسموح الوصل".tr),
+              ),
+            )
+          : DashboardScreen(),
     ),
     (
       name: "أولياء الامور",
       img: "assets/dashIcon/family (1).png",
-      widget:!(HiveDataBase.getAccountManagementModel()!.type!='مستخدم')?  Container(child: Center(child: Text("غير مسموح الوصل".tr),),): ParentsView(),
+      widget: !(HiveDataBase.getAccountManagementModel()!.type != 'مستخدم')
+          ? Container(
+              child: Center(
+                child: Text("غير مسموح الوصل".tr),
+              ),
+            )
+          : ParentsView(),
     ),
     (
       name: "الطلاب",
       img: "assets/dashIcon/student.png",
-      widget:!(HiveDataBase.getAccountManagementModel()!.type!='مستخدم')?  Container(child: Center(child: Text("غير مسموح الوصل".tr),),): StudentView(),
+      widget: !(HiveDataBase.getAccountManagementModel()!.type != 'مستخدم')
+          ? Container(
+              child: Center(
+                child: Text("غير مسموح الوصل".tr),
+              ),
+            )
+          : StudentView(),
     ),
     (
       name: "الصفوف",
       img: "assets/dashIcon/class.png",
-      widget:!(HiveDataBase.getAccountManagementModel()!.type!='مستخدم')?  Container(child: Center(child: Text("غير مسموح الوصل".tr),),): ClassesView(),
+      widget: !(HiveDataBase.getAccountManagementModel()!.type != 'مستخدم')
+          ? Container(
+              child: Center(
+                child: Text("غير مسموح الوصل".tr),
+              ),
+            )
+          : ClassesView(),
     ),
     (
       name: "الدوام",
@@ -63,141 +86,152 @@ class _MainScreenState extends State<MainScreen>
     (
       name: "الامتحانات",
       img: "assets/dashIcon/checklist.png",
-      widget:!(HiveDataBase.getAccountManagementModel()!.type!='مستخدم')?  Container(child: Center(child: Text("غير مسموح الوصل".tr),),): ExamView(),
+      widget: !(HiveDataBase.getAccountManagementModel()!.type != 'مستخدم')
+          ? Container(
+              child: Center(
+                child: Text("غير مسموح الوصل".tr),
+              ),
+            )
+          : ExamView(),
     ),
     (
       name: "الموظفين",
       img: "assets/dashIcon/employee.png",
-      widget: !(HiveDataBase.getAccountManagementModel()!.type!='مستخدم')?  Container(child: Center(child: Text("غير مسموح الوصل".tr),),):EmployeeView(),
+      widget: !(HiveDataBase.getAccountManagementModel()!.type != 'مستخدم')
+          ? Container(
+              child: Center(
+                child: Text("غير مسموح الوصل".tr),
+              ),
+            )
+          : EmployeeView(),
     ),
     (
-    name: "الرواتب",
-    img: "assets/dashIcon/salary.png",
-    widget:!(HiveDataBase.getAccountManagementModel()!.type!='مستخدم')?  Container(child: Center(child: Text("غير مسموح الوصل".tr),),): SalaryView(),
+      name: "الرواتب",
+      img: "assets/dashIcon/salary.png",
+      widget: !(HiveDataBase.getAccountManagementModel()!.type != 'مستخدم')
+          ? Container(
+              child: Center(
+                child: Text("غير مسموح الوصل".tr),
+              ),
+            )
+          : SalaryView(),
     ),
     (
       name: "الحافلات",
       img: "assets/dashIcon/bus.png",
-      widget:!(HiveDataBase.getAccountManagementModel()!.type!='مستخدم')?  Container(child: Center(child: Text("غير مسموح الوصل".tr),),): BusesView(),
+      widget: !(HiveDataBase.getAccountManagementModel()!.type != 'مستخدم')
+          ? Container(
+              child: Center(
+                child: Text("غير مسموح الوصل".tr),
+              ),
+            )
+          : BusesView(),
     ),
     (
       name: "الرسوم الدراسية",
       img: "assets/dashIcon/accounting.png",
-      widget:!(HiveDataBase.getAccountManagementModel()!.type!='مستخدم')?  Container(child: Center(child: Text("غير مسموح الوصل".tr),),): StudyFeesView(),
+      widget: !(HiveDataBase.getAccountManagementModel()!.type != 'مستخدم')
+          ? Container(
+              child: Center(
+                child: Text("غير مسموح الوصل".tr),
+              ),
+            )
+          : StudyFeesView(),
     ),
     (
       name: "الأحداث",
       img: "assets/dashIcon/events.png",
-      widget:!(HiveDataBase.getAccountManagementModel()!.type!='مستخدم')?  Container(child: Center(child: Text("غير مسموح الوصل".tr),),): EventViewScreen(),
+      widget: !(HiveDataBase.getAccountManagementModel()!.type != 'مستخدم')
+          ? Container(
+              child: Center(
+                child: Text("غير مسموح الوصل".tr),
+              ),
+            )
+          : EventViewScreen(),
     ),
     (
       name: "المصاريف",
       img: "assets/dashIcon/audit.png",
-      widget:!(HiveDataBase.getAccountManagementModel()!.type!='مستخدم')?  Container(child: Center(child: Text("غير مسموح الوصل".tr),),): ExpensesViewScreen(),
+      widget: !(HiveDataBase.getAccountManagementModel()!.type != 'مستخدم')
+          ? Container(
+              child: Center(
+                child: Text("غير مسموح الوصل".tr),
+              ),
+            )
+          : ExpensesViewScreen(),
     ),
     (
       name: "المستودع",
       img: "assets/dashIcon/groceries.png",
-      widget:!(HiveDataBase.getAccountManagementModel()!.type!='مستخدم')?  Container(child: Center(child: Text("غير مسموح الوصل".tr),),): StoreViewPage(),
+      widget: !(HiveDataBase.getAccountManagementModel()!.type != 'مستخدم')
+          ? Container(
+              child: Center(
+                child: Text("غير مسموح الوصل".tr),
+              ),
+            )
+          : StoreViewPage(),
     ),
     (
       name: "ادارة المنصة",
       img: "assets/dashIcon/setting.png",
-      widget:!(HiveDataBase.getAccountManagementModel()!.type!='مستخدم')? Container(child: Center(child: Text("غير مسموح الوصل".tr),),): SettingsView(),
+      widget: !(HiveDataBase.getAccountManagementModel()!.type != 'مستخدم')
+          ? Container(
+              child: Center(
+                child: Text("غير مسموح الوصل".tr),
+              ),
+            )
+          : SettingsView(),
     ),
     (
       name: "تسجيل الخروج",
       img: "assets/dashIcon/logout.png",
-      widget:LogoutView() ,
+      widget: LogoutView(),
     ),
   ];
 
-  late TabController tabController;
 
-
-
-  @override
-  void initState() {
-    print(HiveDataBase.getAccountManagementModel()!.type);
-    tabController = TabController(length: allData.length, vsync: this);
-      tabController.addListener(() {
-        // html.window.history.pushState(null, '', "/#/"+allData[tabController.index].widget.toString());
-          HiveDataBase.setCurrentScreen(tabController.index.toString());
-
-        setState(() {});
-      });
-    super.initState();
-    WidgetsFlutterBinding.ensureInitialized()
-        .waitUntilFirstFrameRasterized
-        .then(
-      (value) {
-
-        tabController
-            .animateTo(int.parse(HiveDataBase.getUserData().currentScreen));
-        setState(() {});
-      },
-    );
-  }
 
   @override
   Widget build(BuildContext context) {
     return GetBuilder<HomeViewModel>(builder: (controller) {
       return Scaffold(
         backgroundColor: secondaryColor,
-        body: SafeArea(
-          child: controller.isLoading
-              ? Center(
-                  child: CircularProgressIndicator(),
-                )
-              : SingleChildScrollView(
-                physics: ClampingScrollPhysics(),
-              padding: const EdgeInsets.symmetric(horizontal: 8.0,vertical: 20),
-                child: SizedBox(
-                  height:max(900, Get.height-40),
-                  child: TabContainer(
-                      textDirection: Get.locale.toString() != "en_US"
-                          ? TextDirection.rtl
-                          : TextDirection.ltr,
-                      controller: tabController,
-                      tabEdge: Get.locale.toString() != "en_US"
-                          ? TabEdge.right
-                          : TabEdge.left,
-                      tabsEnd: 1,
-                      tabsStart: 0.0,
-                      tabMaxLength: controller.isDrawerOpen ? 60 : 60,
-                      tabExtent: controller.isDrawerOpen ? 180 : 60,
-                      borderRadius: BorderRadius.circular(10),
-                      tabBorderRadius: BorderRadius.circular(20),
-                      childPadding: const EdgeInsets.all(0.0),
-                      selectedTextStyle: const TextStyle(
-                        color: primaryColor,
-                        fontWeight: FontWeight.w700,
-                        fontSize: 15.0,
-                      ),
-                      unselectedTextStyle: AppStyles.headLineStyle1.copyWith(
-                        color: primaryColor,
-                        fontSize: 13.0,
-                      ),
-                      colors: List.generate(allData.length, (index) => bgColor),
-                      tabs: List.generate(
-                        allData.length,
-                        (index) {
-                          return DrawerListTile(
-                            index: index,
-                            title: allData[index].name.toString().tr,
-                            svgSrc: allData[index].img,
-                            press: () {
-                              setState(() {});
-                            },
-                          );
-                        },
-                      ),
-                      child: allData[int.parse(
-                              HiveDataBase.getUserData().currentScreen)]
-                          .widget),
-                ),
+        body: controller.isLoading
+            ? Center(
+                child: CircularProgressIndicator(),
+              )
+            :
+            Padding(
+              padding: const EdgeInsets.only(top: 8.0,bottom: 8,left: 8),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    color: bgColor,
+                    width: controller.isDrawerOpen ?180  : 60,
+                    child: ListView(
+                      physics: ClampingScrollPhysics(),
+                      shrinkWrap: true,
+                      children: List.generate(allData.length, (index) {
+                        return DrawerListTile(
+                          controller: controller,
+                          index: index,
+                          title: allData[index].name.toString().tr,
+                          svgSrc: allData[index].img,
+                          press: () {
+                            controller.changeCurrentScreen(index);
+
+                          },
+                        );
+                      }),
+                    ),
+                  ),
+                  Expanded(
+                    child: allData[controller.currentScreenIndex].widget,
+                  ),
+                ],
               ),
-        ),
+            ),
       );
     });
   }
@@ -210,51 +244,75 @@ class DrawerListTile extends StatelessWidget {
     required this.index,
     required this.svgSrc,
     required this.press,
+    required this.controller
   }) : super(key: key);
 
   final String title, svgSrc;
   final int index;
   final VoidCallback press;
+  final HomeViewModel controller;
 
   @override
   Widget build(BuildContext context) {
-    return GetBuilder<HomeViewModel>(builder: (controller) {
-      return Directionality(
-        textDirection: Get.locale.toString() != "en_US"
-            ? TextDirection.rtl
-            : TextDirection.ltr,
+    return GestureDetector(
+      onTap: press,
+      child: Directionality(
+        textDirection: Get.locale.toString() != "en_US" ? TextDirection.rtl : TextDirection.ltr,
         child: controller.isDrawerOpen
-            ? Center(
+            ? AnimatedContainer(
+          duration: Durations.medium2,
+                padding: EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                    color: index == controller.currentScreenIndex ? bgColor : secondaryColor,
+                    borderRadius:  controller.currentScreenIndex  - 1 == index
+                            ?  BorderRadius.only(
+                      bottomLeft: Radius.circular(20),
+                    )
+                            : controller.currentScreenIndex  + 1 == index
+                        ?  BorderRadius.only(
+                      topLeft: Radius.circular(20),
+                    ):null),
                 child: Row(
-                children: [
-                  SizedBox(
-                    width: 30,
-                  ),
-                  Image.asset(
-                    svgSrc,
-                    height: 30,
-                  ),
-                  SizedBox(
-                    width: 10,
-                  ),
-                  Flexible(
-                    child: Text(
-                      title,
-                      style: AppStyles.headLineStyle3,
-                      overflow: TextOverflow.ellipsis,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Image.asset(
+                      svgSrc,
+                      height: 30,
                     ),
-
-                  ),
-
-                ],
-              ))
-            : Center(
+                    SizedBox(
+                      width: 10,
+                    ),
+                    Flexible(
+                      child: Text(
+                        title,
+                        style: AppStyles.headLineStyle3,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                  ],
+                ),
+              )
+            : AnimatedContainer(
+          duration: Durations.medium2,
+          decoration: BoxDecoration(
+              color: index == controller.currentScreenIndex  ? bgColor : secondaryColor,
+              borderRadius:  controller.currentScreenIndex  - 1 == index
+                  ?  BorderRadius.only(
+                bottomLeft: Radius.circular(20),
+              )
+                  : controller.currentScreenIndex  + 1 == index
+                  ?  BorderRadius.only(
+                topLeft: Radius.circular(20),
+              ):null),
+          padding: EdgeInsets.all(10),
+              child: Center(
                 child: Image.asset(
                   svgSrc,
                   height: 26,
                 ),
               ),
-      );
-    });
+            ),
+      ),
+    );
   }
 }

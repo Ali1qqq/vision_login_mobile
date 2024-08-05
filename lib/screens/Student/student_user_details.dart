@@ -245,7 +245,7 @@ class _StudentInputFormState extends State<StudentInputForm> {
                     },
                     child: CustomTextField(
                       controller: ageController,
-                      title: 'التولد'.tr,
+                      title: 'الميلاد'.tr,
                       enable: false,
                       keyboardType: TextInputType.datetime,
                       icon: Icon(
