@@ -99,10 +99,25 @@ class EventViewModel extends GetxController {
     print(checkIfPendingDelete(affectedId: currentId));
     return checkIfPendingDelete(affectedId: currentId);
   }
+  String? role;
+  TextEditingController name = TextEditingController();
+  TextEditingController pass = TextEditingController();
+  int selectedMatColor = 4294198070;
+clearController(){
+  name.clear();
+  pass.clear();
+  role = null;
+  selectedMatColor = 4294198070;
+  currentId='';
+  update();
+}
 
   /// use this for get current row selected from user
   setCurrentId(value) {
     currentId = value;
+    name.text=allEvents[currentId]!.name;
+    selectedMatColor=allEvents[currentId]!.color;
+    role = allEvents[currentId]!.role;
     update();
   }
 }

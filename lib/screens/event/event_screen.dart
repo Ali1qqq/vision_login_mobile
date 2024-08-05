@@ -31,11 +31,6 @@ class EventScreen extends StatefulWidget {
 class _EventScreenState extends State<EventScreen> {
   // final ScrollController _scrollController = ScrollController();
   // List data = ["الرمز التسلسلي", "الاسم", "المستهدف", "اللون", ""];
-  String? role;
-  TextEditingController name = TextEditingController();
-  TextEditingController pass = TextEditingController();
-  HomeViewModel homeViewModel = Get.find<HomeViewModel>();
-  int selectedColor = 4294198070;
 
   @override
   Widget build(BuildContext context) {
@@ -82,26 +77,16 @@ class _EventScreenState extends State<EventScreen> {
                       borderRadius: const BorderRadius.all(Radius.circular(10)),
                     ),
                     child: InsertShapeWidget(
-                      titleWidget: Text(
-
-                          controller.currentId==""?
-                          "إضافة حدث".tr:"تعديل الحدث ", style: AppStyles.headLineStyle1),
+                      titleWidget: Text(controller.currentId == "" ? "إضافة حدث".tr : "تعديل الحدث ", style: AppStyles.headLineStyle1),
                       bodyWidget: Column(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          Text(
-                            "إضافة حدث".tr,
-                            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 30),
-                          ),
-                          SizedBox(
-                            height: 50,
-                          ),
                           Wrap(
                             alignment: WrapAlignment.center,
                             runSpacing: 25,
                             // mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              CustomTextField(controller: name, title: "اسم الحدث".tr),
+                              CustomTextField(controller: controller.name, title: "اسم الحدث".tr),
                               SizedBox(
                                 width: 50,
                               ),
@@ -113,10 +98,10 @@ class _EventScreenState extends State<EventScreen> {
                                   width: 100,
                                   height: 50,
                                   child: DropdownButton(
-                                    value: role ?? Const.eventTypeStudent,
+                                    value: controller.role ?? Const.eventTypeStudent,
                                     isExpanded: true,
                                     onChanged: (_) {
-                                      role = _;
+                                      controller.role = _;
                                       setState(() {});
                                     },
                                     items: Const.allEventType.map((e) => DropdownMenuItem(value: e.toString(), child: Text(getEventTypeFromEnum(e)))).toList(),
@@ -132,27 +117,88 @@ class _EventScreenState extends State<EventScreen> {
                                 colors: [Colors.red, Colors.pink, Colors.purple, Colors.deepPurple, Colors.indigo, Colors.blue, Colors.lightBlue, Colors.cyan, Colors.teal, Colors.green, Colors.lime, Colors.yellow, Colors.amber, Colors.orange, Colors.deepOrange, Colors.brown, Colors.blueGrey],
                                 allowShades: false,
                                 onMainColorChange: (ColorSwatch? color) {
-                                  selectedColor = color!.value;
+                                  controller.selectedMatColor = color!.value;
                                   setState(() {});
                                 },
-                                selectedColor: Color(selectedColor)),
+                                selectedColor: Color(controller.selectedMatColor)),
                           ),
                           SizedBox(
                             height: 50,
                           ),
-                          AppButton(
-                            text: "حفظ".tr,
-                            onPressed: () {
-                              role ??= Const.eventTypeStudent;
-                              EventModel model = EventModel(name: name.text, id: generateId("EVENT"), role: role!, color: selectedColor);
-                              name.clear();
-                              pass.clear();
-                              role = null;
-                              EventViewModel eventViewModel = Get.find<EventViewModel>();
-                              eventViewModel.addEvent(model);
-                              setState(() {});
-                            },
-                          )
+                          Wrap(
+                            spacing: 15,
+                            runSpacing: 50,
+                            children: [
+                              AppButton(
+                                text:controller.currentId!=""?"تعديل": "اضافة".tr,
+                                onPressed: () {
+                                  controller.role ??= Const.eventTypeStudent;
+                                  EventModel model = EventModel(
+                                    name: controller.name.text,
+                                    id:controller.currentId==""? generateId("EVENT"):controller.currentId,
+                                    role: controller.role!,
+                                    color: controller.selectedMatColor,
+                                  );
+                                  controller.addEvent(model);
+                                  controller.clearController();
+                                  controller.update();
+                                  setState(() {});
+                                },
+                              ),
+                              if(controller.currentId!="")
+                                ...[
+                                  AppButton(
+                                    text: "جديد".tr,
+                                    onPressed: () {
+                                      controller.clearController();
+                                      controller.update();
+                                    },
+                                  ),
+                                  GetBuilder<WaitManagementViewModel>(
+                                      builder: (_) {
+                                        return AppButton(
+                                          color:  controller.getIfDelete() ? Colors.green : Colors.red,
+                                          text: controller.getIfDelete() ? "استرجاع".tr : "حذف".tr,
+                                          onPressed: () {
+                                            if (controller.getIfDelete()) {
+                                              _.returnDeleteOperation(affectedId: controller.currentId);
+                                            } else {
+                                              TextEditingController editController = TextEditingController();
+
+                                              QuickAlert.show(
+                                                context: context,
+                                                type: QuickAlertType.confirm,
+                                                widget: Center(
+                                                  child: Padding(
+                                                    padding: const EdgeInsets.all(8.0),
+                                                    child: CustomTextField(
+                                                      controller: editController,
+                                                      title: "سبب الحذف".tr,
+                                                      size: Get.width / 4,
+                                                    ),
+                                                  ),
+                                                ),
+                                                text: 'قبول هذه العملية'.tr,
+                                                title: 'هل انت متأكد ؟'.tr,
+                                                onConfirmBtnTap: () async {
+                                                  addWaitOperation(type: waitingListTypes.delete, details: editController.text, collectionName: Const.eventCollection, affectedId: controller.currentId);
+                                                  Get.back();
+                                                },
+                                                onCancelBtnTap: () => Get.back(),
+                                                confirmBtnText: 'نعم'.tr,
+                                                cancelBtnText: 'لا'.tr,
+                                                confirmBtnColor: Colors.redAccent,
+                                                showCancelBtn: true,
+                                              );
+                                            }
+                                          },
+                                        );
+                                      }
+                                  ),
+                                ]
+
+                            ],
+                          ),
                         ],
                       ),
                     ),
@@ -287,45 +333,13 @@ class _EventScreenState extends State<EventScreen> {
               );*/
           }),
         ),
-        floatingActionButton: GetBuilder<WaitManagementViewModel>(builder: (_) {
+   /*     floatingActionButton: GetBuilder<WaitManagementViewModel>(builder: (_) {
           return Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               FloatingActionButton(
                 onPressed: () {
-                  if (enableUpdate) {
-                    if (controller.getIfDelete()) {
-                      _.returnDeleteOperation(affectedId: controller.currentId);
-                    } else {
-                      TextEditingController editController = TextEditingController();
-
-                      QuickAlert.show(
-                        context: context,
-                        type: QuickAlertType.confirm,
-                        widget: Center(
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: CustomTextField(
-                              controller: editController,
-                              title: "سبب الحذف".tr,
-                              size: Get.width / 4,
-                            ),
-                          ),
-                        ),
-                        text: 'قبول هذه العملية'.tr,
-                        title: 'هل انت متأكد ؟'.tr,
-                        onConfirmBtnTap: () async {
-                          addWaitOperation(type: waitingListTypes.delete, details: editController.text, collectionName: Const.eventCollection, affectedId: controller.currentId);
-                          Get.back();
-                        },
-                        onCancelBtnTap: () => Get.back(),
-                        confirmBtnText: 'نعم'.tr,
-                        cancelBtnText: 'لا'.tr,
-                        confirmBtnColor: Colors.redAccent,
-                        showCancelBtn: true,
-                      );
-                    }
-                  }
+                  if (enableUpdate) {}
                 },
                 backgroundColor: controller.getIfDelete() ? Colors.green : Colors.red,
                 child: Icon(
@@ -335,7 +349,7 @@ class _EventScreenState extends State<EventScreen> {
               ),
             ],
           );
-        }),
+        }),*/
       );
     });
   }
