@@ -97,7 +97,6 @@ class StudyFeesViewModel extends GetxController {
   }
 
   bool filterParentsByIndex(ParentModel parent, StudentViewModel studentController) {
-    print(inkwellIndex);
     if (inkwellIndex == 0) {
       return parent.children?.any((child) => studentController.studentMap[child]?.installmentRecords?.values.any((record) => record.isPay != true) ?? false) ?? false;
     } else if (inkwellIndex == 1) {

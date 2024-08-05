@@ -234,7 +234,6 @@ class _StudyFeesViewOldState extends State<StudyFeesViewOld> {
                               Uint8List? _contractsTemp;
                               String? imageURL = installment[index].InstallmentImage;
                               return StatefulBuilder(builder: (BuildContext context, StateSetter setState) {
-                                print(Get.width / 10);
                                 return Padding(
                                   padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 10),
                                   child: Column(

@@ -108,7 +108,6 @@ class _FilteringDataGridState<T> extends State<FilteringDataGrid<T>> {
                   Builder(
                       // stream: widget.dataGridSource.stream,
                       builder: (context) {
-                      print("The Grid Is setState");
                       return SfDataGrid(
                         onFilterChanged: (details) {},
                         allowSorting: true,

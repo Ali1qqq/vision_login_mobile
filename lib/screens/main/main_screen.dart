@@ -23,7 +23,6 @@ late TabController tabController;
 void initState() {
   super.initState();
 
-  print(HiveDataBase.getAccountManagementModel()!.type);
   tabController = TabController(length: allData.length, vsync: this);
   tabController.addListener(() {
     HiveDataBase.setCurrentScreen(tabController.index.toString());

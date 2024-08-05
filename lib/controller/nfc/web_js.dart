@@ -15,7 +15,6 @@ Future<bool> initNFCWorker(typeNFC type) async {
   }
   window.addEventListener("message", (event) {
     var state = js.JsObject.fromBrowserObject(js.context['state']);
-    print(state['data']);
     String serialCode = state['data'].toString();
     EmployeeViewModel accountManagementViewModel = Get.find<EmployeeViewModel>();
     if(type==typeNFC.login){

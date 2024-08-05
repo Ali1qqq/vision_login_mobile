@@ -96,7 +96,6 @@ class EventViewModel extends GetxController {
   String currentId = '';
   /// use this for check if current selected id is deleted
   bool getIfDelete() {
-    print(checkIfPendingDelete(affectedId: currentId));
     return checkIfPendingDelete(affectedId: currentId);
   }
   String? role;

@@ -97,7 +97,6 @@ class _StudentInputFormState extends State<StudentInputForm> {
       genderController.text = widget.studentModel!.gender ?? '';
 
       ageController.text = widget.studentModel!.StudentBirthDay ?? '';
-      print(widget.studentModel!.stdClass);
       classController.text = widget.studentModel!.stdClass ?? '';
       startDateController.text = widget.studentModel!.startDate ?? '';
       busController.text = widget.studentModel!.bus ?? '';
@@ -300,7 +299,6 @@ class _StudentInputFormState extends State<StudentInputForm> {
                         if (selectedWay != null) {
                           _payWay = selectedWay;
                           if (selectedWay != 'اقساط'.tr) {
-                            print("object");
                             monthsController[0].text = DateTime.now().month.toString().padLeft(2, "0");
                             costsController.first = totalPaymentController;
                             print(monthsController[0].text);
@@ -700,7 +698,6 @@ class _StudentInputFormState extends State<StudentInputForm> {
   save(StudentViewModel controller) async {
     if (validateFields(requiredControllers: [], numericControllers: [])) {
       QuickAlert.show(width: Get.width / 2, context: context, type: QuickAlertType.loading, title: 'جاري التحميل'.tr, text: 'يتم العمل على الطلب'.tr, barrierDismissible: false);
-      print(monthsController.length);
       for (int index = 0; index < monthsController.length; index++) {
         String insId = widget.studentModel != null ? widget.studentModel!.installmentRecords!.values.toList()[index].installmentId! : generateId("INSTALLMENT");
         instalmentMap[insId] = InstallmentModel(
