@@ -9,7 +9,7 @@ Widget buildNoClassSelectedMessage() {
     child: Center(
       child: Text(
         "يرجى إختيار احد الصفوف لمشاهدة تفاصيله".tr,
-        style: AppStyles.headLineStyle2,
+        style: AppStyles.headLineStyle1,
         textAlign: TextAlign.center,
       ),
     ),

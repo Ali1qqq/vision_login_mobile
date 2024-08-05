@@ -67,7 +67,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
       child:Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(widget.title,style:  AppStyles.headLineStyle4,),
+          Text(widget.title,style:  AppStyles.headLineStyle3,),
           SizedBox(height: 10,),
           TextFormField(
             onChanged: widget.onChange,
@@ -78,13 +78,13 @@ class _CustomTextFieldState extends State<CustomTextField> {
               hintText: widget.hint,
               suffixIcon:widget.icon ,
               enabledBorder: OutlineInputBorder(
-                borderSide: BorderSide(color:Colors.grey),
+                borderSide: BorderSide(color:Colors.grey,width: 2),
               ),
               disabledBorder:OutlineInputBorder(
-                borderSide: BorderSide(color: Colors.grey),
+                borderSide: BorderSide(color: Colors.grey,width: 2),
               ),
               focusedBorder: OutlineInputBorder(
-                borderSide: BorderSide(color: Colors.grey,width: 2),
+                borderSide: BorderSide(color: Colors.grey,width: 4),
                 // borderRadius: BorderRadius.circular(10),
               ),
 

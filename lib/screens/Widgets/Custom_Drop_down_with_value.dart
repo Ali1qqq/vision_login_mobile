@@ -17,20 +17,20 @@ class CustomDropDownWithValue extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(label,style:  AppStyles.headLineStyle4,),
+          Text(label,style:  AppStyles.headLineStyle3,),
           SizedBox(height: 10,),
           DropdownButtonFormField<String>(
             decoration:  InputDecoration(
               // labelText: label,
               // labelStyle: TextStyle(color: primaryColor),
               enabledBorder:OutlineInputBorder(
-                borderSide: BorderSide(color: primaryColor),
+                borderSide: BorderSide(color: primaryColor,width: 2),
               ),
               disabledBorder:OutlineInputBorder(
-                borderSide: BorderSide(color: Colors.grey),
+                borderSide: BorderSide(color: Colors.grey,width: 2),
               ),
               focusedBorder: OutlineInputBorder(
-                borderSide: BorderSide(color: Colors.grey,width: 2),
+                borderSide: BorderSide(color: Colors.grey,width: 4),
               ),
 
             ),

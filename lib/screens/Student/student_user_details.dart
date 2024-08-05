@@ -581,6 +581,8 @@ class _StudentInputFormState extends State<StudentInputForm> {
               ),
               child:,
             ),*/
+
+          if(widget.studentModel!=null)...[
             SizedBox(
               height: defaultPadding ,
             ),
@@ -606,7 +608,7 @@ class _StudentInputFormState extends State<StudentInputForm> {
                               .toList()
                               .where(
                                 (element) => element.role == Const.eventTypeStudent,
-                              )
+                          )
                               .map((e) => e.name)
                               .toList(),
                           label: "نوع الحدث".tr,
@@ -687,6 +689,8 @@ class _StudentInputFormState extends State<StudentInputForm> {
                 ],
               ),
             )
+          ]
+
           ],
         ),
       ),

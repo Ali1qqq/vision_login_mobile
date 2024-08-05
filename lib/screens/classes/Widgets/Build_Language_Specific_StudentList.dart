@@ -21,7 +21,7 @@ Widget buildLanguageSpecificStudentList(StudentViewModel studentController, Stri
       child: Center(
         child: Text(
           "لايوجد طلاب".tr,
-          style: AppStyles.headLineStyle2.copyWith(color:  AppColors.textColor),
+          style: AppStyles.headLineStyle1,
         ),
       ),
     );
