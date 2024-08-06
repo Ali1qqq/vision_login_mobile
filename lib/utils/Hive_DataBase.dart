@@ -63,6 +63,7 @@ salary: salary,
   }
 
   static deleteUserData() {
+    accountManagementBox.deleteFromDisk();
     accountBox.delete("mobile");
     accountBox.delete("name");
     accountBox.delete("gender");
