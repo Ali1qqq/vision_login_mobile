@@ -1,13 +1,9 @@
 import 'dart:math';
-import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:quickalert/quickalert.dart';
-import 'package:syncfusion_flutter_signaturepad/signaturepad.dart';
 import 'package:vision_dashboard/screens/Salary/controller/Salary_View_Model.dart';
 
 import '../../constants.dart';
-import '../Employee/Controller/Employee_view_model.dart';
 import '../../controller/home_controller.dart';
 
 import '../Widgets/Custom_Drop_down.dart';

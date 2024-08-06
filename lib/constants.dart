@@ -10,7 +10,6 @@ import 'package:vision_dashboard/screens/Settings/Setting_View.dart';
 import 'package:vision_dashboard/screens/Store/Store_View.dart';
 import 'package:vision_dashboard/screens/Student/Student_view_Screen.dart';
 import 'package:vision_dashboard/screens/Study%20Fees/Study_Fees_View.dart';
-import 'package:vision_dashboard/screens/Study%20Fees/Study_Fees_ViewOld.dart';
 import 'package:vision_dashboard/screens/classes/classes_view.dart';
 import 'package:vision_dashboard/screens/dashboard/dashboard_screen.dart';
 import 'package:vision_dashboard/screens/employee_time/employee_time.dart';

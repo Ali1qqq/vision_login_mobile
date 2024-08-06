@@ -2,9 +2,10 @@
 import 'package:flutter/material.dart';
 import 'package:vision_dashboard/models/event_record_model.dart';
 
+import '../../../../constants.dart';
 import '../../../../core/Styling/app_style.dart';
 
-Widget BuildParentEventRecordItem(EventRecordModel record) {
+Widget BuildParentEventRecordItem(EventRecordModel record,VoidCallback onPress) {
   return Container(
     decoration: BoxDecoration(
       color: Color(int.parse(record.color)).withOpacity(0.2),
@@ -29,6 +30,13 @@ Widget BuildParentEventRecordItem(EventRecordModel record) {
             style: AppStyles.headLineStyle3,
           ),
           Spacer(),
+          IconButton(
+            onPressed: onPress,
+            icon: Icon(
+              Icons.delete,
+              color: primaryColor,
+            ),
+          ),
         ],
       ),
     ),

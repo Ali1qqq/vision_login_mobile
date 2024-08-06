@@ -12,11 +12,9 @@ import 'package:vision_dashboard/models/Installment_model.dart';
 import 'package:vision_dashboard/screens/Student/Controller/Student_View_Model.dart';
 import 'package:vision_dashboard/screens/Study%20Fees/Controller/Study_Fees_View_Model.dart';
 import 'package:vision_dashboard/screens/Widgets/AppButton.dart';
-import 'package:vision_dashboard/screens/Widgets/Insert_shape_Widget.dart';
 import 'package:vision_dashboard/utils/Image_OverLay.dart';
 
 import '../../constants.dart';
-import '../../controller/home_controller.dart';
 import '../../core/Utils/service.dart';
 import '../../models/Parent_Model.dart';
 import '../../utils/Dialogs.dart';

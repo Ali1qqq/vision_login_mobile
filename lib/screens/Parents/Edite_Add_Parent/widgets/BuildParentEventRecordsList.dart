@@ -15,7 +15,13 @@ Widget BuildParentEventRecordsList(ParentsViewModel parentsViewModel) {
         final record = parentsViewModel.eventRecords[index];
         return Padding(
           padding: const EdgeInsets.symmetric(vertical: 8.0),
-          child: BuildParentEventRecordItem(record),
+          child: BuildParentEventRecordItem(
+            record,
+            () {
+              parentsViewModel.eventRecords.removeAt(index);
+              parentsViewModel.update();
+            },
+          ),
         );
       },
     ),

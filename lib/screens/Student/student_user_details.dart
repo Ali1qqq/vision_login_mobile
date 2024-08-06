@@ -15,6 +15,7 @@ import 'package:vision_dashboard/screens/Parents/Controller/Parents_View_Model.d
 import 'package:vision_dashboard/screens/Student/Controller/Student_View_Model.dart';
 import 'package:vision_dashboard/screens/Widgets/AppButton.dart';
 import 'package:vision_dashboard/screens/Widgets/Custom_Drop_down.dart';
+import 'package:vision_dashboard/screens/Widgets/Custom_Drop_down_with_value.dart';
 import 'package:vision_dashboard/screens/Widgets/Insert_shape_Widget.dart';
 import 'package:vision_dashboard/screens/Widgets/header.dart';
 import 'package:vision_dashboard/screens/classes/Controller/Class_View_Model.dart';
@@ -36,7 +37,7 @@ class StudentInputForm extends StatefulWidget {
 
 class _StudentInputFormState extends State<StudentInputForm> {
   String _payWay = '';
-  EventModel? selectedEvent;
+  EventModel? selectedEvent = EventModel(name: "name", id: "id", role: "role", color: 0);
   TextEditingController bodyEvent = TextEditingController();
 
   Map<String, InstallmentModel> instalmentMap = {};
@@ -156,7 +157,6 @@ class _StudentInputFormState extends State<StudentInputForm> {
     return Scaffold(
       appBar: Header(title: "اضافة طالب جديد".tr, middleText: "", context: context),
       backgroundColor: bgColor,
-
       body: SingleChildScrollView(
         padding: EdgeInsets.all(16.0),
         child: Column(
@@ -580,115 +580,135 @@ class _StudentInputFormState extends State<StudentInputForm> {
               child:,
             ),*/
 
-          if(widget.studentModel!=null)...[
-            SizedBox(
-              height: defaultPadding ,
-            ),
-            Container(
+            if (widget.studentModel != null) ...[
+              SizedBox(
+                height: defaultPadding,
+              ),
+              InsertShapeWidget(
+                titleWidget: Text(
+                  "معلومات الحداث",
+                  style: AppStyles.headLineStyle1,
+                ),
+                bodyWidget: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    GetBuilder<EventViewModel>(builder: (eventController) {
+                      return Wrap(
+                        runAlignment: WrapAlignment.spaceEvenly,
+                        alignment: WrapAlignment.spaceEvenly,
+
+                        runSpacing: 25,
+                        spacing: 25,
+                        // mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          CustomDropDownWithValue(
+                            value: '',
+                            mapValue: eventController.allEvents.values
+                                .toList()
+                                .where(
+                                  (element) => element.role == Const.eventTypeStudent,
+                                )
+                                .toList(),
+                            label: "نوع الحدث".tr,
+                            onChange: (selectedWay) {
+                              if (selectedWay != null) {
+                                setState(() {});
+                                selectedEvent = Get.find<EventViewModel>().allEvents[selectedWay];
+                                // selectedEvent = selectedWay;
+                              }
+                            },
+                          ),
+                          CustomTextField(controller: bodyEvent, title: 'الوصف'.tr, enable: true, keyboardType: TextInputType.text),
+                          AppButton(
+                            text: 'إضافة سجل حدث'.tr,
+                            onPressed: () {
+                              // DateTime dateTime= await NTP.now();
+                              eventRecords.add(EventRecordModel(body: bodyEvent.text, type: selectedEvent!.name, date: DateTime.now().toIso8601String(), color: selectedEvent!.color.toString()));
+                              bodyEvent.clear();
+                              setState(() {});
+                            },
+                          )
+                        ],
+                      );
+                    }),
+                    SizedBox(height: defaultPadding * 2),
+                    Text('سجل الأحداث'.tr, style: AppStyles.headLineStyle1),
+                    SizedBox(
+                      height: defaultPadding,
+                    ),
+                    Container(
+                      alignment: Alignment.center,
+                      child: ListView.builder(
+                        padding: EdgeInsets.zero,
+                        shrinkWrap: true,
+                        itemCount: eventRecords.length,
+                        itemBuilder: (context, index) {
+                          final record = eventRecords[index];
+                          return Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 8.0),
+                            child: Container(
+                              decoration: BoxDecoration(color: Color(int.parse(record.color)).withOpacity(0.2), borderRadius: BorderRadius.circular(15)),
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(vertical: 14.0, horizontal: 10),
+                                child: Row(
+                                  children: [
+                                    Text(
+                                      record.type,
+                                      style: AppStyles.headLineStyle1.copyWith(color: Colors.black),
+                                    ),
+                                    SizedBox(
+                                      width: 10,
+                                    ),
+                                    Text(
+                                      record.body,
+                                      style: AppStyles.headLineStyle1.copyWith(color: Colors.black),
+                                    ),
+                                    SizedBox(
+                                      width: 50,
+                                    ),
+                                    Text(
+                                      record.date,
+                                      style: AppStyles.headLineStyle3,
+                                    ),
+                                    Spacer(),
+                                    IconButton(
+                                      onPressed: (){
+                                        eventRecords.removeAt(index);
+                                        setState(() {
+
+                                        });
+                                      },
+                                        icon: Icon(
+                                        Icons.delete,
+                                        color: primaryColor,
+                                      ),
+                                    ),
+
+                                  ],
+                                ),
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                    SizedBox(
+                      height: defaultPadding,
+                    ),
+                  ],
+                ),
+              ),
+              /*           Container(
               padding: EdgeInsets.all(16.0),
               alignment: Alignment.center,
               decoration: BoxDecoration(
                 color: secondaryColor,
                 borderRadius: BorderRadius.circular(15),
               ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  GetBuilder<EventViewModel>(builder: (eventController) {
-                    return Wrap(
-                      runAlignment: WrapAlignment.spaceAround,
-                      runSpacing: 25,
-                      // mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        CustomDropDown(
-                          value: '',
-                          listValue: eventController.allEvents.values
-                              .toList()
-                              .where(
-                                (element) => element.role == Const.eventTypeStudent,
-                          )
-                              .map((e) => e.name)
-                              .toList(),
-                          label: "نوع الحدث".tr,
-                          onChange: (selectedWay) {
-                            if (selectedWay != null) {
-                              setState(() {});
-                              selectedEvent?.name = selectedWay;
-                            }
-                          },
-                        ),
-                        SizedBox(width: 16.0),
-                        CustomTextField(controller: bodyEvent, title: 'الوصف'.tr, enable: true, keyboardType: TextInputType.text),
-                        SizedBox(width: 16.0),
-                        AppButton(
-                          text: 'إضافة سجل حدث'.tr,
-                          onPressed: () {
-                            setState(() async {
-                              // DateTime dateTime= await NTP.now();
-                              eventRecords.add(EventRecordModel(body: bodyEvent.text, type: selectedEvent!.name, date: DateTime.now().toIso8601String(), color: selectedEvent!.color.toString()));
-                              bodyEvent.clear();
-                            });
-                          },
-                        )
-                      ],
-                    );
-                  }),
-                  SizedBox(height: defaultPadding * 2),
-                  Text('سجل الأحداث'.tr, style: AppStyles.headLineStyle1),
-                  SizedBox(
-                    height: defaultPadding,
-                  ),
-                  Container(
-                    alignment: Alignment.center,
-                    child: ListView.builder(
-                      padding: EdgeInsets.zero,
-                      shrinkWrap: true,
-                      itemCount: eventRecords.length,
-                      itemBuilder: (context, index) {
-                        final record = eventRecords[index];
-                        return Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 8.0),
-                          child: Container(
-                            decoration: BoxDecoration(color: Color(int.parse(record.color)).withOpacity(0.2), borderRadius: BorderRadius.circular(15)),
-                            child: Padding(
-                              padding: const EdgeInsets.symmetric(vertical: 14.0, horizontal: 10),
-                              child: Row(
-                                children: [
-                                  Text(
-                                    record.type,
-                                    style: AppStyles.headLineStyle1.copyWith(color: Colors.black),
-                                  ),
-                                  SizedBox(
-                                    width: 10,
-                                  ),
-                                  Text(
-                                    record.body,
-                                    style: AppStyles.headLineStyle1.copyWith(color: Colors.black),
-                                  ),
-                                  SizedBox(
-                                    width: 50,
-                                  ),
-                                  Text(
-                                    record.date,
-                                    style: AppStyles.headLineStyle3,
-                                  ),
-                                  Spacer(),
-                                ],
-                              ),
-                            ),
-                          ),
-                        );
-                      },
-                    ),
-                  ),
-                  SizedBox(
-                    height: defaultPadding,
-                  ),
-                ],
-              ),
-            )
-          ]
-
+              child:
+            )*/
+            ]
           ],
         ),
       ),

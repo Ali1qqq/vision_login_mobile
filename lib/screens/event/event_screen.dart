@@ -18,7 +18,6 @@ import '../../utils/const.dart';
 import '../Widgets/AppButton.dart';
 import '../Widgets/Custom_Pluto_Grid.dart';
 import '../Widgets/Custom_Text_Filed.dart';
-import '../Widgets/Data_Row.dart';
 import '../Widgets/header.dart';
 
 class EventScreen extends StatefulWidget {
