@@ -1,4 +1,3 @@
-import 'package:vision_dashboard/models/Installment_model.dart';
 
 import 'event_record_model.dart';
 
@@ -11,16 +10,14 @@ class StudentModel {
       parentId,
       startDate,
       endDate,
-      paymentWay,
+
       stdClass;
   String? studentNumber;
-  int? totalPayment;
   double? grade;
   List<String>? stdExam, contractsImage;
 
   bool? available = false, isAccepted;
 
-  Map<String, InstallmentModel>? installmentRecords = {};
   List<EventRecordModel>? eventRecords;
   String? bus;
 
@@ -37,15 +34,12 @@ class StudentModel {
     this.startDate,
     this.endDate,
     this.eventRecords,
-    this.installmentRecords,
     this.bus,
     this.parentId,
     this.available,
     this.isAccepted,
     this.stdClass,
     this.stdLanguage,
-    this.totalPayment,
-    this.paymentWay,
     this.contractsImage,
   });
 
@@ -65,18 +59,13 @@ class StudentModel {
         if (contractsImage != null) 'contractsImage': contractsImage!,
         if (eventRecords != null)
           'eventRecords': eventRecords!.map((event) => event.toJson()).toList(),
-        if (installmentRecords != null)
-          'installmentRecords': Map.fromEntries(installmentRecords!.entries
-              .map((e) => MapEntry(e.key, e.value.toJson()))
-              .toList()),
+
         if (parentId != null) 'parentId': parentId!,
         if (bus != null) 'bus': bus,
-        if (paymentWay != null) 'paymentWay': paymentWay,
-        if (totalPayment != null) 'totalPayment': totalPayment,
       };
 
   StudentModel.fromJson(Map<String, dynamic> json) {
-    grade = 0.0;
+    grade = json['grade'] != null ?double.parse(json['grade'].toString()):0.0;
     studentName = json['studentName'] ?? '';
     studentNumber = json['studentNumber'] ?? '';
     studentID = json['studentID'] ?? '';
@@ -97,13 +86,8 @@ class StudentModel {
             ?.map((event) => EventRecordModel.fromJson(event))
             .toList() ??
         [];
-    (json['installmentRecords'] ?? {}).forEach((k, v) {
-      installmentRecords![k] = InstallmentModel.fromJson(v);
-    });
 
     bus = json['bus'] ?? '';
-    totalPayment = json['totalPayment'] ?? 0;
-    paymentWay = json['paymentWay'] ?? '';
     available = false;
   }
 

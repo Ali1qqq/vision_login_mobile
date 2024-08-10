@@ -6,7 +6,6 @@ import 'package:quickalert/widgets/quickalert_dialog.dart';
 import 'package:vision_dashboard/screens/Employee/Controller/Employee_view_model.dart';
 import 'package:vision_dashboard/screens/expenses/Controller/expenses_view_model.dart';
 import 'package:vision_dashboard/screens/Buses/Controller/Bus_View_Model.dart';
-import 'package:vision_dashboard/screens/Exams/controller/Exam_View_Model.dart';
 import 'package:vision_dashboard/screens/Parents/Controller/Parents_View_Model.dart';
 import 'package:vision_dashboard/screens/Store/Controller/Store_View_Model.dart';
 import 'package:vision_dashboard/screens/Student/Controller/Student_View_Model.dart';
@@ -71,7 +70,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
       body: SingleChildScrollView(
         padding: EdgeInsets.all(16.0),
         child: GetBuilder<HomeViewModel>(builder: (controller) {
-          double size = max(MediaQuery.sizeOf(context).width - (controller.isDrawerOpen ? 240 : 120), 1000) - 60;
+          double size = max(MediaQuery
+              .sizeOf(context)
+              .width - (controller.isDrawerOpen ? 240 : 120), 1000) - 60;
           return Padding(
             padding: const EdgeInsets.all(15),
             child: GetBuilder<SettingsViewModel>(builder: (controller) {
@@ -130,17 +131,22 @@ class _SettingsScreenState extends State<SettingsScreen> {
                           child: SingleChildScrollView(
                             controller: _scrollLogController,
                             scrollDirection: Axis.horizontal,
-                            child: DataTable(columnSpacing: 0, dividerThickness: 0.3, columns: List.generate(logData.length, (index) => DataColumn(label: Container(width: size / logData.length, child: Center(child: Text(logData[index].toString().tr))))), rows: [
+                            child: DataTable(columnSpacing: 0, dividerThickness: 0.3, columns: List.generate(logData.length, (index) =>
+                                DataColumn(label: Container(width: size / logData.length, child: Center(child: Text(logData[index]
+                                    .toString()
+                                    .tr))))), rows: [
                               for (var deleteModel in controller.allWaiting.values
                                   .where(
                                     (element) => element.isAccepted != null,
-                                  )
+                              )
                                   .toList()
                                   .reversed)
 
-                                ///TODO:fix time issue
+                              ///TODO:fix time issue
                                 DataRow(cells: [
-                                  dataRowItem(size / logData.length, deleteModel.type.toString().tr),
+                                  dataRowItem(size / logData.length, deleteModel.type
+                                      .toString()
+                                      .tr),
                                   dataRowItem(size / logData.length, deleteModel.date!.toString()),
                                   dataRowItem(size / logData.length, deleteModel.details ?? "لا يوجد".tr),
                                   dataRowItem(size / logData.length, _getAffectedName(deleteModel)),
@@ -183,8 +189,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                 value: 'الافتراضي'.tr,
                                 listValue: controller.allArchive
                                     .map(
-                                      (e) => e.toString().tr,
-                                    )
+                                      (e) =>
+                                  e
+                                      .toString()
+                                      .tr,
+                                )
                                     .toList(),
                                 label: "السنة المختارة".tr,
                                 onChange: (value) {
@@ -192,13 +201,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                     if (value != "الافتراضي".tr) {
                                       enableUpdate = false;
                                       controller.getOldData(value);
-
-
                                     } else {
                                       enableUpdate = true;
                                       controller.getDefaultData();
-
-
                                     }
                                   }
                                 },
@@ -209,7 +214,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                 label: 'اختر اللغة'.tr,
                                 onChange: (value) {
                                   Get.find<SettingsViewModel>().changeLanguage(value!);
-
                                 },
                               )
                             ],
@@ -260,7 +264,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                       title: 'هل انت متأكد ؟'.tr,
                                       onConfirmBtnTap: () async {
                                         if (_validateYearFormat(context, yearNameController.text)) {
-                                          QuickAlert.show(width: Get.width / 2, context: context, type: QuickAlertType.loading, title: 'جاري التحميل'.tr, text: 'يتم العمل على الطلب'.tr, barrierDismissible: false);
+                                          QuickAlert.show(width: Get.width / 2,
+                                              context: context,
+                                              type: QuickAlertType.loading,
+                                              title: 'جاري التحميل'.tr,
+                                              text: 'يتم العمل على الطلب'.tr,
+                                              barrierDismissible: false);
 
                                           try {
                                             await controller.archive(yearNameController.text);
@@ -289,7 +298,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                       text: 'قبول هذه العملية'.tr,
                                       title: 'سيتم حذف جميع البيانات الحالية'.tr,
                                       onConfirmBtnTap: () async {
-                                        QuickAlert.show(width: Get.width / 2, context: context, type: QuickAlertType.loading, title: 'جاري التحميل'.tr, text: 'يتم العمل على الطلب'.tr, barrierDismissible: false);
+                                        QuickAlert.show(width: Get.width / 2,
+                                            context: context,
+                                            type: QuickAlertType.loading,
+                                            title: 'جاري التحميل'.tr,
+                                            text: 'يتم العمل على الطلب'.tr,
+                                            barrierDismissible: false);
                                         await controller.archive("s");
                                         Get.back();
                                         Get.back();
@@ -319,14 +333,17 @@ class _SettingsScreenState extends State<SettingsScreen> {
   List<DataColumn> _buildColumns(double size, List<String> deleteData) {
     return List.generate(
       deleteData.length,
-      (index) => DataColumn(
-        label: Container(
-          width: size / deleteData.length,
-          child: Center(
-            child: Text(deleteData[index].toString().tr),
+          (index) =>
+          DataColumn(
+            label: Container(
+              width: size / deleteData.length,
+              child: Center(
+                child: Text(deleteData[index]
+                    .toString()
+                    .tr),
+              ),
+            ),
           ),
-        ),
-      ),
     );
   }
 
@@ -335,7 +352,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
     return List.generate(
       deleteModel.length,
-      (index) {
+          (index) {
         String affectedName = _getAffectedName(deleteModel[index]);
         return DataRow(
           cells: _buildWaitCells(size, deleteData, deleteModel[index], affectedName, controller),
@@ -347,23 +364,37 @@ class _SettingsScreenState extends State<SettingsScreen> {
   String _getAffectedName(WaitManagementModel model) {
     switch (model.collectionName) {
       case accountManagementCollection:
-        return Get.find<EmployeeViewModel>().allAccountManagement[model.affectedId]?.fullName ?? model.affectedId;
+        return Get
+            .find<EmployeeViewModel>()
+            .allAccountManagement[model.affectedId]?.fullName ?? model.affectedId;
       case parentsCollection:
-        return Get.find<ParentsViewModel>().parentMap[model.affectedId]?.fullName ?? model.affectedId;
+        return Get
+            .find<ParentsViewModel>()
+            .parentMap[model.affectedId]?.fullName ?? model.affectedId;
       case studentCollection:
-        return Get.find<StudentViewModel>().studentMap[model.affectedId]?.studentName ?? model.affectedId;
+        return Get
+            .find<StudentViewModel>()
+            .studentMap[model.affectedId]?.studentName ?? model.affectedId;
       case classCollection:
-        return Get.find<ClassViewModel>().classMap[model.affectedId]?.className ?? model.affectedId;
+        return Get
+            .find<ClassViewModel>()
+            .classMap[model.affectedId]?.className ?? model.affectedId;
       case installmentCollection:
-        return Get.find<StudentViewModel>().studentMap[model.relatedId]?.studentName ?? model.affectedId;
+        return Get
+            .find<StudentViewModel>()
+            .studentMap[model.relatedId]?.studentName ?? model.affectedId;
       case busesCollection:
-        return Get.find<BusViewModel>().busesMap[model.affectedId]?.number ?? model.affectedId;
+        return Get
+            .find<BusViewModel>()
+            .busesMap[model.affectedId]?.number ?? model.affectedId;
       case Const.expensesCollection:
-        return Get.find<ExpensesViewModel>().allExpenses[model.affectedId]?.title ?? model.affectedId;
+        return Get
+            .find<ExpensesViewModel>()
+            .allExpenses[model.affectedId]?.title ?? model.affectedId;
       case storeCollection:
-        return Get.find<StoreViewModel>().storeMap[model.affectedId]?.subName ?? model.affectedId;
-      case examsCollection:
-        return Get.find<ExamViewModel>().examMap[model.affectedId]?.subject ?? model.affectedId;
+        return Get
+            .find<StoreViewModel>()
+            .storeMap[model.affectedId]?.subName ?? model.affectedId;
       default:
         return "";
     }
@@ -371,84 +402,86 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
   List<DataCell> _buildWaitCells(double size, List<String> deleteData, WaitManagementModel model, String affectedName, WaitManagementViewModel controller) {
     return [
-      dataRowItem(size / deleteData.length, model.type.toString().tr),
+      dataRowItem(size / deleteData.length, model.type
+          .toString()
+          .tr),
       dataRowItem(size / deleteData.length, model.details ?? "لا يوجد".tr),
       dataRowItem(size / deleteData.length, affectedName),
       dataRowItem(size / deleteData.length, model.collectionName.toString()),
       if (enableUpdate)
         model.type == waitingListTypes.edite.name
             ? dataRowItem(size / deleteData.length, "عرض".tr, onTap: () {
-                Map<String, Map<String, dynamic>> differences = compareMaps(
-                  model.newData ?? {},
-                  model.oldDate ?? {},
-                );
+          Map<String, Map<String, dynamic>> differences = compareMaps(
+            model.newData ?? {},
+            model.oldDate ?? {},
+          );
 
-                showData(context, differences, model);
-              })
+          showData(context, differences, model);
+        })
             : DataCell(
-                Container(
-                  width: size / deleteData.length,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      _buildIconButton(
-                        Icons.check_circle_outline,
-                        Colors.green,
-                        "قبول".tr,
-                        () {
-                          if (enableUpdate)
-                            QuickAlert.show(
-                              context: context,
-                              type: QuickAlertType.confirm,
-                              text: 'قبول هذه العملية'.tr,
-                              title: model.collectionName == parentsCollection ? 'عند حذف ولي الامر سوف يتم حذف الاولاد الخاصة به'.tr : 'هل انت متأكد ؟'.tr,
-                              onConfirmBtnTap: () async {
-                                await controller.doTheWait(model);
-                                Get.back();
-                              },
-                              onCancelBtnTap: () => Get.back(),
-                              confirmBtnText: 'نعم'.tr,
-                              cancelBtnText: 'لا'.tr,
-                              confirmBtnColor: Colors.redAccent,
-                              showCancelBtn: true,
-                            );
+          Container(
+            width: size / deleteData.length,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                _buildIconButton(
+                  Icons.check_circle_outline,
+                  Colors.green,
+                  "قبول".tr,
+                      () {
+                    if (enableUpdate)
+                      QuickAlert.show(
+                        context: context,
+                        type: QuickAlertType.confirm,
+                        text: 'قبول هذه العملية'.tr,
+                        title: model.collectionName == parentsCollection ? 'عند حذف ولي الامر سوف يتم حذف الاولاد الخاصة به'.tr : 'هل انت متأكد ؟'.tr,
+                        onConfirmBtnTap: () async {
+                          await controller.doTheWait(model);
+                          Get.back();
                         },
-                      ),
-                      _buildIconButton(
-                        Icons.remove_circle_outline,
-                        Colors.red,
-                        "رفض".tr,
-                        () {
-                          if (enableUpdate)
-                            QuickAlert.show(
-                              context: context,
-                              type: QuickAlertType.confirm,
-                              text: 'رفض هذه العملية'.tr,
-                              title: 'هل انت متأكد ؟'.tr,
-                              onConfirmBtnTap: () {
-                                controller.undoTheDelete(model);
-                                Get.back();
-                              },
-                              onCancelBtnTap: () => Get.back(),
-                              confirmBtnText: 'نعم'.tr,
-                              cancelBtnText: 'لا'.tr,
-                              confirmBtnColor: Colors.red,
-                              showCancelBtn: true,
-                            );
-                        },
-                      ),
-                    ],
-                  ),
+                        onCancelBtnTap: () => Get.back(),
+                        confirmBtnText: 'نعم'.tr,
+                        cancelBtnText: 'لا'.tr,
+                        confirmBtnColor: Colors.redAccent,
+                        showCancelBtn: true,
+                      );
+                  },
                 ),
-              )
+                _buildIconButton(
+                  Icons.remove_circle_outline,
+                  Colors.red,
+                  "رفض".tr,
+                      () {
+                    if (enableUpdate)
+                      QuickAlert.show(
+                        context: context,
+                        type: QuickAlertType.confirm,
+                        text: 'رفض هذه العملية'.tr,
+                        title: 'هل انت متأكد ؟'.tr,
+                        onConfirmBtnTap: () {
+                          controller.undoTheDelete(model);
+                          Get.back();
+                        },
+                        onCancelBtnTap: () => Get.back(),
+                        confirmBtnText: 'نعم'.tr,
+                        cancelBtnText: 'لا'.tr,
+                        confirmBtnColor: Colors.red,
+                        showCancelBtn: true,
+                      );
+                  },
+                ),
+              ],
+            ),
+          ),
+        )
       else
         DataCell(Container(
             width: size / deleteData.length,
             child: Center(
                 child: Text(
-              "للعرض فقط ".tr,
-              style: AppStyles.headLineStyle4.copyWith(color: primaryColor),
-            ))))
+                  "للعرض فقط ".tr,
+                  style: AppStyles.headLineStyle4.copyWith(color: primaryColor),
+                ))))
     ];
   }
 
@@ -518,23 +551,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       shrinkWrap: true,
                       itemCount: differences.keys.length,
 
-                      /* oldDate?.values.map(
-                            (element) {
-                              int count = 0;
-                              for (int i = 0; i < oldDate.length; i++) {
-*/ /*print(oldDate.values.elementAt(i).toString());
-print("------------------------------------");
-print(newDate!.values.elementAt(i).toString());*/ /*
-                                if (oldDate.values.elementAt(i).toString() !=
-                                    newDate!.values.elementAt(i).toString()) {
-                                  count++;
-                                }
-                              }
 
-                              return count;
-                            },
-                          ).firstOrNull ??
-                          0,*/
                       itemBuilder: (context, index) {
                         return Row(
                           mainAxisAlignment: MainAxisAlignment.start,
@@ -542,53 +559,22 @@ print(newDate!.values.elementAt(i).toString());*/ /*
                             Container(
                                 width: width / 5,
                                 child: Text(
-                                  differences.keys.elementAt(index).toString().tr,
-                                  /*   newDate?.entries
-                                          .where(
-                                            (element) {
-                                     */ /*         print("${element.value.toString()}" +"!="+
-                                                  "${oldDate!.values.elementAt(newDate.values.toList().indexOf(element.value)).toString()}");*/ /*
-                                              return element.value.toString() !=
-                                                  oldDate!.values
-                                                      .elementAt(newDate
-                                                          .keys
-                                                          .toList()
-                                                          .indexOf(element.key))
-                                                      .toString();
-                                            },
-                                          )
-                                          .elementAtOrNull(index)
-                                          ?.key
-                                          .toString()
-                                          .tr ??
-                                      '',*/
+                                  differences.keys
+                                      .elementAt(index)
+                                      .toString()
+                                      .tr,
+
                                   overflow: TextOverflow.ellipsis,
                                   style: AppStyles.headLineStyle3,
                                 )),
                             Text(":"),
-                            Container(
-                                width: width / 4.1,
-                                child: Text(
-                                  differences.values.elementAt(index)['oldData'].toString(),
-                                  /*    newDate?.entries
-                                          .where(
-                                            (element) {
-                                              return element.value.toString() !=
-                                                  oldDate?.values
-                                                      .elementAtOrNull(newDate
-                                                          .keys
-                                                          .toList()
-                                                          .indexOf(element.key))
-                                                      .toString();
-                                            },
-                                          )
-                                          .elementAtOrNull(index)
-                                          ?.value
-                                          .toString()
-                                          .tr ??
-                                      '',*/
-                                  style: AppStyles.headLineStyle3.copyWith(color: primaryColor),
-                                )),
+                              Container(
+                                  width: width / 4.1,
+                                  child: Text(
+                                    differences.values.elementAt(index)['oldData'].toString(),
+
+                                    style: AppStyles.headLineStyle3.copyWith(color: primaryColor),
+                                  )),
                             Spacer(),
                             Container(
                               width: 1,
@@ -599,7 +585,10 @@ print(newDate!.values.elementAt(i).toString());*/ /*
                             Container(
                                 width: width / 5,
                                 child: Text(
-                                  differences.keys.elementAt(index).toString().tr,
+                                  differences.keys
+                                      .elementAt(index)
+                                      .toString()
+                                      .tr,
                                   /* oldDate?.entries
                                           .where(
                                             (element) {
@@ -660,7 +649,7 @@ print(newDate!.values.elementAt(i).toString());*/ /*
                             Icons.check_circle_outline,
                             Colors.green,
                             "قبول".tr,
-                            () {
+                                () {
                               if (enableUpdate)
                                 QuickAlert.show(
                                   context: context,
@@ -685,7 +674,7 @@ print(newDate!.values.elementAt(i).toString());*/ /*
                             Icons.remove_circle_outline,
                             Colors.red,
                             "رفض".tr,
-                            () {
+                                () {
                               if (enableUpdate)
                                 QuickAlert.show(
                                   context: context,

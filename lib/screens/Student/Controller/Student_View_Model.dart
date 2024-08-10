@@ -4,10 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:pluto_grid/pluto_grid.dart';
-import 'package:vision_dashboard/models/Installment_model.dart';
 import 'package:vision_dashboard/models/Student_Model.dart';
-import 'package:vision_dashboard/models/TimeModel.dart';
-import 'package:vision_dashboard/screens/Exams/controller/Exam_View_Model.dart';
 import 'package:vision_dashboard/screens/Study%20Fees/Controller/Study_Fees_View_Model.dart';
 
 import '../../../constants.dart';
@@ -53,17 +50,8 @@ class StudentViewModel extends GetxController {
 
   Map<String, StudentModel> get studentMap => _studentMap;
 
-  ExamViewModel examViewModel = Get.find<ExamViewModel>();
 
-  addExamToStudent(List<String> students, String examId) {
-    students.forEach(
-      (element) async {
-        await studentCollectionRef.doc(element).set({
-          "stdExam": FieldValue.arrayUnion([examId])
-        }, SetOptions(merge: true));
-      },
-    );
-  }
+
 
   late StreamSubscription<QuerySnapshot<Map<String, dynamic>>> listener;
   Color selectedColor=secondaryColor;
@@ -77,7 +65,6 @@ class StudentViewModel extends GetxController {
         _studentMap[element.id] = StudentModel.fromJson(element.data());
       }
       await Get.find<BusViewModel>().getAllWithoutListenBuse();
-      await examViewModel.getGrade(_studentMap);
       selectedColor=secondaryColor;
       plutoKey = GlobalKey();
       rows.clear();
@@ -123,7 +110,6 @@ class StudentViewModel extends GetxController {
       }
       print("Student :${_studentMap.keys.length}");
 
-      examViewModel.getGrade(_studentMap);
       update();
     });
   }
@@ -152,32 +138,9 @@ class StudentViewModel extends GetxController {
     update();
   }
 
-  double getAllTotalPay() {
-    double total = 0.0;
-    _studentMap.values.forEach(
-      (element) {
-        total += element.totalPayment!;
-      },
-    );
-    return total;
-  }
 
-  double getAllReceivePay() {
-    double total = 0;
-    _studentMap.values.forEach(
-      (element) {
-        element.installmentRecords!.values.forEach(
-          (element0) {
-            if (element0.isPay == true) {
-              total += int.parse(element0.installmentCost!);
-            }
-          },
-        );
-      },
-    );
 
-    return total;
-  }
+
 
   // deleteStudent(String studentId) async {
   //   await addWaitOperation(
@@ -200,7 +163,6 @@ class StudentViewModel extends GetxController {
         _studentMap[element.id] = StudentModel.fromJson(element.data());
       }
       await Get.find<BusViewModel>().getAllWithoutListenBuse();
-      await examViewModel.getGrade(_studentMap);
       plutoKey = GlobalKey();
       rows.clear();
       _studentMap.forEach(
@@ -235,105 +197,7 @@ class StudentViewModel extends GetxController {
     });
   }
 
-  int getAllNunReceivePay() {
-    int total = 0;
-    _studentMap.values.forEach(
-      (element) {
-        element.installmentRecords!.values.forEach(
-          (element0) {
-            if (element0.isPay != true) {
-              total += int.parse(element0.installmentCost!);
-            }
-          },
-        );
-      },
-    );
-    return total;
-  }
 
-  int getAllNunReceivePayThisMonth() {
-    int total = 0;
-    _studentMap.values.forEach(
-      (element) {
-        element.installmentRecords!.values.forEach(
-          (element0) {
-            if (int.parse(element0.installmentDate!) <= thisTimesModel!.month &&
-                element0.isPay != true) {
-              total += int.parse(element0.installmentCost!);
-            }
-          },
-        );
-      },
-    );
-    return total;
-  }
-
-  double getAllReceiveMaxPay() {
-    double total = 0;
-    _studentMap.values.forEach(
-      (element) {
-        element.installmentRecords!.values.forEach(
-          (element0) {
-            if (element0.isPay == true) {
-              if (int.parse(element0.installmentCost!) > total)
-                total = int.parse(element0.installmentCost!) * 1.0;
-            }
-          },
-        );
-      },
-    );
-    return total + 50000;
-  }
-
-  double getAllReceivePayAtMonth(String month) {
-    double total = 0;
-    _studentMap.values.forEach(
-      (element) {
-        element.installmentRecords!.values.forEach(
-          (element0) {
-            if (element0.installmentDate! == month && element0.isPay == true) {
-              total += int.parse(element0.installmentCost!);
-            }
-          },
-        );
-      },
-    );
-    return total;
-  }
-
-  setInstallmentPay(String installmentId, String studentId, bool isPay,String imageUrl) async{
-    // DateTime dateTime= await NTP.now();
-TimesModel timesModel=TimesModel.fromDateTime(DateTime.now());
-    Map<String, InstallmentModel>? installmentRecords =
-        _studentMap[studentId]!.installmentRecords;
-    installmentRecords![installmentId]!.isPay = isPay;
-    installmentRecords[installmentId]!.InstallmentImage = imageUrl;
-    installmentRecords[installmentId]!.payTime = timesModel.dateTime.toString();
-    studentCollectionRef.doc(studentId).set(
-        StudentModel(installmentRecords: installmentRecords).toJson(),
-        SetOptions(merge: true));
-  }
-
-  bool chekaIfHaveLateInstallment(String parentId) {
-    bool isLate = false;
-    _studentMap.values
-        .where(
-      (element) => element.parentId == parentId,
-    )
-        .forEach(
-      (element) {
-        element.installmentRecords!.values.forEach(
-          (element0) {
-            if (int.parse(element0.installmentDate!) <= DateTime.now().month &&
-                element0.isPay != true) {
-              isLate = true;
-            }
-          },
-        );
-      },
-    );
-    return isLate;
-  }
 
   void removeClass(String studentId) {
     studentCollectionRef

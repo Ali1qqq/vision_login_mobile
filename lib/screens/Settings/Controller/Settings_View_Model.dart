@@ -12,7 +12,6 @@ import '../../event/Controller/event_view_model.dart';
 import '../../expenses/Controller/expenses_view_model.dart';
 import '../../../utils/const.dart';
 import '../../Buses/Controller/Bus_View_Model.dart';
-import '../../Exams/controller/Exam_View_Model.dart';
 import '../../Parents/Controller/Parents_View_Model.dart';
 import '../../Salary/controller/Salary_View_Model.dart';
 import '../../Store/Controller/Store_View_Model.dart';
@@ -23,7 +22,6 @@ class SettingsViewModel extends GetxController {
       Get.find<EmployeeViewModel>();
   EventViewModel _eventViewModel = Get.find<EventViewModel>();
   SalaryViewModel _salaryViewModel = Get.find<SalaryViewModel>();
-  ExamViewModel _examViewModel = Get.find<ExamViewModel>();
   StudentViewModel _studentViewModel = Get.find<StudentViewModel>();
   ParentsViewModel _parentsViewModel = Get.find<ParentsViewModel>();
   ExpensesViewModel _expensesViewModel = Get.find<ExpensesViewModel>();
@@ -55,7 +53,6 @@ class SettingsViewModel extends GetxController {
 
     }
     await _busViewModel.getColumns();
-    await _examViewModel.getColumns();
     await _studentViewModel.getColumns();
     await _parentsViewModel.getColumns();
     await _expensesViewModel.getColumns();
@@ -111,15 +108,6 @@ class SettingsViewModel extends GetxController {
           .doc(arr.id)
           .set(arr.toJson());
       print("Finished EventViewModel");
-    }
-    for (var arr in _examViewModel.examMap.values.toList()) {
-      await fireStoreInstance
-          .collection(archiveCollection)
-          .doc(yearName)
-          .collection(examsCollection)
-          .doc(arr.id)
-          .set(arr.toJson());
-      print("Finished ExamViewModel");
     }
     for (var arr in _studentViewModel.studentMap.values.toList()) {
       await fireStoreInstance
@@ -200,10 +188,6 @@ class SettingsViewModel extends GetxController {
           .delete();
       print("Finished EventViewModel");
     }
-    for (var arr in _examViewModel.examMap.values.toList()) {
-      await fireStoreInstance.collection(examsCollection).doc(arr.id).delete();
-      print("Finished ExamViewModel");
-    }
     for (var arr in _studentViewModel.studentMap.values.toList()) {
       await fireStoreInstance
           .collection(studentCollection)
@@ -240,7 +224,6 @@ class SettingsViewModel extends GetxController {
     await _accountManagementViewModel.getOldData(value);
     await _eventViewModel.getOldData(value);
     await _salaryViewModel.getOldData(value);
-    await _examViewModel.getOldData(value);
     await _studentViewModel.getOldData(value);
     await _expensesViewModel.getOldData(value);
     await _storeViewModel.getOldData(value);
@@ -254,7 +237,6 @@ class SettingsViewModel extends GetxController {
     await _accountManagementViewModel.getAllEmployee();
     await _eventViewModel.getAllEventRecord();
     await _salaryViewModel.getAllSalary();
-    await _examViewModel.getAllExam();
     await _studentViewModel.getAllStudent();
     await _expensesViewModel.getAllExpenses();
     await _storeViewModel.getAllStore();

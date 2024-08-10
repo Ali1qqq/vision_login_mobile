@@ -8,13 +8,12 @@ import '../../constants.dart';
 
 
 
-AppBar Header({required String  title,required String middleText,required BuildContext context}) {
+AppBar Header({required String  title,required String middleText,required BuildContext context, bool haveBack=false}) {
 
   return AppBar(
     toolbarHeight: 60,
     backgroundColor: bgColor,
     elevation: 0,
-
     surfaceTintColor:bgColor ,
     leading: IconButton(
       icon: Icon(Icons.menu),
@@ -23,6 +22,7 @@ AppBar Header({required String  title,required String middleText,required BuildC
         homeViewModel.controlMenu();
       },
     ),
+
     centerTitle: false,
     title: Row(
       crossAxisAlignment: CrossAxisAlignment.center,
@@ -52,7 +52,12 @@ AppBar Header({required String  title,required String middleText,required BuildC
       ],
     ),
     actions: [
-
+      if(haveBack)
+Directionality(
+    textDirection: TextDirection.ltr,
+    child: IconButton(onPressed: (){
+      Get.back();
+    }, icon: Icon(Icons.arrow_back_ios,color: Colors.blue,)))
     ],
   );
 }

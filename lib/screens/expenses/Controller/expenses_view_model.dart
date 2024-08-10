@@ -158,15 +158,16 @@ class ExpensesViewModel extends GetxController {
       },
     );
   }
-
   /// we use this in diagrams for set limit tall of column height
   double getMaxExpenses() {
     double sub = 0.0;
     allExpenses.forEach(
       (key, value) {
+
         if (sub < (value.total ?? 0)) sub = (value.total ?? 0) * 1.0;
       },
     );
+    print(sub);
 /// we add 5000 for add more space to max tall
     return sub + 5000;
   }

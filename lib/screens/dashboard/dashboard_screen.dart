@@ -1,6 +1,7 @@
 import 'package:get/get.dart';
 import 'package:vision_dashboard/screens/Employee/Controller/Employee_view_model.dart';
 import 'package:vision_dashboard/controller/Wait_management_view_model.dart';
+import 'package:vision_dashboard/screens/Parents/Controller/Parents_View_Model.dart';
 import 'package:vision_dashboard/screens/expenses/Controller/expenses_view_model.dart';
 import 'package:vision_dashboard/responsive.dart';
 import 'package:vision_dashboard/screens/Salary/controller/Salary_View_Model.dart';
@@ -29,6 +30,7 @@ class DashboardScreen extends StatefulWidget {
 class _DashboardScreenState extends State<DashboardScreen> {
   int index = 2;
   StudentViewModel _studentViewModel = Get.find<StudentViewModel>();
+  ParentsViewModel _parentsViewModel = Get.find<ParentsViewModel>();
   ExpensesViewModel _expensesViewModel = Get.find<ExpensesViewModel>();
   EmployeeViewModel _accountManagementViewModel =
       Get.find<EmployeeViewModel>();
@@ -181,10 +183,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
                               child: SquareWidget(
                                   "الاجمالي",
                                   isAll
-                                      ? (_studentViewModel.getAllReceivePay() -
+                                      ? (_parentsViewModel.getAllReceivePay() -
                                           _expensesViewModel.getAllExpensesMoney() -
                                           _salaryViewModel.getAllSalaryPay())
-                                      : (_studentViewModel.getAllReceivePayAtMonth(
+                                      : (_parentsViewModel.getAllReceivePayAtMonth(
                                                   months[selectedMonth]!) -
                                               _expensesViewModel.getExpensesAtMonth(
                                                   months[selectedMonth]!) -
@@ -203,8 +205,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                               child: SquareWidget(
                                   "الايرادات",
                                   isAll
-                                      ? _studentViewModel.getAllReceivePay()
-                                      : _studentViewModel
+                                      ? _parentsViewModel.getAllReceivePay()
+                                      : _parentsViewModel
                                           .getAllReceivePayAtMonth(
                                               months[selectedMonth]!)
                                           .toString(),

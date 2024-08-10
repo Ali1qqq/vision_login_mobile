@@ -3,7 +3,6 @@ import 'package:get/get.dart';
 import 'package:vision_dashboard/models/TimeModel.dart';
 import 'package:vision_dashboard/screens/Buses/Buses_View.dart';
 import 'package:vision_dashboard/screens/Employee/Employee_View.dart';
-import 'package:vision_dashboard/screens/Exams/Exam_View.dart';
 import 'package:vision_dashboard/screens/Parents/Parents_View.dart';
 import 'package:vision_dashboard/screens/Salary/SalaryView.dart';
 import 'package:vision_dashboard/screens/Settings/Setting_View.dart';
@@ -118,7 +117,7 @@ List<String> sexList = [
 List<String> jobList = [
   "اداري",
   "سائق",
-  "مدرس أخلاق(ابتدائي)",
+  "مدرس اسلامية(ابتدائي)",
   "مدرس علوم(ابتدائي)",
   "مدرس رياضيات(ابتدائي)",
   "مدرس دراسات اجتماعية(ابتدائي)",
@@ -126,10 +125,9 @@ List<String> jobList = [
   "مدرس Science(ابتدائي)",
   "مدرس عربي(ابتدائي)",
   "مدرس عربي",
-  "مدرس أخلاق",
+  "مدرس اسلامية",
   "مدرس علوم",
   "مدرس رياضيات",
-  "مدرس إسلامية",
   "مدرس دراسات اجتماعية",
   "مدرس فيزياء",
   "مدرس كيمياء",
@@ -143,6 +141,7 @@ List<String> jobList = [
   "مدرس Physics",
   "مدرس Biology",
   "مدرس لغة أجنبية"
+  "مدرس لغة فرنسية"
 ];
 
 List<({String name, String img, Widget widget})> allData = [
@@ -195,17 +194,7 @@ List<({String name, String img, Widget widget})> allData = [
   img: "assets/dashIcon/time.png",
   widget: EmployeeTimeView(),
   ),
-  (
-  name: "الامتحانات",
-  img: "assets/dashIcon/checklist.png",
-  widget: !(HiveDataBase.getAccountManagementModel()!.type != 'مستخدم')
-      ? Container(
-    child: Center(
-      child: Text("غير مسموح الوصول".tr),
-    ),
-  )
-      : ExamView(),
-  ),
+
   (
   name: "الموظفين",
   img: "assets/dashIcon/employee.png",

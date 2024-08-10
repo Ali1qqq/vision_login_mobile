@@ -66,8 +66,8 @@ class WaitManagementViewModel extends GetxController {
   }
 
   doReturnInstallment(WaitManagementModel waitModel) async {
-    await Get.find<StudentViewModel>().setInstallmentPay(
-        waitModel.affectedId, waitModel.relatedId.toString(), false,'');
+    await Get.find<ParentsViewModel>().setInstallmentPay(
+       installmentId:  waitModel.affectedId,parentId:  waitModel.relatedId.toString(),isPay:  false,imageUrl: '');
   }
 
   doDelete(WaitManagementModel waitModel) async {
@@ -210,12 +210,7 @@ class WaitManagementViewModel extends GetxController {
       await Get.find<EmployeeViewModel>()
           .setBus(waitModel.affectedId, waitModel.oldDate?['employees'] ?? []);
     }
-    if (waitModel.collectionName == examsCollection) {
-      await Get.find<StudentViewModel>().removeExam(
-          waitModel.affectedId, waitModel.newData!['marks'].keys.toList());
-      await Get.find<StudentViewModel>().addExamToStudent(
-          waitModel.oldDate!['marks'].keys.toList(), waitModel.affectedId);
-    }
+
 
     await FirebaseFirestore.instance
         .collection(waitModel.collectionName)

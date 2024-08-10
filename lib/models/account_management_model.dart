@@ -11,7 +11,7 @@ class EmployeeModel {
   Map<String, EmployeeTimeModel> employeeTime = {};
   String? mobileNumber, address, nationality, gender, age, jobTitle, contract, bus, startDate, salaryWithDelay, fullName;
   List<dynamic>? salaryReceived;
-  List<String>? idImages;
+  List<dynamic>? idImages;
   bool? available = false;
   List<EventRecordModel>? eventRecords;
 

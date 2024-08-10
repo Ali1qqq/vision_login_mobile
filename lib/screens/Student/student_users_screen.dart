@@ -6,7 +6,6 @@ import 'package:quickalert/models/quickalert_type.dart';
 import 'package:quickalert/widgets/quickalert_dialog.dart';
 import 'package:vision_dashboard/controller/Wait_management_view_model.dart';
 import 'package:vision_dashboard/models/Parent_Model.dart';
-import 'package:vision_dashboard/screens/Exams/controller/Exam_View_Model.dart';
 import 'package:vision_dashboard/screens/Parents/Controller/Parents_View_Model.dart';
 import 'package:vision_dashboard/screens/Student/Controller/Student_View_Model.dart';
 import 'package:vision_dashboard/screens/Student/student_user_details.dart';
@@ -16,7 +15,6 @@ import 'package:vision_dashboard/utils/Dialogs.dart';
 import '../../constants.dart';
 import '../../controller/home_controller.dart';
 import '../../core/Styling/app_style.dart';
-import '../../models/Student_Model.dart';
 
 import '../Widgets/Custom_Pluto_Grid.dart';
 
@@ -31,39 +29,9 @@ class StudentScreen extends StatefulWidget {
 }
 
 class _StudentScreenState extends State<StudentScreen> {
-  ExamViewModel exam = Get.find<ExamViewModel>();
 
   ParentsViewModel parent = Get.find<ParentsViewModel>();
- /*  final ScrollController _scrollController = ScrollController();
-  List data = [
-    "اسم الطالب",
-    "رقم الطالب",
-    "الجنس",
-    "الميلاد",
-    "الصف",
-    "الشعبة",
-    "تاريخ البداية",
-    "الحافلة",
-    "ولي الأمر",
-    "علامات الطالب",
-    "المعدل",
-    "الخيارات",
-    "",
-  ];
-  List filterData=[
-    "اسم الطالب",
-    "رقم الطالب",
-    "الجنس",
-    "الميلاد",
-    "الصف",
-    "الشعبة",
-    "تاريخ البداية",
-    "الحافلة",
-    "ولي الأمر",
-  ];
-  TextEditingController searchController = TextEditingController();
-  String searchValue = '';
-  int searchIndex = 0;*/
+
 
   String currentId = '';
 
@@ -222,26 +190,7 @@ class _StudentScreenState extends State<StudentScreen> {
                         SizedBox(
                           width: defaultPadding,
                         ),
-                        if(!getIfDelete())
-                        FloatingActionButton(
-                          backgroundColor:(controller.studentMap[currentId]!.stdExam?.isNotEmpty??false) ?primaryColor:Colors.grey.withOpacity(0.5),
-                          onPressed: () {
-                            if(controller.studentMap[currentId]!.stdExam?.isNotEmpty??false)
-                            showDialog(
-                              context: context,
-                              builder: (context) => Container(
-                                width: Get.width/2,
-                                height: Get.height/2,
-                                child: buildMarksAlertDialog(
-                                    controller.studentMap[currentId]!),
-                              ),
-                            );
-                          },
-                          child: Icon(
-                            Icons.collections_bookmark_outlined,
-                            color: Colors.white,
-                          ),
-                        ),
+
                       ],
                     ),
                 )
@@ -252,63 +201,7 @@ class _StudentScreenState extends State<StudentScreen> {
     });
   }
 
-  AlertDialog buildMarksAlertDialog(StudentModel student) {
-    return AlertDialog(
-      backgroundColor: secondaryColor,
-      content:    Container(
-        width: Get.width/3,
-        // height: Get.height/2,
-        child: ListView.builder(
-          shrinkWrap: true,
-          physics: ClampingScrollPhysics(),
-          itemBuilder: (context, index) {
-            return LayoutBuilder(
-              builder: (context, constraints) {
-                double width=constraints.maxWidth;
-                return Row(
-                  children: [
-                    SizedBox(
-                        width:width/4 ,
-                        child: Text("المادة: ",style: AppStyles.headLineStyle3,overflow: TextOverflow.ellipsis,)),
-                    SizedBox(
-                      width:width/4 ,
-                      child: Text(
-                          exam.examMap[student.stdExam![index]]!.subject!,
-                          style: AppStyles.headLineStyle2.copyWith(fontSize: 16),overflow: TextOverflow.ellipsis
-                      ),
-                    ),
 
-                    SizedBox(
-                      width:width/4 , child:  Text("العلامة: ",style: AppStyles.headLineStyle3,overflow: TextOverflow.ellipsis),),
-                    SizedBox(
-                      width:width/4 ,
-                      child: Text(
-                          "${(double.parse(exam.examMap[student.stdExam![index]]!.marks![student.studentID]!) * double.parse(exam.examMap[student.stdExam![index]]!.examMaxMark!)) / 100}",
-                          style: AppStyles.headLineStyle2.copyWith(fontSize: 16),overflow: TextOverflow.ellipsis
-                      ),
-                    ),
-                    // Spacer(),
-                  ],
-                );
-              }
-            );
-          },
-          itemCount: student.stdExam?.length ?? 0,
-        ),
-      ),
-      actions: [
-
-        Center(
-          child: AppButton(
-            text: "تم",
-            onPressed: () {
-              Get.back();
-            },
-          ),
-        )
-      ],
-    );
-  }
 
   AlertDialog buildParentAlertDialog(
       ParentModel parentModel) {
@@ -362,17 +255,6 @@ class _StudentScreenState extends State<StudentScreen> {
                           width: Get.width/12,child: Text("الجنسية: ",style: AppStyles.headLineStyle3.copyWith(color: Colors.white),maxLines: 1,overflow: TextOverflow.ellipsis)),
                       Text(
                         parentModel.nationality.toString(),
-                        style: AppStyles.headLineStyle2.copyWith(fontSize: 16),
-                      ),
-                    ],
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Container(
-                        width: Get.width/12,child:Text("العمر: ",style: AppStyles.headLineStyle3.copyWith(color: Colors.white),maxLines: 1,overflow: TextOverflow.ellipsis)),
-                      Text(
-                        parentModel.age.toString(),
                         style: AppStyles.headLineStyle2.copyWith(fontSize: 16),
                       ),
                     ],

@@ -13,6 +13,7 @@ import 'package:vision_dashboard/models/Parent_Model.dart';
 import 'package:vision_dashboard/models/TimeModel.dart';
 
 import '../../../core/Utils/service.dart';
+import '../../../models/Installment_model.dart';
 import '../../../models/event_model.dart';
 import '../../../models/event_record_model.dart';
 import '../../../utils/Dialogs.dart';
@@ -28,7 +29,6 @@ class ParentsViewModel extends GetxController {
   final numberController = TextEditingController();
   final addressController = TextEditingController();
   final nationalityController = TextEditingController();
-  final ageController = TextEditingController();
   final startDateController = TextEditingController();
   final motherPhoneNumberController = TextEditingController();
   final bodyEventController = TextEditingController();
@@ -36,6 +36,8 @@ class ParentsViewModel extends GetxController {
   final workController = TextEditingController();
   final editController = TextEditingController();
   final idNumController = TextEditingController();
+
+  Map<String, InstallmentModel> instalmentMap = {};
 
   List<EventRecordModel> eventRecords = [];
   EventModel? selectedEvent;
@@ -51,11 +53,11 @@ class ParentsViewModel extends GetxController {
     "الاسم الكامل": PlutoColumnType.text(),
     "العنوان": PlutoColumnType.text(),
     "الجنسية": PlutoColumnType.text(),
-    "العمر": PlutoColumnType.text(),
     "العمل": PlutoColumnType.text(),
     "تاريخ البداية": PlutoColumnType.text(),
     "رقم الام": PlutoColumnType.text(),
     "رقم الطوارئ": PlutoColumnType.text(),
+    "اجمالي الدفعات": PlutoColumnType.text(),
     "سجل الأحداث": PlutoColumnType.text(),
     "موافقة المدير": PlutoColumnType.text(),
   };
@@ -78,7 +80,7 @@ class ParentsViewModel extends GetxController {
 
   getAllParent() async {
     listener = await parentCollectionRef.snapshots().listen((value) {
-      selectedColor=secondaryColor;
+      selectedColor = secondaryColor;
       _parentMap.clear();
       plutoKey = GlobalKey();
       rows.clear();
@@ -91,11 +93,11 @@ class ParentsViewModel extends GetxController {
               data.keys.elementAt(1): PlutoCell(value: ParentModel.fromJson(element.data()).fullName),
               data.keys.elementAt(2): PlutoCell(value: ParentModel.fromJson(element.data()).address),
               data.keys.elementAt(3): PlutoCell(value: ParentModel.fromJson(element.data()).nationality),
-              data.keys.elementAt(4): PlutoCell(value: ParentModel.fromJson(element.data()).age),
-              data.keys.elementAt(5): PlutoCell(value: ParentModel.fromJson(element.data()).work),
-              data.keys.elementAt(6): PlutoCell(value: ParentModel.fromJson(element.data()).startDate),
-              data.keys.elementAt(7): PlutoCell(value: ParentModel.fromJson(element.data()).motherPhone),
-              data.keys.elementAt(8): PlutoCell(value: ParentModel.fromJson(element.data()).emergencyPhone),
+              data.keys.elementAt(4): PlutoCell(value: ParentModel.fromJson(element.data()).work),
+              data.keys.elementAt(5): PlutoCell(value: ParentModel.fromJson(element.data()).startDate),
+              data.keys.elementAt(6): PlutoCell(value: ParentModel.fromJson(element.data()).motherPhone),
+              data.keys.elementAt(7): PlutoCell(value: ParentModel.fromJson(element.data()).emergencyPhone),
+              data.keys.elementAt(8): PlutoCell(value: ParentModel.fromJson(element.data()).totalPayment),
               data.keys.elementAt(9): PlutoCell(value: ParentModel.fromJson(element.data()).eventRecords?.length ?? "0"),
               data.keys.elementAt(10): PlutoCell(value: ParentModel.fromJson(element.data()).isAccepted == true ? "تمت الموافقة".tr : "في انتظار الموافقة".tr),
             },
@@ -106,7 +108,9 @@ class ParentsViewModel extends GetxController {
       update();
     });
   }
-  Color selectedColor=secondaryColor;
+
+  Color selectedColor = secondaryColor;
+
   addParent(ParentModel parentModel) {
     parentCollectionRef.doc(parentModel.id).set(parentModel.toJson(), SetOptions(merge: true));
     update();
@@ -144,11 +148,11 @@ class ParentsViewModel extends GetxController {
               data.keys.elementAt(1): PlutoCell(value: ParentModel.fromJson(element.data()).fullName),
               data.keys.elementAt(2): PlutoCell(value: ParentModel.fromJson(element.data()).address),
               data.keys.elementAt(3): PlutoCell(value: ParentModel.fromJson(element.data()).nationality),
-              data.keys.elementAt(4): PlutoCell(value: ParentModel.fromJson(element.data()).age),
-              data.keys.elementAt(5): PlutoCell(value: ParentModel.fromJson(element.data()).work),
-              data.keys.elementAt(6): PlutoCell(value: ParentModel.fromJson(element.data()).startDate),
-              data.keys.elementAt(7): PlutoCell(value: ParentModel.fromJson(element.data()).motherPhone),
-              data.keys.elementAt(8): PlutoCell(value: ParentModel.fromJson(element.data()).emergencyPhone),
+              data.keys.elementAt(4): PlutoCell(value: ParentModel.fromJson(element.data()).work),
+              data.keys.elementAt(5): PlutoCell(value: ParentModel.fromJson(element.data()).startDate),
+              data.keys.elementAt(6): PlutoCell(value: ParentModel.fromJson(element.data()).motherPhone),
+              data.keys.elementAt(7): PlutoCell(value: ParentModel.fromJson(element.data()).emergencyPhone),
+              data.keys.elementAt(8): PlutoCell(value: ParentModel.fromJson(element.data()).totalPayment),
               data.keys.elementAt(9): PlutoCell(value: ParentModel.fromJson(element.data()).eventRecords?.length ?? "0"),
               data.keys.elementAt(10): PlutoCell(value: ParentModel.fromJson(element.data()).isAccepted == true ? "تمت الموافقة".tr : "في انتظار الموافقة".tr),
             },
@@ -160,6 +164,16 @@ class ParentsViewModel extends GetxController {
     });
   }
 
+  double getAllTotalPay() {
+    double total = 0.0;
+    _parentMap.values.forEach(
+      (element) {
+        total += element.totalPayment!;
+      },
+    );
+    return total;
+  }
+
   void deleteStudent(String parentId, String studentID) {
     _parentMap[parentId]!.children!.removeWhere(
           (element) => element == studentID,
@@ -167,20 +181,43 @@ class ParentsViewModel extends GetxController {
     parentCollectionRef.doc(parentId).set({"children": _parentMap[parentId]!.children!}, SetOptions(merge: true));
   }
 
+  int installmentCount = 0;
+  List<TextEditingController> monthsController = [];
+  List<TextEditingController> costsController = [];
+
   initController() {
+    parent = parentMap[currentId];
     if (parent != null) {
+      payWay = parent!.paymentWay ?? '';
       fullNameController.text = parent!.fullName.toString();
       numberController.text = parent!.phoneNumber.toString();
       addressController.text = parent!.address.toString();
       nationalityController.text = parent!.nationality.toString();
-      ageController.text = parent!.age.toString();
       startDateController.text = parent!.startDate.toString();
       motherPhoneNumberController.text = parent!.motherPhone.toString();
       emergencyPhoneController.text = parent!.emergencyPhone.toString();
       workController.text = parent!.work.toString();
       eventRecords = parent!.eventRecords ?? [];
       idNumController.text = parent!.parentID ?? '';
+      instalmentMap = parent!.installmentRecords!;
+      monthsController = List.generate(
+        parent?.installmentRecords?.values.length ?? 0,
+        (index) => TextEditingController()..text = parent!.installmentRecords!.values.elementAt(index).installmentDate.toString(),
+      );
+      costsController = List.generate(
+        parent?.installmentRecords?.length ?? 0,
+        (index) => TextEditingController()..text = parent!.installmentRecords!.values.elementAt(index).installmentCost.toString(),
+      );
     }
+    update();
+  }
+
+  addInstalment() {
+    String installmentId = generateId("INSTALLMENT");
+    instalmentMap[installmentId] = InstallmentModel(installmentId: installmentId, installmentCost: "0", installmentDate: DateTime.now().month.toString().padLeft(2, "0"), isPay: false);
+    monthsController.add(TextEditingController()..text = instalmentMap[installmentId]!.installmentDate.toString());
+    costsController.add(TextEditingController()..text = instalmentMap[installmentId]!.installmentCost.toString());
+    update();
   }
 
   Future<void> saveParentData(BuildContext context) async {
@@ -191,7 +228,6 @@ class ParentsViewModel extends GetxController {
         numberController,
         addressController,
         nationalityController,
-        ageController,
         numberController,
         startDateController,
         motherPhoneNumberController,
@@ -201,7 +237,6 @@ class ParentsViewModel extends GetxController {
       ],
       numericControllers: [
         numberController,
-        ageController,
         motherPhoneNumberController,
         idNumController,
       ],
@@ -213,10 +248,18 @@ class ParentsViewModel extends GetxController {
     try {
       // تحميل الصور
       List<String> uploadedContracts = await uploadImages(contractsTemp, "contracts");
+      for (int index = 0; index < monthsController.length; index++) {
+        String insId = parent != null ? parent!.installmentRecords!.values.toList()[index].installmentId! : generateId("INSTALLMENT");
+        instalmentMap[insId] = InstallmentModel(
+          installmentCost: costsController[index].text,
+          installmentDate: monthsController[index].text,
+          installmentId: insId,
+          isPay: parent != null ? parent!.installmentRecords!.values.toList()[index].isPay! : false,
+        );
+      }
       contracts.addAll(uploadedContracts);
 
       ParentModel parentModel = ParentModel(
-        age: ageController.text,
         nationality: nationalityController.text,
         contract: contracts,
         isAccepted: parent == null ? true : false,
@@ -231,6 +274,8 @@ class ParentsViewModel extends GetxController {
         eventRecords: eventRecords,
         startDate: startDateController.text,
         children: parent == null ? null : parent!.children,
+        paymentWay: payWay,
+        installmentRecords: instalmentMap,
       );
 
       // إضافة عملية الانتظار إذا كانت العملية تحديث
@@ -260,14 +305,22 @@ class ParentsViewModel extends GetxController {
     }
   }
 
-  void clearController() {
+  String payWay = '';
+
+  final List<String> payWays = [
+    'كاش',
+    'اقساط',
+    'كريدت',
+  ];
+
+  clearController() {
     parent = null;
     currentId = '';
+    payWay = '';
     fullNameController.clear();
     numberController.clear();
     addressController.clear();
     nationalityController.clear();
-    ageController.clear();
     startDateController.clear();
     motherPhoneNumberController.clear();
     bodyEventController.clear();
@@ -279,6 +332,12 @@ class ParentsViewModel extends GetxController {
     selectedEvent = null;
     contracts = [];
     contractsTemp = [];
+    monthsController.clear();
+    costsController.clear();
+    monthsController.clear();
+    costsController.clear();
+    instalmentMap = {};
+    addInstalment();
   }
 
   String currentId = '';
@@ -290,7 +349,7 @@ class ParentsViewModel extends GetxController {
   bool isAdd = false;
 
   void addEventRecord() async {
-    final value= TimesModel.fromDateTime(DateTime.now());
+    final value = TimesModel.fromDateTime(DateTime.now());
     eventRecords.add(EventRecordModel(
       body: bodyEventController.text,
       type: selectedEvent!.name,
@@ -299,32 +358,127 @@ class ParentsViewModel extends GetxController {
     ));
     bodyEventController.clear();
     update();
-    }
+  }
 
-  void showParentInputDialog(
-    BuildContext context,
-  ) {
-    parent = parentMap[currentId];
+  double getAllReceivePay() {
+    double total = 0;
+    _parentMap.values.forEach(
+      (element) {
+        element.installmentRecords!.values.forEach(
+          (element0) {
+            if (element0.isPay == true) {
+              total += int.parse(element0.installmentCost!);
+            }
+          },
+        );
+      },
+    );
+
+    return total;
+  }
+
+  showParentInputDialog(BuildContext context) async {
     initController();
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        return Dialog(
-          backgroundColor: Colors.white,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(25.0),
-          ),
-          child: Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(25.0),
-            ),
-            height: Get.height / 2,
-            width: Get.width / 1.5,
-            child: ParentInputForm(),
-          ),
+        return ClipRRect(
+          borderRadius: BorderRadius.circular(25),
+          child: Dialog(
+              clipBehavior: Clip.hardEdge,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(25),
+              ),
+              child: ParentInputForm()),
         );
       },
     );
+  }
+
+  int getAllNunReceivePay() {
+    int total = 0;
+    _parentMap.values.forEach(
+      (element) {
+        element.installmentRecords!.values.forEach(
+          (element0) {
+            if (element0.isPay != true) {
+              total += int.parse(element0.installmentCost!);
+            }
+          },
+        );
+      },
+    );
+    return total;
+  }
+
+  int getAllNunReceivePayThisMonth() {
+    int total = 0;
+    _parentMap.values.forEach(
+      (element) {
+        element.installmentRecords!.values.forEach(
+          (element0) {
+            if (int.parse(element0.installmentDate!) <= thisTimesModel!.month && element0.isPay != true) {
+              total += int.parse(element0.installmentCost!);
+            }
+          },
+        );
+      },
+    );
+    return total;
+  }
+
+  double getAllReceiveMaxPay() {
+    double total = 0;
+    _parentMap.values.forEach(
+      (element) {
+        element.installmentRecords!.values.forEach(
+          (element0) {
+            if (element0.isPay == true) {
+              if (int.parse(element0.installmentCost!) > total) total = int.parse(element0.installmentCost!) * 1.0;
+            }
+          },
+        );
+      },
+    );
+    return total + 50000;
+  }
+
+  double getAllReceivePayAtMonth(String month) {
+    double total = 0;
+    _parentMap.values.forEach(
+      (element) {
+        element.installmentRecords!.values.forEach(
+          (element0) {
+            if (element0.installmentDate! == month && element0.isPay == true) {
+              total += int.parse(element0.installmentCost!);
+            }
+          },
+        );
+      },
+    );
+    return total;
+  }
+
+  setInstallmentPay({required String installmentId, required String parentId, required bool isPay, required String imageUrl}) async {
+    // DateTime dateTime= await NTP.now();
+    TimesModel timesModel = TimesModel.fromDateTime(DateTime.now());
+    Map<String, InstallmentModel>? installmentRecords = _parentMap[parentId]!.installmentRecords;
+    installmentRecords![installmentId]!.isPay = isPay;
+    installmentRecords[installmentId]!.InstallmentImage = imageUrl;
+    installmentRecords[installmentId]!.payTime = timesModel.dateTime.toString();
+    parentCollectionRef.doc(parentId).set(ParentModel(installmentRecords: installmentRecords).toJson(), SetOptions(merge: true));
+  }
+
+  bool chekaIfHaveLateInstallment(String parentId) {
+    bool isLate = false;
+    _parentMap[parentId]!.installmentRecords!.entries.forEach(
+      (element) {
+        if (int.parse(element.value.installmentDate!) <= DateTime.now().month && element.value.isPay != true) {
+          isLate = true;
+        }
+      },
+    );
+    return isLate;
   }
 
   Future<void> showDeleteConfirmationDialog(WaitManagementViewModel _, BuildContext context) async {

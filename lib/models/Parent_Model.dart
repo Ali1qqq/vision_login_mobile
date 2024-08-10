@@ -1,26 +1,16 @@
-
-
-
+import 'Installment_model.dart';
 import 'event_record_model.dart';
 
-
 class ParentModel {
-  String? fullName,
-      parentID,
-      address,
-      phoneNumber,
-      motherPhone,
-      emergencyPhone,age,
-  id,
-  nationality,startDate,
-      work;
-bool? isAccepted;
-  List<dynamic>? children,contract;
+  String? fullName, parentID, address, phoneNumber, motherPhone, emergencyPhone, paymentWay, id, nationality, startDate, work;
+  bool? isAccepted;
+  List<dynamic>? children, contract;
   List<EventRecordModel>? eventRecords;
+  Map<String, InstallmentModel>? installmentRecords = {};
+  int? totalPayment=0;
 
   ParentModel({
     this.id,
-    this.age,
     this.fullName,
     this.address,
     this.phoneNumber,
@@ -33,52 +23,56 @@ bool? isAccepted;
     this.nationality,
     this.contract,
     this.isAccepted,
-
+    this.installmentRecords,
+    this.paymentWay,
+    this.totalPayment,
     this.children,
   });
 
-
   Map<String, dynamic> toJson() {
     return {
-      if(startDate!=null)   'startDate':startDate,
-      if(fullName!=null)   'fullName': fullName,
-      if(parentID!=null)    'parentID': parentID,
-      if(address!=null)  'address': address,
-      if(nationality!=null)  'nationality':nationality,
-      if(phoneNumber!=null)   'phoneNumber': phoneNumber,
-      if(motherPhone!=null)    'motherPhone': motherPhone,
-      if(emergencyPhone!=null)    'emergencyPhone': emergencyPhone,
-      if(work!=null)    'work': work,
-      if(id!=null)      'id':id,
-      if(age!=null)     'age':age,
-      if(contract!=null)     'contract':contract,
-      if(children!=null)    'children':children,
-      if(isAccepted!=null)    'isAccepted':isAccepted,
-      if(eventRecords!=null)   'eventRecords': eventRecords?.map((event) => event.toJson()).toList()??[],
+      if (startDate != null) 'startDate': startDate,
+      if (fullName != null) 'fullName': fullName,
+      if (parentID != null) 'parentID': parentID,
+      if (address != null) 'address': address,
+      if (nationality != null) 'nationality': nationality,
+      if (phoneNumber != null) 'phoneNumber': phoneNumber,
+      if (motherPhone != null) 'motherPhone': motherPhone,
+      if (emergencyPhone != null) 'emergencyPhone': emergencyPhone,
+      if (work != null) 'work': work,
+      if (id != null) 'id': id,
+      if (contract != null) 'contract': contract,
+      if (children != null) 'children': children,
+      if (installmentRecords != null) 'installmentRecords': Map.fromEntries(installmentRecords!.entries.map((e) => MapEntry(e.key, e.value.toJson())).toList()),
+      if (isAccepted != null) 'isAccepted': isAccepted,
+      if (eventRecords != null) 'eventRecords': eventRecords?.map((event) => event.toJson()).toList() ?? [],
+      if (paymentWay != null) 'paymentWay': paymentWay,
     };
   }
 
   // Method to create ParentModel instance from JSON
-  factory ParentModel.fromJson(Map<String, dynamic> json) {
-    return ParentModel(
-      fullName: json['fullName']??'',
-      parentID: json['parentID']??'',
-      address: json['address']??'',
-      age:json['age']??'',
-      isAccepted:json['isAccepted']??true,
-      startDate:json['startDate']??'',
-      nationality: json['nationality']??'',
-      phoneNumber: json['phoneNumber']??'',
-      motherPhone: json['motherPhone']??'',
-      emergencyPhone: json['emergencyPhone']??'',
-      work: json['work']??'',
-      id: json['id']??'',
-      contract: json['contract']??[],
-      children: json['children']??[],
-      eventRecords: (json['eventRecords'] as List<dynamic>?)
-          ?.map((event) => EventRecordModel.fromJson(event))
-          .toList(),
-    );
+  ParentModel.fromJson(Map<String, dynamic> json) {
+    {
+      fullName = json['fullName'] ?? '';
+      parentID = json['parentID'] ?? '';
+      address = json['address'] ?? '';
+      isAccepted = json['isAccepted'] ?? true;
+      startDate = json['startDate'] ?? '';
+      nationality = json['nationality'] ?? '';
+      phoneNumber = json['phoneNumber'] ?? '';
+      motherPhone = json['motherPhone'] ?? '';
+      emergencyPhone = json['emergencyPhone'] ?? '';
+      work = json['work'] ?? '';
+      id = json['id'] ?? '';
+      (json['installmentRecords'] ?? {}).forEach((k, v) {
+        installmentRecords![k] = InstallmentModel.fromJson(v);
+        totalPayment= totalPayment!+int.parse(InstallmentModel.fromJson(v).installmentCost!);
+      });
+      contract = json['contract'] ?? [];
+      children = json['children'] ?? [];
+      eventRecords = (json['eventRecords'] as List<dynamic>?)?.map((event) => EventRecordModel.fromJson(event)).toList();
+    }
+    paymentWay = json['paymentWay'] ?? '';
   }
 
   @override
@@ -86,5 +80,3 @@ bool? isAccepted;
     return 'ParentModel{fullName: $fullName, parentID: $parentID, address: $address, phoneNumber: $phoneNumber, mPhoneNumber: $motherPhone, emergencyPhone: $emergencyPhone, work: $work, eventRecords: $eventRecords}';
   }
 }
-
-

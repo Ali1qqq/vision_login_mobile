@@ -6,7 +6,6 @@ import 'package:quickalert/models/quickalert_type.dart';
 import 'package:quickalert/widgets/quickalert_dialog.dart';
 import 'package:vision_dashboard/controller/Wait_management_view_model.dart';
 import 'package:vision_dashboard/core/Styling/app_style.dart';
-import 'package:vision_dashboard/models/Installment_model.dart';
 
 import 'package:vision_dashboard/models/Student_Model.dart';
 import 'package:vision_dashboard/models/event_record_model.dart';
@@ -36,17 +35,9 @@ class StudentInputForm extends StatefulWidget {
 }
 
 class _StudentInputFormState extends State<StudentInputForm> {
-  String _payWay = '';
   EventModel? selectedEvent = EventModel(name: "name", id: "id", role: "role", color: 0);
   TextEditingController bodyEvent = TextEditingController();
 
-  Map<String, InstallmentModel> instalmentMap = {};
-
-  final List<String> _payWays = [
-    'كاش',
-    'اقساط',
-    'كريدت',
-  ];
   final studentNameController = TextEditingController();
   final studentNumberController = TextEditingController();
 
@@ -61,9 +52,7 @@ class _StudentInputFormState extends State<StudentInputForm> {
   final guardianController = TextEditingController();
   final languageController = TextEditingController();
   final editController = TextEditingController();
-  final totalPaymentController = TextEditingController();
-  List<TextEditingController> monthsController = [];
-  List<TextEditingController> costsController = [];
+  final gpaController = TextEditingController()..text = "0";
 
   List<EventRecordModel> eventRecords = [];
   String parentName = '';
@@ -74,12 +63,6 @@ class _StudentInputFormState extends State<StudentInputForm> {
 
   String busValue = '';
 
-  addInstalment() {
-    installmentCount++;
-    monthsController.add(TextEditingController());
-    costsController.add(TextEditingController());
-  }
-
   @override
   void initState() {
     // TODO: implement initState
@@ -89,14 +72,12 @@ class _StudentInputFormState extends State<StudentInputForm> {
 
   init() {
     if (widget.studentModel != null) {
-      _payWay = widget.studentModel!.paymentWay ?? '';
-      instalmentMap = widget.studentModel!.installmentRecords ?? {};
       studentNameController.text = widget.studentModel!.studentName ?? '';
       studentNumberController.text = widget.studentModel!.studentNumber ?? '';
       busController.text = widget.studentModel!.bus ?? '';
       busValue = Get.find<BusViewModel>().busesMap[widget.studentModel!.bus]?.name ?? widget.studentModel!.bus!;
       genderController.text = widget.studentModel!.gender ?? '';
-
+      gpaController.text = widget.studentModel!.grade.toString();
       ageController.text = widget.studentModel!.StudentBirthDay ?? '';
       classController.text = widget.studentModel!.stdClass ?? '';
       startDateController.text = widget.studentModel!.startDate ?? '';
@@ -104,51 +85,30 @@ class _StudentInputFormState extends State<StudentInputForm> {
       guardianController.text = widget.studentModel!.parentId!;
       parentName = Get.find<ParentsViewModel>().parentMap[widget.studentModel!.parentId!]?.fullName ?? "";
       languageController.text = widget.studentModel!.stdLanguage ?? '';
-      totalPaymentController.text = widget.studentModel!.totalPayment.toString();
-      installmentCount = widget.studentModel?.installmentRecords?.values.length ?? 0;
 
-      print(widget.studentModel?.installmentRecords?.values.length);
-      monthsController = List.generate(
-        widget.studentModel?.installmentRecords?.values.length ?? 0,
-        (index) => TextEditingController()..text = widget.studentModel!.installmentRecords!.values.elementAt(index).installmentDate.toString(),
-      );
-      costsController = List.generate(
-        widget.studentModel?.installmentRecords?.length ?? 0,
-        (index) => TextEditingController()..text = widget.studentModel!.installmentRecords!.values.elementAt(index).installmentCost.toString(),
-      );
       eventRecords = widget.studentModel!.eventRecords ?? [];
       _contracts = widget.studentModel!.contractsImage ?? [];
-    } else {
-      addInstalment();
     }
   }
-
-  int installmentCount = 0;
 
   clearController() async {
     eventRecords.clear();
     studentNameController.clear();
     studentNumberController.clear();
     genderController.text = '';
-    _payWay = '';
     ageController.clear();
     classController.clear();
     startDateController.clear();
     busController.clear();
     guardianController.clear();
-    monthsController.clear();
-    costsController.clear();
-    totalPaymentController.clear();
+    gpaController.text = "0";
     endDateController.clear();
     parentName = '';
     languageController.text = '';
     busValue = '';
     _contracts.clear();
     _contractsTemp.clear();
-    installmentCount = 0;
-    monthsController.clear();
-    costsController.clear();
-    await addInstalment();
+
     setState(() {});
   }
 
@@ -267,7 +227,7 @@ class _StudentInputFormState extends State<StudentInputForm> {
                                 (e) => e.name!,
                               )
                               .toList() +
-                          ['بدون حافلة'],
+                          ['بدون حافلة', 'مع حافلة'],
                       label: 'الحافلة'.tr,
                       onChange: (value) {
                         if (value != null) {
@@ -286,44 +246,17 @@ class _StudentInputFormState extends State<StudentInputForm> {
                         }
                       },
                     ),
-                    CustomTextField(controller: totalPaymentController, title: 'مبلغ التسجيل'.tr, keyboardType: TextInputType.phone),
-                    CustomDropDown(
-                      value: _payWay.tr,
-                      listValue: _payWays
-                          .map(
-                            (e) => e.toString().tr,
-                          )
-                          .toList(),
-                      label: "طريقة الدفع".tr,
-                      onChange: (selectedWay) async {
-                        if (selectedWay != null) {
-                          _payWay = selectedWay;
-                          if (selectedWay != 'اقساط'.tr) {
-                            monthsController[0].text = DateTime.now().month.toString().padLeft(2, "0");
-                            costsController.first = totalPaymentController;
-                            print(monthsController[0].text);
-                          } else {
-                            monthsController[0].text = '';
-                            costsController.first = TextEditingController();
-                          }
-
-                          /*  if (selectedWay == 'اقساط'.tr) {
-                          _payWay = selectedWay;
-
-                          await addInstalment();
-
-                          setState(() {});
-                        } else {
-                          _payWay = selectedWay;
-                          installmentCount = 0;
-                          monthsController.clear();
-                          costsController.clear();
-                          setState(() {});
-                        }*/
-                        }
-                        setState(() {});
-                      },
-                    ),
+                    if (widget.studentModel != null)
+                      CustomTextField(
+                        controller: gpaController,
+                        title: 'المعدل'.tr,
+                        enable: true,
+                        keyboardType: TextInputType.datetime,
+                        icon: Icon(
+                          Icons.date_range_outlined,
+                          color: primaryColor,
+                        ),
+                      ),
                     InkWell(
                       onTap: () {
                         showDatePicker(
@@ -371,117 +304,6 @@ class _StudentInputFormState extends State<StudentInputForm> {
                           ),
                         ),
                       ),
-                    SizedBox(
-                      width: Get.width / 2,
-                      child: Column(
-                        children: [
-                          SizedBox(height: defaultPadding * 2),
-                          Text('سجل الدفعات:'.tr, style: AppStyles.headLineStyle1),
-                          SizedBox(
-                            height: defaultPadding,
-                          ),
-                          Container(
-                            alignment: Alignment.center,
-                            child: ListView.builder(
-                              padding: EdgeInsets.zero,
-                              shrinkWrap: true,
-                              itemCount: installmentCount,
-                              itemBuilder: (context, index) {
-                                bool cantEdite = widget.studentModel != null ? widget.studentModel!.installmentRecords!.values.toList()[index].isPay ?? false : false;
-                                return Padding(
-                                  padding: const EdgeInsets.symmetric(vertical: 8.0),
-                                  child: Container(
-                                    decoration: BoxDecoration(color: Colors.white.withOpacity(0.5), borderRadius: BorderRadius.circular(15), border: Border.all(width: 2.0, color: primaryColor)),
-                                    child: Padding(
-                                      padding: const EdgeInsets.symmetric(vertical: 14.0, horizontal: 10),
-                                      child: Row(
-                                        children: [
-                                          Spacer(),
-                                          cantEdite
-                                              ? CustomTextField(
-                                                  enable: !cantEdite,
-                                                  isFullBorder: !cantEdite,
-                                                  controller: TextEditingController()
-                                                    ..text = months.entries
-                                                            .where(
-                                                              (element) => element.value == monthsController[index].text,
-                                                            )
-                                                            .firstOrNull
-                                                            ?.key ??
-                                                        '',
-                                                  title: "الشهر".tr,
-                                                  size: Get.width / 5.5,
-                                                  keyboardType: TextInputType.number,
-                                                )
-                                              : CustomDropDown(
-                                                  value: months.entries
-                                                          .where(
-                                                            (element) {
-                                                              if (monthsController.isEmpty) return false;
-                                                              return element.value == monthsController[index].text;
-                                                            },
-                                                          )
-                                                          .firstOrNull
-                                                          ?.key ??
-                                                      '',
-                                                  listValue: months.keys.map((e) => e.toString()).toList(),
-                                                  label: "الشهر".tr,
-                                                  size: Get.width / 5.5,
-                                                  isFullBorder: true,
-                                                  onChange: (value) {
-                                                    if (value != null) {
-                                                      monthsController[index].text = months[value]!;
-                                                    }
-                                                  },
-                                                ),
-                                          Spacer(),
-                                          CustomTextField(
-                                            enable: !cantEdite,
-                                            controller: costsController[index],
-                                            title: "الدفعة".tr,
-                                            size: Get.width / 5.5,
-                                            keyboardType: TextInputType.number,
-                                          ),
-                                          Spacer(),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                );
-                              },
-                            ),
-                          ),
-                          IconButton(
-                              onPressed: () {
-                                addInstalment();
-                                setState(() {});
-                              },
-                              icon: Row(
-                                children: [
-                                  Icon(
-                                    Icons.add,
-                                    color: Colors.blue,
-                                  ),
-                                  Text(
-                                    "اضافة".tr,
-                                    style: AppStyles.headLineStyle3,
-                                  ),
-                                ],
-                              )),
-                          SizedBox(
-                            height: defaultPadding,
-                          ),
-                          /*   GetBuilder<StudentViewModel>(builder: (controller) {
-                            return AppButton(
-                              text: "حفظ".tr,
-                              onPressed: () async {
-                                save(controller);
-                              },
-                            );
-                          }),*/
-                        ],
-                      ),
-                    ),
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -570,16 +392,6 @@ class _StudentInputFormState extends State<StudentInputForm> {
                     }),
                   ],
                 )),
-/*            Container(
-              padding: EdgeInsets.all(16.0),
-              alignment: Alignment.center,
-              decoration: BoxDecoration(
-                color: secondaryColor,
-                borderRadius: BorderRadius.circular(15),
-              ),
-              child:,
-            ),*/
-
             if (widget.studentModel != null) ...[
               SizedBox(
                 height: defaultPadding,
@@ -673,18 +485,15 @@ class _StudentInputFormState extends State<StudentInputForm> {
                                     ),
                                     Spacer(),
                                     IconButton(
-                                      onPressed: (){
+                                      onPressed: () {
                                         eventRecords.removeAt(index);
-                                        setState(() {
-
-                                        });
+                                        setState(() {});
                                       },
-                                        icon: Icon(
+                                      icon: Icon(
                                         Icons.delete,
                                         color: primaryColor,
                                       ),
                                     ),
-
                                   ],
                                 ),
                               ),
@@ -718,15 +527,6 @@ class _StudentInputFormState extends State<StudentInputForm> {
   save(StudentViewModel controller) async {
     if (validateFields(requiredControllers: [], numericControllers: [])) {
       QuickAlert.show(width: Get.width / 2, context: context, type: QuickAlertType.loading, title: 'جاري التحميل'.tr, text: 'يتم العمل على الطلب'.tr, barrierDismissible: false);
-      for (int index = 0; index < monthsController.length; index++) {
-        String insId = widget.studentModel != null ? widget.studentModel!.installmentRecords!.values.toList()[index].installmentId! : generateId("INSTALLMENT");
-        instalmentMap[insId] = InstallmentModel(
-          installmentCost: costsController[index].text,
-          installmentDate: monthsController[index].text,
-          installmentId: insId,
-          isPay: widget.studentModel != null ? widget.studentModel!.installmentRecords!.values.toList()[index].isPay! : false,
-        );
-      }
 
       await uploadImages(_contractsTemp, "contracts").then(
         (value) => _contracts.addAll(value),
@@ -742,17 +542,13 @@ class _StudentInputFormState extends State<StudentInputForm> {
         studentName: studentNameController.text,
         stdClass: classController.text,
         contractsImage: _contracts,
-        paymentWay: _payWay,
-        totalPayment: int.parse(totalPaymentController.text),
         gender: genderController.text,
-        grade: 0.0,
+        grade: double.parse(gpaController.text),
         bus: busController.text,
         startDate: startDateController.text,
         endDate: endDateController.text,
         eventRecords: eventRecords,
-        installmentRecords: instalmentMap,
       );
-      if (busController.text.startsWith("BUS")) await Get.find<BusViewModel>().addStudent(busController.text, student.studentID!);
       if (widget.studentModel != null) {
         addWaitOperation(collectionName: studentCollection, affectedId: widget.studentModel!.studentID!, type: waitingListTypes.edite, oldData: widget.studentModel!.toJson(), newData: student.toJson(), details: editController.text);
 
