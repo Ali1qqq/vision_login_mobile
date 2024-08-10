@@ -44,8 +44,10 @@ class _LogoutViewState extends State<LogoutView> {
               children: [
                 Spacer(),
                 AppButton(text: "نعم".tr, onPressed: (){
-
-                  HiveDataBase.deleteUserData();
+                  HiveDataBase.accountBox.clear();
+                  HiveDataBase.accountManagementBox.clear();
+                  HiveDataBase.setCurrentScreen("0");
+                  HiveDataBase.init();
                   Get.offAll(LoginScreen());
 
                 }),

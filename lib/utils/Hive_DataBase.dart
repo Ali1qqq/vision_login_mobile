@@ -55,22 +55,20 @@ salary: salary,
 
 
 
-
-
   static setCurrentScreen(String currentScreen) async {
     await accountBox.put("currentScreen", currentScreen);
     return true;
   }
 
-  static deleteUserData() {
-    accountManagementBox.deleteFromDisk();
-    accountBox.delete("mobile");
-    accountBox.delete("name");
-    accountBox.delete("gender");
-    accountBox.delete("email");
-    accountBox.delete("licenseImage");
-    accountBox.delete("passport");
-  }
+  // static deleteUserData() {
+  //   HiveDataBase.accountBox.clear();
+  //   accountBox.delete("mobile");
+  //   accountBox.delete("name");
+  //   accountBox.delete("gender");
+  //   accountBox.delete("email");
+  //   accountBox.delete("licenseImage");
+  //   accountBox.delete("passport");
+  // }
 
 
   static Future<void> setAccountManagementModel(EmployeeModel model) async {
@@ -87,6 +85,7 @@ salary: salary,
 
 
   static Future<void> deleteAccountManagementModel() async {
+    // HiveDataBase.accountManagementBox.clear();
     await accountManagementBox.delete("accountManagement");
   }
 }

@@ -32,7 +32,21 @@ import '../../../models/event_record_model.dart';
 import '../../../utils/Hive_DataBase.dart';
 import '../../../utils/To_AR.dart';
 import '../../../controller/nfc/conditional_import.dart';
+import '../../Buses/Buses_View.dart';
+import '../../Parents/Parents_View.dart';
+import '../../Salary/SalaryView.dart';
+import '../../Settings/Setting_View.dart';
+import '../../Store/Store_View.dart';
+import '../../Student/Student_view_Screen.dart';
+import '../../Study Fees/Study_Fees_View.dart';
+import '../../classes/classes_view.dart';
+import '../../dashboard/dashboard_screen.dart';
+import '../../employee_time/employee_time.dart';
+import '../../event/event_view_screen.dart';
+import '../../expenses/expenses_view_screen.dart';
+import '../../logout/logout_View.dart';
 import '../Edite_Add_Employee/Employee_user_details.dart';
+import '../Employee_View.dart';
 
 enum UserManagementStatus {
   first,
@@ -80,14 +94,11 @@ class EmployeeViewModel extends GetxController {
   ///pluto header
   List<PlutoColumn> columns = [];
 
-
   /// this for image already have in Edite Expenses model
   List imageLinkList = [];
 
-
   /// this for image upload from user (we save it temporary before we upload it )
   List<Uint8List> imagesTempData = [];
-
 
   /// pluto data
   List<PlutoRow> rows = [];
@@ -118,6 +129,7 @@ class EmployeeViewModel extends GetxController {
   EmployeeViewModel() {
     getColumns();
     getAllEmployee();
+    getScreens();
   }
 
   bool getIfDelete() {
@@ -127,14 +139,13 @@ class EmployeeViewModel extends GetxController {
   /// Refresh pluto header when change language
   getColumns() {
     columns.clear();
-    if (HiveDataBase.getAccountManagementModel()?.type != "مالك") data.remove("كامة السر");
 
     columns.addAll(toAR(data));
   }
 
   /// we use this for cancel listener
   late StreamSubscription<QuerySnapshot<EmployeeModel>> listener;
-  Color selectedColor=secondaryColor;
+  Color selectedColor = secondaryColor;
 
   getAllEmployee() {
     listener = accountManagementFireStore.snapshots().listen(
@@ -142,10 +153,10 @@ class EmployeeViewModel extends GetxController {
         isLoading = false;
         update();
         await Get.find<BusViewModel>().getAllWithoutListenBuse();
-        selectedColor=secondaryColor;
+        selectedColor = secondaryColor;
         plutoKey = GlobalKey();
         rows.clear();
-        int index = HiveDataBase.getAccountManagementModel()?.type == "مالك" ? 4 : 3;
+        int index = 4;
         allAccountManagement = Map<String, EmployeeModel>.fromEntries(event.docs.toList().map((i) {
           rows.add(
             PlutoRow(
@@ -153,7 +164,7 @@ class EmployeeViewModel extends GetxController {
                 data.keys.elementAt(0): PlutoCell(value: i.id),
                 data.keys.elementAt(1): PlutoCell(value: i.data().userName),
                 data.keys.elementAt(2): PlutoCell(value: i.data().fullName),
-                if (HiveDataBase.getAccountManagementModel()?.type == "مالك") data.keys.elementAt(3): PlutoCell(value: i.data().password),
+                data.keys.elementAt(3): PlutoCell(value: HiveDataBase.getAccountManagementModel()?.type == "مالك" ? i.data().password : ''),
                 data.keys.elementAt(index): PlutoCell(value: i.data().type),
                 data.keys.elementAt(index + 1): PlutoCell(value: i.data().isActive == true ? "فعال".tr : "غير فعال".tr),
                 data.keys.elementAt(index + 2): PlutoCell(value: i.data().mobileNumber),
@@ -241,7 +252,6 @@ class EmployeeViewModel extends GetxController {
 
   adReceiveSalary(String accountId, String paySalary, String salaryDate, String constSalary, String dilaySalary, bytes) async {
     String fileName = 'signatures/$accountId/$salaryDate.png';
-
     uploadImage(bytes, fileName).then(
       (value) async {
         if (value != Error) {
@@ -286,45 +296,119 @@ class EmployeeViewModel extends GetxController {
   String? password;
   String? serialNFC;
   EmployeeModel? myUserModel;
-  UserManagementStatus? userStatus;
+
+
+  getScreens(){
+    if (myUserModel?.type == "مستخدم") {
+
+      initDashboard([
+        (
+        name: "الدوام",
+        img: "assets/dashIcon/time.png",
+        widget: EmployeeTimeView(),
+        ),
+        (
+        name: "تسجيل الخروج",
+        img: "assets/dashIcon/logout.png",
+        widget: LogoutView(),
+        ),
+      ]);
+    } else {
+      initDashboard([
+        (
+        name: "لوحة التحكم",
+        img: "assets/dashIcon/dash.png",
+        widget: DashboardScreen(),
+        ),
+        (
+        name: "أولياء الامور",
+        img: "assets/dashIcon/family (1).png",
+        widget: ParentsView(),
+        ),
+        (
+        name: "الطلاب",
+        img: "assets/dashIcon/student.png",
+        widget: StudentView(),
+        ),
+        (
+        name: "الصفوف",
+        img: "assets/dashIcon/class.png",
+        widget: ClassesView(),
+        ),
+        (
+        name: "الدوام",
+        img: "assets/dashIcon/time.png",
+        widget: EmployeeTimeView(),
+        ),
+        (
+        name: "الموظفين",
+        img: "assets/dashIcon/employee.png",
+        widget: EmployeeView(),
+        ),
+        (
+        name: "الرواتب",
+        img: "assets/dashIcon/salary.png",
+        widget: SalaryView(),
+        ),
+        (
+        name: "الحافلات",
+        img: "assets/dashIcon/bus.png",
+        widget: BusesView(),
+        ),
+        (
+        name: "الرسوم الدراسية",
+        img: "assets/dashIcon/accounting.png",
+        widget: StudyFeesView(),
+        ),
+        (
+        name: "الأحداث",
+        img: "assets/dashIcon/events.png",
+        widget: EventViewScreen(),
+        ),
+        (
+        name: "المصاريف",
+        img: "assets/dashIcon/audit.png",
+        widget: ExpensesViewScreen(),
+        ),
+        (
+        name: "المستودع",
+        img: "assets/dashIcon/groceries.png",
+        widget: StoreViewPage(),
+        ),
+        (
+        name: "ادارة المنصة",
+        img: "assets/dashIcon/setting.png",
+        widget: SettingsView(),
+        ),
+        (
+        name: "تسجيل الخروج",
+        img: "assets/dashIcon/logout.png",
+        widget: LogoutView(),
+        ),
+      ]);
+    }
+  }
 
   void checkUserStatus() async {
     if (userName != null) {
-      FirebaseFirestore.instance.collection(accountManagementCollection).where('userName', isEqualTo: userName).where("password", isEqualTo: password).snapshots().listen((value) async {
-        if (userName == null) {
-          userStatus = UserManagementStatus.first;
-        } else if (value.docs.isNotEmpty) {
+      FirebaseFirestore.instance.collection(accountManagementCollection).where('userName', isEqualTo: userName).where("password", isEqualTo: password).get().then((value) async {
+        if (value.docs.isNotEmpty) {
           myUserModel = EmployeeModel.fromJson(value.docs.first.data());
           if (myUserModel?.isAccepted == false) {
             Get.snackbar("خطأ", "هذا المستخدم غير فعال ");
             return;
           }
           HiveDataBase.setCurrentScreen("0");
-          // await HiveDataBase.setUserData(id: myUserModel!.id, name: myUserModel!.userName, type: myUserModel!.type, serialNFC: myUserModel!.serialNFC ?? '', userName: myUserModel!.userName);
           await HiveDataBase.deleteAccountManagementModel();
           await HiveDataBase.setAccountManagementModel(myUserModel!);
-
-          userStatus = UserManagementStatus.login;
+          getScreens();
           Get.offNamed(AppRoutes.DashboardScreen);
         } else if (value.docs.isEmpty) {
-          if (Get.currentRoute != AppRoutes.main) {
-            userStatus = UserManagementStatus.first;
-            Get.offNamed(AppRoutes.main);
-          } else {
-            Get.snackbar("error", "not matched");
-          }
-          userName = null;
-          serialNFC = null;
-        } else {
-          userStatus = null;
+          Get.snackbar("error", "not matched");
         }
-        update();
       });
-    } else {
-      WidgetsFlutterBinding.ensureInitialized().waitUntilFirstFrameRasterized.then((value) {
-        userStatus = UserManagementStatus.first;
-        Get.offNamed(AppRoutes.main);
-      });
+    } else{
+      Get.snackbar("error", "not matched");
     }
   }
 
@@ -880,7 +964,7 @@ class EmployeeViewModel extends GetxController {
       loadingQuickAlert(context);
       try {
         await uploadImages(imagesTempData, "expenses").then(
-              (value) => imageLinkList.addAll(value),
+          (value) => imageLinkList.addAll(value),
         );
         EmployeeModel model = EmployeeModel(
           id: !enableEdit ? generateId("EMPLOYEE") : employeeModel!.id,
@@ -889,7 +973,11 @@ class EmployeeViewModel extends GetxController {
           password: userPassController.text,
           type: role,
           serialNFC: selectedCardId,
-          idImages: imageLinkList.map((e) => e.toString(),).toList(),
+          idImages: imageLinkList
+              .map(
+                (e) => e.toString(),
+              )
+              .toList(),
           isActive: true,
           isAccepted: false,
           salary: int.parse(salaryController.text),
@@ -1014,7 +1102,7 @@ class EmployeeViewModel extends GetxController {
       startDateController.text = employeeModel!.startDate.toString();
       dayWorkController.text = employeeModel!.dayOfWork.toString();
       bodyEvent.clear();
-      imageLinkList=employeeModel!.idImages??[];
+      imageLinkList = employeeModel!.idImages ?? [];
       userNameController.text = employeeModel!.userName.toString();
       userPassController.text = employeeModel!.password.toString();
       employeeModel!.eventRecords?.forEach(

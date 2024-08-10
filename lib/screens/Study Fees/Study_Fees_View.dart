@@ -46,7 +46,7 @@ class _StudyFeesViewState extends State<StudyFeesView> {
                             onTap: () {
                               controller.setInkwellIndex(0);
                             },
-                            child: SquareWidget(title: "الدفعات القادمة".tr, body: "${parentViewModel.getAllNunReceivePay()}", color: AppColors.textColor, png: "assets/poor.png")),
+                            child: SquareWidget(title: "الدفعات المتبقية".tr, body: "${parentViewModel.getAllNunReceivePay()}", color: AppColors.textColor, png: "assets/poor.png")),
                         InkWell(
                             onTap: () {
                               controller.setInkwellIndex(1);

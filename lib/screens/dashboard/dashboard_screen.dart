@@ -118,7 +118,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                           .isNotEmpty)
                         InkWell(
                           onTap: () {
-                            HiveDataBase.setCurrentScreen("13");
+                            HiveDataBase.setCurrentScreen("12");
                             Get.offAll(MainScreen());
                           },
                           child: Stack(

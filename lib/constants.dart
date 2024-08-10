@@ -140,155 +140,23 @@ List<String> jobList = [
   "مدرس Chemistry",
   "مدرس Physics",
   "مدرس Biology",
-  "مدرس لغة أجنبية"
-  "مدرس لغة فرنسية"
+  "مدرس لغة أجنبية",
+  "مدرس لغة فرنسية",
+  "مدرس لغة المانية",
 ];
 
-List<({String name, String img, Widget widget})> allData = [
-  (
-  name: "لوحة التحكم",
-  img: "assets/dashIcon/dash.png",
-  widget: !(HiveDataBase.getAccountManagementModel()!.type != 'مستخدم')
-      ? Container(
-    child: Center(
-      child: Text("غير مسموح الوصول".tr),
-    ),
-  )
-      : DashboardScreen(),
-  ),
-  (
-  name: "أولياء الامور",
-  img: "assets/dashIcon/family (1).png",
-  widget: !(HiveDataBase.getAccountManagementModel()!.type != 'مستخدم')
-      ? Container(
-    child: Center(
-      child: Text("غير مسموح الوصول".tr),
-    ),
-  )
-      : ParentsView(),
-  ),
-  (
-  name: "الطلاب",
-  img: "assets/dashIcon/student.png",
-  widget: !(HiveDataBase.getAccountManagementModel()!.type != 'مستخدم')
-      ? Container(
-    child: Center(
-      child: Text("غير مسموح الوصول".tr),
-    ),
-  )
-      : StudentView(),
-  ),
-  (
-  name: "الصفوف",
-  img: "assets/dashIcon/class.png",
-  widget: !(HiveDataBase.getAccountManagementModel()!.type != 'مستخدم')
-      ? Container(
-    child: Center(
-      child: Text("غير مسموح الوصول".tr),
-    ),
-  )
-      : ClassesView(),
-  ),
-  (
-  name: "الدوام",
-  img: "assets/dashIcon/time.png",
-  widget: EmployeeTimeView(),
-  ),
+List<({String name, String img, Widget widget})> allData =  [
 
-  (
-  name: "الموظفين",
-  img: "assets/dashIcon/employee.png",
-  widget: !(HiveDataBase.getAccountManagementModel()!.type != 'مستخدم')
-      ? Container(
-    child: Center(
-      child: Text("غير مسموح الوصول".tr),
-    ),
-  )
-      : EmployeeView(),
-  ),
-  (
-  name: "الرواتب",
-  img: "assets/dashIcon/salary.png",
-  widget: !(HiveDataBase.getAccountManagementModel()!.type != 'مستخدم')
-      ? Container(
-    child: Center(
-      child: Text("غير مسموح الوصول".tr),
-    ),
-  )
-      : SalaryView(),
-  ),
-  (
-  name: "الحافلات",
-  img: "assets/dashIcon/bus.png",
-  widget: !(HiveDataBase.getAccountManagementModel()!.type != 'مستخدم')
-      ? Container(
-    child: Center(
-      child: Text("غير مسموح الوصول".tr),
-    ),
-  )
-      : BusesView(),
-  ),
-  (
-  name: "الرسوم الدراسية",
-  img: "assets/dashIcon/accounting.png",
-  widget: !(HiveDataBase.getAccountManagementModel()!.type != 'مستخدم')
-      ? Container(
-    child: Center(
-      child: Text("غير مسموح الوصول".tr),
-    ),
-  )
-      : StudyFeesView(),
-  ),
-  (
-  name: "الأحداث",
-  img: "assets/dashIcon/events.png",
-  widget: !(HiveDataBase.getAccountManagementModel()!.type != 'مستخدم')
-      ? Container(
-    child: Center(
-      child: Text("غير مسموح الوصول".tr),
-    ),
-  )
-      : EventViewScreen(),
-  ),
-  (
-  name: "المصاريف",
-  img: "assets/dashIcon/audit.png",
-  widget: !(HiveDataBase.getAccountManagementModel()!.type != 'مستخدم')
-      ? Container(
-    child: Center(
-      child: Text("غير مسموح الوصول".tr),
-    ),
-  )
-      : ExpensesViewScreen(),
-  ),
-  (
-  name: "المستودع",
-  img: "assets/dashIcon/groceries.png",
-  widget: !(HiveDataBase.getAccountManagementModel()!.type != 'مستخدم')
-      ? Container(
-    child: Center(
-      child: Text("غير مسموح الوصول".tr),
-    ),
-  )
-      : StoreViewPage(),
-  ),
-  (
-  name: "ادارة المنصة",
-  img: "assets/dashIcon/setting.png",
-  widget: !(HiveDataBase.getAccountManagementModel()!.type != 'مستخدم')
-      ? Container(
-    child: Center(
-      child: Text("غير مسموح الوصول".tr),
-    ),
-  )
-      : SettingsView(),
-  ),
   (
   name: "تسجيل الخروج",
   img: "assets/dashIcon/logout.png",
   widget: LogoutView(),
   ),
 ];
+
+initDashboard(List<({String name, String img, Widget widget})> ourData){
+  allData =ourData;
+}
 List<String> contractsList = ['دوام جزئي', 'دوام كلي', 'اون لاين'];
 List<String> languageList = [
   "عربي",

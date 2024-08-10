@@ -41,7 +41,7 @@ class BusViewModel extends GetxController {
     getColumns();
     getAllBuse();
   }
-
+  Map<Map<String, PlutoColumnType>,Map<String, PlutoColumnType>> pluto={};
   Map<String, BusModel> _busesMap = {};
 
   Map<String, BusModel> get busesMap => _busesMap;
@@ -53,6 +53,8 @@ class BusViewModel extends GetxController {
       _busesMap.clear();
       selectedColor=secondaryColor;
       plutoKey = GlobalKey();
+      pluto.clear();
+
       rows.clear();
       // await   Get.find<ExpensesViewModel>().getAllWithoutListenExpenses();
       for (var element in value.docs) {

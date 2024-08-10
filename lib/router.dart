@@ -24,7 +24,7 @@ class AppRoutes {
   static List<GetPage> routes = [
     GetPage(name: main, page: () {
 
-      if(HiveDataBase.accountBox.get("userName")==null)
+      if(HiveDataBase.accountManagementBox.isEmpty)
       return LoginScreen();
       else
         return MainScreen();
