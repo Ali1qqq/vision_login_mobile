@@ -93,7 +93,7 @@ flutter:
   fonts:
     - family: Cairo
       fonts:
-        - asset: assets/Fonts/Cairo-Regular.ttf
+        - asset: assets/Fonts/Poppins-Regular.ttf
   # fonts:
   #   - family: Schyler
   #     fonts:
