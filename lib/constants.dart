@@ -90,11 +90,7 @@ const String nfcCardCollection = 'NfcCards';
 TimesModel? thisTimesModel;
 
 
-Map accountType = {
-  "user": "مستخدم".tr,
-  "admin": "مدير".tr,
-  "superAdmin": "مالك".tr,
-};
+
 
 List<String> classNameList = [
   "KG 1",
@@ -116,8 +112,9 @@ List<String> sexList = [
   "انثى",
 ];
 List<String> jobList = [
-  "اداري",
+  "مدير",
   "سائق",
+  "عامل/ه",
   "مدرس اسلامية(ابتدائي)",
   "مدرس علوم(ابتدائي)",
   "مدرس رياضيات(ابتدائي)",

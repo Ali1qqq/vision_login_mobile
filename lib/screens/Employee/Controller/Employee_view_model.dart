@@ -58,6 +58,11 @@ enum UserManagementStatus {
 }
 
 enum typeNFC { login, time, add }
+Map accountType = {
+  "user": "مستخدم".tr,
+  "admin": "مدير".tr,
+  "superAdmin": "مالك".tr,
+};
 
 class EmployeeViewModel extends GetxController {
   final fullNameController = TextEditingController();
@@ -188,6 +193,7 @@ class EmployeeViewModel extends GetxController {
         isOpen = List.generate(allAccountManagement.length, (index) => false);
         isLoading = true;
         Get.find<SalaryViewModel>().getEmployeeSalaryPluto();
+
         update();
       },
     );
@@ -314,6 +320,19 @@ class EmployeeViewModel extends GetxController {
         ),
       ]);
     } else {
+      if(myUserModel?.type == "مالك")
+        {
+          accountType = {
+            "user": "مستخدم".tr,
+            "admin": "مدير".tr,
+            "superAdmin": "مالك".tr,
+          };
+        }else{
+        accountType = {
+          "user": "مستخدم".tr,
+          "admin": "مدير".tr,
+        };
+      }
       initDashboard([
         (
           name: "لوحة التحكم",

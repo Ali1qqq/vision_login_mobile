@@ -21,7 +21,13 @@ class _SettingsViewState extends State<SettingsView> {
     // TODO: implement initState
     super.initState();
     if (HiveDataBase.getAccountManagementModel()?.type != 'مالك') {
+      print("object");
       Get.find<EmployeeViewModel>().currentId=HiveDataBase.getAccountManagementModel()!.id;
+
+      WidgetsFlutterBinding.ensureInitialized().waitUntilFirstFrameRasterized.then((value) {
+        Get.find<EmployeeViewModel>().initController();
+        Get.find<EmployeeViewModel>().update();
+      },);
       // Get.find<EmployeeViewModel>().setCurrentId( HiveDataBase.getAccountManagementModel()!.id) ;
       // Get.find<EmployeeViewModel>(). initController() ;
     }

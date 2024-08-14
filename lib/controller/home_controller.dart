@@ -8,7 +8,7 @@ class HomeViewModel extends GetxController {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   GlobalKey<ScaffoldState> get scaffoldKey => _scaffoldKey;
   int menuIndex = 0;
-  bool isDrawerOpen= false;
+  bool isDrawerOpen= true;
   bool isLoading=false;
   int currentScreenIndex=int.parse(HiveDataBase.getUserData().currentScreen);
   changeIsLoading(){
