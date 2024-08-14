@@ -20,13 +20,7 @@ class EmployeeTimeBox extends StatelessWidget {
         color: secondaryColor,
         borderRadius: const BorderRadius.all(Radius.circular(10)),
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-
-          EmployeeTimeChart()
-        ],
-      ),
+      child: EmployeeTimeChart(),
     );
   }
 }

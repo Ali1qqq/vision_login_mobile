@@ -100,75 +100,78 @@ class TotalBarChartState extends State<TotalBarChart> {
         reverse: true,
         child: SizedBox(
           width: max(1200, Get.width),
-          child: LayoutBuilder(
-            builder: (context, constraints) {
-              final barsSpace = 24.0 * constraints.maxWidth / 400;
-              final barsWidth = 8.0 * constraints.maxWidth / 400;
-              return BarChart(
-                BarChartData(
-                  minY:  widget.index == 2
-                      ? -parentViewModel.getAllReceiveMaxPay()/2
-                      : 0,
-                  maxY: widget.index == 0
-                      ? expensesViewModel.getMaxExpenses()
-                      : widget.index == 1
-                          ? parentViewModel.getAllReceiveMaxPay()
-                          : parentViewModel.getAllReceiveMaxPay(),
-                  alignment: BarChartAlignment.center,
-                  barTouchData: BarTouchData(
-                    enabled: true,
-                    touchTooltipData: BarTouchTooltipData(
-                      getTooltipItem: (group, groupIndex, rod, rodIndex) {
-                        return BarTooltipItem(
-                          '${rod.rodStackItems[0].toY.toString()} درهم',
-                          const TextStyle(
-                            color: blueColor,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        );
-                      },
-                    ),
-                  ),
-                  titlesData: FlTitlesData(
-                    show: true,
-                    bottomTitles: AxisTitles(
-                      sideTitles: SideTitles(
-                        showTitles: true,
-                        reservedSize: 40,
-                        getTitlesWidget: bottomTitles,
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: LayoutBuilder(
+              builder: (context, constraints) {
+                final barsSpace = 24.0 * constraints.maxWidth / 400;
+                final barsWidth = 8.0 * constraints.maxWidth / 400;
+                return BarChart(
+                  BarChartData(
+                    minY:  widget.index == 2
+                        ? -parentViewModel.getAllReceiveMaxPay()/2
+                        : 0,
+                    maxY: widget.index == 0
+                        ? expensesViewModel.getMaxExpenses()
+                        : widget.index == 1
+                            ? parentViewModel.getAllReceiveMaxPay()
+                            : parentViewModel.getAllReceiveMaxPay(),
+                    alignment: BarChartAlignment.center,
+                    barTouchData: BarTouchData(
+                      enabled: true,
+                      touchTooltipData: BarTouchTooltipData(
+                        getTooltipItem: (group, groupIndex, rod, rodIndex) {
+                          return BarTooltipItem(
+                            '${rod.rodStackItems[0].toY.toString()} درهم',
+                            const TextStyle(
+                              color: blueColor,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          );
+                        },
                       ),
                     ),
-                    leftTitles: AxisTitles(
-                      sideTitles: SideTitles(
-                        showTitles: true,
-                        reservedSize: 60,
-                        getTitlesWidget: leftTitles,
+                    titlesData: FlTitlesData(
+                      show: true,
+                      bottomTitles: AxisTitles(
+                        sideTitles: SideTitles(
+                          showTitles: true,
+                          reservedSize: 40,
+                          getTitlesWidget: bottomTitles,
+                        ),
+                      ),
+                      leftTitles: AxisTitles(
+                        sideTitles: SideTitles(
+                          showTitles: true,
+                          reservedSize: 60,
+                          getTitlesWidget: leftTitles,
+                        ),
+                      ),
+                      topTitles: const AxisTitles(
+                        sideTitles: SideTitles(showTitles: false),
+                      ),
+                      rightTitles: const AxisTitles(
+                        sideTitles: SideTitles(showTitles: false),
                       ),
                     ),
-                    topTitles: const AxisTitles(
-                      sideTitles: SideTitles(showTitles: false),
+                    gridData: FlGridData(
+                      show: true,
+                      checkToShowHorizontalLine: (value) => value % 10 == 0,
+                      getDrawingHorizontalLine: (value) => FlLine(
+                        color: secondaryColor.withOpacity(0.5)/*Colors.white.withOpacity(0.5)*/,
+                        strokeWidth: 1,
+                      ),
+                      drawVerticalLine: false,
                     ),
-                    rightTitles: const AxisTitles(
-                      sideTitles: SideTitles(showTitles: false),
+                    borderData: FlBorderData(
+                      show: false,
                     ),
+                    groupsSpace: barsSpace,
+                    barGroups: getData(barsWidth, barsSpace),
                   ),
-                  gridData: FlGridData(
-                    show: true,
-                    checkToShowHorizontalLine: (value) => value % 10 == 0,
-                    getDrawingHorizontalLine: (value) => FlLine(
-                      color: secondaryColor.withOpacity(0.5)/*Colors.white.withOpacity(0.5)*/,
-                      strokeWidth: 1,
-                    ),
-                    drawVerticalLine: false,
-                  ),
-                  borderData: FlBorderData(
-                    show: false,
-                  ),
-                  groupsSpace: barsSpace,
-                  barGroups: getData(barsWidth, barsSpace),
-                ),
-              );
-            },
+                );
+              },
+            ),
           ),
         ));
   }
