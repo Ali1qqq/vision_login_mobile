@@ -1,6 +1,7 @@
 import 'package:vision_dashboard/screens/Employee/Controller/Employee_view_model.dart';
 import 'package:vision_dashboard/controller/Wait_management_view_model.dart';
 import 'package:vision_dashboard/screens/Study%20Fees/Controller/Study_Fees_View_Model.dart';
+import 'package:vision_dashboard/screens/Widgets/Pluto_View_Model.dart';
 import 'package:vision_dashboard/screens/event/Controller/event_view_model.dart';
 import 'package:vision_dashboard/screens/expenses/Controller/expenses_view_model.dart';
 import 'package:vision_dashboard/controller/home_controller.dart';
@@ -32,6 +33,7 @@ class GetBinding extends Bindings {
     Get.put(ClassViewModel());
     Get.put(NfcCardViewModel());
     Get.put(StudyFeesViewModel());
+    Get.put(PlutoViewModel());
   }
 
 }

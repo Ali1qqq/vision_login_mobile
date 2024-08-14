@@ -24,13 +24,13 @@ class CustomDropDownWithValue extends StatelessWidget {
               // labelText: label,
               // labelStyle: TextStyle(color: primaryColor),
               enabledBorder:OutlineInputBorder(
-                borderSide: BorderSide(color: primaryColor,width: 2),
+                borderSide: BorderSide(color: secondaryColor,width: 2),
               ),
               disabledBorder:OutlineInputBorder(
-                borderSide: BorderSide(color: Colors.grey,width: 2),
+                borderSide: BorderSide(color: secondaryColor,width: 2),
               ),
               focusedBorder: OutlineInputBorder(
-                borderSide: BorderSide(color: Colors.grey,width: 4),
+                borderSide: BorderSide(color: secondaryColor,width: 4),
               ),
 
             ),

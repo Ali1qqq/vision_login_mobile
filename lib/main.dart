@@ -61,7 +61,7 @@ class MyApp extends StatelessWidget {
           // buttonColor: Colors.white,
           // textTheme: ButtonTextTheme.normal,
         ),
-        fontFamily: 'Poppins',
+        fontFamily: 'Cairo',
         canvasColor: secondaryColor,
         scaffoldBackgroundColor: bgColor,
         textTheme: TextTheme(

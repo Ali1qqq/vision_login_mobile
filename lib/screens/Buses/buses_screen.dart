@@ -159,7 +159,7 @@ class _BusesScreenState extends State<BusesScreen> {
       title: 'هل انت متأكد ؟'.tr,
       onConfirmBtnTap: () async {
 
-       await addWaitOperation(
+        await addWaitOperation(
             type: waitingListTypes.delete,
             details: editController.text,
             collectionName: busesCollection,
@@ -339,4 +339,3 @@ class _BusesScreenState extends State<BusesScreen> {
     );
   }
 }
-

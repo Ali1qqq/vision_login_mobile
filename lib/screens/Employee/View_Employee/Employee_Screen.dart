@@ -16,76 +16,76 @@ class AccountManagementScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetBuilder<EmployeeViewModel>(
-      builder: (controller) {
-        return Scaffold(
-          appBar: Header(
-              context: context,
-              title: 'ادارة الموظفين'.tr,
-              middleText:
-                  "تقوم هذه الواجهة بعرض الامور الاساسية في المنصة وهي المستخدمين وامكانية اضافة او تعديل او حذف كما تعرض السجلات الممطلوب حذفها للموافقة عليها او استرجاعها"
-                      .tr),
-          body: SingleChildScrollView(
-            physics: NeverScrollableScrollPhysics(),
-            padding: EdgeInsets.all(16.0),
-            child: GetBuilder<HomeViewModel>(builder: (hController) {
-              double size = max(
-                      Get.width -
-                          (hController.isDrawerOpen ? 240 : 120),
-                      1000) -
-                  60;
-              return Padding(
-                padding: const EdgeInsets.all(0),
-                child: Container(
-                  padding: EdgeInsets.all(defaultPadding),
-                  decoration: BoxDecoration(
-                    color: secondaryColor,
-                    borderRadius: const BorderRadius.all(Radius.circular(10)),
-                  ),
-                  child: SizedBox(
-                    height: Get.height-180,
-                    width: size + 60,
-                    child: CustomPlutoGrid(
-                      controller: controller,
-                      selectedColor: controller.selectedColor,
-                      idName: "الرقم التسلسلي",
-                      onSelected: (event) {
-                        controller.selectedColor=Colors.white.withOpacity(0.5);
+        builder: (controller) {
+          return Scaffold(
+            appBar: Header(
+                context: context,
+                title: 'ادارة الموظفين'.tr,
+                middleText:
+                "تقوم هذه الواجهة بعرض الامور الاساسية في المنصة وهي المستخدمين وامكانية اضافة او تعديل او حذف كما تعرض السجلات الممطلوب حذفها للموافقة عليها او استرجاعها"
+                    .tr),
+            body: SingleChildScrollView(
+              physics: NeverScrollableScrollPhysics(),
+              padding: EdgeInsets.all(16.0),
+              child: GetBuilder<HomeViewModel>(builder: (hController) {
+                double size = max(
+                    Get.width -
+                        (hController.isDrawerOpen ? 240 : 120),
+                    1000) -
+                    60;
+                return Padding(
+                  padding: const EdgeInsets.all(0),
+                  child: Container(
+                    padding: EdgeInsets.all(defaultPadding),
+                    decoration: BoxDecoration(
+                      color: secondaryColor,
+                      borderRadius: const BorderRadius.all(Radius.circular(10)),
+                    ),
+                    child: SizedBox(
+                      height: Get.height-180,
+                      width: size + 60,
+                      child: CustomPlutoGrid(
+                        controller: controller,
+                        selectedColor: controller.selectedColor,
+                        idName: "الرقم التسلسلي",
+                        onSelected: (event) {
+                          controller.selectedColor=Colors.white.withOpacity(0.5);
 
-                        controller.setCurrentId(event.row?.cells["الرقم التسلسلي"]?.value);
+                          controller.setCurrentId(event.row?.cells["الرقم التسلسلي"]?.value);
 
-                      },
+                        },
+                      ),
                     ),
                   ),
-                ),
-              );
-            }),
-          ),
-          floatingActionButton: GetBuilder<WaitManagementViewModel>(
-            builder: (_) {
-              return enableUpdate && controller.currentId != ''&&controller.allAccountManagement[controller.currentId]!.isAccepted!
-                  ? SizedBox(
-                width: Get.width,
-                child: Wrap(
-                  alignment: WrapAlignment.center,
-                  children: [
-                    buildEmployeeDeleteButton(_, context, controller),
-                    SizedBox(
-                      width: defaultPadding,
+                );
+              }),
+            ),
+            floatingActionButton: GetBuilder<WaitManagementViewModel>(
+                builder: (_) {
+                  return enableUpdate && controller.currentId != ''&&controller.allAccountManagement[controller.currentId]!.isAccepted!
+                      ? SizedBox(
+                    width: Get.width,
+                    child: Wrap(
+                      alignment: WrapAlignment.center,
+                      children: [
+                        buildEmployeeDeleteButton(_, context, controller),
+                        SizedBox(
+                          width: defaultPadding,
+                        ),
+                        if(controller.allAccountManagement[controller.currentId]!.isAccepted==true&&!controller.getIfDelete())
+                          buildEmployeeEditButton(context, controller)
+                      ],
                     ),
-                    if(controller.allAccountManagement[controller.currentId]!.isAccepted==true&&!controller.getIfDelete())
-                    buildEmployeeEditButton(context, controller)
-                  ],
-                ),
-              )
-                  : Container();
-            }
-          ),
-        );
-      }
+                  )
+                      : Container();
+                }
+            ),
+          );
+        }
     );
   }
 
- 
+
 }
 
 /*  child: Scrollbar(

@@ -28,13 +28,13 @@ class CustomDropDown extends StatelessWidget {
               enabled: enable??true,
               labelStyle: AppStyles.headLineStyle3.copyWith(overflow: TextOverflow.ellipsis),
               enabledBorder:OutlineInputBorder(
-                borderSide: BorderSide(color: Colors.grey,width: 2),
+                borderSide: BorderSide(color: secondaryColor,width: 2),
               ),
               disabledBorder:UnderlineInputBorder(
-                borderSide: BorderSide(color: Colors.grey,width: 2),
+                borderSide: BorderSide(color: secondaryColor,width: 2),
               ),
               focusedBorder: OutlineInputBorder(
-                borderSide: BorderSide(color: Colors.grey,width: 4),
+                borderSide: BorderSide(color: secondaryColor,width: 4),
               ),
 
             ),

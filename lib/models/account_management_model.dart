@@ -1,8 +1,12 @@
+import 'package:get/get.dart';
 import 'package:vision_dashboard/models/employee_time_model.dart';
 
+import '../screens/Buses/Controller/Bus_View_Model.dart';
+import '../utils/Hive_DataBase.dart';
+import '../utils/abstract.dart';
 import 'event_record_model.dart';
 
-class EmployeeModel {
+class EmployeeModel implements Mappable{
   late String id, userName, password, type;
   String? serialNFC;
   int? salary, dayOfWork, discounts;
@@ -99,6 +103,29 @@ class EmployeeModel {
       if (bus != null) 'bus': bus,
       if (startDate != null) 'startDate': startDate!,
       'eventRecords': eventRecords!.isNotEmpty ? eventRecords!.map((event) => event.toJson()).toList() : [],
+    };
+  }
+
+  @override
+  Map<String, dynamic> toMap() {
+    return {
+      "الرقم التسلسلي": id,
+      "اسم المستخدم":userName ,
+      "الاسم الكامل": fullName,
+      "كامة السر": HiveDataBase.getAccountManagementModel()?.type == "مالك" ? password : '' ,
+      "الدور": type,
+      "الحالة": isActive == true ? "فعال".tr : "غير فعال".tr,
+      "رقم الموبايل": mobileNumber,
+      "العنوان":address ,
+      "الجنسية": nationality,
+      "الجنس": gender,
+      "العمر": age,
+      "الوظيفة": jobTitle,
+      "العقد":contract ,
+      "الحافلة": Get.find<BusViewModel>().busesMap[bus]?.name ?? bus,
+      "تاريخ البداية": startDate,
+      "سجل الاحداث": eventRecords?.length,
+      "موافقة المدير": isAccepted == true ? "تمت الموافقة".tr : "في انتظار الموافقة".tr,
     };
   }
 }

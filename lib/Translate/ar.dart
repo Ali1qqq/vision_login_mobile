@@ -285,4 +285,6 @@ Map<String, String> ar = {
   "isPay": "مدفوع",
   "payTime": "وقت الدفع",
   "grade": "المعدل",
+  "توقيت التأخير:": "Late Time",
+  "توقيت الغياب:": "Append Time",
 };

@@ -4,11 +4,15 @@ abstract class Const {
   static const expensesCollection = "Expenses";
   static const eventCollection = "Events";
   static const waitManagementCollection = "WaitManagement";
+  static const settingsCollection = "Setting";
 
   static const eventTypeStudent = 'eventTypeStudent';
   static const eventTypeParent = 'eventTypeParent';
   static const eventTypeEmployee = 'eventTypeEmployee';
   static const allEventType = [eventTypeStudent, eventTypeParent, eventTypeEmployee];
+  static const String appendTime = 'AppendTime';
+  static  const String lateTime = 'LateTime';
+  static const String time = 'Time';
 }
 
 Map<String, Map<String, dynamic>> compareMaps(Map<String, dynamic> newData, Map<String, dynamic> oldData) {

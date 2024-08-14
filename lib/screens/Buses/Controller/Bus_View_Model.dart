@@ -13,7 +13,7 @@ import '../../../utils/To_AR.dart';
 
 class BusViewModel extends GetxController {
   final buseCollectionRef =
-      FirebaseFirestore.instance.collection(busesCollection);
+  FirebaseFirestore.instance.collection(busesCollection);
   final firebaseFirestore = FirebaseFirestore.instance;
   List<PlutoColumn> columns = [];
   List<PlutoRow> rows = [];
@@ -69,11 +69,11 @@ class BusViewModel extends GetxController {
             cells: {
               data.keys.elementAt(0): PlutoCell(value: element.id),
               data.keys.elementAt(1):
-                  PlutoCell(value: BusModel.fromJson(element.data()).number),
+              PlutoCell(value: BusModel.fromJson(element.data()).number),
               data.keys.elementAt(2):
-                  PlutoCell(value: BusModel.fromJson(element.data()).name),
+              PlutoCell(value: BusModel.fromJson(element.data()).name),
               data.keys.elementAt(3):
-                  PlutoCell(value: BusModel.fromJson(element.data()).type),
+              PlutoCell(value: BusModel.fromJson(element.data()).type),
               data.keys.elementAt(4): PlutoCell(
                   value: BusModel.fromJson(element.data())
                       .students
@@ -86,7 +86,7 @@ class BusViewModel extends GetxController {
                       .toString()),
               data.keys.elementAt(6): PlutoCell(value: total),
               data.keys.elementAt(7):
-                  PlutoCell(value: BusModel.fromJson(element.data()).startDate),
+              PlutoCell(value: BusModel.fromJson(element.data()).startDate),
               data.keys.elementAt(8):
               PlutoCell(value: BusModel.fromJson(element.data()).isAccepted==true?"تمت الموافقة".tr:"في انتظار الموافقة".tr),
             },
@@ -195,7 +195,7 @@ class BusViewModel extends GetxController {
         .collection(busesCollection)
         .get()
         .then(
-      (value) {
+          (value) {
         _busesMap.clear();
         plutoKey = GlobalKey();
         rows.clear();
@@ -249,7 +249,7 @@ class BusViewModel extends GetxController {
   deleteStudent(String busId, String Student) async {
     _busesMap[busId]!.students!.removeWhere(
           (element) => element == Student,
-        );
+    );
     buseCollectionRef.doc(busId).set(
         {"students": _busesMap[busId]!.students!}, SetOptions(merge: true));
   }
@@ -257,7 +257,7 @@ class BusViewModel extends GetxController {
   deleteEmployee(String busId, String empId) async {
     _busesMap[busId]!.employees!.removeWhere(
           (element) => element == empId,
-        );
+    );
     buseCollectionRef.doc(busId).set(
         {"employees": _busesMap[busId]!.students!}, SetOptions(merge: true));
   }

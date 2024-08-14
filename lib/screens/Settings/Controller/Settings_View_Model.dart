@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:vision_dashboard/screens/Employee/Controller/Employee_view_model.dart';
 import 'package:vision_dashboard/controller/Wait_management_view_model.dart';
@@ -18,8 +19,7 @@ import '../../Store/Controller/Store_View_Model.dart';
 import '../../Student/Controller/Student_View_Model.dart';
 
 class SettingsViewModel extends GetxController {
-  EmployeeViewModel _accountManagementViewModel =
-      Get.find<EmployeeViewModel>();
+  EmployeeViewModel _accountManagementViewModel = Get.find<EmployeeViewModel>();
   EventViewModel _eventViewModel = Get.find<EventViewModel>();
   SalaryViewModel _salaryViewModel = Get.find<SalaryViewModel>();
   StudentViewModel _studentViewModel = Get.find<StudentViewModel>();
@@ -30,39 +30,61 @@ class SettingsViewModel extends GetxController {
   BusViewModel _busViewModel = Get.find<BusViewModel>();
 
 
+  Map<String,dynamic> settingsMap={
+    "AppendTime":{"Time":"8 00"},
+    "LateTime":{"Time":"7 30"}
+  };
+
+  TextEditingController lateTimeController = TextEditingController()..text = "0 0";
+  TextEditingController appendTimeController = TextEditingController()..text = "0 0";
+
   final fireStoreInstance = FirebaseFirestore.instance;
 
   SettingsViewModel() {
     getAllArchive();
+    getAllSettings();
   }
 
   List allArchive = [];
 
+  setTime(String time, String TimeName) async {
+    await fireStoreInstance.collection(Const.settingsCollection).doc(TimeName).set({"Time": time});
+    update();
+  }
 
-  changeLanguage(String lan)async{
+  getAllSettings() async {
+    await fireStoreInstance.collection(Const.settingsCollection).snapshots().listen((date) {
+      settingsMap.clear();
+      for(var element in date.docs){
+        settingsMap[element.id]=element.data();
+        
+      }
+      update();
 
+    },);
+  }
+
+  changeLanguage(String lan) async {
 /*    HomeViewModel homeViewModel =Get.find<HomeViewModel>();
     homeViewModel.changeIsLoading();*/
 
-    if(lan=='عربي')
-      {
-      await  Get.updateLocale(Locale("ar",'ar'));
-
-      }else{
-    await  Get.updateLocale(Locale("en",'US'));
-
+    if (lan == 'عربي') {
+      await Get.updateLocale(Locale("ar", 'ar'));
+    } else {
+      await Get.updateLocale(Locale("en", 'US'));
     }
-    await _busViewModel.getColumns();
+    // await _busViewModel.getColumns();
     await _studentViewModel.getColumns();
     await _parentsViewModel.getColumns();
     await _expensesViewModel.getColumns();
     await _storeViewModel.getColumns();
 
-    await   Get.offAll(() =>LoginScreen(), binding: GetBinding());
+    await Get.offAll(() => LoginScreen(), binding: GetBinding());
 /* await   homeViewModel.changeIsLoading();
     // await  Get.offNamed(AppRoutes.EmployeeView);
     update();*/
   }
+
   getAllArchive() {
     fireStoreInstance.collection(archiveCollection).get().then(
       (event) {
@@ -76,137 +98,69 @@ class SettingsViewModel extends GetxController {
     );
   }
 
-   archive(String yearName) async {
-    fireStoreInstance
-        .collection(archiveCollection)
-        .doc(yearName)
-        .set({"Year": yearName}, SetOptions(merge: true));
-    for (var arr
-        in _accountManagementViewModel.allAccountManagement.values.toList()) {
-      await fireStoreInstance
-          .collection(archiveCollection)
-          .doc(yearName)
-          .collection(accountManagementCollection)
-          .doc(arr.id)
-          .set(arr.toJson());
+  archive(String yearName) async {
+    fireStoreInstance.collection(archiveCollection).doc(yearName).set({"Year": yearName}, SetOptions(merge: true));
+    for (var arr in _accountManagementViewModel.allAccountManagement.values.toList()) {
+      await fireStoreInstance.collection(archiveCollection).doc(yearName).collection(accountManagementCollection).doc(arr.id).set(arr.toJson());
       print("Finished allAccountManagement");
     }
     for (var arr in _salaryViewModel.salaryMap.values.toList()) {
-      await fireStoreInstance
-          .collection(archiveCollection)
-          .doc(yearName)
-          .collection(salaryCollection)
-          .doc(arr.salaryId)
-          .set(arr.toJson());
+      await fireStoreInstance.collection(archiveCollection).doc(yearName).collection(salaryCollection).doc(arr.salaryId).set(arr.toJson());
       print("Finished SalaryViewModel");
     }
     for (var arr in _eventViewModel.allEvents.values.toList()) {
-      await fireStoreInstance
-          .collection(archiveCollection)
-          .doc(yearName)
-          .collection(Const.eventCollection)
-          .doc(arr.id)
-          .set(arr.toJson());
+      await fireStoreInstance.collection(archiveCollection).doc(yearName).collection(Const.eventCollection).doc(arr.id).set(arr.toJson());
       print("Finished EventViewModel");
     }
     for (var arr in _studentViewModel.studentMap.values.toList()) {
-      await fireStoreInstance
-          .collection(archiveCollection)
-          .doc(yearName)
-          .collection(studentCollection)
-          .doc(arr.studentID)
-          .set(arr.toJson());
+      await fireStoreInstance.collection(archiveCollection).doc(yearName).collection(studentCollection).doc(arr.studentID).set(arr.toJson());
       print("Finished StudentViewModel");
     }
     for (var arr in _parentsViewModel.parentMap.values.toList()) {
-      await fireStoreInstance
-          .collection(archiveCollection)
-          .doc(yearName)
-          .collection(parentsCollection)
-          .doc(arr.id)
-          .set(arr.toJson());
+      await fireStoreInstance.collection(archiveCollection).doc(yearName).collection(parentsCollection).doc(arr.id).set(arr.toJson());
       print("Finished ParentsViewModel");
     }
     for (var arr in _expensesViewModel.allExpenses.values.toList()) {
-      await fireStoreInstance
-          .collection(archiveCollection)
-          .doc(yearName)
-          .collection(Const.expensesCollection)
-          .doc(arr.id)
-          .set(arr.toJson());
+      await fireStoreInstance.collection(archiveCollection).doc(yearName).collection(Const.expensesCollection).doc(arr.id).set(arr.toJson());
       print("Finished ExpensesViewModel");
     }
     for (var arr in _storeViewModel.storeMap.values.toList()) {
-      await fireStoreInstance
-          .collection(archiveCollection)
-          .doc(yearName)
-          .collection(storeCollection)
-          .doc(arr.id)
-          .set(arr.toJson());
+      await fireStoreInstance.collection(archiveCollection).doc(yearName).collection(storeCollection).doc(arr.id).set(arr.toJson());
       print("Finished StoreViewModel");
     }
     for (var arr in _deleteManagementViewModel.allWaiting.values.toList()) {
-      await fireStoreInstance
-          .collection(archiveCollection)
-          .doc(yearName)
-          .collection(Const.waitManagementCollection)
-          .doc(arr.id)
-          .set(arr.toJson());
+      await fireStoreInstance.collection(archiveCollection).doc(yearName).collection(Const.waitManagementCollection).doc(arr.id).set(arr.toJson());
       print("Finished deleteManagementCollection");
     }
     for (var arr in _busViewModel.busesMap.values.toList()) {
-      await fireStoreInstance
-          .collection(archiveCollection)
-          .doc(yearName)
-          .collection(busesCollection)
-          .doc(arr.busId)
-          .set(arr.toJson());
+      await fireStoreInstance.collection(archiveCollection).doc(yearName).collection(busesCollection).doc(arr.busId).set(arr.toJson());
       print("Finished busesCollection");
     }
   }
 
   void deleteCurrentData() async {
-    for (var arr
-        in _accountManagementViewModel.allAccountManagement.values.toList()) {
-      await fireStoreInstance
-          .collection(accountManagementCollection)
-          .doc(arr.id)
-          .delete();
+    for (var arr in _accountManagementViewModel.allAccountManagement.values.toList()) {
+      await fireStoreInstance.collection(accountManagementCollection).doc(arr.id).delete();
       print("Finished allAccountManagement");
     }
     for (var arr in _salaryViewModel.salaryMap.values.toList()) {
-      await fireStoreInstance
-          .collection(salaryCollection)
-          .doc(arr.salaryId)
-          .delete();
+      await fireStoreInstance.collection(salaryCollection).doc(arr.salaryId).delete();
       print("Finished SalaryViewModel");
     }
     for (var arr in _eventViewModel.allEvents.values.toList()) {
-      await fireStoreInstance
-          .collection(Const.eventCollection)
-          .doc(arr.id)
-          .delete();
+      await fireStoreInstance.collection(Const.eventCollection).doc(arr.id).delete();
       print("Finished EventViewModel");
     }
     for (var arr in _studentViewModel.studentMap.values.toList()) {
-      await fireStoreInstance
-          .collection(studentCollection)
-          .doc(arr.studentID)
-          .delete();
+      await fireStoreInstance.collection(studentCollection).doc(arr.studentID).delete();
       print("Finished StudentViewModel");
     }
     for (var arr in _parentsViewModel.parentMap.values.toList()) {
-      await fireStoreInstance
-          .collection(parentsCollection)
-          .doc(arr.id)
-          .delete();
+      await fireStoreInstance.collection(parentsCollection).doc(arr.id).delete();
       print("Finished ParentsViewModel");
     }
     for (var arr in _expensesViewModel.allExpenses.values.toList()) {
-      await fireStoreInstance
-          .collection(Const.expensesCollection)
-          .doc(arr.id)
-          .delete();
+      await fireStoreInstance.collection(Const.expensesCollection).doc(arr.id).delete();
       print("Finished ExpensesViewModel");
     }
     for (var arr in _storeViewModel.storeMap.values.toList()) {

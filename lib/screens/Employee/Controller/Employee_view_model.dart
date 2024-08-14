@@ -17,10 +17,12 @@ import 'package:vision_dashboard/router.dart';
 import 'package:vision_dashboard/screens/Buses/Controller/Bus_View_Model.dart';
 
 import 'package:vision_dashboard/screens/Salary/controller/Salary_View_Model.dart';
+import 'package:vision_dashboard/screens/Settings/Controller/Settings_View_Model.dart';
 
 import 'package:vision_dashboard/screens/Widgets/AppButton.dart';
 import 'package:vision_dashboard/screens/Widgets/Custom_Text_Filed.dart';
 import 'package:vision_dashboard/utils/Dialogs.dart';
+import 'package:vision_dashboard/utils/const.dart';
 
 import '../../../constants.dart';
 import '../../../controller/NFC_Card_View_model.dart';
@@ -297,93 +299,91 @@ class EmployeeViewModel extends GetxController {
   String? serialNFC;
   EmployeeModel? myUserModel;
 
-
-  getScreens(){
+  getScreens() {
     if (myUserModel?.type == "مستخدم") {
-
       initDashboard([
         (
-        name: "الدوام",
-        img: "assets/dashIcon/time.png",
-        widget: EmployeeTimeView(),
+          name: "الدوام",
+          img: "assets/dashIcon/time.png",
+          widget: EmployeeTimeView(),
         ),
         (
-        name: "تسجيل الخروج",
-        img: "assets/dashIcon/logout.png",
-        widget: LogoutView(),
+          name: "تسجيل الخروج",
+          img: "assets/dashIcon/logout.png",
+          widget: LogoutView(),
         ),
       ]);
     } else {
       initDashboard([
         (
-        name: "لوحة التحكم",
-        img: "assets/dashIcon/dash.png",
-        widget: DashboardScreen(),
+          name: "لوحة التحكم",
+          img: "assets/dashIcon/dash.png",
+          widget: DashboardScreen(),
         ),
         (
-        name: "أولياء الامور",
-        img: "assets/dashIcon/family (1).png",
-        widget: ParentsView(),
+          name: "أولياء الامور",
+          img: "assets/dashIcon/family (1).png",
+          widget: ParentsView(),
         ),
         (
-        name: "الطلاب",
-        img: "assets/dashIcon/student.png",
-        widget: StudentView(),
+          name: "الطلاب",
+          img: "assets/dashIcon/student.png",
+          widget: StudentView(),
         ),
         (
-        name: "الصفوف",
-        img: "assets/dashIcon/class.png",
-        widget: ClassesView(),
+          name: "الصفوف",
+          img: "assets/dashIcon/class.png",
+          widget: ClassesView(),
         ),
         (
-        name: "الدوام",
-        img: "assets/dashIcon/time.png",
-        widget: EmployeeTimeView(),
+          name: "الدوام",
+          img: "assets/dashIcon/time.png",
+          widget: EmployeeTimeView(),
         ),
         (
-        name: "الموظفين",
-        img: "assets/dashIcon/employee.png",
-        widget: EmployeeView(),
+          name: "الموظفين",
+          img: "assets/dashIcon/employee.png",
+          widget: EmployeeView(),
         ),
         (
-        name: "الرواتب",
-        img: "assets/dashIcon/salary.png",
-        widget: SalaryView(),
+          name: "الرواتب",
+          img: "assets/dashIcon/salary.png",
+          widget: SalaryView(),
         ),
         (
-        name: "الحافلات",
-        img: "assets/dashIcon/bus.png",
-        widget: BusesView(),
+          name: "الحافلات",
+          img: "assets/dashIcon/bus.png",
+          widget: BusesView(),
         ),
         (
-        name: "الرسوم الدراسية",
-        img: "assets/dashIcon/accounting.png",
-        widget: StudyFeesView(),
+          name: "الرسوم الدراسية",
+          img: "assets/dashIcon/accounting.png",
+          widget: StudyFeesView(),
         ),
         (
-        name: "الأحداث",
-        img: "assets/dashIcon/events.png",
-        widget: EventViewScreen(),
+          name: "الأحداث",
+          img: "assets/dashIcon/events.png",
+          widget: EventViewScreen(),
         ),
         (
-        name: "المصاريف",
-        img: "assets/dashIcon/audit.png",
-        widget: ExpensesViewScreen(),
+          name: "المصاريف",
+          img: "assets/dashIcon/audit.png",
+          widget: ExpensesViewScreen(),
         ),
         (
-        name: "المستودع",
-        img: "assets/dashIcon/groceries.png",
-        widget: StoreViewPage(),
+          name: "المستودع",
+          img: "assets/dashIcon/groceries.png",
+          widget: StoreViewPage(),
         ),
         (
-        name: "ادارة المنصة",
-        img: "assets/dashIcon/setting.png",
-        widget: SettingsView(),
+          name: "ادارة المنصة",
+          img: "assets/dashIcon/setting.png",
+          widget: SettingsView(),
         ),
         (
-        name: "تسجيل الخروج",
-        img: "assets/dashIcon/logout.png",
-        widget: LogoutView(),
+          name: "تسجيل الخروج",
+          img: "assets/dashIcon/logout.png",
+          widget: LogoutView(),
         ),
       ]);
     }
@@ -407,7 +407,7 @@ class EmployeeViewModel extends GetxController {
           Get.snackbar("error", "not matched");
         }
       });
-    } else{
+    } else {
       Get.snackbar("error", "not matched");
     }
   }
@@ -415,6 +415,9 @@ class EmployeeViewModel extends GetxController {
   String? loginUserPage;
 
   Future<void> addTime({String? cardId, String? userName, String? password}) async {
+    SettingsViewModel settingsController = Get.find<SettingsViewModel>();
+    String lateTime = settingsController.settingsMap[Const.lateTime][Const.time];
+    String appendTime = settingsController.settingsMap[Const.appendTime][Const.time];
     bool? isLateWithReason;
     bool isDayOff = false;
     int totalLate = 0;
@@ -445,7 +448,7 @@ class EmployeeViewModel extends GetxController {
             Get.snackbar("خطأ اثناء التسجيل", "الدوام لم يبدأ بعد");
             return;
           }
-          if (timeData.isAfter(8, 00)) {
+          if (timeData.isAfter(int.parse(appendTime.split(" ")[0]), int.parse(appendTime.split(" ")[1]))) {
             totalLate = timeData.dateTime.difference(DateTime.now().copyWith(hour: 7, minute: 41, second: 0)).inMinutes;
             isDayOff = true;
             isLateWithReason = false;
@@ -501,7 +504,7 @@ class EmployeeViewModel extends GetxController {
                         Get.back();
                       })
                 ]);
-          } else if (timeData.isAfter(7, 40)) {
+          } else if (timeData.isAfter(int.parse(lateTime.split(" ")[0]), (int.parse(lateTime.split(" ")[1])))) {
             totalLate = timeData.dateTime.difference(DateTime.now().copyWith(hour: 7, minute: 41, second: 0)).inMinutes;
             isLateWithReason = false;
             await Get.defaultDialog(

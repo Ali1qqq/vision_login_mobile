@@ -86,6 +86,7 @@ const String archiveCollection = 'Archive';
 const String busesCollection = 'Buses';
 const String installmentCollection = 'Installment';
 const String nfcCardCollection = 'NfcCards';
+
 TimesModel? thisTimesModel;
 
 
