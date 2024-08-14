@@ -191,7 +191,7 @@ receiveSalary({required BuildContext context}){
     int total = 0;
     _salaryMap.forEach(
       (key, value) {
-        total += double.parse(value.dilaySalary!).toInt();
+        total += double.parse(value.paySalary!).toInt();
       },
     );
     update();

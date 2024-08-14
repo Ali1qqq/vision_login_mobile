@@ -93,6 +93,7 @@ class TotalBarChartState extends State<TotalBarChart> {
 
   @override
   Widget build(BuildContext context) {
+
     return SingleChildScrollView(
         scrollDirection: Axis.horizontal,
         physics: ClampingScrollPhysics(),
@@ -105,11 +106,9 @@ class TotalBarChartState extends State<TotalBarChart> {
               final barsWidth = 8.0 * constraints.maxWidth / 400;
               return BarChart(
                 BarChartData(
-                  minY: widget.index == 0
-                      ? -expensesViewModel.getMaxExpenses()
-                      : widget.index == 1
-                      ? -parentViewModel.getAllReceiveMaxPay()
-                      : -parentViewModel.getAllReceiveMaxPay(),
+                  minY:  widget.index == 2
+                      ? -parentViewModel.getAllReceiveMaxPay()/2
+                      : 0,
                   maxY: widget.index == 0
                       ? expensesViewModel.getMaxExpenses()
                       : widget.index == 1
@@ -157,7 +156,7 @@ class TotalBarChartState extends State<TotalBarChart> {
                     show: true,
                     checkToShowHorizontalLine: (value) => value % 10 == 0,
                     getDrawingHorizontalLine: (value) => FlLine(
-                      color: Colors.white.withOpacity(0.5),
+                      color: secondaryColor.withOpacity(0.5)/*Colors.white.withOpacity(0.5)*/,
                       strokeWidth: 1,
                     ),
                     drawVerticalLine: false,

@@ -26,7 +26,7 @@ class InsertShapeWidget extends StatelessWidget {
                 width: defaultPadding,
               ),
 
-              titleWidget
+              Expanded(child: titleWidget)
 
             ],
           ),

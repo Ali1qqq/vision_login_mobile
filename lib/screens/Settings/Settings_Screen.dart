@@ -162,169 +162,179 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   SizedBox(
                     height: defaultPadding * 2,
                   ),
-                  InsertShapeWidget(
-                    titleWidget: Text(
-                      "الارشفة وحذف البيانات".tr,
-                      style: AppStyles.headLineStyle1,
-                    ),
-                    bodyWidget: GetBuilder<SettingsViewModel>(builder: (controller) {
-                      return Column(
-                        children: [
-                          Wrap(
-                            runSpacing: 20,
-                            alignment: WrapAlignment.start,
-                            crossAxisAlignment: WrapCrossAlignment.end,
-                            spacing: 50,
-                            children: [
-                              CustomDropDown(
-                                value: 'الافتراضي'.tr,
-                                listValue: controller.allArchive
-                                    .map(
-                                      (e) => e.toString().tr,
-                                    )
-                                    .toList(),
-                                label: "السنة المختارة".tr,
-                                onChange: (value) {
-                                  if (value != null) {
-                                    if (value != "الافتراضي".tr) {
-                                      enableUpdate = false;
-                                      controller.getOldData(value);
-                                    } else {
-                                      enableUpdate = true;
-                                      controller.getDefaultData();
-                                    }
-                                  }
-                                },
-                              ),
-                              CustomDropDown(
-                                value: Get.locale.toString() != "en_US" ? 'عربي' : 'English',
-                                listValue: ['عربي', 'English'],
-                                label: 'اختر اللغة'.tr,
-                                onChange: (value) {
-                                  Get.find<SettingsViewModel>().changeLanguage(value!);
-                                },
-                              ),
-                            ],
+                  Row(
+                    children: [
+                      Expanded(
+                        child: InsertShapeWidget(
+                          titleWidget: Text(
+                            "الارشفة وحذف البيانات".tr,
+                            style: AppStyles.headLineStyle1,
                           ),
-                          SizedBox(
-                            height: defaultPadding * 2,
-                          ),
-                          Wrap(
-                            runSpacing: 20,
-                            alignment: WrapAlignment.spaceEvenly,
-                            spacing: 50,
-                            children: [
-                              AppButton(
-                                  text: "ارشفة البيانات الحالية".tr,
-                                  onPressed: () async {
-                                    bool _validateYearFormat(BuildContext context, String value) {
-                                      final yearFormat = RegExp(r'^\d{4}-\d{4}$');
-                                      if (!yearFormat.hasMatch(value)) {
-                                        QuickAlert.show(
-                                          cancelBtnText: "موافق".tr,
-                                          context: context,
-                                          type: QuickAlertType.error,
-                                          title: 'يجب أن يكون التنسيق مثل 2024-2025'.tr,
-                                          text: "يجب التأكد من البيانات".tr,
-                                        );
-                                        ScaffoldMessenger.of(context).showSnackBar(
-                                          SnackBar(
-                                            content: Text('يجب أن يكون التنسيق مثل 2024-2025'.tr),
-                                          ),
-                                        );
-                                        return false;
-                                      } else
-                                        return true;
-                                    }
-
-                                    TextEditingController yearNameController = TextEditingController();
-                                    QuickAlert.show(
-                                      context: context,
-                                      type: QuickAlertType.confirm,
-                                      widget: Padding(
-                                        padding: EdgeInsets.all(8),
-                                        child: CustomTextField(
-                                          controller: yearNameController,
-                                          title: "ادخل اسم السنة".tr,
-                                        ),
-                                      ),
-                                      text: 'قبول هذه العملية'.tr,
-                                      title: 'هل انت متأكد ؟'.tr,
-                                      onConfirmBtnTap: () async {
-                                        if (_validateYearFormat(context, yearNameController.text)) {
-                                          QuickAlert.show(width: Get.width / 2, context: context, type: QuickAlertType.loading, title: 'جاري التحميل'.tr, text: 'يتم العمل على الطلب'.tr, barrierDismissible: false);
-
-                                          try {
-                                            await controller.archive(yearNameController.text);
-                                            Get.back();
-                                            Get.back();
-                                          } on Exception catch (e) {
-                                            await getReedOnlyError(context, title: e.toString());
-                                            Get.back();
-                                            Get.back();
+                          bodyWidget: GetBuilder<SettingsViewModel>(builder: (controller) {
+                            return Column(
+                              children: [
+                                Wrap(
+                                  runSpacing: 20,
+                                  alignment: WrapAlignment.start,
+                                  crossAxisAlignment: WrapCrossAlignment.end,
+                                  spacing: 50,
+                                  children: [
+                                    CustomDropDown(
+                                      value: 'الافتراضي'.tr,
+                                      listValue: controller.allArchive
+                                          .map(
+                                            (e) => e.toString().tr,
+                                          )
+                                          .toList(),
+                                      label: "السنة المختارة".tr,
+                                      onChange: (value) {
+                                        if (value != null) {
+                                          if (value != "الافتراضي".tr) {
+                                            enableUpdate = false;
+                                            controller.getOldData(value);
+                                          } else {
+                                            enableUpdate = true;
+                                            controller.getDefaultData();
                                           }
                                         }
                                       },
-                                      onCancelBtnTap: () => Get.back(),
-                                      confirmBtnText: 'نعم'.tr,
-                                      cancelBtnText: 'لا'.tr,
-                                      confirmBtnColor: Colors.redAccent,
-                                      showCancelBtn: true,
-                                    );
-                                  }),
-                              AppButton(
-                                  text: "بدأ عام دراسي جديد".tr,
-                                  onPressed: () async {
-                                    QuickAlert.show(
-                                      context: context,
-                                      type: QuickAlertType.confirm,
-                                      text: 'قبول هذه العملية'.tr,
-                                      title: 'سيتم حذف جميع البيانات الحالية'.tr,
-                                      onConfirmBtnTap: () async {
-                                        QuickAlert.show(width: Get.width / 2, context: context, type: QuickAlertType.loading, title: 'جاري التحميل'.tr, text: 'يتم العمل على الطلب'.tr, barrierDismissible: false);
-                                        await controller.archive("s");
-                                        Get.back();
-                                        Get.back();
+                                    ),
+                                    CustomDropDown(
+                                      value: Get.locale.toString() != "en_US" ? 'عربي' : 'English',
+                                      listValue: ['عربي', 'English'],
+                                      label: 'اختر اللغة'.tr,
+                                      onChange: (value) {
+                                        Get.find<SettingsViewModel>().changeLanguage(value!);
                                       },
-                                      onCancelBtnTap: () => Get.back(),
-                                      confirmBtnText: 'نعم'.tr,
-                                      cancelBtnText: 'لا'.tr,
-                                      confirmBtnColor: Colors.redAccent,
-                                      showCancelBtn: true,
-                                    );
-                                  }),
-                            ],
-                          ),
-                        ],
-                      );
-                    }),
+                                    ),
+                                  ],
+                                ),
+                                SizedBox(
+                                  height: defaultPadding * 2,
+                                ),
+                                Wrap(
+                                  runSpacing: 20,
+                                  alignment: WrapAlignment.spaceEvenly,
+                                  spacing: 50,
+                                  children: [
+                                    AppButton(
+                                        text: "ارشفة البيانات الحالية".tr,
+                                        onPressed: () async {
+                                          bool _validateYearFormat(BuildContext context, String value) {
+                                            final yearFormat = RegExp(r'^\d{4}-\d{4}$');
+                                            if (!yearFormat.hasMatch(value)) {
+                                              QuickAlert.show(
+                                                cancelBtnText: "موافق".tr,
+                                                context: context,
+                                                type: QuickAlertType.error,
+                                                title: 'يجب أن يكون التنسيق مثل 2024-2025'.tr,
+                                                text: "يجب التأكد من البيانات".tr,
+                                              );
+                                              ScaffoldMessenger.of(context).showSnackBar(
+                                                SnackBar(
+                                                  content: Text('يجب أن يكون التنسيق مثل 2024-2025'.tr),
+                                                ),
+                                              );
+                                              return false;
+                                            } else
+                                              return true;
+                                          }
+
+                                          TextEditingController yearNameController = TextEditingController();
+                                          QuickAlert.show(
+                                            context: context,
+                                            type: QuickAlertType.confirm,
+                                            widget: Padding(
+                                              padding: EdgeInsets.all(8),
+                                              child: CustomTextField(
+                                                controller: yearNameController,
+                                                title: "ادخل اسم السنة".tr,
+                                              ),
+                                            ),
+                                            text: 'قبول هذه العملية'.tr,
+                                            title: 'هل انت متأكد ؟'.tr,
+                                            onConfirmBtnTap: () async {
+                                              if (_validateYearFormat(context, yearNameController.text)) {
+                                                QuickAlert.show(width: Get.width / 2, context: context, type: QuickAlertType.loading, title: 'جاري التحميل'.tr, text: 'يتم العمل على الطلب'.tr, barrierDismissible: false);
+
+                                                try {
+                                                  await controller.archive(yearNameController.text);
+                                                  Get.back();
+                                                  Get.back();
+                                                } on Exception catch (e) {
+                                                  await getReedOnlyError(context, title: e.toString());
+                                                  Get.back();
+                                                  Get.back();
+                                                }
+                                              }
+                                            },
+                                            onCancelBtnTap: () => Get.back(),
+                                            confirmBtnText: 'نعم'.tr,
+                                            cancelBtnText: 'لا'.tr,
+                                            confirmBtnColor: Colors.redAccent,
+                                            showCancelBtn: true,
+                                          );
+                                        }),
+                                    AppButton(
+                                        text: "بدأ عام دراسي جديد".tr,
+                                        onPressed: () async {
+                                          QuickAlert.show(
+                                            context: context,
+                                            type: QuickAlertType.confirm,
+                                            text: 'قبول هذه العملية'.tr,
+                                            title: 'سيتم حذف جميع البيانات الحالية'.tr,
+                                            onConfirmBtnTap: () async {
+                                              QuickAlert.show(width: Get.width / 2, context: context, type: QuickAlertType.loading, title: 'جاري التحميل'.tr, text: 'يتم العمل على الطلب'.tr, barrierDismissible: false);
+                                              await controller.archive("s");
+                                              Get.back();
+                                              Get.back();
+                                            },
+                                            onCancelBtnTap: () => Get.back(),
+                                            confirmBtnText: 'نعم'.tr,
+                                            cancelBtnText: 'لا'.tr,
+                                            confirmBtnColor: Colors.redAccent,
+                                            showCancelBtn: true,
+                                          );
+                                        }),
+                                  ],
+                                ),
+                              ],
+                            );
+                          }),
+                        ),
+                      ),
+                      SizedBox(
+                        width: defaultPadding,
+                      ),
+                      Expanded(
+                          child: InsertShapeWidget(
+                              titleWidget: Text(
+                                "ضبط الدوام".tr,
+                                style: AppStyles.headLineStyle1,
+                              ),
+                              bodyWidget: Wrap(
+                                runSpacing: 20,
+                                alignment: WrapAlignment.start,
+                                crossAxisAlignment: WrapCrossAlignment.end,
+                                spacing: 50,
+                                children: [
+                                  TimeWidget(
+                                    isLate: true,
+                                    timeController: controller.lateTimeController,
+                                    controller: controller,
+                                  ),
+                                  TimeWidget(
+                                    isLate: false,
+                                    timeController: controller.appendTimeController,
+                                    controller: controller,
+                                  ),
+                                ],
+                              )))
+                    ],
                   ),
                   SizedBox(
                     height: defaultPadding * 2,
                   ),
-                  InsertShapeWidget(
-                      titleWidget: Text(
-                        "ضبط الدوام".tr,
-                        style: AppStyles.headLineStyle1,
-                      ),
-                      bodyWidget: Wrap(
-                        runSpacing: 20,
-                        alignment: WrapAlignment.start,
-                        crossAxisAlignment: WrapCrossAlignment.end,
-                        spacing: 50,
-                        children: [
-                          TimeWidget(
-                            isLate: true,
-                            timeController: controller.lateTimeController,
-                            controller: controller,
-                          ),
-                          TimeWidget(
-                            isLate: false,
-                            timeController: controller.appendTimeController,
-                            controller: controller,
-                          ),
-                        ],
-                      ))
                 ],
               );
             }),
@@ -692,16 +702,18 @@ class TimeWidget extends StatelessWidget {
   final TextEditingController timeController;
   final bool isLate;
   final SettingsViewModel controller;
+
   @override
   Widget build(BuildContext context) {
     // timeController.text = "07 31";
-    String lateTime=controller.settingsMap[Const.lateTime][Const.time];
-    String appendTime=controller.settingsMap[Const.appendTime][Const.time];
+    String lateTime = controller.settingsMap[Const.lateTime][Const.time];
+    String appendTime = controller.settingsMap[Const.appendTime][Const.time];
 
-
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: CrossAxisAlignment.end,
+    return Wrap(
+      alignment: WrapAlignment.center,
+      // mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: WrapCrossAlignment.end,
+      // crossAxisAlignment: CrossAxisAlignment.end,
       children: [
         Text(
           isLate ? "توقيت التأخير: " : "توقيت الغياب: ",
@@ -720,7 +732,7 @@ class TimeWidget extends StatelessWidget {
                 sunset: TimeOfDay(hour: 18, minute: 0),
                 duskSpanInMinutes: 120,
                 onChange: (time) {
-                  controller.setTime("${time.hour} ${time.minute}", isLate ? "LateTime" : "AppendTime");
+                  controller.setTime("${time.hour} ${time.minute}", isLate ? Const.lateTime : Const.appendTime);
                 },
               ),
             );
@@ -733,9 +745,7 @@ class TimeWidget extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 Text(
-                  isLate
-                      ? "${lateTime.split(" ")[0].padLeft(2, "0")}:${lateTime.split(" ")[1].padLeft(2, "0")}"
-                      : "${appendTime.split(" ")[0].padLeft(2, "0")}:${appendTime.split(" ")[1].padLeft(2, "0")}",
+                  isLate ? "${lateTime.split(" ")[0].padLeft(2, "0")}:${lateTime.split(" ")[1].padLeft(2, "0")}" : "${appendTime.split(" ")[0].padLeft(2, "0")}:${appendTime.split(" ")[1].padLeft(2, "0")}",
                   style: AppStyles.headLineStyle1,
                   overflow: TextOverflow.ellipsis,
                 ),

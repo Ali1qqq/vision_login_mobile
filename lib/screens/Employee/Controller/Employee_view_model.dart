@@ -690,6 +690,24 @@ class EmployeeViewModel extends GetxController {
     return pay;
   }
 
+  double getAllPaySalaryAtMonth(String month) {
+    double pay = 0.0;
+
+    pay= Get.find<SalaryViewModel>()
+        .salaryMap
+        .values
+        .where(
+          (element) {
+            return element.salaryId!.split(" ")[0].split("-")[1] == month;
+          },
+        )
+        .map(
+          (e) => double.parse(e.paySalary!),
+        )
+        .toList().fold(0, (previousValue, element) => previousValue+element,);
+    return pay;
+  }
+
   double getUserSalariesAtMonth(String month, String user) {
     double pay = 0.0;
     if (allAccountManagement[user]!

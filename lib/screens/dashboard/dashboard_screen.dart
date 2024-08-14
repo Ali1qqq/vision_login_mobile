@@ -191,7 +191,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                               _expensesViewModel.getExpensesAtMonth(
                                                   months[selectedMonth]!) -
                                               _accountManagementViewModel
-                                                  .getAllSalariesAtMonth(months[
+                                                  .getAllPaySalaryAtMonth(months[
                                                       selectedMonth]! /*DateTime.now().month.toString()*/))
                                           .toString(),
                                   primaryColor,
@@ -232,7 +232,16 @@ class _DashboardScreenState extends State<DashboardScreen> {
                               "الرواتب المستحقة",
                               _accountManagementViewModel
                                   .getAllSalariesAtMonth(
-                                  thisTimesModel!.month.toString())
+                                  months[selectedMonth]!)
+                                  .toString(),
+                              Colors.black,
+                              "assets/late-payment.png",
+                              false),
+                          SquareWidget(
+                              "الرواتب المستلمة",
+                              _accountManagementViewModel
+                                  .getAllPaySalaryAtMonth(
+                                  months[selectedMonth]!)
                                   .toString(),
                               Colors.black,
                               "assets/money-bag.png",
@@ -319,8 +328,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
     return Padding(
       padding: const EdgeInsets.all(0),
       child: Container(
-        height: 275,
-        width: 275,
+        height: 250,
+        width: 250,
         decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(15), color: secondaryColor),
         child: Column(
