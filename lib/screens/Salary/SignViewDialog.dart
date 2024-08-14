@@ -14,6 +14,7 @@ AlertDialog buildSignViewDialog(String text, EmployeeModel account,
     BuildContext context) {
   TextEditingController salaryReceived = TextEditingController();
   TextEditingController salaryMonth = TextEditingController();
+  TextEditingController notsController = TextEditingController();
   return AlertDialog(
     backgroundColor: secondaryColor,
     actions: [
@@ -48,6 +49,12 @@ AlertDialog buildSignViewDialog(String text, EmployeeModel account,
                 SizedBox(
                   height: defaultPadding,
                 ),
+                CustomTextField(
+                    controller: notsController ,
+                    title: "ملاحظات".tr),
+                SizedBox(
+                  height: defaultPadding,
+                ),
                 Padding(
                     padding: EdgeInsets.all(10),
                     child: Container(
@@ -66,7 +73,7 @@ AlertDialog buildSignViewDialog(String text, EmployeeModel account,
                       onPressed: () {
 
                         controller. handleSaveButtonPressed(
-                            salaryReceived.text, account.id, date, account.salary.toString(), text,context);
+                            salaryReceived.text, account.id, date, account.salary.toString(), text,context,notsController.text);
                       }),
                   AppButton(text: "اعادة".tr, onPressed: controller. handleClearButtonPressed),
                 ], mainAxisAlignment: MainAxisAlignment.spaceEvenly)

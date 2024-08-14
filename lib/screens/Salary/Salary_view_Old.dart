@@ -40,7 +40,7 @@ class _SalaryViewOldState extends State<SalaryViewOld> {
         await signatureGlobalKey.currentState!.toImage(pixelRatio: 3.0);
     final bytes = await data.toByteData(format: ui.ImageByteFormat.png);
     await Get.find<EmployeeViewModel>()
-        .adReceiveSalary(id, paySalary, date, constSalary, dilaySalary, bytes);
+        .adReceiveSalary(id, paySalary, date, constSalary, dilaySalary, bytes,"");
 
   }
 

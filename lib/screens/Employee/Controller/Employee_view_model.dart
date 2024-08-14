@@ -252,7 +252,7 @@ class EmployeeViewModel extends GetxController {
     }
   }
 
-  adReceiveSalary(String accountId, String paySalary, String salaryDate, String constSalary, String dilaySalary, bytes) async {
+  adReceiveSalary(String accountId, String paySalary, String salaryDate, String constSalary, String dilaySalary, bytes,String nots) async {
     String fileName = 'signatures/$accountId/$salaryDate.png';
     uploadImage(bytes, fileName).then(
       (value) async {
@@ -273,7 +273,7 @@ class EmployeeViewModel extends GetxController {
           ));
 
           if (double.parse(paySalary).toInt() != double.parse(dilaySalary).toInt())
-            await addWaitOperation(collectionName: accountManagementCollection, affectedId: accountId, type: waitingListTypes.waitDiscounts, details: "الراتب الممنوح".tr + " ($paySalary) " + "الراتب المستحق".tr + " ($dilaySalary) ");
+            await addWaitOperation(collectionName: accountManagementCollection, affectedId: accountId, type: waitingListTypes.waitDiscounts, details: "الراتب الممنوح".tr + " ($paySalary) " + "الراتب المستحق".tr + " ($dilaySalary) ${nots}");
           Get.back();
           Get.back();
         }

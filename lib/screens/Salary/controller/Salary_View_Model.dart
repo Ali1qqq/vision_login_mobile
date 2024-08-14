@@ -56,11 +56,12 @@ class SalaryViewModel extends GetxController {
      String constSalary,
      String dilaySalary,
      BuildContext context,
+      String nots,
   ) async {
     QuickAlert.show(width: Get.width / 2, context: context, type: QuickAlertType.loading, title: 'جاري التحميل'.tr, text: 'يتم العمل على الطلب'.tr, barrierDismissible: false);
     final data = await signatureGlobalKey.currentState!.toImage(pixelRatio: 3.0);
     final bytes = await data.toByteData(format: ui.ImageByteFormat.png);
-    await employeeController.adReceiveSalary(id, paySalary, date, constSalary, dilaySalary, bytes);
+    await employeeController.adReceiveSalary(id, paySalary, date, constSalary, dilaySalary, bytes,nots);
   }
 receiveSalary({required BuildContext context}){
  EmployeeModel  accountModel=employeeController.allAccountManagement[currentId]!;
