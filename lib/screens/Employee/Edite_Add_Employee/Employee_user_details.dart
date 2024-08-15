@@ -22,7 +22,7 @@ class EmployeeInputForm extends StatelessWidget {
   Widget build(BuildContext context) {
     return GetBuilder<EmployeeViewModel>(builder: (empController) {
       return Scaffold(
-        appBar: Header(context: context, title: ConstString.addNewEmployee, middleText: "".tr),
+        appBar: Header(context: context, title: empController.employeeModel == null ? ConstString.addNewEmployee : empController.employeeModel!.fullName!, middleText: "".tr),
         backgroundColor: bgColor,
         body: SingleChildScrollView(
           padding: EdgeInsets.all(16.0),
@@ -106,7 +106,7 @@ class EmployeeInputForm extends StatelessWidget {
                                 (e) => e.name!,
                               )
                               .toList() +
-                          ['بدون حافلة'],
+                          ['مع حافلة', 'بدون حافلة'],
                       label: 'الحافلة'.tr,
                       onChange: (value) {
                         if (value != null) {
@@ -221,10 +221,8 @@ class EmployeeInputForm extends StatelessWidget {
                   ],
                 ),
               ),
-
               SizedBox(height: 16.0),
               if (empController.enableEdit) EmployeeEventContainer(),
-
             ],
           ),
         ),
@@ -232,7 +230,7 @@ class EmployeeInputForm extends StatelessWidget {
     });
   }
 
-  // EmployeeInputForm();
+// EmployeeInputForm();
 }
 /* Container(
                   padding: EdgeInsets.all(16.0),
