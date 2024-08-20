@@ -1,12 +1,13 @@
 import 'package:get/get.dart';
 import 'package:vision_dashboard/models/employee_time_model.dart';
 
+import '../constants.dart';
 import '../screens/Buses/Controller/Bus_View_Model.dart';
 import '../utils/Hive_DataBase.dart';
 import '../utils/abstract.dart';
 import 'event_record_model.dart';
 
-class EmployeeModel implements Mappable{
+class EmployeeModel implements Mappable {
   late String id, userName, password, type;
   String? serialNFC;
   int? salary, dayOfWork, discounts;
@@ -48,9 +49,10 @@ class EmployeeModel implements Mappable{
   });
 
   EmployeeModel.fromJson(json) {
+    // print(  HiveDataBase.getAccountManagementModel()!.type != 'مالك');
     id = json['id'] ?? '';
     userName = json['userName'] ?? '';
-    password = json['password'] ?? '';
+    password = currentEmployee?.type != 'مالك' ? "*******" : json['password'] ?? '';
     type = json['type'] ?? '';
     fullName = json['fullName'] ?? '';
     serialNFC = json['serialNFC'] ?? '';
@@ -83,7 +85,7 @@ class EmployeeModel implements Mappable{
       "userName": userName,
       if (fullName != null) "fullName": fullName,
       if (discounts != null) "discounts": discounts,
-      "password": password,
+      if (currentEmployee?.type == 'مالك') "password": password,
       if (salaryReceived != null) "salaryReceived": salaryReceived?.toList(),
       "type": type,
       if (serialNFC != null) "serialNFC": serialNFC,
@@ -110,18 +112,18 @@ class EmployeeModel implements Mappable{
   Map<String, dynamic> toMap() {
     return {
       "الرقم التسلسلي": id,
-      "اسم المستخدم":userName ,
+      "اسم المستخدم": userName,
       "الاسم الكامل": fullName,
-      "كامة السر": HiveDataBase.getAccountManagementModel()?.type == "مالك" ? password : '' ,
+      "كامة السر": password,
       "الدور": type,
       "الحالة": isActive == true ? "فعال".tr : "غير فعال".tr,
       "رقم الموبايل": mobileNumber,
-      "العنوان":address ,
+      "العنوان": address,
       "الجنسية": nationality,
       "الجنس": gender,
       "العمر": age,
       "الوظيفة": jobTitle,
-      "العقد":contract ,
+      "العقد": contract,
       "الحافلة": Get.find<BusViewModel>().busesMap[bus]?.name ?? bus,
       "تاريخ البداية": startDate,
       "سجل الاحداث": eventRecords?.length,

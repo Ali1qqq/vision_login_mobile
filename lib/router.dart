@@ -29,7 +29,7 @@ class AppRoutes {
     GetPage(
         name: main,
         page: () {
-          if (HiveDataBase.getAccountManagementModel()?.id != null) {
+          if (currentEmployee?.id != null) {
             return MainScreen();
           } else
             return LoginScreen();

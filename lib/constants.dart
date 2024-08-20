@@ -1,21 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
+
 import 'package:vision_dashboard/models/TimeModel.dart';
-import 'package:vision_dashboard/screens/Buses/Buses_View.dart';
-import 'package:vision_dashboard/screens/Employee/Employee_View.dart';
-import 'package:vision_dashboard/screens/Parents/Parents_View.dart';
-import 'package:vision_dashboard/screens/Salary/SalaryView.dart';
-import 'package:vision_dashboard/screens/Settings/Setting_View.dart';
-import 'package:vision_dashboard/screens/Store/Store_View.dart';
-import 'package:vision_dashboard/screens/Student/Student_view_Screen.dart';
-import 'package:vision_dashboard/screens/Study%20Fees/Study_Fees_View.dart';
-import 'package:vision_dashboard/screens/classes/classes_view.dart';
-import 'package:vision_dashboard/screens/dashboard/dashboard_screen.dart';
-import 'package:vision_dashboard/screens/employee_time/employee_time.dart';
-import 'package:vision_dashboard/screens/event/event_view_screen.dart';
-import 'package:vision_dashboard/screens/expenses/expenses_view_screen.dart';
+import 'package:vision_dashboard/models/account_management_model.dart';
+
 import 'package:vision_dashboard/screens/logout/logout_View.dart';
-import 'package:vision_dashboard/utils/Hive_DataBase.dart';
 
 const primaryColor = Color(0xff3E96F4);
 const secondaryColor = Color(0xffCCC7BF);
@@ -25,6 +13,7 @@ const bgColor = Color(0xffF6F6F4); // تخفيف لون الخلفية
 //Color(0xff7e0303)F6F6F4
 //Color(0xffc89665) 3E96F4
 const defaultPadding = 16.0;
+EmployeeModel? currentEmployee;
 
 Map<String, String> cardsMap = {
   "1": "04:5D:B0:F3:9F:61:80",

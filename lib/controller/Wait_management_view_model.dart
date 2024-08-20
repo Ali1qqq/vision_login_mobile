@@ -71,10 +71,7 @@ class WaitManagementViewModel extends GetxController {
   }
 
   doDelete(WaitManagementModel waitModel) async {
-    await FirebaseFirestore.instance
-        .collection(waitModel.collectionName)
-        .doc(waitModel.affectedId)
-        .delete();
+
     switch (waitModel.collectionName) {
       case Const.expensesCollection:
         if (waitModel.relatedId != null) {
@@ -86,7 +83,6 @@ class WaitManagementViewModel extends GetxController {
         await deleteStudentFromParentsAndBus(
             waitModel.affectedId, waitModel.relatedId!);
         break;
-
       case classCollection:
         await deleteClassFromStudent(waitModel.affectedId);
         break;
@@ -96,7 +92,14 @@ class WaitManagementViewModel extends GetxController {
           Get.find<StudentViewModel>().getAllStudentWithOutListen();
           Get.find<EmployeeViewModel>().getAllEmployeeWithoutListen();
         }
+      case accountManagementCollection:
+        await makeCardAvailable(waitModel.affectedId);
+        break;
     }
+    await FirebaseFirestore.instance
+        .collection(waitModel.collectionName)
+        .doc(waitModel.affectedId)
+        .delete();
   }
 
   deleteStudentFromParentsAndBus(String studentId, String relatedId) async {
@@ -222,6 +225,15 @@ class WaitManagementViewModel extends GetxController {
    clearDiscount(WaitManagementModel waitModel) {
      Get.find<EmployeeViewModel>().clearDiscount(waitModel.affectedId);
    }
+
+  makeCardAvailable(String affectedId) {
+   String cardId=
+    Get.find<EmployeeViewModel>().allAccountManagement[affectedId]!.serialNFC??'';
+    FirebaseFirestore.instance
+        .collection(nfcCardCollection)
+        .doc(cardId)
+        .set({"userId":null}, SetOptions(merge: true));
+  }
 
 }
 

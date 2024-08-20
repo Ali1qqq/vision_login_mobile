@@ -4,38 +4,23 @@ import 'package:vision_dashboard/screens/Employee/Controller/Employee_view_model
 import 'package:vision_dashboard/screens/Settings/Settings_Screen.dart';
 import 'package:vision_dashboard/screens/Employee/Edite_Add_Employee/Employee_user_details.dart';
 
-import '../../utils/Hive_DataBase.dart';
+import '../../constants.dart';
 import 'Controller/Settings_View_Model.dart';
 
-class SettingsView extends StatefulWidget {
+class SettingsView extends StatelessWidget {
   SettingsView({super.key});
 
-  @override
-  State<SettingsView> createState() => _SettingsViewState();
-}
-
-class _SettingsViewState extends State<SettingsView> {
-
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    if (HiveDataBase.getAccountManagementModel()?.type != 'مالك') {
-      print("object");
-      Get.find<EmployeeViewModel>().currentId=HiveDataBase.getAccountManagementModel()!.id;
-
-      WidgetsFlutterBinding.ensureInitialized().waitUntilFirstFrameRasterized.then((value) {
-        Get.find<EmployeeViewModel>().initController();
-        Get.find<EmployeeViewModel>().update();
-      },);
-      // Get.find<EmployeeViewModel>().setCurrentId( HiveDataBase.getAccountManagementModel()!.id) ;
-      // Get.find<EmployeeViewModel>(). initController() ;
-    }
-  }
   @override
   Widget build(BuildContext context) {
 
     return GetBuilder<SettingsViewModel>(builder: (context) {
+      if (currentEmployee?.type != 'مالك') {
+        Get.find<EmployeeViewModel>().currentId=currentEmployee!.id;
+        WidgetsFlutterBinding.ensureInitialized().waitUntilFirstFrameRasterized.then((value) {
+          Get.find<EmployeeViewModel>().initController();
+          Get.find<EmployeeViewModel>().update();
+        },);
+      }
       return Scaffold(
         body: AnimatedCrossFade(
           duration: Duration(milliseconds: 500),
@@ -45,9 +30,9 @@ class _SettingsViewState extends State<SettingsView> {
           ),
           secondChild: ConstrainedBox(
             constraints: BoxConstraints(maxHeight: Get.height),
-            child: EmployeeInputForm(),
+            child: EmployeeInputForm(viewOnly:true),
           ),
-          crossFadeState: HiveDataBase.getAccountManagementModel()!.type != 'مالك' ? CrossFadeState.showSecond : CrossFadeState.showFirst,
+          crossFadeState: currentEmployee!.type != 'مالك' ? CrossFadeState.showSecond : CrossFadeState.showFirst,
         ),
       );
     });

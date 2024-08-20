@@ -363,6 +363,14 @@ class _DashboardScreenState extends State<DashboardScreen> {
             SizedBox(
               height: 20,
             ),
+            if(title=="الايرادات".tr)
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text("قيمة الضربية:".tr,style: AppStyles.headLineStyle4.copyWith(color: Colors.red)),
+                  Text((double.parse(body.toString())*0.5).toString(),style: AppStyles.headLineStyle4.copyWith(color: Colors.red),),
+                ],
+              )
           ],
         ),
       ),

@@ -14,6 +14,7 @@ import 'firebase_options.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await HiveDataBase.init();
   await Firebase.initializeApp(
 
     options: DefaultFirebaseOptions.currentPlatform,
@@ -21,7 +22,7 @@ Future<void> main() async {
 /*  SystemChrome.setPreferredOrientations([
     DeviceOrientation.landscapeLeft,
   ]);*/
-  await HiveDataBase.init();
+  currentEmployee= await HiveDataBase.getAccountManagementModel();
   thisTimesModel = TimesModel.fromDateTime(DateTime.now());
   runApp(MyApp());
 }

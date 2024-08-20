@@ -306,7 +306,7 @@ class ExpensesViewModel extends GetxController {
         title: titleController.text,
         body: busId != null ? "مصروف الحافلة ${busController.busesMap[busId]!.name}\n ${bodyController.text}" : bodyController.text,
         total: int.parse(totalController.text),
-        userId: HiveDataBase.getAccountManagementModel()!.id,
+        userId: currentEmployee!.id,
         images: imageLinkList,
       );
 

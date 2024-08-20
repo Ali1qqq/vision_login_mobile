@@ -17,7 +17,8 @@ import '../../Widgets/header.dart';
 
 class EmployeeInputForm extends StatelessWidget {
   final NfcCardViewModel cardViewModel = Get.find<NfcCardViewModel>();
-
+  EmployeeInputForm({this. viewOnly=false});
+  final bool viewOnly;
   @override
   Widget build(BuildContext context) {
     return GetBuilder<EmployeeViewModel>(builder: (empController) {
@@ -202,7 +203,9 @@ class EmployeeInputForm extends StatelessWidget {
                           child: ListView(
                             scrollDirection: Axis.horizontal,
                             children: [
+                              if(!viewOnly)
                               buildAddIdImageButton(empController),
+
                               ...buildIdImageList(empController.imagesTempData, empController, true),
                               ...buildIdImageList(empController.imageLinkList, empController, false),
                             ],
@@ -210,7 +213,8 @@ class EmployeeInputForm extends StatelessWidget {
                         ),
                       ],
                     ),
-                    if (empController.enableEdit) CustomTextField(controller: empController.editController, title: 'سبب التعديل'.tr, keyboardType: TextInputType.text),
+                    if (empController.enableEdit&&!viewOnly) CustomTextField(controller: empController.editController, title: 'سبب التعديل'.tr, keyboardType: TextInputType.text),
+                    if(!viewOnly)
                     GetBuilder<EmployeeViewModel>(builder: (controller) {
                       return AppButton(
                           text: "حفظ".tr,
@@ -230,112 +234,5 @@ class EmployeeInputForm extends StatelessWidget {
     });
   }
 
-// EmployeeInputForm();
-}
-/* Container(
-                  padding: EdgeInsets.all(16.0),
-                  alignment: Alignment.center,
-                  decoration: BoxDecoration(
-                    color: secondaryColor,
-                    borderRadius: BorderRadius.circular(15),
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      GetBuilder<EventViewModel>(builder: (eventController) {
-                        return Wrap(
-                          runAlignment: WrapAlignment.spaceAround,
-                          runSpacing: 25,
-                          children: [
-                            CustomDropDownWithValue(
-                              value: '',
-                              mapValue: eventController.allEvents.values
-                                  .toList()
-                                  .where(
-                                    (element) => element.role == Const.eventTypeEmployee,
-                                  )
-                                  .map((e) => e)
-                                  .toList(),
-                              label: "نوع الحدث".tr,
-                              onChange: (selectedWay) {
-                                if (selectedWay != null) {
 
-                                 empController.selectedEvent = eventController.allEvents[selectedWay];
-                                  empController.update();
-                                }
-                              },
-                            ),
-                            SizedBox(width: 16.0),
-                            CustomTextField(
-                              controller: empController.bodyEvent,
-                              title: 'الوصف'.tr,
-                              enable: true,
-                              keyboardType: TextInputType.text,
-                            ),
-                            SizedBox(width: 16.0),
-                            AppButton(
-                              text: 'إضافة سجل حدث'.tr,
-                              onPressed: () {
-                                setState(() {
-                                  empController.eventRecords.add(EventRecordModel(
-                                    body: empController.bodyEvent.text,
-                                    type: empController.selectedEvent!.name,
-                                    date: thisTimesModel!.dateTime.toString().split(".")[0],
-                                    color: empController.selectedEvent!.color.toString(),
-                                  ));
-                                  empController.bodyEvent.clear();
-                                });
-                              },
-                            ),
-                          ],
-                        );
-                      }),
-                      SizedBox(height: defaultPadding * 2),
-                      Text('سجل الأحداث:'.tr, style: Styles.headLineStyle1),
-                      SizedBox(height: defaultPadding),
-                      Container(
-                        padding: EdgeInsets.all(0.0),
-                        alignment: Alignment.center,
-                        child: ListView.builder(
-                          padding: EdgeInsets.zero,
-                          shrinkWrap: true,
-                          itemCount: empController.eventRecords.length,
-                          itemBuilder: (context, index) {
-                            final record = empController.eventRecords[index];
-                            return Padding(
-                              padding: const EdgeInsets.symmetric(vertical: 8.0),
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  color: Color(int.parse(record.color)).withOpacity(0.2),
-                                  borderRadius: BorderRadius.circular(15),
-                                ),
-                                child: Padding(
-                                  padding: const EdgeInsets.symmetric(vertical: 14.0, horizontal: 10),
-                                  child: Row(
-                                    children: [
-                                      Text(
-                                        record.type,
-                                        style: Styles.headLineStyle1.copyWith(color: Colors.black),
-                                      ),
-                                      SizedBox(width: 10),
-                                      Text(
-                                        record.body,
-                                        style: Styles.headLineStyle1.copyWith(color: Colors.black),
-                                      ),
-                                      SizedBox(width: 50),
-                                      Text(
-                                        record.date,
-                                        style: Styles.headLineStyle3,
-                                      ),
-                                      Spacer(),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            );
-                          },
-                        ),
-                      ),
-                    ],
-                  ),
-                )*/
+}

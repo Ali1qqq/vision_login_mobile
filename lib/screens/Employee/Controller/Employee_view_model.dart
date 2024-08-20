@@ -135,7 +135,7 @@ class EmployeeViewModel extends GetxController {
 
   EmployeeViewModel() {
     getColumns();
-    if(HiveDataBase.getAccountManagementModel()?.id!=null)
+    if(currentEmployee?.id!=null)
     getAllEmployee();
     getScreens();
   }
@@ -166,13 +166,18 @@ class EmployeeViewModel extends GetxController {
         rows.clear();
         int index = 4;
         allAccountManagement = Map<String, EmployeeModel>.fromEntries(event.docs.toList().map((i) {
+          if(currentEmployee!.type != 'مالك')
+            {
+              if(i.data().type=="مالك")
+                return MapEntry(i.id.toString(), i.data());
+            }
           rows.add(
             PlutoRow(
               cells: {
                 data.keys.elementAt(0): PlutoCell(value: i.id),
                 data.keys.elementAt(1): PlutoCell(value: i.data().userName),
                 data.keys.elementAt(2): PlutoCell(value: i.data().fullName),
-                data.keys.elementAt(3): PlutoCell(value:HiveDataBase.getAccountManagementModel()!.type != 'مالك' ? '': i.data().password ),
+                data.keys.elementAt(3): PlutoCell(value:i.data().password ),
                 data.keys.elementAt(index): PlutoCell(value: i.data().type),
                 data.keys.elementAt(index + 1): PlutoCell(value: i.data().isActive == true ? "فعال".tr : "غير فعال".tr),
                 data.keys.elementAt(index + 2): PlutoCell(value: i.data().mobileNumber),
@@ -418,9 +423,11 @@ class EmployeeViewModel extends GetxController {
             Get.snackbar("خطأ", "هذا المستخدم غير فعال ");
             return;
           }
+          currentEmployee=await myUserModel!;
           HiveDataBase.setCurrentScreen("0");
           await HiveDataBase.deleteAccountManagementModel();
           await HiveDataBase.setAccountManagementModel(myUserModel!);
+
           await getScreens();
           await  getAllEmployee();
           Get.offNamed(AppRoutes.DashboardScreen);
