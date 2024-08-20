@@ -287,4 +287,6 @@ Map<String, String> ar = {
   "grade": "المعدل",
   "توقيت التأخير:": "Late Time",
   "توقيت الغياب:": "Append Time",
+  "idImages":"صورة الهوية",
+  "employeeTime":"دوام الموظف",
 };

@@ -1075,7 +1075,7 @@ class EmployeeViewModel extends GetxController {
           await addWaitOperation(
             collectionName: accountManagementCollection,
             affectedId: model.id,
-            details: model.toJson().toString(),
+            newData: model.toJson(),
             type: waitingListTypes.add,
           );
         }
@@ -1159,7 +1159,7 @@ class EmployeeViewModel extends GetxController {
   }
 
   /// when press Edite button
-  void showEmployeeInputDialog(BuildContext context) {
+   showEmployeeInputDialog(BuildContext context) {
     showDialog(
       context: context,
       builder: (BuildContext context) {

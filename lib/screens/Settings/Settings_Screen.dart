@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:math';
 import 'package:day_night_time_picker/lib/daynight_timepicker.dart';
 import 'package:day_night_time_picker/lib/state/time.dart';
@@ -5,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:quickalert/models/quickalert_type.dart';
 import 'package:quickalert/widgets/quickalert_dialog.dart';
+import 'package:vision_dashboard/models/account_management_model.dart';
 import 'package:vision_dashboard/screens/Employee/Controller/Employee_view_model.dart';
 import 'package:vision_dashboard/screens/Widgets/Insert_shape_Widget.dart';
 import 'package:vision_dashboard/screens/expenses/Controller/expenses_view_model.dart';
@@ -398,7 +400,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
   List<DataCell> _buildWaitCells(double size, List<String> deleteData, WaitManagementModel model, String affectedName, WaitManagementViewModel controller) {
     return [
       dataRowItem(size / deleteData.length, model.type.toString().tr),
-      dataRowItem(size / deleteData.length, model.details ?? "لا يوجد".tr),
+      model.type == waitingListTypes.add.name  ? dataRowItem(size / deleteData.length, "عرض".tr,color: primaryColor, onTap: () {
+        showEmployeeDialog(context, model.newData ?? {});
+      }):dataRowItem(size / deleteData.length, model.details==''||model.details==null ? "لا يوجد".tr:model.details),
       dataRowItem(size / deleteData.length, affectedName),
       dataRowItem(size / deleteData.length, model.collectionName.toString()),
       if (enableUpdate)
@@ -680,6 +684,54 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         ],
                       ),
                     ),
+                  ],
+                );
+              },
+            ),
+          ),
+        );
+      },
+    );
+  }
+  showEmployeeDialog(BuildContext context, Map<String,dynamic> employeeModel) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return Dialog(
+          clipBehavior: Clip.hardEdge,
+          backgroundColor: Colors.white,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(25.0),
+          ),
+          child: Container(
+            width: ( Get.width / 4)+( Get.width / 4),
+            child: ListView.builder(
+
+              padding: EdgeInsets.zero,
+              physics: ClampingScrollPhysics(),
+              shrinkWrap: true,
+              itemCount: employeeModel.length,
+              itemBuilder: (context, index) {
+                double width = Get.width;
+                return Row(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    SizedBox(
+                        width: width / 5,
+                        child: Text(
+                          employeeModel.keys.elementAt(index).toString().tr,
+                          overflow: TextOverflow.ellipsis,
+                          style: AppStyles.headLineStyle3,
+                        )),
+                    Text(":"),
+                    SizedBox(
+                        width: width / 4.1,
+                        child: Text(
+                          employeeModel.values.elementAt(index).toString(),
+                          textAlign: TextAlign.center,
+                          style: AppStyles.headLineStyle3.copyWith(color: primaryColor),
+                        )),
                   ],
                 );
               },
