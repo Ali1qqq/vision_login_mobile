@@ -1,11 +1,9 @@
-import 'package:vision_dashboard/models/Installment_model.dart';
 
 abstract class Const {
   static const expensesCollection = "Expenses";
   static const eventCollection = "Events";
   static const waitManagementCollection = "WaitManagement";
   static const settingsCollection = "Setting";
-
   static const eventTypeStudent = 'eventTypeStudent';
   static const eventTypeParent = 'eventTypeParent';
   static const eventTypeEmployee = 'eventTypeEmployee';
@@ -19,13 +17,15 @@ Map<String, Map<String, dynamic>> compareMaps(Map<String, dynamic> newData, Map<
   Map<String, Map<String, dynamic>> differences = {};
 
   newData.forEach((key, value) {
-    if (key != "isAccepted"&&key != "installmentRecords") if (oldData.containsKey(key) && newData[key].toString() != oldData[key].toString()) {
+
+    if (key != "isAccepted"&&key != "installmentRecords"&&key!="eventRecords") if (oldData.containsKey(key) && newData[key].toString() != oldData[key].toString()) {
       differences[key] = {'newData': newData[key], 'oldData': oldData[key]};
     }
     ///فحص الاقساط
     if (key == "installmentRecords") {
 /// معرفة اذا كان هناك تعديل على الاقساط كلها
       Map<String, Map<String, dynamic>> installmentDeference = compareMaps(newData[key], oldData[key]);
+      print(installmentDeference.length);
       if (installmentDeference != {}) {
         /// الدوران على القسط المتعدل لمعرفة التعديل الحاصل
         installmentDeference.forEach(
@@ -39,6 +39,26 @@ Map<String, Map<String, dynamic>> compareMaps(Map<String, dynamic> newData, Map<
             },);
           },
         );
+      }
+    }
+    if (key == "eventRecords") {
+
+      bool eventAdd = newData[key].length!=oldData[key].length;
+      print(eventAdd);
+      if(eventAdd) {
+        String newEvent = '';
+        List<dynamic> dataList = newData[key];
+
+        for (int i = 0; i < dataList.length; i++) {
+          var string = dataList[i];
+          newEvent += string["type"].toString() + " - " + string["body"].toString();
+
+          // إذا لم يكن العنصر الأخير، أضف "\n"
+          if (i < dataList.length - 1) {
+            newEvent += "\n";
+          }
+        }
+        differences["eventRecords"] = {'newData':newEvent, 'oldData': "اضافة حدث"};
       }
     }
   });

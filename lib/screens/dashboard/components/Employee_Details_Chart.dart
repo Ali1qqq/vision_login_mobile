@@ -18,8 +18,7 @@ class EmployeeDetailsChart extends StatefulWidget {
 
 class _EmployeeDetailsChartState extends State<EmployeeDetailsChart> {
   int touchedIndex = -1;
-  EmployeeViewModel _accountManagementViewModel =
-      Get.find<EmployeeViewModel>();
+  EmployeeViewModel _accountManagementViewModel = Get.find<EmployeeViewModel>();
 
   @override
   Widget build(BuildContext context) {
@@ -44,8 +43,7 @@ class _EmployeeDetailsChartState extends State<EmployeeDetailsChart> {
             touchedIndex: touchedIndex,
             paiChartSelectionData: paiChartSelectionData(),
             title: "موظف".tr,
-            subtitle: _accountManagementViewModel.allAccountManagement.length
-                .toString(),
+            subtitle: _accountManagementViewModel.allAccountManagement.length.toString(),
           ),
           InfoCard(
             onTap: () {
@@ -53,13 +51,12 @@ class _EmployeeDetailsChartState extends State<EmployeeDetailsChart> {
               setState(() {});
             },
             title: "اداري".tr,
-            amountOfEmployee:
-                _accountManagementViewModel.allAccountManagement.values
-                    .where(
-                      (element) => element.jobTitle == 'اداري',
-                    )
-                    .length
-                    .toString(),
+            amountOfEmployee: _accountManagementViewModel.allAccountManagement.values
+                .where(
+                  (element) => element.jobTitle == 'مدير' || (element.jobTitle?.startsWith("عامل") ?? false),
+                )
+                .length
+                .toString(),
             color: Colors.redAccent,
           ),
           InfoCard(
@@ -68,29 +65,26 @@ class _EmployeeDetailsChartState extends State<EmployeeDetailsChart> {
               setState(() {});
             },
             title: "استاذ".tr,
-            amountOfEmployee:
-                _accountManagementViewModel.allAccountManagement.values
-                    .where(
-                      (element) => element.jobTitle?.startsWith("مدرس")??false,
-                    )
-                    .length
-                    .toString(),
+            amountOfEmployee: _accountManagementViewModel.allAccountManagement.values
+                .where(
+                  (element) => element.jobTitle?.startsWith("مدرس") ?? false,
+                )
+                .length
+                .toString(),
             color: primaryColor,
           ),
-
           InfoCard(
             onTap: () {
               touchedIndex == 2 ? touchedIndex = -1 : touchedIndex = 2;
               setState(() {});
             },
             title: "سائق".tr,
-            amountOfEmployee:
-                _accountManagementViewModel.allAccountManagement.values
-                    .where(
-                      (element) => element.jobTitle == 'سائق',
-                    )
-                    .length
-                    .toString(),
+            amountOfEmployee: _accountManagementViewModel.allAccountManagement.values
+                .where(
+                  (element) => element.jobTitle == 'سائق',
+                )
+                .length
+                .toString(),
             color: Colors.cyan,
           ),
         ],
@@ -105,21 +99,16 @@ class _EmployeeDetailsChartState extends State<EmployeeDetailsChart> {
       double radius = isTouched ? 50.0 : 30;
       const shadows = [Shadow(color: Colors.black, blurRadius: 2)];
       switch (i) {
-
         case 0:
           return PieChartSectionData(
             color: primaryColor,
             value: _accountManagementViewModel.allAccountManagement.values
-                .where(
-                  (element) => element.jobTitle == 'مدرس/ه',
-            )
-                .length *
+                    .where(
+                      (element) => element.jobTitle?.startsWith("مدرس") ?? false,
+                    )
+                    .length *
                 1.0,
-            title: _accountManagementViewModel.allAccountManagement.isEmpty
-                ? ''
-                : '${((_accountManagementViewModel.allAccountManagement.values.where(
-                  (element) =>element.jobTitle?.startsWith("مدرس")??false
-            ).length / _accountManagementViewModel.allAccountManagement.length) * 100).round()}%',
+            title: _accountManagementViewModel.allAccountManagement.isEmpty ? '' : '${((_accountManagementViewModel.allAccountManagement.values.where((element) => element.jobTitle?.startsWith("مدرس") ?? false).length / _accountManagementViewModel.allAccountManagement.length) * 100).round()}%',
             radius: radius,
             titleStyle: TextStyle(
               fontSize: fontSize,
@@ -132,16 +121,16 @@ class _EmployeeDetailsChartState extends State<EmployeeDetailsChart> {
           return PieChartSectionData(
             color: blueColor,
             value: _accountManagementViewModel.allAccountManagement.values
-                .where(
-                  (element) => element.jobTitle == 'اداري',
-            )
-                .length *
+                    .where(
+                      (element) => element.jobTitle == 'مدير' || (element.jobTitle?.startsWith("عامل") ?? false),
+                    )
+                    .length *
                 1.0,
             title: _accountManagementViewModel.allAccountManagement.isEmpty
                 ? ''
                 : '${((_accountManagementViewModel.allAccountManagement.values.where(
-                  (element) => element.jobTitle == 'اداري',
-            ).length / _accountManagementViewModel.allAccountManagement.length) * 100).round()}%',
+                      (element) => element.jobTitle == 'مدير' || (element.jobTitle?.startsWith("عامل") ?? false),
+                    ).length / _accountManagementViewModel.allAccountManagement.length) * 100).round()}%',
             radius: radius,
             titleStyle: TextStyle(
               fontSize: fontSize,
@@ -154,17 +143,16 @@ class _EmployeeDetailsChartState extends State<EmployeeDetailsChart> {
           return PieChartSectionData(
             color: Colors.cyan,
             value: _accountManagementViewModel.allAccountManagement.values
-                .where(
-                  (element) => element.jobTitle == 'سائق',
-            )
-                .length *
+                    .where(
+                      (element) => element.jobTitle == 'سائق',
+                    )
+                    .length *
                 1.0,
             title: _accountManagementViewModel.allAccountManagement.isEmpty
                 ? ''
                 : '${((_accountManagementViewModel.allAccountManagement.values.where(
-                  (element) => element.jobTitle == 'سائق',
-            ).length / _accountManagementViewModel.allAccountManagement.length) * 100).round()}%',
-
+                      (element) => element.jobTitle == 'سائق',
+                    ).length / _accountManagementViewModel.allAccountManagement.length) * 100).round()}%',
             radius: radius,
             titleStyle: TextStyle(
               fontSize: fontSize,

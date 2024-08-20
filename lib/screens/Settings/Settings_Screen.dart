@@ -143,7 +143,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                 ///TODO:fix time issue
                                 DataRow(cells: [
                                   dataRowItem(size / logData.length, deleteModel.type.toString().tr),
-                                  dataRowItem(size / logData.length, deleteModel.date!.toString()),
+                                  dataRowItem(size / logData.length, deleteModel.date!.toString().split(".")[0]),
                                   dataRowItem(size / logData.length, deleteModel.details ?? "لا يوجد".tr),
                                   dataRowItem(size / logData.length, _getAffectedName(deleteModel)),
                                   dataRowItem(size / logData.length, deleteModel.collectionName.toString()),
@@ -285,7 +285,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                             title: 'سيتم حذف جميع البيانات الحالية'.tr,
                                             onConfirmBtnTap: () async {
                                               QuickAlert.show(width: Get.width / 2, context: context, type: QuickAlertType.loading, title: 'جاري التحميل'.tr, text: 'يتم العمل على الطلب'.tr, barrierDismissible: false);
-                                              await controller.archive("s");
+                                              await controller.deleteCurrentData();
                                               Get.back();
                                               Get.back();
                                             },

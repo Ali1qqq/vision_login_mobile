@@ -29,10 +29,9 @@ class SettingsViewModel extends GetxController {
   WaitManagementViewModel _deleteManagementViewModel = Get.find<WaitManagementViewModel>();
   BusViewModel _busViewModel = Get.find<BusViewModel>();
 
-
-  Map<String,dynamic> settingsMap={
-    "AppendTime":{"Time":"8 00"},
-    "LateTime":{"Time":"7 30"}
+  Map<String, dynamic> settingsMap = {
+    "AppendTime": {"Time": "8 00"},
+    "LateTime": {"Time": "7 30"}
   };
 
   TextEditingController lateTimeController = TextEditingController()..text = "0 0";
@@ -53,15 +52,15 @@ class SettingsViewModel extends GetxController {
   }
 
   getAllSettings() async {
-    await fireStoreInstance.collection(Const.settingsCollection).snapshots().listen((date) {
-      settingsMap.clear();
-      for(var element in date.docs){
-        settingsMap[element.id]=element.data();
-        
-      }
-      update();
-
-    },);
+    await fireStoreInstance.collection(Const.settingsCollection).snapshots().listen(
+      (date) {
+        settingsMap.clear();
+        for (var element in date.docs) {
+          settingsMap[element.id] = element.data();
+        }
+        update();
+      },
+    );
   }
 
   changeLanguage(String lan) async {
@@ -138,39 +137,44 @@ class SettingsViewModel extends GetxController {
     }
   }
 
-  void deleteCurrentData() async {
+  Future<void> deleteAllDocumentsInCollection(String collectionName) async {
+    FirebaseFirestore firestore = FirebaseFirestore.instance;
+    CollectionReference collection = firestore.collection(collectionName);
+
+    try {
+      QuerySnapshot querySnapshot = await collection.get();
+      for (QueryDocumentSnapshot doc in querySnapshot.docs) {
+        await doc.reference.delete();
+      }
+      print("Finished deleting all documents in $collectionName");
+    } catch (e) {
+      print("Error deleting documents in $collectionName: $e");
+    }
+  }
+
+   deleteCurrentData() async {
     for (var arr in _accountManagementViewModel.allAccountManagement.values.toList()) {
-      await fireStoreInstance.collection(accountManagementCollection).doc(arr.id).delete();
+      await fireStoreInstance.collection(accountManagementCollection).doc(arr.id).set({
+        "employeeTime": {},
+        "salaryReceived": [],
+        "bus":"بدون حافلة",
+        "eventRecords":[],
+      }, SetOptions(merge: true));
       print("Finished allAccountManagement");
     }
-    for (var arr in _salaryViewModel.salaryMap.values.toList()) {
-      await fireStoreInstance.collection(salaryCollection).doc(arr.salaryId).delete();
-      print("Finished SalaryViewModel");
-    }
-    for (var arr in _eventViewModel.allEvents.values.toList()) {
-      await fireStoreInstance.collection(Const.eventCollection).doc(arr.id).delete();
-      print("Finished EventViewModel");
-    }
-    for (var arr in _studentViewModel.studentMap.values.toList()) {
-      await fireStoreInstance.collection(studentCollection).doc(arr.studentID).delete();
-      print("Finished StudentViewModel");
-    }
-    for (var arr in _parentsViewModel.parentMap.values.toList()) {
-      await fireStoreInstance.collection(parentsCollection).doc(arr.id).delete();
-      print("Finished ParentsViewModel");
-    }
-    for (var arr in _expensesViewModel.allExpenses.values.toList()) {
-      await fireStoreInstance.collection(Const.expensesCollection).doc(arr.id).delete();
-      print("Finished ExpensesViewModel");
-    }
-    for (var arr in _storeViewModel.storeMap.values.toList()) {
-      await fireStoreInstance.collection(storeCollection).doc(arr.id).delete();
-      print("Finished StoreViewModel");
-    }
-    for (var arr in _busViewModel.busesMap.values.toList()) {
-      await fireStoreInstance.collection(storeCollection).doc(arr.busId).delete();
-      print("Finished storeCollection");
-    }
+
+    await deleteAllDocumentsInCollection(Const.expensesCollection);
+    await deleteAllDocumentsInCollection(salaryCollection);
+    await deleteAllDocumentsInCollection(studentCollection);
+    await deleteAllDocumentsInCollection(parentsCollection);
+    await deleteAllDocumentsInCollection(busesCollection);
+    await deleteAllDocumentsInCollection(storeCollection);
+    await deleteAllDocumentsInCollection(Const.waitManagementCollection);
+
+    print("Finished deleting documents in all collections");
+
+    update();
+
   }
 
   void getOldData(String value) async {

@@ -223,7 +223,7 @@ Map<String, String> ar = {
   "bus": "الحافلة",
   "contract": "دوام كلي",
   "dayOfWork": "عدد ايام العمل",
-  "eventRecords": "",
+  "eventRecords": "سجل الاحداث",
   "fullName": "الاسم",
   "gender": "الجنس",
   "id": "الرقم التسلسلي",

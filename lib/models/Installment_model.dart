@@ -20,8 +20,8 @@ class InstallmentModel {
     return InstallmentModel(
       installmentId: json['installmentId'] ?? '',
       installmentCost: json['installmentCost'] ?? '',
-      installmentDate: json['installmentDate'] ?? '',
-      InstallmentImage: json['InstallmentImage'] ?? 'https://image.shutterstock.com/image-vector/dotted-spiral-vortex-royaltyfree-images-600w-2227567913.jpg',
+      installmentDate: json['installmentDate'] ,
+      InstallmentImage: json['InstallmentImage'],
       isPay: json['isPay'] ?? false,
       payTime: json['payTime'] ?? '',
     );

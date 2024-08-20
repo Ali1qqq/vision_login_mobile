@@ -86,13 +86,14 @@ class ParentsViewModel extends GetxController {
       plutoKey = GlobalKey();
       rows.clear();
       for (var element in value.docs) {
+        // print("object");
         _parentMap[element.id] = ParentModel.fromJson(element.data());
         rows.add(
           PlutoRow(
             cells: {
               data.keys.elementAt(0): PlutoCell(value: element.id),
               data.keys.elementAt(1): PlutoCell(value: ParentModel.fromJson(element.data()).fullName),
-              data.keys.elementAt(2): PlutoCell(value: ParentModel.fromJson(element.data()).children?.length??'0'),
+              data.keys.elementAt(2): PlutoCell(value: ParentModel.fromJson(element.data()).children?.length ?? '0'),
               data.keys.elementAt(3): PlutoCell(value: ParentModel.fromJson(element.data()).address),
               data.keys.elementAt(4): PlutoCell(value: ParentModel.fromJson(element.data()).nationality),
               data.keys.elementAt(5): PlutoCell(value: ParentModel.fromJson(element.data()).work),
@@ -148,7 +149,7 @@ class ParentsViewModel extends GetxController {
             cells: {
               data.keys.elementAt(0): PlutoCell(value: element.id),
               data.keys.elementAt(1): PlutoCell(value: ParentModel.fromJson(element.data()).fullName),
-              data.keys.elementAt(2): PlutoCell(value: ParentModel.fromJson(element.data()).children?.length??'0'),
+              data.keys.elementAt(2): PlutoCell(value: ParentModel.fromJson(element.data()).children?.length ?? '0'),
               data.keys.elementAt(3): PlutoCell(value: ParentModel.fromJson(element.data()).address),
               data.keys.elementAt(4): PlutoCell(value: ParentModel.fromJson(element.data()).nationality),
               data.keys.elementAt(5): PlutoCell(value: ParentModel.fromJson(element.data()).work),
@@ -202,7 +203,9 @@ class ParentsViewModel extends GetxController {
       workController.text = parent!.work.toString();
       eventRecords = parent!.eventRecords ?? [];
       idNumController.text = parent!.parentID ?? '';
-      instalmentMap = parent!.installmentRecords!;
+      instalmentMap = {};
+      instalmentMap .addAll( parent!.installmentRecords!);
+      print(instalmentMap.values.length);
       monthsController = List.generate(
         parent?.installmentRecords?.values.length ?? 0,
         (index) => TextEditingController()..text = parent!.installmentRecords!.values.elementAt(index).installmentDate.toString(),
@@ -218,8 +221,8 @@ class ParentsViewModel extends GetxController {
   addInstalment() {
     String installmentId = generateId("INSTALLMENT");
     instalmentMap[installmentId] = InstallmentModel(installmentId: installmentId, installmentCost: "0", installmentDate: DateTime.now().month.toString().padLeft(2, "0"), isPay: false);
-    monthsController.add(TextEditingController()..text = instalmentMap[installmentId]!.installmentDate.toString());
-    costsController.add(TextEditingController()..text = instalmentMap[installmentId]!.installmentCost.toString());
+    monthsController.add(TextEditingController()..text =DateTime.now().month.toString().padLeft(2, "0"),);
+    costsController.add(TextEditingController()..text = "0");
     update();
   }
 
@@ -251,16 +254,16 @@ class ParentsViewModel extends GetxController {
     try {
       // تحميل الصور
       List<String> uploadedContracts = await uploadImages(contractsTemp, "contracts");
-      for (int index = 0; index < monthsController.length; index++) {
-        String insId = parent != null ? parent!.installmentRecords!.values.toList()[index].installmentId! : generateId("INSTALLMENT");
-        instalmentMap[insId] = InstallmentModel(
+      for (int index = 0; index < instalmentMap.length; index++) {
+        instalmentMap[instalmentMap.keys.elementAt(index)] = InstallmentModel(
           installmentCost: costsController[index].text,
           installmentDate: monthsController[index].text,
-          installmentId: insId,
+          installmentId: instalmentMap.keys.elementAt(index),
           isPay: parent != null ? parent!.installmentRecords!.values.toList()[index].isPay! : false,
         );
       }
       contracts.addAll(uploadedContracts);
+
 
       ParentModel parentModel = ParentModel(
         nationality: nationalityController.text,
@@ -282,6 +285,10 @@ class ParentsViewModel extends GetxController {
       );
 
       // إضافة عملية الانتظار إذا كانت العملية تحديث
+      print(parent?.installmentRecords?.values.map((e) => e.toJson(),));
+      print(instalmentMap.values.map((e) => e.toJson(),));
+      // Get.back();
+      // return;
       if (parent != null) {
         await addWaitOperation(
           collectionName: parentsCollection,

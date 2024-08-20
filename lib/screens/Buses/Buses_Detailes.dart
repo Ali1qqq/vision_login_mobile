@@ -131,33 +131,28 @@ class _BusInputFormState extends State<BusInputForm> {
                     CustomTextField(controller: nameController, title: 'اسم الحافلة'.tr),
                     CustomTextField(controller: numberController, title: 'رقم الحافلة'.tr),
                     CustomTextField(controller: typeController, title: 'نوع الحافلة'.tr),
-                    Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        CustomTextField(
-                          controller: startDateController,
-                          title: 'تاريخ البداية'.tr,
-                          enable: false,
-                          keyboardType: TextInputType.datetime,
-                        ),
-                        IconButton(
-                          onPressed: () {
-                            showDatePicker(
-                              context: context,
-                              firstDate: DateTime(2010),
-                              lastDate: DateTime(2100),
-                            ).then((date) {
-                              if (date != null) {
-                                startDateController.text = date.toString().split(" ")[0];
-                              }
-                            });
-                          },
-                          icon: Icon(
-                            Icons.date_range_outlined,
-                            color: primaryColor,
-                          ),
-                        ),
-                      ],
+                    InkWell(
+                      onTap: (){
+                        showDatePicker(
+                          context: context,
+                          firstDate: DateTime(2010),
+                          lastDate: DateTime(2100),
+                        ).then((date) {
+                          if (date != null) {
+                            startDateController.text = date.toString().split(" ")[0];
+                          }
+                        });
+                      },
+                      child: CustomTextField(
+                        controller: startDateController,
+                        title: 'تاريخ البداية'.tr,
+                        enable: false,
+                        keyboardType: TextInputType.datetime,
+                        icon:Icon(
+                          Icons.date_range_outlined,
+                          color: primaryColor,
+                        ) ,
+                      ),
                     ),
                     if (widget.busModel != null) CustomTextField(controller: editController, title: 'سبب التعديل'.tr),
                     GetBuilder<BusViewModel>(builder: (busController) {
@@ -223,7 +218,7 @@ class _BusInputFormState extends State<BusInputForm> {
                               columns: List.generate(dataStu.length, (index) => DataColumn(label: Container(width: size / (dataStu.length), child: Center(child: Text(dataStu[index].toString().tr))))),
                               rows: allSection.values
                                   .where(
-                                    (element) => element.bus == "بدون حافلة" && element.isAccepted == true,
+                                    (element) =>( element.bus == "بدون حافلة" || element.bus == "مع حافلة")&& element.isAccepted == true,
                                   )
                                   .map(
                                     (e) => studentDataRow(

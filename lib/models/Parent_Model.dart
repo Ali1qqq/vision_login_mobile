@@ -64,7 +64,9 @@ class ParentModel {
       emergencyPhone = json['emergencyPhone'] ?? '';
       work = json['work'] ?? '';
       id = json['id'] ?? '';
+
       (json['installmentRecords'] ?? {}).forEach((k, v) {
+
         installmentRecords![k] = InstallmentModel.fromJson(v);
         totalPayment= totalPayment!+int.parse(InstallmentModel.fromJson(v).installmentCost!);
       });
