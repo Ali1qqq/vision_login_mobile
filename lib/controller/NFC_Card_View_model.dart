@@ -42,7 +42,7 @@ class NfcCardViewModel extends GetxController {
   }
 
   addNfcCard(NfcCardModel model) async {
-    await nfcCardCollectionRef.doc(model.nfcId).set(model.toJson());
+    await nfcCardCollectionRef.doc(model.nfcId).set(model.toJson(),SetOptions(merge: true));
   }
 
    deleteUserCard(String? cardId)async {

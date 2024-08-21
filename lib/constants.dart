@@ -16,7 +16,7 @@ const defaultPadding = 16.0;
 EmployeeModel? currentEmployee;
 
 Map<String, String> cardsMap = {
-  "1": "04:5D:B0:F3:9F:61:80",
+  "1": "04:AB:C0:21:5F:61:80",
   "2": "04:8B:BB:F8:9F:61:80",
   "3": "04:50:49:22:5F:61:80",
   "4": "04:2C:E1:F3:9F:61:80",

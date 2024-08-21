@@ -201,6 +201,7 @@ class EmployeeViewModel extends GetxController {
         Get.find<SalaryViewModel>().getEmployeeSalaryPluto();
 
         update();
+        print("listener from user");
       },
     );
   }
@@ -311,8 +312,10 @@ class EmployeeViewModel extends GetxController {
   String? serialNFC;
   EmployeeModel? myUserModel;
 
-  getScreens() {
-    if (myUserModel?.type == "مستخدم") {
+  getScreens()async {
+
+    if (currentEmployee?.type == "مستخدم") {
+      HiveDataBase.setCurrentScreen("0");
       initDashboard([
         (
           name: "الدوام",
@@ -326,7 +329,7 @@ class EmployeeViewModel extends GetxController {
         ),
       ]);
     } else {
-      if(myUserModel?.type == "مالك")
+      if(currentEmployee?.type == "مالك")
         {
           accountType = {
             "user": "مستخدم".tr,
@@ -429,7 +432,7 @@ class EmployeeViewModel extends GetxController {
           await HiveDataBase.setAccountManagementModel(myUserModel!);
 
           await getScreens();
-          await  getAllEmployee();
+            getAllEmployee();
           Get.offNamed(AppRoutes.DashboardScreen);
         } else if (value.docs.isEmpty) {
           Get.snackbar("error", "not matched");
@@ -472,10 +475,11 @@ class EmployeeViewModel extends GetxController {
       {
         TimesModel timeData = TimesModel.fromDateTime(DateTime.now());
         if (user.employeeTime[timeData.formattedTime] == null) {
-          if (timeData.isBefore(7, 00)) {
-            Get.snackbar("خطأ اثناء التسجيل", "الدوام لم يبدأ بعد");
+    /*      if (timeData.isBefore(6, 00)||timeData.isAfter(18, 00)) {
+
+            Get.snackbar("خطأ اثناء التسجيل", "لا يمكن اتسجيل الخروج في هذا الوقت");
             return;
-          }
+          }*/
           if (timeData.isAfter(int.parse(appendTime.split(" ")[0]), int.parse(appendTime.split(" ")[1]))) {
             totalLate = timeData.dateTime.difference(DateTime.now().copyWith(hour: 7, minute: 41, second: 0)).inMinutes;
             isDayOff = true;
@@ -607,9 +611,7 @@ class EmployeeViewModel extends GetxController {
           loginUserPage = "لقد قمت بالخروج بالفعل " + user.userName;
           print("You close the day already");
         } else {
-          if (timeData.isAfter(18, 00)) {
-            return;
-          }
+
           if (timeData.isBefore(14, 00)) {
             totalEarlier = timeData.dateTime.copyWith(hour: 14, minute: 00, second: 0).difference(timeData.dateTime).inMinutes;
           }

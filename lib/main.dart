@@ -24,6 +24,7 @@ Future<void> main() async {
   ]);*/
   currentEmployee= await HiveDataBase.getAccountManagementModel();
   thisTimesModel = TimesModel.fromDateTime(DateTime.now());
+
   runApp(MyApp());
 }
 
