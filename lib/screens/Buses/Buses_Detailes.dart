@@ -78,7 +78,6 @@ class _BusInputFormState extends State<BusInputForm> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     initBus();
   }
@@ -288,6 +287,7 @@ class _BusInputFormState extends State<BusInputForm> {
       details: editController.text,
       oldData: widget.busModel!.toJson(),
       newData: bus.toJson(),
+      userName: currentEmployee?.userName.toString()??""
     );
   }
 

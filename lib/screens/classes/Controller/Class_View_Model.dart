@@ -102,6 +102,8 @@ class ClassViewModel extends GetxController {
         String classId = currentClass.classId.toString();
         if (!checkIfPendingDelete(affectedId: classId)) {
           addWaitOperation(
+            userName: currentEmployee?.userName.toString()??"",
+
             type: waitingListTypes.delete,
             collectionName: classCollection,
             affectedId: classId,
@@ -230,7 +232,10 @@ class ClassViewModel extends GetxController {
                           if (classNameController.text != classModel.className) {
                             if (classNameController.text.isNotEmpty) {
                               if (classModel.className != '') {
-                                addWaitOperation(collectionName: classCollection, affectedId: classModel.classId!, type: waitingListTypes.edite, newData: ClassModel(className: classNameController.text, classId: classModel.classId, isAccepted: false).toJson(), oldData: classModel.toJson());
+                                addWaitOperation(collectionName: classCollection,
+
+                                    userName: currentEmployee?.userName.toString()??"",
+                                    affectedId: classModel.classId!, type: waitingListTypes.edite, newData: ClassModel(className: classNameController.text, classId: classModel.classId, isAccepted: false).toJson(), oldData: classModel.toJson());
                                 addClass(ClassModel(className: classNameController.text, classId: classModel.classId, isAccepted: false));
                               } else
                                 addClass(ClassModel(className: classNameController.text, classId: classModel.classId, isAccepted: true));

@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'dart:math';
 import 'package:day_night_time_picker/lib/daynight_timepicker.dart';
 import 'package:day_night_time_picker/lib/state/time.dart';
@@ -6,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:quickalert/models/quickalert_type.dart';
 import 'package:quickalert/widgets/quickalert_dialog.dart';
-import 'package:vision_dashboard/models/account_management_model.dart';
 import 'package:vision_dashboard/screens/Employee/Controller/Employee_view_model.dart';
 import 'package:vision_dashboard/screens/Widgets/Insert_shape_Widget.dart';
 import 'package:vision_dashboard/screens/expenses/Controller/expenses_view_model.dart';
@@ -45,7 +43,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
   List<String> deleteData = [
     "نوع العملية",
     "التفاصيل",
-    "الرمز التسلسلي المتأثر",
+    "التاريخ",
+    "من قبل",
+    "العنصر المتأثر",
     "التصنيف المتأثر",
     "العمليات",
   ];
@@ -60,7 +60,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     "نوع العملية",
     "التاريخ",
     "التفاصيل",
-    "الرمز التسلسلي المتأثر",
+    "العنصر التسلسلي المتأثر",
     "التصنيف المتأثر",
     "الحالة",
   ];
@@ -142,11 +142,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                   .toList()
                                   .reversed)
 
-                                ///TODO:fix time issue
                                 DataRow(cells: [
                                   dataRowItem(size / logData.length, deleteModel.type.toString().tr),
-                                  dataRowItem(size / logData.length, deleteModel.date!.toString().split(".")[0]),
-                                  dataRowItem(size / logData.length, deleteModel.details ?? "لا يوجد".tr),
+                                  dataRowItem(size / logData.length, formatDateTimeFromString(deleteModel.date.toString())),
+                                  dataRowItem(size / logData.length, deleteModel.details == '' || deleteModel.details == null ? "لا يوجد".tr:deleteModel.details ),
                                   dataRowItem(size / logData.length, _getAffectedName(deleteModel)),
                                   dataRowItem(size / logData.length, deleteModel.collectionName.toString()),
                                   dataRowItem(
@@ -410,6 +409,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
               showEmployeeDialog(context, model.newData ?? {});
             })
           : dataRowItem(size / deleteData.length, model.details == '' || model.details == null ? "لا يوجد".tr : model.details),
+      dataRowItem(size / deleteData.length,formatDateTimeFromString(model.date.toString())),
+      dataRowItem(size / deleteData.length, model.userName.toString().tr),
       dataRowItem(size / deleteData.length, affectedName),
       dataRowItem(size / deleteData.length, model.collectionName.toString()),
       if (enableUpdate)
@@ -827,163 +828,4 @@ int minute=int.parse(time.split(" ")[1]);
     );
   }
 }
-/* for (var deleteModel
-                                        in controller.allWaiting.values.where(
-                                              (element) => element.isAccepted == null,
-                                        ))
-                                          DataRow(cells: [
-                                            dataRowItem(
-                                                size / deleteData.length,
-                                                deleteModel.type.toString().tr),
-                                            dataRowItem(
-                                                size / deleteData.length,
-                                                deleteModel.details ??
-                                                    "لا يوجد".tr),
-                                            dataRowItem(size / deleteData.length,
-                                                deleteModel.collectionName==accountManagementCollection?
-                                                    Get.find<AccountManagementViewModel>().allAccountManagement[deleteModel.affectedId]?.fullName
-                                                    :""),
-                                            dataRowItem(
-                                                size / deleteData.length,
-                                                deleteModel.collectionName
-                                                    .toString()),
-                                            DataCell(Container(
-                                              width: size / deleteData.length,
-                                              child: Row(
-                                                mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                                children: [
-                                                  IconButton(
-                                                      onPressed: () {
-                                                        if (enableUpdate)
-                                                          QuickAlert.show(
-                                                              context: context,
-                                                              type: QuickAlertType
-                                                                  .confirm,
-                                                              text:
-                                                              'حذف هذا العنصر بشكل نهائي'
-                                                                  .tr,
-                                                              title: deleteModel
-                                                                  .collectionName ==
-                                                                  parentsCollection
-                                                                  ? 'عند حذف ولي الامر سوف يتم حذف الاولاد الخاصة به'
-                                                                  .tr
-                                                                  : 'هل انت متأكد ؟'
-                                                                  .tr
-                                                                  .tr,
-                                                              onConfirmBtnTap: () =>
-                                                              {
-                                                                controller
-                                                                    .doTheWait(
-                                                                    deleteModel),
-                                                                Get.back()
-                                                              },
-                                                              onCancelBtnTap: () =>
-                                                                  Get.back(),
-                                                              confirmBtnText:
-                                                              'نعم'.tr,
-                                                              cancelBtnText:
-                                                              'لا'.tr,
-                                                              confirmBtnColor:
-                                                              Colors.redAccent
-                                                                  ,
-                                                              showCancelBtn: true);
-                                                      },
-                                                      icon: Row(
-                                                        children: [
-                                                          Icon(
-                                                            Icons
-                                                                .check_circle_outline,
-                                                            color: Colors.green,
-                                                          ),
-                                                          SizedBox(
-                                                            width: 5,
-                                                          ),
-                                                          Text("قبول".tr),
-                                                        ],
-                                                      )),
-                                                  IconButton(
-                                                      onPressed: () {
-                                                        if (enableUpdate)
-                                                          QuickAlert.show(
-                                                              context: context,
-                                                              type: QuickAlertType
-                                                                  .confirm,
-                                                              text:
-                                                              'استرجاع هذه العنصر'
-                                                                  .tr,
-                                                              title:
-                                                              'هل انت متأكد ؟'
-                                                                  .tr,
-                                                              onConfirmBtnTap: () =>
-                                                              {
-                                                                controller
-                                                                    .undoTheDelete(
-                                                                    deleteModel),
-                                                                Get.back()
-                                                              },
-                                                              onCancelBtnTap: () =>
-                                                                  Get.back(),
-                                                              confirmBtnText:
-                                                              'نعم'.tr,
-                                                              cancelBtnText:
-                                                              'لا'.tr,
-                                                              confirmBtnColor:
-                                                              Colors.red,
-                                                              showCancelBtn: true);
-                                                      },
-                                                      icon: Row(
-                                                        children: [
-                                                          Icon(
-                                                            Icons
-                                                                .remove_circle_outline,
-                                                            color: Colors.red,
-                                                          ),
-                                                          SizedBox(
-                                                            width: 5,
-                                                          ),
-                                                          Text("رفض".tr),
-                                                        ],
-                                                      )),
-                                                ],
-                                              ),
-                                            )),
-                                            /*  dataRowItem(
-                                              size / deleteData.length,
-                                              deleteModel.collectionName
-                                                  .toString()),
-                                          dataRowItem(size / deleteData.length,
-                                              "استرجاع".tr, color: Colors.teal,
-                                              onTap: () {
-                                            if (enableUpdate)
-                                              controller
-                                                  .undoTheDelete(deleteModel);
-                                          }),
-                                          dataRowItem(size / deleteData.length,
-                                              "حذف نهائي".tr,
-                                              color: Colors.red.shade700,
-                                              onTap: () {
 
-
-                                            if (enableUpdate)
-
-                                              QuickAlert.show(
-                                                context: context,
-                                                type: QuickAlertType.confirm,
-                                                text: 'حذف هذا العنصر بشكل نهائي'.tr,
-                                                title: 'هل انت متأكد ؟'.tr,
-                                                onConfirmBtnTap: () =>
-                                                {
-                                                        controller.doTheDelete(
-                                                            deleteModel),Get.back()
-                                                      },
-                                                onCancelBtnTap: () => Get.back(),
-                                                confirmBtnText: 'نعم'.tr,
-                                                cancelBtnText: 'لا'.tr,
-                                                confirmBtnColor: Colors.redAccent.withOpacity(0.2),
-                                                showCancelBtn: true
-                                              );
-
-                                          }),*/
-                                          ]),
-                                      ]),*/

@@ -166,6 +166,7 @@ class SettingsViewModel extends GetxController {
     }
 
     await deleteAllDocumentsInCollection(Const.expensesCollection);
+    await deleteAllDocumentsInCollection(Const.eventCollection);
     await deleteAllDocumentsInCollection(salaryCollection);
     await deleteAllDocumentsInCollection(studentCollection);
     await deleteAllDocumentsInCollection(parentsCollection);

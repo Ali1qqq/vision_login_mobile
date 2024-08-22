@@ -284,7 +284,10 @@ class StudyFeesViewModel extends GetxController {
                                                     getConfirmDialog(
                                                       context,
                                                       onConfirm: () {
-                                                        addWaitOperation(type: waitingListTypes.returnInstallment, collectionName: installmentCollection, affectedId: installment.installmentId!, relatedId: installmentStudent.keys.elementAt(parentIndex));
+                                                        addWaitOperation(type: waitingListTypes.returnInstallment,
+                                                            userName: currentEmployee?.userName.toString()??"",
+
+                                                            collectionName: installmentCollection, affectedId: installment.installmentId!, relatedId: installmentStudent.keys.elementAt(parentIndex));
                                                       },
                                                     );
                                                 },

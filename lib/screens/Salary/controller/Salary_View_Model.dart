@@ -172,7 +172,12 @@ receiveSalary({required BuildContext context}){
   }
 
   deleteSalary(String salaryId) async {
-    await addWaitOperation(type: waitingListTypes.delete, collectionName: salaryCollection, affectedId: salaryId);
+    await addWaitOperation(type: waitingListTypes.delete,
+
+        userName: currentEmployee?.userName.toString()??"",
+        collectionName: salaryCollection, affectedId: salaryId
+
+    );
     update();
   }
 

@@ -19,7 +19,6 @@ class _ImageOverlayState extends State<ImageOverlay> {
   double imageWidth=200;
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     imageHeight=widget.imageHeight;
     imageWidth=widget.imageWidth;

@@ -125,6 +125,8 @@ class BusViewModel extends GetxController {
     await addWaitOperation(
         type: waitingListTypes.delete,
         collectionName: busesCollection,
+        userName: currentEmployee?.userName.toString()??"",
+
         affectedId: buseId);
     update();
   }

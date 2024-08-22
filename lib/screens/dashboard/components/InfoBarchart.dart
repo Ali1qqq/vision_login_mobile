@@ -23,7 +23,6 @@ class _InfoBarChartState extends State<InfoBarChart> {
 int localTouch=-1;
 @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     localTouch=widget.touchedIndex;
   }

@@ -47,50 +47,7 @@ bool isNumeric(String str) {
 
 
 
-/*Future<TimesModel?> getTime() async {
-  TimesModel? timesModel;
-  try {
-    final response = await http.get(Uri.parse("https://worldtimeapi.org/api/timezone/Asia/Dubai"));
-    print("response statusCode  ${response.statusCode}");
-    if (response.statusCode == 200) {
-      timesModel = TimesModel.fromJson(jsonDecode(response.body));
-    } else {
-      timesModel = TimesModel(
-        year: DateTime.now().year,
-        month: DateTime.now().month,
-        day: DateTime.now().day,
-        hour: DateTime.now().hour,
-        minute: DateTime.now().minute,
-        seconds: DateTime.now().second,
-        milliSeconds: DateTime.now().millisecond,
-        dateTime: DateTime.now(),
-        date: DateTime.now().toString().split(" ")[0],
-        timeZone: DateTime.now().timeZoneName,
-        dayOfWeek: DateTime.now().day.toString(),
-      );
-    }
-  } on Exception catch (e) {
-    // TODO
-    print(e.toString());
-    timesModel = TimesModel(
-      year: DateTime.now().year,
-      month: DateTime.now().month,
-      day: DateTime.now().day,
-      hour: DateTime.now().hour,
-      minute: DateTime.now().minute,
-      seconds: DateTime.now().second,
-      milliSeconds: DateTime.now().millisecond,
-      dateTime: DateTime.now(),
-      date: DateTime.now().toString().split(" ")[0],
-      // time:DateTime.now(). toString().split(" ")[1],
-      timeZone: DateTime.now().timeZoneName,
-      dayOfWeek: DateTime.now().day.toString(),
-      // dstActive: true
-    );
-  }
-  thisTimesModel = timesModel;
-  return timesModel;
-}*/
+
 
 Future<List<String>> uploadImages(List<Uint8List> ImagesTempData, String folderName) async {
   List<String> imageLinkList = [];

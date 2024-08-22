@@ -163,6 +163,8 @@ class _BusesScreenState extends State<BusesScreen> {
             type: waitingListTypes.delete,
             details: editController.text,
             collectionName: busesCollection,
+            userName: currentEmployee?.userName.toString()??"",
+
             affectedId: controller.busesMap[currentId]!.busId.toString());
 
 

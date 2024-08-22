@@ -173,7 +173,7 @@ class EmployeeInputForm extends StatelessWidget {
                             },
                           )
                           .map(
-                            (e) => e.value.nfcId.toString()??'',
+                            (e) => e.value.nfcId.toString(),
                           )
                           .toList()..sort((a, b) => int.parse(a).compareTo(int.parse(b))),
                       label: "رقم البطاقة".tr,

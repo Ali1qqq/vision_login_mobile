@@ -284,7 +284,7 @@ class EmployeeViewModel extends GetxController {
           ));
 
           if (double.parse(paySalary).toInt() != double.parse(dilaySalary).toInt())
-            await addWaitOperation(collectionName: accountManagementCollection, affectedId: accountId, type: waitingListTypes.waitDiscounts, details: "الراتب الممنوح".tr + " ($paySalary) " + "الراتب المستحق".tr + " ($dilaySalary) ${nots}");
+            await addWaitOperation(collectionName: accountManagementCollection, userName: currentEmployee?.userName.toString() ?? "", affectedId: accountId, type: waitingListTypes.waitDiscounts, details: "الراتب الممنوح".tr + " ($paySalary) " + "الراتب المستحق".tr + " ($dilaySalary) ${nots}");
           Get.back();
           Get.back();
         }
@@ -971,6 +971,8 @@ class EmployeeViewModel extends GetxController {
       title: 'هل انت متأكد ؟'.tr,
       onConfirmBtnTap: () async {
         addWaitOperation(
+          userName: currentEmployee?.userName.toString()??"",
+
           details: editController.text,
           collectionName: accountManagementCollection,
           affectedId: allAccountManagement[currentId]?.id ?? '',
@@ -1051,6 +1053,8 @@ class EmployeeViewModel extends GetxController {
         if (enableEdit) {
           ///addWaitOperation old Value=القيمة الي جاي من الويدجت newValue = القيم الجديدة من ال controller
           addWaitOperation(
+            userName: currentEmployee?.userName.toString()??"",
+
             collectionName: accountManagementCollection,
             affectedId: employeeModel!.id,
             type: waitingListTypes.edite,
@@ -1063,7 +1067,6 @@ class EmployeeViewModel extends GetxController {
           if (employeeModel!.serialNFC != selectedCardId) {
             Get.find<NfcCardViewModel>().deleteUserCard(employeeModel!.serialNFC);
             Get.find<NfcCardViewModel>().setCardForEMP(
-
               selectedCardId,
               employeeModel!.id,
             );
@@ -1080,6 +1083,8 @@ class EmployeeViewModel extends GetxController {
         if (!enableEdit) {
           ///اضافة العملية للموافقة عليها
           await addWaitOperation(
+            userName: currentEmployee?.userName.toString()??"",
+
             collectionName: accountManagementCollection,
             affectedId: model.id,
             newData: model.toJson(),
@@ -1091,8 +1096,7 @@ class EmployeeViewModel extends GetxController {
         Get.back();
         await addAccount(model);
         getSuccessDialog(context);
-        if(!enableEdit)
-        Get.find<NfcCardViewModel>().setCardForEMP(selectedCardId, model.id);
+        if (!enableEdit) Get.find<NfcCardViewModel>().setCardForEMP(selectedCardId, model.id);
         clearController();
       } on Exception catch (e) {
         await getReedOnlyError(context, title: e.toString());

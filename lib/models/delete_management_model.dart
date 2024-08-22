@@ -1,7 +1,7 @@
 
 
 class WaitManagementModel {
-  late String id, affectedId, collectionName;
+  late String id, affectedId, collectionName,userName;
 
   Map<String, dynamic>? oldDate, newData;
   String? details, relatedId, date, type;
@@ -11,6 +11,7 @@ class WaitManagementModel {
   WaitManagementModel(
       {required this.id,
       required this.affectedId,
+      required this.userName,
       required this.collectionName,
       this.details,
       this.relatedId,
@@ -28,6 +29,7 @@ class WaitManagementModel {
     details = json['details'] ?? 'لا يوجد';
     isAccepted = json['isAccepted'];
     collectionName = json['collectionName'] ?? '';
+    userName = json['userName'] ?? '';
     relatedId = json['relatedId'];
     oldDate=json['oldDate']??{};
     newData=json['newData']??{};
@@ -39,6 +41,7 @@ class WaitManagementModel {
       "id": id,
       "date": date,
       "details": details,
+      "userName":userName,
       "collectionName": collectionName,
       "affectedId": affectedId,
       "isAccepted": isAccepted,

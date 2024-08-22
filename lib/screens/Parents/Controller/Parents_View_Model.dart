@@ -126,6 +126,8 @@ class ParentsViewModel extends GetxController {
 
   deleteParent(String parentId, List studentList) async {
     await addWaitOperation(
+        userName: currentEmployee?.userName.toString()??"",
+
         type: waitingListTypes.delete,
         collectionName: parentsCollection,
         affectedId: parentId,
@@ -291,6 +293,8 @@ class ParentsViewModel extends GetxController {
       // return;
       if (parent != null) {
         await addWaitOperation(
+          userName: currentEmployee?.userName.toString()??"",
+
           collectionName: parentsCollection,
           affectedId: parent!.id.toString(),
           type: waitingListTypes.edite,
@@ -515,6 +519,8 @@ class ParentsViewModel extends GetxController {
           collectionName: parentsCollection,
           affectedId: parentMap[currentId]!.id!,
           details: editController.text,
+          userName: currentEmployee?.userName.toString()??"",
+
         );
         Get.back();
       },

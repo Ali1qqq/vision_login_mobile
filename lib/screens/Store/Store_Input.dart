@@ -24,7 +24,6 @@ class _StoreInputFormState extends State<StoreInputForm> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
   }
 

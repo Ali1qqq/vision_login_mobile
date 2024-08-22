@@ -220,8 +220,6 @@ class WaitManagementViewModel extends GetxController {
       {
         EmployeeModel newEMP=EmployeeModel.fromJson(waitModel.newData!);
         EmployeeModel oldEMP=EmployeeModel.fromJson(waitModel.oldDate!);
-        print(newEMP.serialNFC);
-        print(oldEMP.serialNFC);
         if(newEMP.serialNFC!=oldEMP.serialNFC)
           {
 
@@ -255,6 +253,8 @@ class WaitManagementViewModel extends GetxController {
 addWaitOperation({
   required String collectionName,
   required String affectedId,
+  required String userName,
+
   String? details,
   String? relatedId,
   Map<String, dynamic>? oldData,
@@ -269,6 +269,7 @@ await  Get.find<WaitManagementViewModel>().addDeleteOperation(WaitManagementMode
     newData: newData,
     oldDate: oldData,
     details: details,
+  userName:userName,
     type: type.name,
     relatedId: relatedId,
   ));

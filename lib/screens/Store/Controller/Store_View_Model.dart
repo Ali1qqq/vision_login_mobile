@@ -84,6 +84,7 @@ class StoreViewModel extends GetxController{
   deleteStore(String storeId)async {
     await addWaitOperation(
         type: waitingListTypes.delete,
+        userName: currentEmployee?.userName.toString()??"",
 
         collectionName: storeCollection,
         affectedId: storeId);

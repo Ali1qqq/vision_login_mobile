@@ -65,7 +65,6 @@ class _StudentInputFormState extends State<StudentInputForm> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     init();
   }
@@ -550,7 +549,11 @@ class _StudentInputFormState extends State<StudentInputForm> {
         eventRecords: eventRecords,
       );
       if (widget.studentModel != null) {
-        addWaitOperation(collectionName: studentCollection, affectedId: widget.studentModel!.studentID!, type: waitingListTypes.edite, oldData: widget.studentModel!.toJson(), newData: student.toJson(), details: editController.text);
+        addWaitOperation(collectionName: studentCollection,
+
+            userName: currentEmployee?.userName.toString()??"",
+
+            affectedId: widget.studentModel!.studentID!, type: waitingListTypes.edite, oldData: widget.studentModel!.toJson(), newData: student.toJson(), details: editController.text);
 
         if (widget.studentModel!.parentId != guardianController.text) {
           Get.find<ParentsViewModel>().deleteStudent(widget.studentModel!.parentId!, widget.studentModel!.studentID!);

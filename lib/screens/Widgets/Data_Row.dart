@@ -11,6 +11,7 @@ dataRowItem(size, text, {onTap, color}) {
             onTap: onTap,
             child: Center(
                 child: Text(
+                  textDirection:TextDirection.ltr ,
               text,
               textAlign: TextAlign.center,
               style: color == null

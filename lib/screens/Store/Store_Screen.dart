@@ -291,6 +291,7 @@ class _StoreScreenState extends State<StoreScreen> {
 
                               await addWaitOperation(
                                 type: waitingListTypes.delete,
+                                userName: currentEmployee?.userName.toString()??"",
 
                                 collectionName: parentsCollection,
                                 affectedId:
@@ -369,6 +370,8 @@ class _StoreScreenState extends State<StoreScreen> {
                 id: storeModel.id,
               );
               addWaitOperation(
+                userName: currentEmployee?.userName.toString()??"",
+
                 collectionName: storeCollection,
                 affectedId: storeModel.id!,
                 type: waitingListTypes.edite,

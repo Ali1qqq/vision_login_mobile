@@ -14,7 +14,6 @@ import '../../../core/Utils/service.dart';
 import '../../Buses/Controller/Bus_View_Model.dart';
 import '../../Widgets/Custom_Text_Filed.dart';
 import '../../../utils/Dialogs.dart';
-import '../../../utils/Hive_DataBase.dart';
 import '../../../utils/To_AR.dart';
 import '../../../utils/const.dart';
 import '../../../controller/Wait_management_view_model.dart';
@@ -80,6 +79,7 @@ class ExpensesViewModel extends GetxController {
             details: editController.text,
             collectionName: Const.expensesCollection,
             affectedId: allExpenses[currentId]!.id!,
+            userName: currentEmployee?.userName.toString()??"",
             relatedId: allExpenses[currentId]!.busId,
           );
           Get.back();
@@ -315,7 +315,10 @@ class ExpensesViewModel extends GetxController {
       ///وقت التعديل
       if (expensesModel != null) {
         Get.back();
-        addWaitOperation(collectionName: Const.expensesCollection, oldData: expensesModel!.toJson(), newData: model.toJson(), affectedId: model.id!, type: waitingListTypes.edite);
+        addWaitOperation(collectionName: Const.expensesCollection,
+            userName: currentEmployee?.userName.toString()??"",
+
+            oldData: expensesModel!.toJson(), newData: model.toJson(), affectedId: model.id!, type: waitingListTypes.edite);
       }
       /// اذا كانت الواجهة مستدعاه من الباص
       if (busId != null) {

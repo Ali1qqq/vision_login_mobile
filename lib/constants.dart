@@ -4,11 +4,27 @@ import 'package:vision_dashboard/models/TimeModel.dart';
 import 'package:vision_dashboard/models/account_management_model.dart';
 
 import 'package:vision_dashboard/screens/logout/logout_View.dart';
+String formatDateTimeFromString(String isoString) {
+  DateTime dateTime = DateTime.parse(isoString);
+
+  // تحديد الفترة (AM/PM)
+  String period = dateTime.hour >= 12 ? "PM" : "AM";
+
+  // تحويل الساعة إلى تنسيق 12 ساعة
+  int hour = dateTime.hour % 12;
+  if (hour == 0) hour = 12; // تحويل الساعة 0 إلى 12
+
+  // تنسيق التاريخ والوقت
+  String formattedDateTime = "${dateTime.year}-${dateTime.month.toString().padLeft(2, '0')}-${dateTime.day.toString().padLeft(2, '0')} \n"
+      "${hour.toString().padLeft(2, '0')}:${dateTime.minute.toString().padLeft(2, '0')} $period";
+
+  return formattedDateTime;
+}
 
 const primaryColor = Color(0xff3E96F4);
 const secondaryColor = Color(0xffCCC7BF);
 const blueColor = Color(0xffBC9F88);
-const bgColor = Color(0xffF6F6F4); // تخفيف لون الخلفية
+const bgColor = Color(0xffF6F6F4);
 //Color(0xff3d0312)CCC7BF
 //Color(0xff7e0303)F6F6F4
 //Color(0xffc89665) 3E96F4

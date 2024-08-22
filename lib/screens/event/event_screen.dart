@@ -180,7 +180,10 @@ class _EventScreenState extends State<EventScreen> {
                                                 text: 'قبول هذه العملية'.tr,
                                                 title: 'هل انت متأكد ؟'.tr,
                                                 onConfirmBtnTap: () async {
-                                                  addWaitOperation(type: waitingListTypes.delete, details: editController.text, collectionName: Const.eventCollection, affectedId: controller.currentId);
+                                                  addWaitOperation(type: waitingListTypes.delete,
+
+                                                      userName: currentEmployee?.userName.toString()??"",
+                                                      details: editController.text, collectionName: Const.eventCollection, affectedId: controller.currentId);
                                                   Get.back();
                                                 },
                                                 onCancelBtnTap: () => Get.back(),

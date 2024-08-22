@@ -125,6 +125,8 @@ class _StudentScreenState extends State<StudentScreen> {
                                     onConfirmBtnTap: () async {
 
                                       addWaitOperation(
+                                          userName: currentEmployee?.userName.toString()??"",
+
                                           type: waitingListTypes.delete
                                           ,details: editController.text,
                                           collectionName: studentCollection,

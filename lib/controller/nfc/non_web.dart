@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:get/get.dart';
 import 'package:nfc_manager/nfc_manager.dart';
-import 'package:vision_dashboard/constants.dart';
 import 'package:vision_dashboard/screens/Employee/Controller/Employee_view_model.dart';
 
 
