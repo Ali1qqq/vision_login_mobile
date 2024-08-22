@@ -4,6 +4,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'package:get/get.dart';
 import 'package:vision_dashboard/constants.dart';
+import 'package:vision_dashboard/controller/NFC_Card_View_model.dart';
+import 'package:vision_dashboard/models/account_management_model.dart';
 import 'package:vision_dashboard/screens/Employee/Controller/Employee_view_model.dart';
 import 'package:vision_dashboard/models/Bus_Model.dart';
 import 'package:vision_dashboard/models/Parent_Model.dart';
@@ -214,7 +216,20 @@ class WaitManagementViewModel extends GetxController {
           .setBus(waitModel.affectedId, waitModel.oldDate?['employees'] ?? []);
     }
 
+    if (waitModel.collectionName == accountManagementCollection)
+      {
+        EmployeeModel newEMP=EmployeeModel.fromJson(waitModel.newData!);
+        EmployeeModel oldEMP=EmployeeModel.fromJson(waitModel.oldDate!);
+        print(newEMP.serialNFC);
+        print(oldEMP.serialNFC);
+        if(newEMP.serialNFC!=oldEMP.serialNFC)
+          {
 
+            Get.find<NfcCardViewModel>().deleteUserCard(newEMP.serialNFC);
+            Get.find<NfcCardViewModel>().setCardForEMP(oldEMP.serialNFC!,waitModel.affectedId);
+          }
+
+      }
     await FirebaseFirestore.instance
         .collection(waitModel.collectionName)
         .doc(waitModel.affectedId)

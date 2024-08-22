@@ -289,4 +289,7 @@ Map<String, String> ar = {
   "توقيت الغياب:": "Append Time",
   "idImages":"صورة الهوية",
   "employeeTime":"دوام الموظف",
+  "LateTime":"وفت التأخير",
+  "AppendTime":"وقت الغياب",
+  "OutTime":"وقت الخروج"
 };

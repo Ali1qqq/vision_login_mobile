@@ -15,9 +15,9 @@ class NfcCardModel {
 
   Map<String, dynamic> toJson() {
     return {
-      'nfcId': nfcId,
-      'nfcUid': nfcUid,
-      'userId': userId,
+    if(nfcId!=null)  'nfcId': nfcId,
+      if(nfcUid!=null)   'nfcUid': nfcUid,
+      if(userId!=null)   'userId': userId,
     };
   }
 

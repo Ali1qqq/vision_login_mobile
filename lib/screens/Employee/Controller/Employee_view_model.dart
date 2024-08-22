@@ -58,6 +58,7 @@ enum UserManagementStatus {
 }
 
 enum typeNFC { login, time, add }
+
 Map accountType = {
   "user": "مستخدم".tr,
   "admin": "مدير".tr,
@@ -135,8 +136,7 @@ class EmployeeViewModel extends GetxController {
 
   EmployeeViewModel() {
     getColumns();
-    if(currentEmployee?.id!=null)
-    getAllEmployee();
+    if (currentEmployee?.id != null) getAllEmployee();
     getScreens();
   }
 
@@ -166,18 +166,16 @@ class EmployeeViewModel extends GetxController {
         rows.clear();
         int index = 4;
         allAccountManagement = Map<String, EmployeeModel>.fromEntries(event.docs.toList().map((i) {
-          if(currentEmployee!.type != 'مالك')
-            {
-              if(i.data().type=="مالك")
-                return MapEntry(i.id.toString(), i.data());
-            }
+          if (currentEmployee!.type != 'مالك') {
+            if (i.data().type == "مالك") return MapEntry(i.id.toString(), i.data());
+          }
           rows.add(
             PlutoRow(
               cells: {
                 data.keys.elementAt(0): PlutoCell(value: i.id),
                 data.keys.elementAt(1): PlutoCell(value: i.data().userName),
                 data.keys.elementAt(2): PlutoCell(value: i.data().fullName),
-                data.keys.elementAt(3): PlutoCell(value:i.data().password ),
+                data.keys.elementAt(3): PlutoCell(value: i.data().password),
                 data.keys.elementAt(index): PlutoCell(value: i.data().type),
                 data.keys.elementAt(index + 1): PlutoCell(value: i.data().isActive == true ? "فعال".tr : "غير فعال".tr),
                 data.keys.elementAt(index + 2): PlutoCell(value: i.data().mobileNumber),
@@ -265,7 +263,7 @@ class EmployeeViewModel extends GetxController {
     }
   }
 
-  adReceiveSalary(String accountId, String paySalary, String salaryDate, String constSalary, String dilaySalary, bytes,String nots) async {
+  adReceiveSalary(String accountId, String paySalary, String salaryDate, String constSalary, String dilaySalary, bytes, String nots) async {
     String fileName = 'signatures/$accountId/$salaryDate.png';
     uploadImage(bytes, fileName).then(
       (value) async {
@@ -312,8 +310,7 @@ class EmployeeViewModel extends GetxController {
   String? serialNFC;
   EmployeeModel? myUserModel;
 
-  getScreens()async {
-
+  getScreens() async {
     if (currentEmployee?.type == "مستخدم") {
       HiveDataBase.setCurrentScreen("0");
       initDashboard([
@@ -329,14 +326,13 @@ class EmployeeViewModel extends GetxController {
         ),
       ]);
     } else {
-      if(currentEmployee?.type == "مالك")
-        {
-          accountType = {
-            "user": "مستخدم".tr,
-            "admin": "مدير".tr,
-            "superAdmin": "مالك".tr,
-          };
-        }else{
+      if (currentEmployee?.type == "مالك") {
+        accountType = {
+          "user": "مستخدم".tr,
+          "admin": "مدير".tr,
+          "superAdmin": "مالك".tr,
+        };
+      } else {
         accountType = {
           "user": "مستخدم".tr,
           "admin": "مدير".tr,
@@ -426,13 +422,13 @@ class EmployeeViewModel extends GetxController {
             Get.snackbar("خطأ", "هذا المستخدم غير فعال ");
             return;
           }
-          currentEmployee=await myUserModel!;
+          currentEmployee = await myUserModel!;
           HiveDataBase.setCurrentScreen("0");
           await HiveDataBase.deleteAccountManagementModel();
           await HiveDataBase.setAccountManagementModel(myUserModel!);
 
           await getScreens();
-            getAllEmployee();
+          getAllEmployee();
           Get.offNamed(AppRoutes.DashboardScreen);
         } else if (value.docs.isEmpty) {
           Get.snackbar("error", "not matched");
@@ -444,11 +440,13 @@ class EmployeeViewModel extends GetxController {
   }
 
   String? loginUserPage;
+  NfcCardViewModel nfcCardViewModel = Get.find<NfcCardViewModel>();
 
   Future<void> addTime({String? cardId, String? userName, String? password}) async {
     SettingsViewModel settingsController = Get.find<SettingsViewModel>();
     String lateTime = settingsController.settingsMap[Const.lateTime][Const.time];
     String appendTime = settingsController.settingsMap[Const.appendTime][Const.time];
+    String outTime = settingsController.settingsMap[Const.outTime][Const.time];
     bool? isLateWithReason;
     bool isDayOff = false;
     int totalLate = 0;
@@ -458,11 +456,9 @@ class EmployeeViewModel extends GetxController {
     print("add Time");
     EmployeeModel? user;
     if (cardId != null) {
-      user = allAccountManagement.values
-          .where(
-            (element) => element.serialNFC == cardId,
-          )
-          .firstOrNull;
+      String? userId = nfcCardViewModel.nfcCardMap[cardId]?.userId;
+      print(userId);
+      if (userId != null) user = allAccountManagement[userId];
     } else {
       user = allAccountManagement.values
           .where(
@@ -475,13 +471,13 @@ class EmployeeViewModel extends GetxController {
       {
         TimesModel timeData = TimesModel.fromDateTime(DateTime.now());
         if (user.employeeTime[timeData.formattedTime] == null) {
-    /*      if (timeData.isBefore(6, 00)||timeData.isAfter(18, 00)) {
+          /*      if (timeData.isBefore(6, 00)||timeData.isAfter(18, 00)) {
 
             Get.snackbar("خطأ اثناء التسجيل", "لا يمكن اتسجيل الخروج في هذا الوقت");
             return;
           }*/
           if (timeData.isAfter(int.parse(appendTime.split(" ")[0]), int.parse(appendTime.split(" ")[1]))) {
-            totalLate = timeData.dateTime.difference(DateTime.now().copyWith(hour: 7, minute: 41, second: 0)).inMinutes;
+            totalLate = timeData.dateTime.difference(DateTime.now().copyWith(hour: int.parse(appendTime.split(" ")[0]), minute: int.parse(appendTime.split(" ")[1]), second: 0)).inMinutes;
             isDayOff = true;
             isLateWithReason = false;
             await Get.defaultDialog(
@@ -537,7 +533,7 @@ class EmployeeViewModel extends GetxController {
                       })
                 ]);
           } else if (timeData.isAfter(int.parse(lateTime.split(" ")[0]), (int.parse(lateTime.split(" ")[1])))) {
-            totalLate = timeData.dateTime.difference(DateTime.now().copyWith(hour: 7, minute: 41, second: 0)).inMinutes;
+            totalLate = timeData.dateTime.difference(DateTime.now().copyWith(hour: int.parse(appendTime.split(" ")[0]), minute: int.parse(appendTime.split(" ")[1]), second: 0)).inMinutes;
             isLateWithReason = false;
             await Get.defaultDialog(
                 barrierDismissible: false,
@@ -611,17 +607,14 @@ class EmployeeViewModel extends GetxController {
           loginUserPage = "لقد قمت بالخروج بالفعل " + user.userName;
           print("You close the day already");
         } else {
-
-          if (timeData.isBefore(14, 00)) {
-            totalEarlier = timeData.dateTime.copyWith(hour: 14, minute: 00, second: 0).difference(timeData.dateTime).inMinutes;
+          if (timeData.isBefore(int.parse(outTime.split(" ")[0]), int.parse(outTime.split(" ")[1]))) {
+            totalEarlier = timeData.dateTime.copyWith(hour: int.parse(outTime.split(" ")[0]), minute: int.parse(outTime.split(" ")[1]), second: 0).difference(timeData.dateTime).inMinutes;
           }
-
           user.employeeTime[timeData.formattedTime]!.isEarlierWithReason = true;
           user.employeeTime[timeData.formattedTime]!.totalEarlier = totalEarlier;
           user.employeeTime[timeData.formattedTime]!.reasonOfEarlier = '';
           loginUserPage = "وداعا " + user.userName;
-          user.employeeTime[timeData.formattedTime]!.endDate = timeData.dateTime.copyWith(hour: 14, day: timeData.day, minute: 00);
-          ;
+          user.employeeTime[timeData.formattedTime]!.endDate = timeData.dateTime.copyWith(hour: int.parse(outTime.split(" ")[0]), day: timeData.day, minute: int.parse(outTime.split(" ")[1]));
           user.employeeTime[timeData.formattedTime]!.isDayEnd = true;
           user.employeeTime[timeData.formattedTime]!.totalDate = timeData.dateTime.difference(user.employeeTime[timeData.formattedTime]!.startDate!).inMinutes;
         }
@@ -723,7 +716,7 @@ class EmployeeViewModel extends GetxController {
   double getAllPaySalaryAtMonth(String month) {
     double pay = 0.0;
 
-    pay= Get.find<SalaryViewModel>()
+    pay = Get.find<SalaryViewModel>()
         .salaryMap
         .values
         .where(
@@ -734,7 +727,11 @@ class EmployeeViewModel extends GetxController {
         .map(
           (e) => double.parse(e.paySalary!),
         )
-        .toList().fold(0, (previousValue, element) => previousValue+element,);
+        .toList()
+        .fold(
+          0,
+          (previousValue, element) => previousValue + element,
+        );
     return pay;
   }
 
@@ -1066,7 +1063,8 @@ class EmployeeViewModel extends GetxController {
           if (employeeModel!.serialNFC != selectedCardId) {
             Get.find<NfcCardViewModel>().deleteUserCard(employeeModel!.serialNFC);
             Get.find<NfcCardViewModel>().setCardForEMP(
-              employeeModel!.serialNFC.toString(),
+
+              selectedCardId,
               employeeModel!.id,
             );
           }
@@ -1093,6 +1091,7 @@ class EmployeeViewModel extends GetxController {
         Get.back();
         await addAccount(model);
         getSuccessDialog(context);
+        if(!enableEdit)
         Get.find<NfcCardViewModel>().setCardForEMP(selectedCardId, model.id);
         clearController();
       } on Exception catch (e) {
@@ -1168,7 +1167,7 @@ class EmployeeViewModel extends GetxController {
   }
 
   /// when press Edite button
-   showEmployeeInputDialog(BuildContext context) {
+  showEmployeeInputDialog(BuildContext context) {
     showDialog(
       context: context,
       builder: (BuildContext context) {

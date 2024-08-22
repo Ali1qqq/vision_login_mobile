@@ -24,7 +24,7 @@ Future<bool> initNFCWorker(typeNFC type) async {
         }
       }
       var cardId=id.toUpperCase();
-      cardId=cardsMap.entries.where((element) => element.value==cardId,).firstOrNull?.key??cardId;
+      // cardId=cardsMap.entries.where((element) => element.value==cardId,).firstOrNull?.key??cardId;
       EmployeeViewModel accountManagementViewModel = Get.find<EmployeeViewModel>();
       if(type==typeNFC.login){
         // accountManagementViewModel.signInUsingNFC(cardId);

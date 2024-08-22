@@ -10,6 +10,7 @@ abstract class Const {
   static const allEventType = [eventTypeStudent, eventTypeParent, eventTypeEmployee];
   static const String appendTime = 'AppendTime';
   static  const String lateTime = 'LateTime';
+  static  const String outTime = 'OutTime';
   static const String time = 'Time';
 }
 

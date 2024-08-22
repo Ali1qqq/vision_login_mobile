@@ -19,6 +19,8 @@ class GetBinding extends Bindings {
 
   @override
   void dependencies() {
+    Get.put(NfcCardViewModel());
+
     Get.put(HomeViewModel());
     Get.put(EmployeeViewModel());
     Get.put(ExpensesViewModel());
@@ -31,7 +33,6 @@ class GetBinding extends Bindings {
     Get.put(WaitManagementViewModel());
     Get.put(SettingsViewModel());
     Get.put(ClassViewModel());
-    Get.put(NfcCardViewModel());
     Get.put(StudyFeesViewModel());
     Get.put(PlutoViewModel());
   }

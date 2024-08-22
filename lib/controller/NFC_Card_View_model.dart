@@ -13,7 +13,7 @@ class NfcCardViewModel extends GetxController {
     getAllNfcCard();
 
     /// this for add card from Local const to Firebase
-   /* cardsMap.forEach(
+ /*   cardsMap.forEach(
       (key, value) {
         addNfcCard(NfcCardModel(nfcId: key, nfcUid: value));
       },
@@ -25,28 +25,38 @@ class NfcCardViewModel extends GetxController {
   Map<String, NfcCardModel> get nfcCardMap => _nfcCardMap;
 
   getAllNfcCard() async {
-    await nfcCardCollectionRef.get().then(
+    await nfcCardCollectionRef.snapshots().listen(
       (value) {
         for (var element in value.docs) {
           _nfcCardMap[element.id] = NfcCardModel.fromJson(element.data());
         }
+        // print(_nfcCardMap.values.map((e) => e.toJson(),).toList());
+        // print(_nfcCardMap.keys.toList());
+        update();
       },
+
     );
-    update();
+
   }
 
-  setCardForEMP(String cardId, String userId) async {
-    await nfcCardCollectionRef.doc(cardId).set(NfcCardModel(userId: userId, nfcId: cardId).toJson(), SetOptions(merge: true));
+  setCardForEMP( String cardId,String userId) async {
+
+  String? cardUid=  nfcCardMap.entries.where((element) => element.value.nfcId==cardId,).first.key;
+
+    await nfcCardCollectionRef.doc(cardUid).set(NfcCardModel(userId: userId).toJson(), SetOptions(merge: true));
     getAllNfcCard();
     update();
   }
 
   addNfcCard(NfcCardModel model) async {
-    await nfcCardCollectionRef.doc(model.nfcId).set(model.toJson(),SetOptions(merge: true));
+    await nfcCardCollectionRef.doc(model.nfcUid).set(model.toJson(),SetOptions(merge: true));
   }
 
    deleteUserCard(String? cardId)async {
-    await nfcCardCollectionRef.doc(cardId).set(NfcCardModel(userId: null, nfcId: cardId).toJson(), SetOptions(merge: true));
+     print(cardId);
+     String? cardUid=  nfcCardMap.entries.where((element) => element.value.nfcId==cardId,).first.key;
+     print(cardUid);
+     await nfcCardCollectionRef.doc(cardUid).set(NfcCardModel(userId:"").toJson(), SetOptions(merge: true));
     getAllNfcCard();
     update();
   }

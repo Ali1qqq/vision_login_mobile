@@ -4,10 +4,12 @@ import 'package:get/get.dart';
 import '../../screens/Employee/Controller/Employee_view_model.dart';
 
 Future<bool> initNFCWorker(typeNFC type) async {
+
   bool isSupportNfc = false;
   var a = await js.context.callMethod(
     'initNFC',
   );
+  print(a);
   if (a == "ok") {
     isSupportNfc = true;
   } else {

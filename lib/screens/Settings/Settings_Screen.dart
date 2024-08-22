@@ -321,13 +321,18 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                 spacing: 50,
                                 children: [
                                   TimeWidget(
-                                    isLate: true,
+                                    timeName: TimeName.LateTime,
                                     timeController: controller.lateTimeController,
                                     controller: controller,
                                   ),
                                   TimeWidget(
-                                    isLate: false,
+                                    timeName: TimeName.AppendTime,
                                     timeController: controller.appendTimeController,
+                                    controller: controller,
+                                  ),
+                                  TimeWidget(
+                                    timeName: TimeName.OutTime,
+                                    timeController: controller.outTimeController,
                                     controller: controller,
                                   ),
                                 ],
@@ -400,9 +405,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
   List<DataCell> _buildWaitCells(double size, List<String> deleteData, WaitManagementModel model, String affectedName, WaitManagementViewModel controller) {
     return [
       dataRowItem(size / deleteData.length, model.type.toString().tr),
-      model.type == waitingListTypes.add.name  ? dataRowItem(size / deleteData.length, "عرض".tr,color: primaryColor, onTap: () {
-        showEmployeeDialog(context, model.newData ?? {});
-      }):dataRowItem(size / deleteData.length, model.details==''||model.details==null ? "لا يوجد".tr:model.details),
+      model.type == waitingListTypes.add.name
+          ? dataRowItem(size / deleteData.length, "عرض".tr, color: primaryColor, onTap: () {
+              showEmployeeDialog(context, model.newData ?? {});
+            })
+          : dataRowItem(size / deleteData.length, model.details == '' || model.details == null ? "لا يوجد".tr : model.details),
       dataRowItem(size / deleteData.length, affectedName),
       dataRowItem(size / deleteData.length, model.collectionName.toString()),
       if (enableUpdate)
@@ -693,7 +700,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
       },
     );
   }
-  showEmployeeDialog(BuildContext context, Map<String,dynamic> employeeModel) {
+
+  showEmployeeDialog(BuildContext context, Map<String, dynamic> employeeModel) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -704,9 +712,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
             borderRadius: BorderRadius.circular(25.0),
           ),
           child: Container(
-            width: ( Get.width / 4)+( Get.width / 4),
+            width: (Get.width / 4) + (Get.width / 4),
             child: ListView.builder(
-
               padding: EdgeInsets.zero,
               physics: ClampingScrollPhysics(),
               shrinkWrap: true,
@@ -747,28 +754,25 @@ class TimeWidget extends StatelessWidget {
   const TimeWidget({
     super.key,
     required this.timeController,
-    required this.isLate,
+    required this.timeName,
     required this.controller,
   });
 
   final TextEditingController timeController;
-  final bool isLate;
+  final TimeName timeName;
   final SettingsViewModel controller;
 
   @override
   Widget build(BuildContext context) {
-    // timeController.text = "07 31";
-    String lateTime = controller.settingsMap[Const.lateTime][Const.time];
-    String appendTime = controller.settingsMap[Const.appendTime][Const.time];
-
+    String time = controller.settingsMap[timeName.name][Const.time];
+int hour=int.parse(time.split(" ")[0]);
+int minute=int.parse(time.split(" ")[1]);
     return Wrap(
       alignment: WrapAlignment.center,
-      // mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: WrapCrossAlignment.end,
-      // crossAxisAlignment: CrossAxisAlignment.end,
       children: [
         Text(
-          isLate ? "توقيت التأخير: " : "توقيت الغياب: ",
+          timeName.name.tr,
           style: AppStyles.headLineStyle3,
         ),
         SizedBox(
@@ -779,12 +783,12 @@ class TimeWidget extends StatelessWidget {
             Navigator.of(context).push(
               showPicker(
                 context: context,
-                value: Time(hour: TimeOfDay.now().hour, minute: TimeOfDay.now().minute),
+                value: Time(hour: int.parse(time.split(" ")[0].padLeft(2, "0")), minute: int.parse(time.split(" ")[1].padLeft(2, "0"))),
                 sunrise: TimeOfDay(hour: 6, minute: 0),
                 sunset: TimeOfDay(hour: 18, minute: 0),
                 duskSpanInMinutes: 120,
                 onChange: (time) {
-                  controller.setTime("${time.hour} ${time.minute}", isLate ? Const.lateTime : Const.appendTime);
+                  controller.setTime("${time.hour} ${time.minute}",timeName.name);
                 },
               ),
             );
@@ -795,13 +799,22 @@ class TimeWidget extends StatelessWidget {
             decoration: BoxDecoration(borderRadius: BorderRadius.circular(5), border: Border.all(color: secondaryColor, width: 2)),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+
               children: [
                 Text(
-                  isLate ? "${lateTime.split(" ")[0].padLeft(2, "0")}:${lateTime.split(" ")[1].padLeft(2, "0")}" : "${appendTime.split(" ")[0].padLeft(2, "0")}:${appendTime.split(" ")[1].padLeft(2, "0")}",
+                  hour>12?
+                  "PM":
+                  "AM",
+                  style: AppStyles.headLineStyle2.copyWith(color: primaryColor),
+                  overflow: TextOverflow.ellipsis,
+                ),
+                Text(
+                  hour>12?
+                "${(hour-12).toString().padLeft(2, "0")}:${minute.toString().padLeft(2, "0")}":
+                  "${hour.toString().padLeft(2, "0")}:${minute.toString().padLeft(2, "0")}",
                   style: AppStyles.headLineStyle1,
                   overflow: TextOverflow.ellipsis,
                 ),
-                // Spacer(),
                 Icon(
                   Icons.timelapse_rounded,
                   color: Colors.blue,

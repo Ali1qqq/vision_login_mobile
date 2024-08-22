@@ -15,21 +15,21 @@ const bgColor = Color(0xffF6F6F4); // تخفيف لون الخلفية
 const defaultPadding = 16.0;
 EmployeeModel? currentEmployee;
 
-Map<String, String> cardsMap = {
-  "1": "04:AB:C0:21:5F:61:80",
-  "2": "04:8B:BB:F8:9F:61:80",
-  "3": "04:50:49:22:5F:61:80",
-  "4": "04:2C:E1:F3:9F:61:80",
-  "5": "04:96:CA:1D:5F:61:80",
-  "6": "04:9B:32:1F:5F:61:80",
-  "7": "04:FE:59:F5:9F:61:80",
-  "8": "04:E4:CD:1F:5F:61:80",
-  "9": "04:85:80:1E:5F:61:80",
-  "10": "04:65:17:F1:9F:61:81",
-  "11": "04:D6:EE:20:5F:61:80",
-  "12": "04:B0:EE:1F:5F:61:80",
-  "13": "04:40:0E:1F:5F:61:80",
-};
+// Map<String, String> cardsMap = {
+//   "1": "04:AB:C0:21:5F:61:80",
+//   "2": "04:8B:BB:F8:9F:61:80",
+//   "3": "04:50:49:22:5F:61:80",
+//   "4": "04:2C:E1:F3:9F:61:80",
+//   "5": "04:96:CA:1D:5F:61:80",
+//   "6": "04:9B:32:1F:5F:61:80",
+//   "7": "04:FE:59:F5:9F:61:80",
+//   "8": "04:E4:CD:1F:5F:61:80",
+//   "9": "04:85:80:1E:5F:61:80",
+//   "10": "04:65:17:F1:9F:61:81",
+//   "11": "04:D6:EE:20:5F:61:80",
+//   "12": "04:B0:EE:1F:5F:61:80",
+//   "13": "04:40:0E:1F:5F:61:80",
+// };
 
 List<String> employeeName = [
   "",
@@ -166,5 +166,6 @@ Map<String, String> months = {
 };
 
 enum waitingListTypes { delete, returnInstallment, waitDiscounts, add, edite }
+enum TimeName { LateTime, AppendTime, OutTime,}
 
 const accountManagementCollection = "AccountManagement";

@@ -166,19 +166,20 @@ class EmployeeInputForm extends StatelessWidget {
                           .where(
                             (element) {
                               /// اذا لم تكن البطاقة المختارة
-                              if (element.key != empController.selectedCardId)
-                                return element.value.userId == null;
+                              if (element.value.nfcId != empController.selectedCardId)
+                                return element.value.userId == null||element.value.userId == '';
                               else
                                 return true;
                             },
                           )
                           .map(
-                            (e) => e.key,
+                            (e) => e.value.nfcId.toString()??'',
                           )
-                          .toList(),
+                          .toList()..sort((a, b) => int.parse(a).compareTo(int.parse(b))),
                       label: "رقم البطاقة".tr,
                       onChange: (value) {
                         if (value != null) {
+                          print(value);
                           empController.selectedCardId = value;
                           empController.update();
                         }
