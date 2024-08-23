@@ -241,7 +241,7 @@ class WaitManagementViewModel extends GetxController {
 
   makeCardAvailable(String affectedId) {
    String cardId=
-    Get.find<EmployeeViewModel>().allAccountManagement[affectedId]!.serialNFC??'';
+    Get.find<NfcCardViewModel>().nfcCardMap.values.where((element) => element.userId==affectedId,).firstOrNull?.nfcUid??'';
     FirebaseFirestore.instance
         .collection(nfcCardCollection)
         .doc(cardId)
