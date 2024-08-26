@@ -124,7 +124,7 @@ class _StudentInputFormState extends State<StudentInputForm> {
             InsertShapeWidget(
                 titleWidget: Text(
                   "معلومات الطالب".tr,
-                  style: AppStyles.headLineStyle4,
+                  style: AppStyles.headLineStyle1,
                 ),
                 bodyWidget: Wrap(
                   clipBehavior: Clip.hardEdge,
@@ -306,7 +306,7 @@ class _StudentInputFormState extends State<StudentInputForm> {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text("صورة العقد".tr),
+                        Text("صورة الطالب (اختياري)".tr),
                         SizedBox(
                           height: 15,
                         ),

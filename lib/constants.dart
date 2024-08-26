@@ -47,33 +47,7 @@ EmployeeModel? currentEmployee;
 //   "13": "04:40:0E:1F:5F:61:80",
 // };
 
-List<String> employeeName = [
-  "",
-  'أحمد الأيوبي',
-  'محمد الأسدي',
-  'علي البغدادي',
-  'حسين الكرمي',
-  'عمر النجار',
-  'يوسف الراوي',
-  'إبراهيم الحسيني',
-  'خالد الزبيدي',
-  'عبدالله العطار',
-  'سعيد الحداد',
-  'طارق البصري',
-  'ياسر الزهراني',
-  'سامي الشمري',
-  'ماجد القيسي',
-  'عماد السعدي',
-  'فهد العتيبي',
-  'سليمان الجبوري',
-  'أنس الفارسي',
-  'بسام الزهيري',
-  'جمال التميمي',
-  'هيثم الهاشمي',
-  'رامي الشميري',
-  'نادر العدني',
-  ''
-];
+
 
 String generateId(String type) {
   var _ = DateTime.now().microsecondsSinceEpoch.toString();
@@ -97,21 +71,7 @@ TimesModel? thisTimesModel;
 
 
 
-List<String> classNameList = [
-  "KG 1",
-  "KG 2",
-  "Grade 1",
-  "Grade 2",
-  "Grade 3",
-  "Grade 4",
-  "Grade 5",
-  "Grade 6",
-  "Grade 7",
-  "Grade 8",
-  "Grade 9",
-  "Grade 10",
-  "Grade 11",
-];
+
 List<String> sexList = [
   "ذكر",
   "انثى",

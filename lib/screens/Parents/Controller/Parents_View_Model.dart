@@ -324,7 +324,6 @@ class ParentsViewModel extends GetxController {
   final List<String> payWays = [
     'كاش',
     'اقساط',
-    'كريدت',
   ];
 
   clearController() {
