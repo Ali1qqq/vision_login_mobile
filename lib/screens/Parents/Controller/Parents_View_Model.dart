@@ -37,6 +37,11 @@ class ParentsViewModel extends GetxController {
   final editController = TextEditingController();
   final idNumController = TextEditingController();
 
+  bool isOverlayVisible=false;
+
+  int imageHeight=200;
+  int imageWidth=200;
+
   Map<String, InstallmentModel> instalmentMap = {};
 
   List<EventRecordModel> eventRecords = [];
