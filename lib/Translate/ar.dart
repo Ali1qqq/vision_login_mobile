@@ -221,7 +221,7 @@ Map<String, String> ar = {
   "address": "شارع فطحل",
   "age": "العمر",
   "bus": "الحافلة",
-  "contract": "دوام كلي",
+  "contract": "صور العقد",
   "dayOfWork": "عدد ايام العمل",
   "eventRecords": "سجل الاحداث",
   "fullName": "الاسم",

@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:vision_dashboard/screens/Employee/Controller/Employee_view_model.dart';
+import 'package:vision_dashboard/screens/Parents/Controller/Parents_View_Model.dart';
 
-List<Widget> buildIdImageList(List<dynamic> imageList, EmployeeViewModel controller, bool isTemporary) {
+List<Widget> buildParentIdImageList(List<dynamic> imageList, ParentsViewModel controller, bool isTemporary) {
   return List.generate(
     imageList.length,
         (index) {
       return Padding(
         padding: const EdgeInsets.symmetric(horizontal: 8.0),
         child: Container(
-          width: 300,
-          height: 300,
+          width: 200,
+          height: 150,
           child: Stack(
             children: [
               Container(
@@ -18,19 +18,19 @@ List<Widget> buildIdImageList(List<dynamic> imageList, EmployeeViewModel control
                   color: Colors.grey,
                   borderRadius: BorderRadius.circular(15),
                 ),
-                width: 300,
-                height: 300,
+                width: 200,
+                height: 150,
                 child: isTemporary
                     ? Image.memory(
                   imageList[index],
-                  height: 300,
-                  width: 300,
+                  height: 150,
+                  width: 200,
                   fit: BoxFit.fitHeight,
                 )
                     : Image.network(
                   imageList[index],
-                  height: 300,
-                  width: 300,
+                  height: 150,
+                  width: 200,
                   fit: BoxFit.cover,
                 ),
               ),
@@ -40,9 +40,9 @@ List<Widget> buildIdImageList(List<dynamic> imageList, EmployeeViewModel control
                 child: InkWell(
                   onTap: () {
                     if (isTemporary) {
-                      controller.imagesTempData.removeAt(index);
+                      controller.contractsTemp.removeAt(index);
                     } else {
-                      controller.imageLinkList.removeAt(index);
+                      controller.contracts.removeAt(index);
                     }
                     controller.update(); // Notify the UI
                   },

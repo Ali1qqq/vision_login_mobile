@@ -35,16 +35,16 @@ class _CustomTextFieldState extends State<CustomTextField> {
   @override
   void initState() {
     super.initState();
-    widget.controller.addListener(_convertArabicNumbersToEnglish);
+    widget.controller.addListener(convertArabicNumbersToEnglish);
   }
 
   @override
   void dispose() {
-    widget.controller.removeListener(_convertArabicNumbersToEnglish);
+    widget.controller.removeListener(convertArabicNumbersToEnglish);
     super.dispose();
   }
 
-  void _convertArabicNumbersToEnglish() {
+  void convertArabicNumbersToEnglish() {
     if(widget.isNumeric) {
       final text = widget.controller.text;
       final convertedText = text.replaceAllMapped(

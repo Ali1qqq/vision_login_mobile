@@ -3,7 +3,11 @@ import 'package:get/get.dart';
 import 'package:vision_dashboard/models/Installment_model.dart';
 import 'package:vision_dashboard/screens/Parents/Controller/Parents_View_Model.dart';
 import 'package:vision_dashboard/screens/Parents/Edite_Add_Parent/widgets/BuildParentAddContractButton.dart';
+import 'package:vision_dashboard/screens/Parents/Edite_Add_Parent/widgets/BuildParentContractImage.dart';
+import 'package:vision_dashboard/screens/Parents/Edite_Add_Parent/widgets/BuildParentContractImageSection.dart';
 import 'package:vision_dashboard/screens/Parents/Edite_Add_Parent/widgets/EventParentContainer.dart';
+import 'package:vision_dashboard/screens/Parents/Edite_Add_Parent/widgets/ParentAddIdImageButton.dart';
+import 'package:vision_dashboard/screens/Parents/Edite_Add_Parent/widgets/ParentIdImageListWidget.dart';
 import 'package:vision_dashboard/screens/Widgets/AppButton.dart';
 import 'package:vision_dashboard/screens/Widgets/Insert_shape_Widget.dart';
 import 'package:vision_dashboard/screens/Widgets/header.dart';
@@ -107,7 +111,12 @@ class ParentInputForm extends StatelessWidget {
                             }
                           },
                         ),
-                        BuildParentAddContractButton(parentController),
+                        // buildParentContractImageSection(parentController),
+                        // BuildParentContractImage(memoryImage: parentController.contractsTemp),
+                        buildParentAddIdImageButton(parentController),
+
+                        ...buildParentIdImageList(parentController.contractsTemp, parentController, true),
+                        ...buildParentIdImageList(parentController.contracts, parentController, false),
 
                         SizedBox(
                           width: Get.width / 2,

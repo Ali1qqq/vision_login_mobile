@@ -13,7 +13,7 @@ Widget buildParentContractImageSection(ParentsViewModel parentController) {
       Text("صورة العقد".tr),
       SizedBox(height: 15),
       SizedBox(
-        height: 200,
+        height: 250,
         child: ListView(
           scrollDirection: Axis.horizontal,
           children: [

@@ -206,6 +206,7 @@ class ParentsViewModel extends GetxController {
       eventRecords = parent!.eventRecords ?? [];
       idNumController.text = parent!.parentID ?? '';
       instalmentMap = {};
+      contracts=parent!.contract!.map((e) => e.toString(),).toList();
       instalmentMap .addAll( parent!.installmentRecords!);
       print(instalmentMap.values.length);
       monthsController = List.generate(
