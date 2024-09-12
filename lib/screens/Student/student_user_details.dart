@@ -12,6 +12,8 @@ import 'package:vision_dashboard/models/event_record_model.dart';
 import 'package:vision_dashboard/screens/Buses/Controller/Bus_View_Model.dart';
 import 'package:vision_dashboard/screens/Parents/Controller/Parents_View_Model.dart';
 import 'package:vision_dashboard/screens/Student/Controller/Student_View_Model.dart';
+import 'package:vision_dashboard/screens/Student/widgets/AddSTIdImageButton.dart';
+import 'package:vision_dashboard/screens/Student/widgets/STIdImageListWidget.dart';
 import 'package:vision_dashboard/screens/Widgets/AppButton.dart';
 import 'package:vision_dashboard/screens/Widgets/Custom_Drop_down.dart';
 import 'package:vision_dashboard/screens/Widgets/Custom_Drop_down_with_value.dart';
@@ -43,7 +45,8 @@ class _StudentInputFormState extends State<StudentInputForm> {
 
   final genderController = TextEditingController();
   final ageController = TextEditingController();
-  final classController = TextEditingController()..text = '';
+  final classController = TextEditingController()
+    ..text = '';
 
   final startDateController = TextEditingController();
   final endDateController = TextEditingController();
@@ -52,14 +55,15 @@ class _StudentInputFormState extends State<StudentInputForm> {
   final guardianController = TextEditingController();
   final languageController = TextEditingController();
   final editController = TextEditingController();
-  final gpaController = TextEditingController()..text = "0";
+  final gpaController = TextEditingController()
+    ..text = "0";
 
   List<EventRecordModel> eventRecords = [];
   String parentName = '';
 
-  List<String> _contracts = [];
-  List<Uint8List> _contractsTemp = [];
+
   ClassViewModel classViewModel = Get.find<ClassViewModel>();
+  StudentViewModel studentViewModel = Get.find<StudentViewModel>();
 
   String busValue = '';
 
@@ -74,7 +78,9 @@ class _StudentInputFormState extends State<StudentInputForm> {
       studentNameController.text = widget.studentModel!.studentName ?? '';
       studentNumberController.text = widget.studentModel!.studentNumber ?? '';
       busController.text = widget.studentModel!.bus ?? '';
-      busValue = Get.find<BusViewModel>().busesMap[widget.studentModel!.bus]?.name ?? widget.studentModel!.bus!;
+      busValue = Get
+          .find<BusViewModel>()
+          .busesMap[widget.studentModel!.bus]?.name ?? widget.studentModel!.bus!;
       genderController.text = widget.studentModel!.gender ?? '';
       gpaController.text = widget.studentModel!.grade.toString();
       ageController.text = widget.studentModel!.StudentBirthDay ?? '';
@@ -82,11 +88,13 @@ class _StudentInputFormState extends State<StudentInputForm> {
       startDateController.text = widget.studentModel!.startDate ?? '';
       busController.text = widget.studentModel!.bus ?? '';
       guardianController.text = widget.studentModel!.parentId!;
-      parentName = Get.find<ParentsViewModel>().parentMap[widget.studentModel!.parentId!]?.fullName ?? "";
+      parentName = Get
+          .find<ParentsViewModel>()
+          .parentMap[widget.studentModel!.parentId!]?.fullName ?? "";
       languageController.text = widget.studentModel!.stdLanguage ?? '';
 
       eventRecords = widget.studentModel!.eventRecords ?? [];
-      _contracts = widget.studentModel!.contractsImage ?? [];
+      studentViewModel.contracts = widget.studentModel!.contractsImage ?? [];
     }
   }
 
@@ -105,8 +113,8 @@ class _StudentInputFormState extends State<StudentInputForm> {
     parentName = '';
     languageController.text = '';
     busValue = '';
-    _contracts.clear();
-    _contractsTemp.clear();
+    studentViewModel.contracts.clear();
+    studentViewModel.contractsTemp.clear();
 
     setState(() {});
   }
@@ -136,23 +144,25 @@ class _StudentInputFormState extends State<StudentInputForm> {
                     CustomTextField(controller: studentNameController, title: "اسم الطالب".tr),
                     CustomDropDown(
                       value: parentName,
-                      listValue: Get.find<ParentsViewModel>()
+                      listValue: Get
+                          .find<ParentsViewModel>()
                           .parentMap
                           .values
                           .map(
                             (e) => e.fullName!,
-                          )
+                      )
                           .toList(),
                       label: 'ولي الأمر'.tr,
                       onChange: (value) {
                         if (value != null) {
                           parentName = value;
-                          guardianController.text = Get.find<ParentsViewModel>()
+                          guardianController.text = Get
+                              .find<ParentsViewModel>()
                               .parentMap
                               .values
                               .where(
                                 (element) => element.fullName == value,
-                              )
+                          )
                               .first
                               .id!;
                         }
@@ -197,7 +207,7 @@ class _StudentInputFormState extends State<StudentInputForm> {
                       listValue: classViewModel.classMap.values
                           .map(
                             (e) => e.className!,
-                          )
+                      )
                           .toList(),
                       label: 'الصف'.tr,
                       onChange: (value) {
@@ -219,13 +229,14 @@ class _StudentInputFormState extends State<StudentInputForm> {
                     ),
                     CustomDropDown(
                       value: busValue,
-                      listValue: Get.find<BusViewModel>()
-                              .busesMap
-                              .values
-                              .map(
-                                (e) => e.name!,
-                              )
-                              .toList() +
+                      listValue: Get
+                          .find<BusViewModel>()
+                          .busesMap
+                          .values
+                          .map(
+                            (e) => e.name!,
+                      )
+                          .toList() +
                           ['بدون حافلة', 'مع حافلة'],
                       label: 'الحافلة'.tr,
                       onChange: (value) {
@@ -234,11 +245,11 @@ class _StudentInputFormState extends State<StudentInputForm> {
                           final busViewController = Get.find<BusViewModel>();
                           if (busViewController.busesMap.isNotEmpty) {
                             busController.text = busViewController.busesMap.values
-                                    .where(
-                                      (element) => element.name == value,
-                                    )
-                                    .firstOrNull
-                                    ?.busId ??
+                                .where(
+                                  (element) => element.name == value,
+                            )
+                                .firstOrNull
+                                ?.busId ??
                                 value;
                           } else
                             busController.text = value;
@@ -303,11 +314,17 @@ class _StudentInputFormState extends State<StudentInputForm> {
                           ),
                         ),
                       ),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text("صورة الطالب (اختياري)".tr),
-                        SizedBox(
+
+                    GetBuilder<StudentViewModel>(builder: (logic) {
+                      return Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+
+                          StudentAddIdImageButton(studentViewModel),
+
+                          ...StudentImageList(studentViewModel.contractsTemp, studentViewModel, true),
+                          ...StudentImageList(studentViewModel.contracts, studentViewModel, false),
+                          /*     SizedBox(
                           height: 15,
                         ),
                         SizedBox(
@@ -377,9 +394,10 @@ class _StudentInputFormState extends State<StudentInputForm> {
                               ),
                             ],
                           ),
-                        ),
-                      ],
-                    ),
+                        ),*/
+                        ],
+                      );
+                    }),
                     if (widget.studentModel != null) CustomTextField(controller: editController, title: 'سبب التعديل'.tr),
                     GetBuilder<StudentViewModel>(builder: (controller) {
                       return AppButton(
@@ -419,13 +437,15 @@ class _StudentInputFormState extends State<StudentInputForm> {
                                 .toList()
                                 .where(
                                   (element) => element.role == Const.eventTypeStudent,
-                                )
+                            )
                                 .toList(),
                             label: "نوع الحدث".tr,
                             onChange: (selectedWay) {
                               if (selectedWay != null) {
                                 setState(() {});
-                                selectedEvent = Get.find<EventViewModel>().allEvents[selectedWay];
+                                selectedEvent = Get
+                                    .find<EventViewModel>()
+                                    .allEvents[selectedWay];
                                 // selectedEvent = selectedWay;
                               }
                             },
@@ -525,10 +545,15 @@ class _StudentInputFormState extends State<StudentInputForm> {
 
   save(StudentViewModel controller) async {
     if (validateFields(requiredControllers: [], numericControllers: [])) {
-      QuickAlert.show(width: Get.width / 2, context: context, type: QuickAlertType.loading, title: 'جاري التحميل'.tr, text: 'يتم العمل على الطلب'.tr, barrierDismissible: false);
+      QuickAlert.show(width: Get.width / 2,
+          context: context,
+          type: QuickAlertType.loading,
+          title: 'جاري التحميل'.tr,
+          text: 'يتم العمل على الطلب'.tr,
+          barrierDismissible: false);
 
-      await uploadImages(_contractsTemp, "contracts").then(
-        (value) => _contracts.addAll(value),
+      await uploadImages(studentViewModel.contractsTemp, "contracts").then(
+            (value) => studentViewModel.contracts.addAll(value),
       );
       final student = StudentModel(
         stdExam: widget.studentModel?.stdExam,
@@ -540,7 +565,7 @@ class _StudentInputFormState extends State<StudentInputForm> {
         StudentBirthDay: ageController.text,
         studentName: studentNameController.text,
         stdClass: classController.text,
-        contractsImage: _contracts,
+        contractsImage: studentViewModel.contracts,
         gender: genderController.text,
         grade: double.parse(gpaController.text),
         bus: busController.text,
@@ -551,9 +576,13 @@ class _StudentInputFormState extends State<StudentInputForm> {
       if (widget.studentModel != null) {
         addWaitOperation(collectionName: studentCollection,
 
-            userName: currentEmployee?.userName.toString()??"",
+            userName: currentEmployee?.userName.toString() ?? "",
 
-            affectedId: widget.studentModel!.studentID!, type: waitingListTypes.edite, oldData: widget.studentModel!.toJson(), newData: student.toJson(), details: editController.text);
+            affectedId: widget.studentModel!.studentID!,
+            type: waitingListTypes.edite,
+            oldData: widget.studentModel!.toJson(),
+            newData: student.toJson(),
+            details: editController.text);
 
         if (widget.studentModel!.parentId != guardianController.text) {
           Get.find<ParentsViewModel>().deleteStudent(widget.studentModel!.parentId!, widget.studentModel!.studentID!);

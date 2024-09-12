@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:typed_data';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
@@ -18,6 +19,9 @@ class StudentViewModel extends GetxController {
       FirebaseFirestore.instance.collection(studentCollection);
   List<PlutoColumn> columns = [];
   List<PlutoRow> rows = [];
+
+  List<String> contracts = [];
+  List<Uint8List> contractsTemp = [];
 
   Map<String, PlutoColumnType> data = {
     "الرقم التسلسلي": PlutoColumnType.text(),
