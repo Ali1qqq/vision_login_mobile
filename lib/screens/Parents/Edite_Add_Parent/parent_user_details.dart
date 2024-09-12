@@ -49,7 +49,7 @@ class ParentInputForm extends StatelessWidget {
                         CustomTextField(
                           controller: parentController.idNumController,
                           title: 'رقم الهوية'.tr,
-                          isNumeric: true,
+                          // isNumeric: true,
                         ),
                         CustomTextField(
                           controller: parentController.numberController,
