@@ -212,7 +212,7 @@ class StudyFeesViewModel extends GetxController {
                                                     if (element.bytes != null) _contractsTemp = element.bytes!;
                                                   },
                                                 );
-
+                                                setState((){});
                                                 update();
                                               }
                                             },
