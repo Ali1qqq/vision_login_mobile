@@ -83,7 +83,8 @@ class EmployeeViewModel extends GetxController {
   final editController = TextEditingController();
   final userNameController = TextEditingController();
   final userPassController = TextEditingController();
-
+double imageHeight=150;
+double imageWidth=150;
   /// when scan NFC Card
   TextEditingController nfcController = TextEditingController();
 

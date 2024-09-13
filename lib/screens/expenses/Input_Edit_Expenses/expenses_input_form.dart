@@ -23,7 +23,7 @@ class ExpensesInputForm extends StatelessWidget {
     return GetBuilder<ExpensesViewModel>(builder: (controller) {
       return Scaffold(
         backgroundColor: bgColor,
-        appBar: Header(title: "اضافة مصروف جديد", middleText: "", context: context),
+        appBar: Header(title: controller.expensesModel==null?"اضافة مصروف جديد":"تعديل مصروف", middleText: "", context: context),
         body: SingleChildScrollView(
             padding: EdgeInsets.all(16.0),
             child: InsertShapeWidget(
@@ -73,24 +73,10 @@ class ExpensesInputForm extends StatelessWidget {
                     controller: controller.bodyController,
                     title: 'الوصف'.tr,
                   ),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text("صورة الفاتورة".tr),
-                      SizedBox(height: 15),
-                      SizedBox(
-                        height: 200,
-                        child: ListView(
-                          scrollDirection: Axis.horizontal,
-                          children: [
-                            buildAddImageButton(controller),
-                            ...buildImageList(controller.ImagesTempData, controller, true),
-                            ...buildImageList(controller.imageLinkList, controller, false),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
+                  buildAddImageButton(controller),
+                  ...buildImageList(controller.ImagesTempData, controller, true),
+                  ...buildImageList(controller.imageLinkList, controller, false),
+
                   AppButton(
                     text: "حفظ".tr,
                     onPressed: () async {

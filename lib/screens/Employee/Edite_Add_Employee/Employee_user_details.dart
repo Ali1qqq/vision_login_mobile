@@ -194,26 +194,12 @@ class EmployeeInputForm extends StatelessWidget {
                         empController.update();
                       },
                     ),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text("صورة الهوية".tr),
-                        SizedBox(height: 15),
-                        SizedBox(
-                          height: 150,
-                          child: ListView(
-                            scrollDirection: Axis.horizontal,
-                            children: [
-                              if(!viewOnly)
-                              buildAddIdImageButton(empController),
+                    if(!viewOnly)
+                      buildAddIdImageButton(empController),
 
-                              ...buildIdImageList(empController.imagesTempData, empController, true),
-                              ...buildIdImageList(empController.imageLinkList, empController, false),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
+                    ...buildIdImageList(empController.imagesTempData, empController, true),
+                    ...buildIdImageList(empController.imageLinkList, empController, false),
+
                     if (empController.enableEdit&&!viewOnly) CustomTextField(controller: empController.editController, title: 'سبب التعديل'.tr, keyboardType: TextInputType.text),
                     if(!viewOnly)
                     GetBuilder<EmployeeViewModel>(builder: (controller) {

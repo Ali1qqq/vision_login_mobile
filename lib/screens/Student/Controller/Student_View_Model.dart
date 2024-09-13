@@ -22,6 +22,9 @@ class StudentViewModel extends GetxController {
 
   List<String> contracts = [];
   List<Uint8List> contractsTemp = [];
+  int imageHeight=200;
+  int imageWidth=200;
+
 
   Map<String, PlutoColumnType> data = {
     "الرقم التسلسلي": PlutoColumnType.text(),

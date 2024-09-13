@@ -29,8 +29,8 @@ void showExpensesInputDialog(BuildContext context) {
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(25.0),
           ),
-          height: Get.height / 2,
-          width: Get.width / 1.5,
+          height: Get.height / 1.1,
+          width: Get.width / 1.1,
           child: ExpensesInputForm(),
         ),
       );

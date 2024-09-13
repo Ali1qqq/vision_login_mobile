@@ -50,7 +50,8 @@ class ExpensesViewModel extends GetxController {
     return checkIfPendingDelete(affectedId: currentId);
   }
 
-
+double imageHeight=200;
+double imageWidth=200;
 
   /// delete or return current selected row
   void handleDeleteOrRestore(BuildContext context, WaitManagementViewModel waitController) {
