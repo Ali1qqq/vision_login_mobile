@@ -135,7 +135,7 @@ class ParentInputForm extends StatelessWidget {
                                   itemCount: parentController.instalmentMap.length,
                                   itemBuilder: (context, index) {
                                     InstallmentModel oneInstallment=parentController.instalmentMap.values.elementAt(index);
-                                    bool canEdite=oneInstallment.isPay??true;
+                                    bool cantEdite=oneInstallment.isPay??false;
                                     return Padding(
                                       padding: const EdgeInsets.symmetric(vertical: 8.0),
                                       child: Container(
@@ -146,7 +146,33 @@ class ParentInputForm extends StatelessWidget {
                                             crossAxisAlignment: CrossAxisAlignment.end,
                                             children: [
                                               Spacer(),
-                                              canEdite
+                                              InkWell(
+                                                onTap: () {
+
+                                                  if(!cantEdite) {
+                                                    showDatePicker(
+                                                      context: context,
+                                                      firstDate: DateTime(2010),
+                                                      lastDate: DateTime(2100),
+                                                    ).then((date) {
+                                                      if (date != null) {
+                                                        parentController.monthsController[index].text = date.toString().split(" ")[0];
+                                                      }
+                                                    });
+                                                  }
+                                                },
+                                                child: CustomTextField(
+                                                  controller: parentController.monthsController[index],
+                                                  title: 'تاريخ البداية'.tr,
+                                                  enable: false,
+                                                  keyboardType: TextInputType.datetime,
+                                                  icon: Icon(
+                                                    Icons.date_range_outlined,
+                                                    color: primaryColor,
+                                                  ),
+                                                ),
+                                              ),
+                                       /*       canEdite
                                                   ? CustomTextField(
                                                       enable: !canEdite,
                                                       isFullBorder: !canEdite,
@@ -182,10 +208,10 @@ class ParentInputForm extends StatelessWidget {
                                                           parentController.monthsController[index].text = months[value]!;
                                                         }
                                                       },
-                                                    ),
+                                                    ),*/
                                               Spacer(),
                                               CustomTextField(
-                                                enable: !canEdite,
+                                                enable: !cantEdite,
                                                 controller: parentController.costsController[index],
                                                 title: "الدفعة".tr,
                                                 isNumeric: true,
@@ -243,6 +269,8 @@ class ParentInputForm extends StatelessWidget {
                     AppButton(
                         text: 'حفظ'.tr,
                         onPressed: () {
+                          // print( parentController.instalmentMap.entries.map((e) => e.value.toJson(),).toList());
+                          // print(  Map.fromEntries(parentController.instalmentMap!.entries.map((e) => MapEntry(e.key, e.value.toJson())).toList()));
                           parentController.saveParentData(context);
                         }),
                   ],

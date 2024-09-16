@@ -66,9 +66,16 @@ class ParentModel {
       id = json['id'] ?? '';
 
       (json['installmentRecords'] ?? {}).forEach((k, v) {
+        // إنشاء الكائن مرة واحدة فقط
+        var installment = InstallmentModel.fromJson(v);
 
-        installmentRecords![k] = InstallmentModel.fromJson(v);
-        totalPayment= totalPayment!+int.parse(InstallmentModel.fromJson(v).installmentCost!);
+        // تخزين الكائن في القاموس
+        installmentRecords![k] = installment;
+
+        // التحقق من قيمة installmentCost وجمع المجموع
+        if (installment.installmentCost != null && installment.installmentCost!.isNotEmpty) {
+          totalPayment = totalPayment! + (int.tryParse(installment.installmentCost!) ?? 0);
+        }
       });
       contract = json['contract'] ?? [];
       children = json['children'] ?? [];

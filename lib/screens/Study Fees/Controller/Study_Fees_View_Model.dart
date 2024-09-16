@@ -103,7 +103,7 @@ class StudyFeesViewModel extends GetxController {
     } else if (inkwellIndex == 1) {
       return parent.installmentRecords?.values.any((record) => record.isPay == true) ?? false;
     } else if (inkwellIndex == 2) {
-      return parent.installmentRecords?.values.any((record) => int.parse(record.installmentDate!) <= thisTimesModel!.month && record.isPay != true) ?? false;
+      return parent.installmentRecords?.values.any((record) => DateTime.parse(record.installmentDate!) .isBefore(DateTime.now()) && record.isPay != true) ?? false;
     } else {
       return (parent.installmentRecords?.length ?? 0) > 0;
     }
@@ -121,7 +121,7 @@ class StudyFeesViewModel extends GetxController {
   int calculateLatePayment(ParentModel parent) {
     return parent.installmentRecords?.values
             .where(
-              (record) => record.isPay != true && int.parse(record.installmentDate!) <= thisTimesModel!.month,
+              (record) => record.isPay != true && DateTime.parse(record.installmentDate!).isBefore(DateTime.now()),
             )
             .fold(0, (sum, record) => (sum ?? 0) + int.parse(record.installmentCost.toString())) ??
         0;
@@ -158,7 +158,7 @@ class StudyFeesViewModel extends GetxController {
                       itemCount: installmentStudent.length,
                       itemBuilder: (context, parentIndex) {
                         InstallmentModel installment = installmentStudent.values.elementAt(parentIndex);
-                        bool isLate = int.parse(installment.installmentDate!) > DateTime.now().month;
+                        bool isLate = DateTime.parse(installment.installmentDate!).isBefore(DateTime.now());
                         Uint8List? _contractsTemp;
                         String? imageURL = installment.InstallmentImage;
                         return StatefulBuilder(builder: (BuildContext context, StateSetter setState) {
@@ -248,7 +248,7 @@ class StudyFeesViewModel extends GetxController {
                                           ),
                                         if (installment.isPay == true)
                                           ImageOverlay(
-                                            imageUrl: imageURL!,
+                                            imageUrl: imageURL??'',
                                             imageHeight: 50,
                                             imageWidth: max(140, Get.width / 10),
                                           ),

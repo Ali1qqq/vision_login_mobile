@@ -229,7 +229,7 @@ class ParentsViewModel extends GetxController {
   addInstalment() {
     String installmentId = generateId("INSTALLMENT");
     instalmentMap[installmentId] = InstallmentModel(installmentId: installmentId, installmentCost: "0", installmentDate: DateTime.now().month.toString().padLeft(2, "0"), isPay: false);
-    monthsController.add(TextEditingController()..text =DateTime.now().month.toString().padLeft(2, "0"),);
+    monthsController.add(TextEditingController()..text =DateTime.now().toString().split(" ")[0]);
     costsController.add(TextEditingController()..text = "0");
     update();
   }
@@ -267,6 +267,8 @@ class ParentsViewModel extends GetxController {
           installmentCost: costsController[index].text,
           installmentDate: monthsController[index].text,
           installmentId: instalmentMap.keys.elementAt(index),
+          InstallmentImage: parent != null ? parent!.installmentRecords!.values.toList()[index].InstallmentImage! : null,
+          payTime: parent != null ? parent!.installmentRecords!.values.toList()[index].payTime! : null,
           isPay: parent != null ? parent!.installmentRecords!.values.toList()[index].isPay! : false,
         );
       }
@@ -429,14 +431,16 @@ class ParentsViewModel extends GetxController {
     );
     return total;
   }
-
+///
+  /// "2024-09-13 13:46:21.256"
   int getAllNunReceivePayThisMonth() {
     int total = 0;
     _parentMap.values.forEach(
       (element) {
         element.installmentRecords!.values.forEach(
           (element0) {
-            if (int.parse(element0.installmentDate!) <= thisTimesModel!.month && element0.isPay != true) {
+
+            if (DateTime.parse(element0.installmentDate!).isBefore(DateTime.now()) && element0.isPay != true) {
               total += int.parse(element0.installmentCost!);
             }
           },

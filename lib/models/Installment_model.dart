@@ -16,15 +16,13 @@ class InstallmentModel {
   });
 
   // fromJson method
-  factory InstallmentModel.fromJson(Map<String, dynamic> json) {
-    return InstallmentModel(
-      installmentId: json['installmentId'] ?? '',
-      installmentCost: json['installmentCost'] ?? '',
-      installmentDate: json['installmentDate'] ,
-      InstallmentImage: json['InstallmentImage'],
-      isPay: json['isPay'] ?? false,
-      payTime: json['payTime'] ?? '',
-    );
+  InstallmentModel.fromJson(Map<String, dynamic> json) {
+    installmentId = json['installmentId'] ?? '';
+    installmentCost = json['installmentCost'] ?? '';
+    installmentDate = json['installmentDate'] ?? '';
+    InstallmentImage = json['InstallmentImage'] ?? '';
+    isPay = json['isPay'] ?? false;
+    payTime = json['payTime'] ?? '';
   }
 
   // toJson method
