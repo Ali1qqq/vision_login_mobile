@@ -34,18 +34,18 @@ dependencies:
   cupertino_icons: ^1.0.3
   google_fonts: ^6.2.0
   fl_chart: ^0.67.0
-  get:
-  firebase_core:
-  cloud_firestore:
-  tab_container:
+  get: ^4.6.6
+  firebase_core: ^3.5.0
+  cloud_firestore: ^5.4.2
+  tab_container: ^3.5.3
   faker: ^2.1.0
-  nfc_manager:
+  nfc_manager: ^3.5.0
   flutter_material_color_picker:
   file_picker:
   fluttertoast:
   universal_html:
-  firebase_storage: 11.6.0
-  duration:
+  firebase_storage: 12.3.1
+  duration: 3.0.13
   accordion:
   syncfusion_flutter_datagrid:
   syncfusion_flutter_signaturepad: ^26.1.39
