@@ -1,11 +1,8 @@
-import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:vision_dashboard/screens/Parents/Controller/Parents_View_Model.dart';
 
-import '../../../../utils/Image_OverLay.dart';
 
 List<Widget> buildParentIdImageList(List<dynamic> imageList, ParentsViewModel controller, bool isTemporary) {
   return List.generate(
