@@ -109,15 +109,13 @@ class ParentInputForm extends StatelessWidget {
                         ),
                         // buildParentContractImageSection(parentController),
                         // BuildParentContractImage(memoryImage: parentController.contractsTemp),
-                     Row(
-                       children: [
-                         buildParentAddIdImageButton(parentController),
-
-                         ...buildParentIdImageList(parentController.contractsTemp, parentController, true),
-                         ...buildParentIdImageList(parentController.contracts, parentController, false),
-                       ],
-                     ),
-
+                        Row(
+                          children: [
+                            buildParentAddIdImageButton(parentController),
+                            ...buildParentIdImageList(parentController.contractsTemp, parentController, true),
+                            ...buildParentIdImageList(parentController.contracts, parentController, false),
+                          ],
+                        ),
                         Column(
                           children: [
                             SizedBox(height: defaultPadding * 2),
@@ -130,11 +128,10 @@ class ParentInputForm extends StatelessWidget {
                               shrinkWrap: true,
                               itemCount: parentController.instalmentMap.length,
                               itemBuilder: (context, index) {
-
                                 InstallmentModel oneInstallment = parentController.instalmentMap.values.elementAt(index);
                                 bool cantEdit = oneInstallment.isPay ?? false;
 
-                                return buildInstallmentItem(context, oneInstallment, cantEdit, index,parentController);
+                                return buildInstallmentItem(context, oneInstallment, cantEdit, index, parentController);
                               },
                             ),
                             IconButton(
@@ -153,27 +150,22 @@ class ParentInputForm extends StatelessWidget {
                                     ),
                                   ],
                                 )),
+                            if (parentController.parent == null)
                             SizedBox(
                               height: defaultPadding,
                             ),
-                            /*   GetBuilder<StudentViewModel>(builder: (controller) {
-                              return AppButton(
-                                text: "حفظ".tr,
-                                onPressed: () async {
-                                  save(controller);
-                                },
-                              );
-                            }),*/
                           ],
                         ),
                         if (parentController.parent != null) CustomTextField(controller: parentController.editController, title: 'سبب التعديل'.tr),
                       ],
                     ),
+                    if (parentController.parent != null)
+                      SizedBox(
+                        height: defaultPadding,
+                      ),
                     AppButton(
                         text: 'حفظ'.tr,
                         onPressed: () {
-                          // print( parentController.instalmentMap.entries.map((e) => e.value.toJson(),).toList());
-                          // print(  Map.fromEntries(parentController.instalmentMap!.entries.map((e) => MapEntry(e.key, e.value.toJson())).toList()));
                           parentController.saveParentData(context);
                         }),
                   ],
