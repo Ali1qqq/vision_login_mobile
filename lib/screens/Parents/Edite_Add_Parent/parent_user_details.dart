@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:vision_dashboard/models/Installment_model.dart';
 import 'package:vision_dashboard/screens/Parents/Controller/Parents_View_Model.dart';
 import 'package:vision_dashboard/screens/Parents/Edite_Add_Parent/widgets/EventParentContainer.dart';
+import 'package:vision_dashboard/screens/Parents/Edite_Add_Parent/widgets/InstallmentItem.dart';
 import 'package:vision_dashboard/screens/Parents/Edite_Add_Parent/widgets/ParentAddIdImageButton.dart';
 import 'package:vision_dashboard/screens/Parents/Edite_Add_Parent/widgets/ParentIdImageListWidget.dart';
 import 'package:vision_dashboard/screens/Widgets/AppButton.dart';
@@ -121,118 +122,15 @@ class ParentInputForm extends StatelessWidget {
                               height: defaultPadding,
                             ),
                             ListView.separated(
-                              separatorBuilder: (context, index) => SizedBox(
-                                height: 10,
-                              ),
+                              separatorBuilder: (context, index) => SizedBox(height: 10),
                               shrinkWrap: true,
                               itemCount: parentController.instalmentMap.length,
                               itemBuilder: (context, index) {
-                                var sortedValues = parentController.instalmentMap.values.toList()
-                                  ..sort((a, b) {
-                                    return a.installmentDate!.compareTo(b.installmentDate!);
-                                  });
-                                InstallmentModel oneInstallment = sortedValues[index];
-                                bool cantEdite = oneInstallment.isPay ?? false;
-                                return Container(
-                                  decoration: BoxDecoration(
-                                    color: Colors.white.withOpacity(0.5),
-                                    borderRadius: BorderRadius.circular(15),
-                                    border: Border.all(
-                                      width: 2.0,
-                                      color: primaryColor,
-                                    ),
-                                  ),
-                                  child: Padding(
-                                    padding: const EdgeInsets.symmetric(vertical: 14.0, horizontal: 10),
-                                    child: Row(
-                                      crossAxisAlignment: CrossAxisAlignment.end,
-                                      children: [
-                                        Spacer(),
-                                        InkWell(
-                                          onTap: () {
-                                            if (!cantEdite) {
-                                              showDatePicker(
-                                                context: context,
-                                                firstDate: DateTime(2010),
-                                                lastDate: DateTime(2100),
-                                              ).then((date) {
-                                                if (date != null) {
-                                                  parentController.monthsController[index].text = date.toString().split(" ")[0];
-                                                }
-                                              });
-                                            }
-                                          },
-                                          child: CustomTextField(
-                                            controller: parentController.monthsController[index],
-                                            title: 'تاريخ البداية'.tr,
-                                            enable: false,
-                                            keyboardType: TextInputType.datetime,
-                                            icon: Icon(
-                                              Icons.date_range_outlined,
-                                              color: primaryColor,
-                                            ),
-                                          ),
-                                        ),
-                                        /*       canEdite
-                                            ? CustomTextField(
-                                                enable: !canEdite,
-                                                isFullBorder: !canEdite,
-                                                controller: TextEditingController()
-                                                  ..text = months.entries
-                                                          .where(
-                                                            (element) => element.value == parentController.monthsController[index].text,
-                                                          )
-                                                          .firstOrNull
-                                                          ?.key ??
-                                                      '',
-                                                title: "الشهر".tr,
-                                                size: Get.width / 5.5,
-                                                keyboardType: TextInputType.number,
-                                              )
-                                            : CustomDropDown(
-                                                value: months.entries
-                                                        .where(
-                                                          (element) {
-                                                            if (parentController.monthsController.isEmpty) return false;
-                                                            return element.value == parentController.monthsController[index].text;
-                                                          },
-                                                        )
-                                                        .firstOrNull
-                                                        ?.key ??
-                                                    '',
-                                                listValue: months.keys.map((e) => e.toString()).toList(),
-                                                label: "الشهر".tr,
-                                                size: Get.width / 5.5,
-                                                isFullBorder: true,
-                                                onChange: (value) {
-                                                  if (value != null) {
-                                                    parentController.monthsController[index].text = months[value]!;
-                                                  }
-                                                },
-                                              ),*/
-                                        Spacer(),
-                                        CustomTextField(
-                                          enable: !cantEdite,
-                                          controller: parentController.costsController[index],
-                                          title: "الدفعة".tr,
-                                          isNumeric: true,
-                                          size: Get.width / 5.5,
-                                          keyboardType: TextInputType.number,
-                                        ),
-                                        Spacer(),
-                                        IconButton(
-                                            onPressed: () {
-                                              parentController.instalmentMap.remove(oneInstallment.installmentId);
-                                              parentController.update();
-                                            },
-                                            icon: Icon(
-                                              Icons.delete,
-                                              color: Colors.red,
-                                            ))
-                                      ],
-                                    ),
-                                  ),
-                                );
+
+                                InstallmentModel oneInstallment = parentController.instalmentMap.values.elementAt(index);
+                                bool cantEdit = oneInstallment.isPay ?? false;
+
+                                return buildInstallmentItem(context, oneInstallment, cantEdit, index,parentController);
                               },
                             ),
                             IconButton(

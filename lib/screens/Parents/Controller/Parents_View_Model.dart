@@ -213,21 +213,17 @@ class ParentsViewModel extends GetxController {
       instalmentMap = {};
 
       contracts=parent!.contract!.map((e) => e.toString(),).toList();
-      ///todo: هون بعبيها
+
       var sortedEntries = parent!.installmentRecords!.entries.toList()
         ..sort((a, b) => a.value.installmentDate!.compareTo(b.value.installmentDate!));
-      print(sortedEntries.map((e) => e.value.installmentDate!,).toList());
       instalmentMap.addAll(Map.fromEntries(sortedEntries));
-      print(instalmentMap.entries.map((e) => e.value.installmentDate!,).toList());
-      // instalmentMap .addAll( parent!.installmentRecords!);
-      print(instalmentMap.values.length);
       monthsController = List.generate(
-        parent?.installmentRecords?.values.length ?? 0,
-        (index) => TextEditingController()..text = parent!.installmentRecords!.values.elementAt(index).installmentDate.toString(),
+        instalmentMap.values.length ,
+        (index) => TextEditingController()..text = instalmentMap.values.elementAt(index).installmentDate.toString(),
       );
       costsController = List.generate(
-        parent?.installmentRecords?.length ?? 0,
-        (index) => TextEditingController()..text = parent!.installmentRecords!.values.elementAt(index).installmentCost.toString(),
+        instalmentMap.length ,
+        (index) => TextEditingController()..text =instalmentMap.values.elementAt(index).installmentCost.toString(),
       );
     }
     update();
