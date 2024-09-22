@@ -42,7 +42,7 @@ class ParentInputForm extends StatelessWidget {
                       alignment: WrapAlignment.spaceEvenly,
                       runSpacing: 50,
                       spacing: 25,
-                      children: [
+                      children: <Widget>[
                         CustomTextField(controller: parentController.fullNameController, title: 'الاسم الكامل'.tr),
                         CustomTextField(
                           controller: parentController.idNumController,
@@ -109,11 +109,15 @@ class ParentInputForm extends StatelessWidget {
                         ),
                         // buildParentContractImageSection(parentController),
                         // BuildParentContractImage(memoryImage: parentController.contractsTemp),
-                        buildParentAddIdImageButton(parentController),
+                     Row(
+                       children: [
+                         buildParentAddIdImageButton(parentController),
 
-                        ...buildParentIdImageList(parentController.contractsTemp, parentController, true),
-                        ...buildParentIdImageList(parentController.contracts, parentController, false),
-//Todo: هون بعرضها
+                         ...buildParentIdImageList(parentController.contractsTemp, parentController, true),
+                         ...buildParentIdImageList(parentController.contracts, parentController, false),
+                       ],
+                     ),
+
                         Column(
                           children: [
                             SizedBox(height: defaultPadding * 2),
