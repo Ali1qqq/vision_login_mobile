@@ -27,9 +27,6 @@ class _CustomPlutoGridState extends State<CustomPlutoGrid> {
       key: widget.controller.plutoKey,
       columns: widget.controller.columns,
       rows: widget.controller.rows,
-      onChanged: (event) {
-        print("onChanged");
-      },
       onLoaded: (PlutoGridOnLoadedEvent event) {
         
       },
@@ -68,8 +65,16 @@ class _CustomPlutoGridState extends State<CustomPlutoGrid> {
       createFooter: (stateManager) {
         stateManager.setPageSize(40, notify: false); // default 40
 
-        return PlutoPagination(
-          stateManager,
+        return Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              'عدد العناصر: ${stateManager.refRows.length}',
+              style: AppStyles.headLineStyle4,
+            ),
+            Expanded(child: PlutoPagination(stateManager)),
+
+          ],
         );
       },
     );
