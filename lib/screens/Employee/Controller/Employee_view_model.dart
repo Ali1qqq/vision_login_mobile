@@ -766,6 +766,7 @@ double imageWidth=150;
                       3)
               .floor() *
           75;
+
       int totalDayOff = (accountModel.employeeTime.isEmpty
               ? 0
               : accountModel.employeeTime.values.where(
@@ -773,7 +774,7 @@ double imageWidth=150;
                     return element.isDayOff == true;
                   },
                 ).length) *
-          (accountModel.salary! / accountModel.dayOfWork!).round();
+          ((accountModel.salary??0) / (accountModel.dayOfWork!=0?(accountModel.dayOfWork??1):1)).round();
 
       pay += accountModel.salary! - totalDayOff - totalLateAndEarlier;
     }
