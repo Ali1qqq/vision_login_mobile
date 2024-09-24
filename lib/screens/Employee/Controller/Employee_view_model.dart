@@ -83,8 +83,9 @@ class EmployeeViewModel extends GetxController {
   final editController = TextEditingController();
   final userNameController = TextEditingController();
   final userPassController = TextEditingController();
-double imageHeight=150;
-double imageWidth=150;
+  double imageHeight = 150;
+  double imageWidth = 150;
+
   /// when scan NFC Card
   TextEditingController nfcController = TextEditingController();
 
@@ -705,7 +706,7 @@ double imageWidth=150;
                         return element.isDayOff == true;
                       },
                     ).length) *
-              (accountModel.salary! / accountModel.dayOfWork!).round();
+              (accountModel.salary! / (accountModel.dayOfWork != 0 ? (accountModel.dayOfWork ?? 1) : 1)).round();
 
           pay += accountModel.salary! - totalDayOff - totalLateAndEarlier;
         }
@@ -774,7 +775,7 @@ double imageWidth=150;
                     return element.isDayOff == true;
                   },
                 ).length) *
-          ((accountModel.salary??0) / (accountModel.dayOfWork!=0?(accountModel.dayOfWork??1):1)).round();
+          ((accountModel.salary ?? 0) / (accountModel.dayOfWork != 0 ? (accountModel.dayOfWork ?? 1) : 1)).round();
 
       pay += accountModel.salary! - totalDayOff - totalLateAndEarlier;
     }
@@ -973,8 +974,7 @@ double imageWidth=150;
       title: 'هل انت متأكد ؟'.tr,
       onConfirmBtnTap: () async {
         addWaitOperation(
-          userName: currentEmployee?.userName.toString()??"",
-
+          userName: currentEmployee?.userName.toString() ?? "",
           details: editController.text,
           collectionName: accountManagementCollection,
           affectedId: allAccountManagement[currentId]?.id ?? '',
@@ -1055,8 +1055,7 @@ double imageWidth=150;
         if (enableEdit) {
           ///addWaitOperation old Value=القيمة الي جاي من الويدجت newValue = القيم الجديدة من ال controller
           addWaitOperation(
-            userName: currentEmployee?.userName.toString()??"",
-
+            userName: currentEmployee?.userName.toString() ?? "",
             collectionName: accountManagementCollection,
             affectedId: employeeModel!.id,
             type: waitingListTypes.edite,
@@ -1085,8 +1084,7 @@ double imageWidth=150;
         if (!enableEdit) {
           ///اضافة العملية للموافقة عليها
           await addWaitOperation(
-            userName: currentEmployee?.userName.toString()??"",
-
+            userName: currentEmployee?.userName.toString() ?? "",
             collectionName: accountManagementCollection,
             affectedId: model.id,
             newData: model.toJson(),
@@ -1208,5 +1206,18 @@ double imageWidth=150;
 
   clearDiscount(String affectedId) {
     FirebaseFirestore.instance.collection(accountManagementCollection).doc(affectedId).set({"discounts": 0}, SetOptions(merge: true));
+  }
+
+  double getMaxSalary() {
+    double maxSalary = 3500;
+    allAccountManagement.forEach(
+      (key, value) {
+        if (value.salary! > maxSalary) {
+          maxSalary = value.salary! * 1.0;
+        }
+      },
+    );
+
+    return maxSalary+1500;
   }
 }

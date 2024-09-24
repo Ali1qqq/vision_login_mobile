@@ -72,7 +72,7 @@ class EmployeeSalaryBarChartState extends State<EmployeeSalaryBarChart> {
             return BarChart(
               BarChartData(
 
-                maxY: 3500,
+                maxY: accountManageVM.getMaxSalary(),
                 barTouchData: BarTouchData(
                   enabled: true,
                   touchTooltipData: BarTouchTooltipData(
