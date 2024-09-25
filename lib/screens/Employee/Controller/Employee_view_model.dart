@@ -793,7 +793,7 @@ class EmployeeViewModel extends GetxController {
                   ? 0
                   : accountModel.employeeTime!.values.where(
                         (element) {
-                          return element.isDayOff != true && element.isLateWithReason != true;
+                          return element.isDayOff != true && element.isLateWithReason == false;
                         },
                       ).length /
                       3)
