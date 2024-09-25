@@ -12,7 +12,7 @@ class EmployeeModel implements Mappable {
   int? salary, dayOfWork, discounts;
   bool? isAccepted;
   late bool isActive;
-  Map<String, EmployeeTimeModel> employeeTime = {};
+  Map<String, EmployeeTimeModel>? employeeTime = {};
   String? mobileNumber, address, nationality, gender, age, jobTitle, contract, bus, startDate, salaryWithDelay, fullName;
   List<dynamic>? salaryReceived;
   List<dynamic>? idImages;
@@ -45,6 +45,7 @@ class EmployeeModel implements Mappable {
     this.discounts,
     this.available,
     this.idImages,
+    this.employeeTime,
   });
 
   EmployeeModel.fromJson(json) {
@@ -64,7 +65,7 @@ class EmployeeModel implements Mappable {
     isAccepted = json['isAccepted'] ?? true;
 
     (json['employeeTime'] ?? {}).forEach((k, v) {
-      employeeTime[k] = EmployeeTimeModel.fromJson(v);
+      employeeTime?[k] = EmployeeTimeModel.fromJson(v);
     });
     mobileNumber = json['mobileNumber'] ?? '';
     address = json['address'] ?? '';
@@ -92,7 +93,7 @@ class EmployeeModel implements Mappable {
       if (salary != null) "salary": salary,
       if (isAccepted != null) "isAccepted": isAccepted,
       if (dayOfWork != null) "dayOfWork": dayOfWork,
-      if (employeeTime.isEmpty) "employeeTime": Map.fromEntries(employeeTime.entries.map((e) => MapEntry(e.key, e.value.toJson())).toList()),
+      if (employeeTime!=null) "employeeTime": Map.fromEntries(employeeTime!.entries.map((e) => MapEntry(e.key, e.value.toJson())).toList()),
       if (mobileNumber != null) 'mobileNumber': mobileNumber,
       if (address != null) 'address': address,
       if (nationality != null) 'nationality': nationality,

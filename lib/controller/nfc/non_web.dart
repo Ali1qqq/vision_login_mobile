@@ -13,6 +13,7 @@ Future<bool> initNFCWorker(typeNFC type) async {
   isNfcAvailable = await NfcManager.instance.isAvailable();
   if(isNfcAvailable){
     NfcManager.instance.startSession(onDiscovered: (NfcTag tag) async {
+
       List<int> idList = tag.data["ndef"]['identifier'];
       String id ='';
       for(var e in idList){

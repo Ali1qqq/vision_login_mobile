@@ -490,7 +490,7 @@ alignment: Alignment.center,
                                                             ),
                                                           ),
                                                           rows: [
-                                                            for (var j in accountModel.employeeTime.values.where((element) {
+                                                            for (var j in accountModel.employeeTime!.values.where((element) {
                                                               if (selectedMonth != 'الكل'.tr) if (selectedDay == '' || selectedDay == 'الكل'.tr)
                                                                 return element.dayName.toString().split("-")[1] == months[selectedMonth];
                                                               else
@@ -612,16 +612,16 @@ alignment: Alignment.center,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                if (employees[index].employeeTime.values.where((element) => element.dayName == selectedDate.text && element.endDate != null).isNotEmpty)
+                if (employees[index].employeeTime!.values.where((element) => element.dayName == selectedDate.text && element.endDate != null).isNotEmpty)
                   Text(
                     "تم الانتهاء".tr,
                     style: AppStyles.headLineStyle3.copyWith(color: AppColors.textColor),
                   )
                 else if (selectedDate.text == dayNameNow)
                   AppButton(
-                      text: employees[index].employeeTime.values.where((element) => element.dayName == dayNameNow.split(' ')[0]).isNotEmpty ? "الخروج".tr : "الدخول".tr,
+                      text: employees[index].employeeTime!.values.where((element) => element.dayName == dayNameNow.split(' ')[0]).isNotEmpty ? "الخروج".tr : "الدخول".tr,
                       onPressed: () {
-                        if (employees[index].employeeTime.values.where((element) => element.dayName == dayNameNow.split(' ')[0] && element.endDate != null).isEmpty)
+                        if (employees[index].employeeTime!.values.where((element) => element.dayName == dayNameNow.split(' ')[0] && element.endDate != null).isEmpty)
                           getConfirmDialog(
                             context,
                             onConfirm: () {
@@ -637,7 +637,7 @@ alignment: Alignment.center,
                     "لم يسجل الخروج".tr,
                     style: AppStyles.headLineStyle3.copyWith(color: AppColors.textColor),
                   ),
-                if (employees[index].employeeTime.values.where((element) => element.dayName == selectedDate.text.split(' ')[0]).isEmpty)
+                if (employees[index].employeeTime!.values.where((element) => element.dayName == selectedDate.text.split(' ')[0]).isEmpty)
                   AppButton(
                     text: "غائب",
                     onPressed: () {

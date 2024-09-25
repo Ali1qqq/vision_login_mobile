@@ -82,7 +82,7 @@ final  ScrollController scrollController;
     List<MapEntry<String, EmployeeModel>> employees = accountController
         .allAccountManagement.entries
         .where((element) =>
-    element.value.employeeTime.keys.where((element0) => element0.toString().split("-")[1]=='${months[selectedMonth]}',).isNotEmpty
+    element.value.employeeTime!.keys.where((element0) => element0.toString().split("-")[1]=='${months[selectedMonth]}',).isNotEmpty
         &&element.value.salaryReceived!.where((element) {
           return element.toString().split(" ")[0] ==
               '${thisTimesModel!.year}-${months[selectedMonth]}';
@@ -94,14 +94,14 @@ final  ScrollController scrollController;
           employees.length,
               (index) {
             EmployeeModel accountModel = employees[index].value;
-            int totalLate = accountModel.employeeTime.isEmpty
+            int totalLate = accountModel.employeeTime!.isEmpty
                 ? 0
-                : accountModel.employeeTime.values
+                : accountModel.employeeTime!.values
                 .map((e) => e.totalLate ?? 0)
                 .reduce((value, element) => value + element);
-            int totalEarlier = accountModel.employeeTime.isEmpty
+            int totalEarlier = accountModel.employeeTime!.isEmpty
                 ? 0
-                : accountModel.employeeTime.values
+                : accountModel.employeeTime!.values
                 .map((e) => e.totalEarlier ?? 0)
                 .reduce((value, element) => value + element);
             int totalTime = totalLate + totalEarlier;

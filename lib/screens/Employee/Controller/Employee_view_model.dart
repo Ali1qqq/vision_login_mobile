@@ -472,14 +472,14 @@ class EmployeeViewModel extends GetxController {
     if (user != null) {
       {
         TimesModel timeData = TimesModel.fromDateTime(DateTime.now());
-        if (user.employeeTime[timeData.formattedTime] == null) {
+        if (user.employeeTime![timeData.formattedTime] == null) {
           /*      if (timeData.isBefore(6, 00)||timeData.isAfter(18, 00)) {
 
             Get.snackbar("خطأ اثناء التسجيل", "لا يمكن اتسجيل الخروج في هذا الوقت");
             return;
           }*/
           if (timeData.isAfter(int.parse(appendTime.split(" ")[0]), int.parse(appendTime.split(" ")[1]))) {
-            totalLate = timeData.dateTime.difference(DateTime.now().copyWith(hour: int.parse(appendTime.split(" ")[0]), minute: int.parse(appendTime.split(" ")[1]), second: 0)).inMinutes;
+            totalLate = timeData.dateTime.difference(DateTime.now().copyWith(hour: int.parse(appendTime.split(" ")[0]), minute: int.parse(appendTime.split(" ")[1]), second: 0)).inSeconds;
             isDayOff = true;
             isLateWithReason = false;
             await Get.defaultDialog(
@@ -535,7 +535,8 @@ class EmployeeViewModel extends GetxController {
                       })
                 ]);
           } else if (timeData.isAfter(int.parse(lateTime.split(" ")[0]), (int.parse(lateTime.split(" ")[1])))) {
-            totalLate = timeData.dateTime.difference(DateTime.now().copyWith(hour: int.parse(appendTime.split(" ")[0]), minute: int.parse(appendTime.split(" ")[1]), second: 0)).inMinutes;
+            totalLate = timeData.dateTime.difference(DateTime.now().copyWith(hour: int.parse(appendTime.split(" ")[0]), minute: int.parse(appendTime.split(" ")[1]), second: 0)).inSeconds;
+            isDayOff = false;
             isLateWithReason = false;
             await Get.defaultDialog(
                 barrierDismissible: false,
@@ -591,7 +592,7 @@ class EmployeeViewModel extends GetxController {
                 ]);
           }
 
-          user.employeeTime[timeData.formattedTime] = EmployeeTimeModel(
+          user.employeeTime![timeData.formattedTime] = EmployeeTimeModel(
               dayName: timeData.formattedTime,
               startDate: timeData.dateTime.copyWith(hour: timeData.hour, day: timeData.day, minute: timeData.minute),
               endDate: null,
@@ -605,22 +606,22 @@ class EmployeeViewModel extends GetxController {
               reasonOfEarlier: null,
               totalEarlier: null);
           loginUserPage = "اهلا بك " + user.userName;
-        } else if (user.employeeTime[timeData.formattedTime]!.isDayEnd!) {
+        } else if (user.employeeTime![timeData.formattedTime]!.isDayEnd!) {
           loginUserPage = "لقد قمت بالخروج بالفعل " + user.userName;
           print("You close the day already");
         } else {
           if (timeData.isBefore(int.parse(outTime.split(" ")[0]), int.parse(outTime.split(" ")[1]))) {
             totalEarlier = timeData.dateTime.copyWith(hour: int.parse(outTime.split(" ")[0]), minute: int.parse(outTime.split(" ")[1]), second: 0).difference(timeData.dateTime).inMinutes;
           }
-          user.employeeTime[timeData.formattedTime]!.isEarlierWithReason = true;
-          user.employeeTime[timeData.formattedTime]!.totalEarlier = totalEarlier;
-          user.employeeTime[timeData.formattedTime]!.reasonOfEarlier = '';
+          user.employeeTime![timeData.formattedTime]!.isEarlierWithReason = true;
+          user.employeeTime![timeData.formattedTime]!.totalEarlier = totalEarlier;
+          user.employeeTime![timeData.formattedTime]!.reasonOfEarlier = '';
           loginUserPage = "وداعا " + user.userName;
-          user.employeeTime[timeData.formattedTime]!.endDate = timeData.dateTime.copyWith(hour: int.parse(outTime.split(" ")[0]), day: timeData.day, minute: int.parse(outTime.split(" ")[1]));
-          user.employeeTime[timeData.formattedTime]!.isDayEnd = true;
-          user.employeeTime[timeData.formattedTime]!.totalDate = timeData.dateTime.difference(user.employeeTime[timeData.formattedTime]!.startDate!).inMinutes;
+          user.employeeTime![timeData.formattedTime]!.endDate = timeData.dateTime.copyWith(hour: int.parse(outTime.split(" ")[0]), day: timeData.day, minute: int.parse(outTime.split(" ")[1]));
+          user.employeeTime![timeData.formattedTime]!.isDayEnd = true;
+          user.employeeTime![timeData.formattedTime]!.totalDate = timeData.dateTime.difference(user.employeeTime![timeData.formattedTime]!.startDate!).inMinutes;
         }
-        accountManagementFireStore.doc(user.id).update({"employeeTime": Map.fromEntries(user.employeeTime.entries.map((e) => MapEntry(e.key, e.value.toJson())).toList())});
+        accountManagementFireStore.doc(user.id).update({"employeeTime": Map.fromEntries(user.employeeTime!.entries.map((e) => MapEntry(e.key, e.value.toJson())).toList())});
 
         update();
         await Future.delayed(Duration(seconds: 4));
@@ -673,15 +674,15 @@ class EmployeeViewModel extends GetxController {
     double pay = 0.0;
     allAccountManagement.forEach(
       (key, value) {
-        if (value.employeeTime.entries.where(
+        if (value.employeeTime!.entries.where(
           (element) {
             return element.key.toString().split("-")[1] == month.padLeft(2, "0");
           },
         ).isNotEmpty) {
           EmployeeModel accountModel = value;
-          int totalLateAndEarlier = (accountModel.employeeTime.isEmpty
+          int totalLateAndEarlier = (accountModel.employeeTime!.isEmpty
                       ? 0
-                      : accountModel.employeeTime.values.where(
+                      : accountModel.employeeTime!.values.where(
                             (element) {
                               return element.isDayOff != true && element.isLateWithReason != true;
                             },
@@ -689,9 +690,9 @@ class EmployeeViewModel extends GetxController {
                           3)
                   .floor() *
               75;
-          totalLateAndEarlier += (accountModel.employeeTime.isEmpty
+          totalLateAndEarlier += (accountModel.employeeTime!.isEmpty
                       ? 0
-                      : accountModel.employeeTime.values.where(
+                      : accountModel.employeeTime!.values.where(
                             (element) {
                               return element.isDayOff != true && element.endDate == null;
                             },
@@ -699,9 +700,9 @@ class EmployeeViewModel extends GetxController {
                           3)
                   .floor() *
               75;
-          int totalDayOff = (accountModel.employeeTime.isEmpty
+          int totalDayOff = (accountModel.employeeTime!.isEmpty
                   ? 0
-                  : accountModel.employeeTime.values.where(
+                  : accountModel.employeeTime!.values.where(
                       (element) {
                         return element.isDayOff == true;
                       },
@@ -740,26 +741,27 @@ class EmployeeViewModel extends GetxController {
   double getUserSalariesAtMonth(String month, String user) {
     double pay = 0.0;
     if (allAccountManagement[user]!
-        .employeeTime
+        .employeeTime!
         .entries
         .where(
           (element) => element.key.toString().split("-")[1] == month.padLeft(2, "0").toString(),
         )
         .isNotEmpty) {
       EmployeeModel accountModel = allAccountManagement[user]!;
-      int totalLateAndEarlier = (accountModel.employeeTime.isEmpty
+      int totalLateAndEarlier = (accountModel.employeeTime!.isEmpty
                   ? 0
-                  : accountModel.employeeTime.values.where(
+                  : accountModel.employeeTime!.values.where(
                         (element) {
-                          return element.isDayOff != true && element.isLateWithReason != true;
+                          return element.isDayOff != true && element.isLateWithReason == false;
                         },
                       ).length /
                       3)
               .floor() *
           75;
-      totalLateAndEarlier += (accountModel.employeeTime.isEmpty
+
+      totalLateAndEarlier += (accountModel.employeeTime!.isEmpty
                   ? 0
-                  : accountModel.employeeTime.values.where(
+                  : accountModel.employeeTime!.values.where(
                         (element) {
                           return element.isDayOff != true && element.endDate == null;
                         },
@@ -768,9 +770,9 @@ class EmployeeViewModel extends GetxController {
               .floor() *
           75;
 
-      int totalDayOff = (accountModel.employeeTime.isEmpty
+      int totalDayOff = (accountModel.employeeTime!.isEmpty
               ? 0
-              : accountModel.employeeTime.values.where(
+              : accountModel.employeeTime!.values.where(
                   (element) {
                     return element.isDayOff == true;
                   },
@@ -785,11 +787,11 @@ class EmployeeViewModel extends GetxController {
 
   double getAllUserSalariesAtMonth(String user) {
     double pay = 0.0;
-    if (allAccountManagement[user]!.employeeTime.entries.isNotEmpty) {
+    if (allAccountManagement[user]!.employeeTime!.entries.isNotEmpty) {
       EmployeeModel accountModel = allAccountManagement[user]!;
-      int totalLateAndEarlier = (accountModel.employeeTime.isEmpty
+      int totalLateAndEarlier = (accountModel.employeeTime!.isEmpty
                   ? 0
-                  : accountModel.employeeTime.values.where(
+                  : accountModel.employeeTime!.values.where(
                         (element) {
                           return element.isDayOff != true && element.isLateWithReason != true;
                         },
@@ -797,9 +799,9 @@ class EmployeeViewModel extends GetxController {
                       3)
               .floor() *
           75;
-      totalLateAndEarlier += (accountModel.employeeTime.isEmpty
+      totalLateAndEarlier += (accountModel.employeeTime!.isEmpty
                   ? 0
-                  : accountModel.employeeTime.values.where(
+                  : accountModel.employeeTime!.values.where(
                         (element) {
                           return element.isDayOff != true && element.endDate == null;
                         },
@@ -807,14 +809,14 @@ class EmployeeViewModel extends GetxController {
                       3)
               .floor() *
           75;
-      int totalDayOff = (accountModel.employeeTime.isEmpty
+      int totalDayOff = (accountModel.employeeTime!.isEmpty
               ? 0
-              : accountModel.employeeTime.values.where(
+              : accountModel.employeeTime!.values.where(
                   (element) {
                     return element.isDayOff == true;
                   },
                 ).length) *
-          (accountModel.salary! / accountModel.dayOfWork!).round();
+          (accountModel.salary! / (accountModel.dayOfWork != 0 ? (accountModel.dayOfWork ?? 1) : 1)).round();
 
       pay += accountModel.salary! - totalDayOff - totalLateAndEarlier;
     }
@@ -827,7 +829,7 @@ class EmployeeViewModel extends GetxController {
     List<double> time = [0.0];
     allAccountManagement.forEach(
       (key, value) {
-        if (value.employeeTime.entries
+        if (value.employeeTime!.entries
             .where(
               (element) => element.key.toString() == day && element.value.isDayOff != true,
             )
@@ -851,7 +853,7 @@ class EmployeeViewModel extends GetxController {
     List<int> totalLateList = [];
     if (selectedMonth != 'الكل')
       totalLateList = allAccountManagement[userId]!
-          .employeeTime
+          .employeeTime!
           .values
           .where(
             (element) => element.dayName!.split("-")[1].split("-")[0] == months[selectedMonth],
@@ -859,9 +861,9 @@ class EmployeeViewModel extends GetxController {
           .map((e) => e.totalLate ?? 0)
           .toList();
     else
-      totalLateList = allAccountManagement[userId]!.employeeTime.values.map((e) => e.totalLate ?? 0).toList();
+      totalLateList = allAccountManagement[userId]!.employeeTime!.values.map((e) => e.totalLate ?? 0).toList();
     if (totalLateList.isNotEmpty) totalLate = totalLateList.reduce((value, element) => value + element);
-    return totalLate;
+    return totalLate ~/ 60;
   }
 
   int getTotalLateForUserAtDay({required String selectedDay, required String userId}) {
@@ -869,7 +871,7 @@ class EmployeeViewModel extends GetxController {
     List<int> totalLateList = [];
     if (selectedDay != 'الكل')
       totalLateList = allAccountManagement[userId]!
-          .employeeTime
+          .employeeTime!
           .values
           .where(
             (element) {
@@ -879,9 +881,9 @@ class EmployeeViewModel extends GetxController {
           .map((e) => e.totalLate ?? 0)
           .toList();
     else
-      totalLateList = allAccountManagement[userId]!.employeeTime.values.map((e) => e.totalLate ?? 0).toList();
+      totalLateList = allAccountManagement[userId]!.employeeTime!.values.map((e) => e.totalLate ?? 0).toList();
     if (totalLateList.isNotEmpty) totalLate = totalLateList.reduce((value, element) => value + element);
-    return totalLate;
+    return totalLate ~/ 60;
   }
 
   void addCard({required String cardId}) {
@@ -898,7 +900,7 @@ class EmployeeViewModel extends GetxController {
   }
 
   setAppend(String userId, date) {
-    allAccountManagement[userId]!.employeeTime[date] = EmployeeTimeModel(
+    allAccountManagement[userId]!.employeeTime![date] = EmployeeTimeModel(
         dayName: date,
         startDate: DateTime.now().copyWith(hour: 7, day: int.parse(date.toString().split("-")[1]), minute: 30),
         endDate: DateTime.now().copyWith(hour: 7, day: int.parse(date.toString().split("-")[1]), minute: 30),
@@ -911,7 +913,7 @@ class EmployeeViewModel extends GetxController {
         isEarlierWithReason: null,
         reasonOfEarlier: null,
         totalEarlier: null);
-    accountManagementFireStore.doc(userId).update({"employeeTime": Map.fromEntries(allAccountManagement[userId]!.employeeTime.entries.map((e) => MapEntry(e.key, e.value.toJson())).toList())});
+    accountManagementFireStore.doc(userId).update({"employeeTime": Map.fromEntries(allAccountManagement[userId]!.employeeTime!.entries.map((e) => MapEntry(e.key, e.value.toJson())).toList())});
   }
 
   /// we use this for fold Screen
@@ -1023,6 +1025,7 @@ class EmployeeViewModel extends GetxController {
           userName: userNameController.text,
           fullName: fullNameController.text,
           password: userPassController.text,
+          employeeTime: !enableEdit ? {} : employeeModel!.employeeTime,
           type: role,
           serialNFC: selectedCardId,
           idImages: imageLinkList
@@ -1218,6 +1221,6 @@ class EmployeeViewModel extends GetxController {
       },
     );
 
-    return maxSalary+1500;
+    return maxSalary + 1500;
   }
 }
