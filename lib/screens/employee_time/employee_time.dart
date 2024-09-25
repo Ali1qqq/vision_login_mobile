@@ -573,6 +573,7 @@ alignment: Alignment.center,
           ? FloatingActionButton(
               backgroundColor: primaryColor,
               onPressed: () {
+                if(currentEmployee?.type!='مستخدم')
                 setState(() {
                   isCard = !isCard;
                 });
