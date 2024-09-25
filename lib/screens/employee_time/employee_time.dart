@@ -111,8 +111,10 @@ class _EmployeeTimeViewState extends State<EmployeeTimeView> {
                                       Expanded(
                                         child: InkWell(
                                           onTap: () {
-                                            isShowLogin = true;
-                                            setState(() {});
+
+                                              isShowLogin = true;
+                                              setState(() {});
+
                                           },
                                           child: Container(
                                             height: 50,
@@ -135,8 +137,10 @@ class _EmployeeTimeViewState extends State<EmployeeTimeView> {
                                       Expanded(
                                         child: InkWell(
                                           onTap: () {
-                                            if (HiveDataBase.getUserData().type != 'مستخدم') isShowLogin = false;
-                                            setState(() {});
+                                            if(currentEmployee?.type!='مستخدم') {
+                                              isShowLogin = false;
+                                              setState(() {});
+                                            }
                                           },
                                           child: Container(
                                             height: 50,
