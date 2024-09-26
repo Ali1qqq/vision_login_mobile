@@ -64,9 +64,9 @@ class EmployeeModel implements Mappable {
     isActive = json['isActive'] ?? true;
     isAccepted = json['isAccepted'] ?? true;
 
-    (json['employeeTime'] ?? {}).forEach((k, v) {
+/*    (json['employeeTime'] ?? {}).forEach((k, v) {
       employeeTime?[k] = EmployeeTimeModel.fromJson(v);
-    });
+    });*/
     mobileNumber = json['mobileNumber'] ?? '';
     address = json['address'] ?? '';
     nationality = json['nationality'] ?? '';
@@ -77,6 +77,21 @@ class EmployeeModel implements Mappable {
     bus = json['bus'] ?? '';
     startDate = json['startDate'] ?? '';
     eventRecords = ((json['eventRecords'] ?? []) as List<dynamic>?)?.map((event) => EventRecordModel.fromJson(event)).toList() ?? [];
+    var tempEmployeeTime = <String, EmployeeTimeModel>{};
+    (json['employeeTime'] ?? {}).forEach((k, v) {
+      tempEmployeeTime[k] = EmployeeTimeModel.fromJson(v);
+    });
+    var sortedEmployeeTimes = tempEmployeeTime.entries.toList()
+      ..sort((a, b) {
+        DateTime dateA = DateTime.parse(a.value.dayName!);
+        DateTime dateB = DateTime.parse(b.value.dayName!);
+        return dateA.compareTo(dateB); // ترتيب تصاعدي حسب التاريخ
+      });
+
+// إعادة تعيين العناصر المرتبة إلى employeeTime
+    employeeTime = {
+      for (var entry in sortedEmployeeTimes) entry.key: entry.value
+    };
   }
 
   toJson() {

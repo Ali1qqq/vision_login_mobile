@@ -227,6 +227,7 @@ Map<String, String> ar = {
   "fullName": "الاسم",
   "gender": "الجنس",
   "id": "الرقم التسلسلي",
+  "type": "نوع المستخدم",
   "isActive": "الحالة",
   "jobTitle": "الوظيفة",
   "mobileNumber": "رقم التواصل",

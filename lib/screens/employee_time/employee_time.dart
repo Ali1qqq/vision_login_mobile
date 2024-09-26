@@ -516,7 +516,7 @@ alignment: Alignment.center,
                                                                           : j.endDate == null
                                                                               ? "لم يسجل خروج".tr
                                                                               : DateFun.dateToMinAndHour(j.endDate!)),
-                                                                  dataRowItem(size / data.length, j.isDayOff == true ? "غائب".tr : DateFun.minutesToTime(j.totalDate ?? 0)),
+                                                                  dataRowItem(size / data.length, j.isDayOff == true ? "غائب".tr : DateFun.minutesToTime(j.endDate?.difference(j.startDate??j.endDate!).inMinutes ?? 0)),
                                                                   dataRowItem(
                                                                       size / data.length,
                                                                       j.isDayOff == true

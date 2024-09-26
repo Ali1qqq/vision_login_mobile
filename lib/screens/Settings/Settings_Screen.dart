@@ -145,8 +145,21 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                 DataRow(cells: [
                                   dataRowItem(size / logData.length, deleteModel.type.toString().tr),
                                   dataRowItem(size / logData.length, formatDateTimeFromString(deleteModel.date.toString())),
-                                  dataRowItem(size / logData.length, deleteModel.details == '' || deleteModel.details == null ? "لا يوجد".tr:deleteModel.details ),
-                                  dataRowItem(size / logData.length, _getAffectedName(deleteModel)),
+                                  deleteModel.type == waitingListTypes.add.name
+                                      ? dataRowItem(size / deleteData.length, "عرض".tr, color: primaryColor, onTap: () {
+                                    showEmployeeDialog(context, deleteModel.newData ?? {});
+                                  })
+                                      :  deleteModel.type == waitingListTypes.edite.name
+                                      ? dataRowItem(size / deleteData.length, "عرض".tr,color: Colors.pink, onTap: () {
+
+                                    Map<String, Map<String, dynamic>> differences = compareMaps(
+                                      deleteModel.newData ?? {},
+                                      deleteModel.oldDate ?? {},
+                                    );
+
+                                    showData(context, differences, deleteModel,false);
+                                  })
+                                      : dataRowItem(size / deleteData.length, deleteModel.details == '' || deleteModel.details == null ? "لا يوجد".tr : deleteModel.details),                                  dataRowItem(size / logData.length, _getAffectedName(deleteModel)),
                                   dataRowItem(size / logData.length, deleteModel.collectionName.toString()),
                                   dataRowItem(
                                     size / logData.length,
@@ -421,7 +434,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   model.oldDate ?? {},
                 );
 
-                showData(context, differences, model);
+                showData(context, differences, model,true);
               })
             : DataCell(
                 Container(
@@ -503,7 +516,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     );
   }
 
-  showData(BuildContext context, Map<String, Map<String, dynamic>> differences, WaitManagementModel waitModel) {
+  showData(BuildContext context, Map<String, Map<String, dynamic>> differences, WaitManagementModel waitModel, bool withEdit) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -556,6 +569,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       shrinkWrap: true,
                       itemCount: differences.keys.length,
                       itemBuilder: (context, index) {
+
                         return Row(
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
@@ -635,6 +649,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     SizedBox(
                       height: defaultPadding,
                     ),
+                    if(withEdit)
                     Container(
                       // width: size / deleteData.length,
                       child: Row(
