@@ -1,7 +1,3 @@
-
-
-
-
 import 'package:get/get.dart';
 
 import '../utils/abstract.dart';
@@ -31,23 +27,19 @@ class BusModel implements Mappable {
     this.expense,
     this.eventRecords,
     this.isAccepted,
-
   });
 
-
-
-  Map<String, dynamic> toJson() =>
-      {
-        if(name != null) 'name': name,
-        if(busId != null) 'busId': busId,
-        if(number != null) 'number': number,
-        if(type != null) 'type': type,
-        if(isAccepted != null) 'isAccepted': isAccepted,
-        if(employees != null) 'employees': employees!.toList(),
-        if(students != null) 'students': students!.toList(),
-        if(startDate != null) 'startDate': startDate!.toIso8601String(),
-        if(expense != null) 'expense': expense,
-        if(eventRecords != null) 'eventRecords': eventRecords!.map((event) => event.toJson()).toList(),
+  Map<String, dynamic> toJson() => {
+        if (name != null) 'name': name,
+        if (busId != null) 'busId': busId,
+        if (number != null) 'number': number,
+        if (type != null) 'type': type,
+        if (isAccepted != null) 'isAccepted': isAccepted,
+        if (employees != null) 'employees': employees!.toList(),
+        if (students != null) 'students': students!.toList(),
+        if (startDate != null) 'startDate': startDate!.toIso8601String(),
+        if (expense != null) 'expense': expense,
+        if (eventRecords != null) 'eventRecords': eventRecords!.map((event) => event.toJson()).toList(),
       };
 
   factory BusModel.fromJson(Map<String, dynamic> json) {
@@ -60,10 +52,14 @@ class BusModel implements Mappable {
       employees: List<String>.from(json['employees'] ?? []),
       students: List<String>.from(json['students'] ?? []),
       startDate: DateTime.parse(json['startDate']),
-      expense: List<String>.from (json['expense'] ?? []),
-      eventRecords: (json['eventRecords'] as List<dynamic>?)
-          ?.map((event) => EventRecordModel.fromJson(event))
-          .toList() ?? [],
+      expense: List<String>.from(json['expense'] ?? []),
+      eventRecords: (json['eventRecords'] as List<dynamic>?)?.map((event) => EventRecordModel.fromJson(event)).toList()
+        ?..sort((a, b) {
+          // افترض أن لديك حقل `date` أو `timestamp` في `EventRecordModel`
+          DateTime dateA = DateTime.parse(a.date); // استبدل `date` بالحقل المناسب
+          DateTime dateB = DateTime.parse(b.date); // استبدل `date` بالحقل المناسب
+          return dateA.compareTo(dateB); // ترتيب تصاعدي
+        }),
     );
   }
 
@@ -75,7 +71,7 @@ class BusModel implements Mappable {
   @override
   Map<String, dynamic> toMap() {
     return {
-      "الرقم التسلسلي":busId.toString(),
+      "الرقم التسلسلي": busId.toString(),
       'رقم الحافلة': number.toString(),
       'اسم الحافلة': name.toString(),
       'النوع': type.toString(),

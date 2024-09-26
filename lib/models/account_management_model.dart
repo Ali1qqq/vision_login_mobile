@@ -76,7 +76,15 @@ class EmployeeModel implements Mappable {
     contract = json['contract'] ?? '';
     bus = json['bus'] ?? '';
     startDate = json['startDate'] ?? '';
-    eventRecords = ((json['eventRecords'] ?? []) as List<dynamic>?)?.map((event) => EventRecordModel.fromJson(event)).toList() ?? [];
+    eventRecords = (json['eventRecords'] as List<dynamic>?)
+        ?.map((event) => EventRecordModel.fromJson(event))
+        .toList()
+      ?..sort((a, b) {
+        // افترض أن لديك حقل `date` في `EventRecordModel`
+        DateTime dateA = DateTime.parse(a.date); // استبدل `date` بالحقل المناسب
+        DateTime dateB = DateTime.parse(b.date); // استبدل `date` بالحقل المناسب
+        return dateA.compareTo(dateB); // ترتيب تصاعدي
+      });
     var tempEmployeeTime = <String, EmployeeTimeModel>{};
     (json['employeeTime'] ?? {}).forEach((k, v) {
       tempEmployeeTime[k] = EmployeeTimeModel.fromJson(v);

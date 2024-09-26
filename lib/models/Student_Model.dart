@@ -83,10 +83,14 @@ class StudentModel {
     startDate = json['startDate'] ?? '';
     endDate = json['endDate'] ?? '';
     eventRecords = (json['eventRecords'] as List<dynamic>?)
-            ?.map((event) => EventRecordModel.fromJson(event))
-            .toList() ??
-        [];
-
+        ?.map((event) => EventRecordModel.fromJson(event))
+        .toList()
+      ?..sort((a, b) {
+        // افترض أن لديك حقل `date` في `EventRecordModel`
+        DateTime dateA = DateTime.parse(a.date); // استبدل `date` بالحقل المناسب
+        DateTime dateB = DateTime.parse(b.date); // استبدل `date` بالحقل المناسب
+        return dateA.compareTo(dateB); // ترتيب تصاعدي
+      });
     bus = json['bus'] ?? '';
     available = false;
   }
