@@ -1,5 +1,7 @@
 
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class ExpensesModel {
   String? id, title, userId, date;
 
@@ -28,7 +30,7 @@ bool? isAccepted;
     body = json['body'];
     isAccepted = json['isAccepted'];
     busId = json['busId'];
-    date = json['date'] ?? DateTime.now().toString();
+    date = json['date'] ??Timestamp.now().toDate().toString();
     images = json['images'] == null
         ? []
         : json['images'].map((e) => e.toString()).toList();

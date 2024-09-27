@@ -1,6 +1,7 @@
 import 'dart:math';
 import 'dart:typed_data';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -103,7 +104,7 @@ class StudyFeesViewModel extends GetxController {
     } else if (inkwellIndex == 1) {
       return parent.installmentRecords?.values.any((record) => record.isPay == true) ?? false;
     } else if (inkwellIndex == 2) {
-      return parent.installmentRecords?.values.any((record) => DateTime.parse(record.installmentDate!) .isBefore(DateTime.now()) && record.isPay != true) ?? false;
+      return parent.installmentRecords?.values.any((record) => DateTime.parse(record.installmentDate!) .isBefore(Timestamp.now().toDate()) && record.isPay != true) ?? false;
     } else {
       return (parent.installmentRecords?.length ?? 0) > 0;
     }
@@ -121,7 +122,7 @@ class StudyFeesViewModel extends GetxController {
   int calculateLatePayment(ParentModel parent) {
     return parent.installmentRecords?.values
             .where(
-              (record) => record.isPay != true && DateTime.parse(record.installmentDate!).isBefore(DateTime.now()),
+              (record) => record.isPay != true && DateTime.parse(record.installmentDate!).isBefore(Timestamp.now().toDate()),
             )
             .fold(0, (sum, record) => (sum ?? 0) + int.parse(record.installmentCost.toString())) ??
         0;
@@ -163,7 +164,7 @@ class StudyFeesViewModel extends GetxController {
                           },
                         );
                         InstallmentModel installment = installmentList[parentIndex];
-                        bool isLate = DateTime.parse(installment.installmentDate!).isBefore(DateTime.now());
+                        bool isLate = DateTime.parse(installment.installmentDate!).isBefore(Timestamp.now().toDate());
                         Uint8List? _contractsTemp;
                         String? imageURL = installment.InstallmentImage;
                         return StatefulBuilder(builder: (BuildContext context, StateSetter setState) {

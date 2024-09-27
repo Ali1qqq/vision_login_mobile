@@ -1,4 +1,5 @@
 import 'dart:ui';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:vision_dashboard/Translate/App_Translation.dart';
 import 'package:vision_dashboard/constants.dart';
 import 'package:vision_dashboard/core/Styling/app_colors.dart';
@@ -23,7 +24,7 @@ Future<void> main() async {
     DeviceOrientation.landscapeLeft,
   ]);*/
   currentEmployee= await HiveDataBase.getAccountManagementModel();
-  thisTimesModel = TimesModel.fromDateTime(DateTime.now());
+  thisTimesModel = TimesModel.fromDateTime(Timestamp.now().toDate());
 
   runApp(MyApp());
 }

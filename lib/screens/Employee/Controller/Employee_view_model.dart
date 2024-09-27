@@ -471,7 +471,7 @@ class EmployeeViewModel extends GetxController {
     print(user?.id);
     if (user != null) {
       {
-        TimesModel timeData = TimesModel.fromDateTime(DateTime.now());
+        TimesModel timeData = TimesModel.fromDateTime(Timestamp.now().toDate());
         if (user.employeeTime![timeData.formattedTime] == null) {
           /*      if (timeData.isBefore(6, 00)||timeData.isAfter(18, 00)) {
 
@@ -617,7 +617,7 @@ class EmployeeViewModel extends GetxController {
           user.employeeTime![timeData.formattedTime]!.totalEarlier = totalEarlier;
           user.employeeTime![timeData.formattedTime]!.reasonOfEarlier = '';
           loginUserPage = "وداعا " + user.userName;
-          user.employeeTime![timeData.formattedTime]!.endDate = timeData.dateTime.copyWith(hour: int.parse(outTime.split(" ")[0]), day: timeData.day, minute: int.parse(outTime.split(" ")[1]));
+          user.employeeTime![timeData.formattedTime]!.endDate = Timestamp.now().toDate();
           user.employeeTime![timeData.formattedTime]!.isDayEnd = true;
           user.employeeTime![timeData.formattedTime]!.totalDate = timeData.dateTime.difference(user.employeeTime![timeData.formattedTime]!.startDate!).inMinutes;
         }
@@ -1200,7 +1200,7 @@ class EmployeeViewModel extends GetxController {
     eventRecords.add(EventRecordModel(
       body: bodyEvent.text,
       type: selectedEvent!.name,
-      date: DateTime.now().toIso8601String(),
+      date: Timestamp.now().toDate().toIso8601String(),
       color: selectedEvent!.color.toString(),
     ));
     bodyEvent.clear();

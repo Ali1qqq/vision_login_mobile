@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -455,7 +456,7 @@ class _StudentInputFormState extends State<StudentInputForm> {
                             text: 'إضافة سجل حدث'.tr,
                             onPressed: () {
                               // DateTime dateTime= await NTP.now();
-                              eventRecords.add(EventRecordModel(body: bodyEvent.text, type: selectedEvent!.name, date: DateTime.now().toIso8601String(), color: selectedEvent!.color.toString()));
+                              eventRecords.add(EventRecordModel(body: bodyEvent.text, type: selectedEvent!.name, date: Timestamp.now().toDate().toIso8601String(), color: selectedEvent!.color.toString()));
                               bodyEvent.clear();
                               setState(() {});
                             },

@@ -231,8 +231,8 @@ class ParentsViewModel extends GetxController {
 
   addInstalment() {
     String installmentId = generateId("INSTALLMENT");
-    instalmentMap[installmentId] = InstallmentModel(installmentId: installmentId, installmentCost: "0", installmentDate: DateTime.now().month.toString().padLeft(2, "0"), isPay: false);
-    monthsController.add(TextEditingController()..text =DateTime.now().toString().split(" ")[0]);
+    instalmentMap[installmentId] = InstallmentModel(installmentId: installmentId, installmentCost: "0", installmentDate: Timestamp.now().toDate().month.toString().padLeft(2, "0"), isPay: false);
+    monthsController.add(TextEditingController()..text =Timestamp.now().toDate().toString().split(" ")[0]);
     costsController.add(TextEditingController()..text = "0");
     update();
   }
@@ -373,7 +373,7 @@ class ParentsViewModel extends GetxController {
   bool isAdd = false;
 
   void addEventRecord() async {
-    final value = TimesModel.fromDateTime(DateTime.now());
+    final value = TimesModel.fromDateTime(Timestamp.now().toDate());
     eventRecords.add(EventRecordModel(
       body: bodyEventController.text,
       type: selectedEvent!.name,
@@ -443,7 +443,7 @@ class ParentsViewModel extends GetxController {
         element.installmentRecords!.values.forEach(
           (element0) {
 
-            if (DateTime.parse(element0.installmentDate!).isBefore(DateTime.now()) && element0.isPay != true) {
+            if (DateTime.parse(element0.installmentDate!).isBefore(Timestamp.now().toDate()) && element0.isPay != true) {
               total += int.parse(element0.installmentCost!);
             }
           },
@@ -487,7 +487,7 @@ class ParentsViewModel extends GetxController {
 
   setInstallmentPay({required String installmentId, required String parentId, required bool isPay, required String imageUrl}) async {
     // DateTime dateTime= await NTP.now();
-    TimesModel timesModel = TimesModel.fromDateTime(DateTime.now());
+    TimesModel timesModel = TimesModel.fromDateTime(Timestamp.now().toDate());
     Map<String, InstallmentModel>? installmentRecords = _parentMap[parentId]!.installmentRecords;
     installmentRecords![installmentId]!.isPay = isPay;
     installmentRecords[installmentId]!.InstallmentImage = imageUrl;
@@ -499,7 +499,7 @@ class ParentsViewModel extends GetxController {
     bool isLate = false;
     _parentMap[parentId]!.installmentRecords!.entries.forEach(
       (element) {
-        if (int.parse(element.value.installmentDate!) <= DateTime.now().month && element.value.isPay != true) {
+        if (int.parse(element.value.installmentDate!) <= Timestamp.now().toDate().month && element.value.isPay != true) {
           isLate = true;
         }
       },
