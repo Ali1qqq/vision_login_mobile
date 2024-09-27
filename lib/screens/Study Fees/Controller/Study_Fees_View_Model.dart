@@ -264,12 +264,16 @@ class StudyFeesViewModel extends GetxController {
                                             child: AppButton(
                                               onPressed: () async {
                                                 await getConfirmDialog(context, onConfirm: () async {
-                                                  if (_contractsTemp != null)
+                                          
+                                              
+                                                  if(_contractsTemp!=null) {
                                                     await uploadImages([_contractsTemp!], "contracts").then(
-                                                      (value) => imageURL = value.first,
+                                                          (value) => imageURL = value.first,
                                                     );
-                                                  parentController.setInstallmentPay(installmentId: installment.installmentId!, parentId: currentId, isPay: true, imageUrl: imageURL!);
-                                                  Get.back();
+                                                    parentController.setInstallmentPay(installmentId: installment.installmentId!, parentId: currentId, isPay: true, imageUrl: imageURL!);
+                                                    Get.back();
+                                                  }
+                                                  Get.snackbar("خطـأ","يرجى وضع صورة السند");
                                                 });
 
                                                 //

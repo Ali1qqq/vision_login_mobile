@@ -475,7 +475,7 @@ class ParentsViewModel extends GetxController {
       (element) {
         element.installmentRecords!.values.forEach(
           (element0) {
-            if (element0.installmentDate! == month && element0.isPay == true) {
+            if (element0.installmentDate!.split("-")[1] == month && element0.isPay == true) {
               total += int.parse(element0.installmentCost!);
             }
           },

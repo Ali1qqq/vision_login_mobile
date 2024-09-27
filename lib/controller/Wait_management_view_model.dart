@@ -299,7 +299,7 @@ bool checkIfPendingDelete({required String affectedId}) {
           .where(
             (element) =>
                 element.affectedId == affectedId &&
-                element.isAccepted != false &&
+                element.isAccepted == false &&
                 (element.type == waitingListTypes.delete.name ||
                     element.type ==
                         waitingListTypes.returnInstallment
