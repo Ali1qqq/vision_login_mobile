@@ -1,8 +1,12 @@
 import 'dart:io';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
 import 'package:nfc_manager/nfc_manager.dart';
 import 'package:vision_dashboard/screens/Employee/Controller/Employee_view_model.dart';
+
+import '../../screens/Settings/Controller/Settings_View_Model.dart';
+import '../../utils/const.dart';
 
 
 Future<bool> initNFCWorker(typeNFC type) async {
@@ -29,7 +33,28 @@ Future<bool> initNFCWorker(typeNFC type) async {
       if(type==typeNFC.login){
         // accountManagementViewModel.signInUsingNFC(cardId);
       }else if(type==typeNFC.time){
-        // accountManagementViewModel.addTime(cardId: cardId);
+        SettingsViewModel settingsController = Get.find<SettingsViewModel>();
+        String lateTime = settingsController.settingsMap[Const.lateTime][Const.time];
+        String appendTime = settingsController.settingsMap[Const.appendTime][Const.time];
+        String outTime = settingsController.settingsMap[Const.outTime][Const.time];
+        String friLateTime = settingsController.settingsMap[Const.friLateTime][Const.time];
+        String friAppendTime = settingsController.settingsMap[Const.friAppendTime][Const.time];
+        String friOutTime = settingsController.settingsMap[Const.friOutTime][Const.time];
+        if ( Timestamp.now().toDate().weekday == DateTime.friday) {
+          accountManagementViewModel.addTime(
+            appendTime:friAppendTime ,
+            lateTime:friLateTime ,
+            outTime: friOutTime,
+            cardId: cardId,
+          );
+        } else {
+          accountManagementViewModel.addTime(
+            appendTime: appendTime,
+            lateTime: lateTime,
+            outTime: outTime,
+            cardId: cardId,
+          );
+        }
       }else{
         accountManagementViewModel.addCard(cardId: cardId);
       }
