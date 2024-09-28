@@ -32,12 +32,18 @@ class SettingsViewModel extends GetxController {
   Map<String, dynamic> settingsMap = {
     "AppendTime": {"Time": "8 00"},
     "LateTime": {"Time": "7 30"},
-    "OutTime": {"Time": "14 00"}
+    "OutTime": {"Time": "14 00"},
+    "FriAppendTime": {"Time": "7 30"},
+    "FriLateTime": {"Time": "7 45"},
+    "FriOutTime": {"Time": "11 45"},
   };
 
   TextEditingController lateTimeController = TextEditingController()..text = "0 0";
   TextEditingController appendTimeController = TextEditingController()..text = "0 0";
   TextEditingController outTimeController = TextEditingController()..text = "0 0";
+  TextEditingController friLateTimeController = TextEditingController()..text = "0 0";
+  TextEditingController friAppendTimeController = TextEditingController()..text = "0 0";
+  TextEditingController friOutTimeController = TextEditingController()..text = "0 0";
 
   final fireStoreInstance = FirebaseFirestore.instance;
 

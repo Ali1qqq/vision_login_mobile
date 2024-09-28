@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:vision_dashboard/screens/Employee/Controller/Employee_view_model.dart';
 
 import 'package:flutter/material.dart';
@@ -11,8 +12,9 @@ import '../../controller/home_controller.dart';
 import '../../core/Styling/app_colors.dart';
 import '../../core/Styling/app_style.dart';
 import '../../models/account_management_model.dart';
-import '../../utils/Hive_DataBase.dart';
+import '../../utils/const.dart';
 import '../../utils/minutesToTime.dart';
+import '../Settings/Controller/Settings_View_Model.dart';
 import '../Widgets/Custom_Drop_down.dart';
 import '../Widgets/Custom_Text_Filed.dart';
 import '../Widgets/Data_Row.dart';
@@ -629,9 +631,31 @@ alignment: Alignment.center,
                           getConfirmDialog(
                             context,
                             onConfirm: () {
-                              accountController.addTime(
-                                userName: employees[index].userName,
-                              );
+                              SettingsViewModel settingsController = Get.find<SettingsViewModel>();
+                              String lateTime = settingsController.settingsMap[Const.lateTime][Const.time];
+                              String appendTime = settingsController.settingsMap[Const.appendTime][Const.time];
+                              String outTime = settingsController.settingsMap[Const.outTime][Const.time];
+                              String friLateTime = settingsController.settingsMap[Const.friLateTime][Const.time];
+                              String friAppendTime = settingsController.settingsMap[Const.friAppendTime][Const.time];
+                              String friOutTime = settingsController.settingsMap[Const.friOutTime][Const.time];
+                              if ( Timestamp.now().toDate().weekday == DateTime.friday) {
+                                accountController.addTime(
+                                  appendTime:friAppendTime ,
+                                  lateTime:friLateTime ,
+                                  outTime: friOutTime,
+                                  userName: employees[index].userName,
+                                );
+                              } else {
+                                accountController.addTime(
+                                  appendTime: appendTime,
+                                  lateTime: lateTime,
+                                  outTime: outTime,
+                                  userName: employees[index].userName,
+                                );
+                              }
+
+
+
                               Get.back();
                             },
                           );

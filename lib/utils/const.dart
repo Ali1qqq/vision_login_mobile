@@ -11,6 +11,9 @@ abstract class Const {
   static const String appendTime = 'AppendTime';
   static  const String lateTime = 'LateTime';
   static  const String outTime = 'OutTime';
+  static const String friAppendTime = 'FriAppendTime';
+  static  const String friLateTime = 'FriLateTime';
+  static  const String friOutTime = 'FriOutTime';
   static const String time = 'Time';
 }
 

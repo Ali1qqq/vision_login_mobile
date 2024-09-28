@@ -142,6 +142,6 @@ Map<String, String> months = {
 };
 
 enum waitingListTypes { delete, returnInstallment, waitDiscounts, add, edite }
-enum TimeName { LateTime, AppendTime, OutTime,}
+enum TimeName { LateTime, AppendTime, OutTime, FriLateTime, FriAppendTime, FriOutTime,}
 
 const accountManagementCollection = "AccountManagement";

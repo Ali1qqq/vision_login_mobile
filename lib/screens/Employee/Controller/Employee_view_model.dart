@@ -17,12 +17,10 @@ import 'package:vision_dashboard/router.dart';
 import 'package:vision_dashboard/screens/Buses/Controller/Bus_View_Model.dart';
 
 import 'package:vision_dashboard/screens/Salary/controller/Salary_View_Model.dart';
-import 'package:vision_dashboard/screens/Settings/Controller/Settings_View_Model.dart';
 
 import 'package:vision_dashboard/screens/Widgets/AppButton.dart';
 import 'package:vision_dashboard/screens/Widgets/Custom_Text_Filed.dart';
 import 'package:vision_dashboard/utils/Dialogs.dart';
-import 'package:vision_dashboard/utils/const.dart';
 
 import '../../../constants.dart';
 import '../../../controller/NFC_Card_View_model.dart';
@@ -444,16 +442,15 @@ class EmployeeViewModel extends GetxController {
   String? loginUserPage;
   NfcCardViewModel nfcCardViewModel = Get.find<NfcCardViewModel>();
 
-  Future<void> addTime({String? cardId, String? userName, String? password}) async {
-    SettingsViewModel settingsController = Get.find<SettingsViewModel>();
-    String lateTime = settingsController.settingsMap[Const.lateTime][Const.time];
-    String appendTime = settingsController.settingsMap[Const.appendTime][Const.time];
-    String outTime = settingsController.settingsMap[Const.outTime][Const.time];
+  Future<void> addTime({String? cardId, String? userName, String? password,required String appendTime,required String lateTime,required String outTime}) async {
+
     bool? isLateWithReason;
+    bool? isEarlierWithReason ;
     bool isDayOff = false;
     int totalLate = 0;
     int totalEarlier = 0;
     TextEditingController lateReasonController = TextEditingController();
+    TextEditingController earlierReasonController = TextEditingController();
     print(cardId);
     print("add Time");
     EmployeeModel? user;
@@ -612,10 +609,63 @@ class EmployeeViewModel extends GetxController {
         } else {
           if (timeData.isBefore(int.parse(outTime.split(" ")[0]), int.parse(outTime.split(" ")[1]))) {
             totalEarlier = timeData.dateTime.copyWith(hour: int.parse(outTime.split(" ")[0]), minute: int.parse(outTime.split(" ")[1]), second: 0).difference(timeData.dateTime).inMinutes;
+            isEarlierWithReason = false;
+            await Get.defaultDialog(
+                barrierDismissible: false,
+                backgroundColor: Colors.white,
+                title: "خروج مبكر ",
+                content: Container(
+                  child: StatefulBuilder(
+                    builder: (context, setstate) {
+                      return Column(
+                        children: [
+                          Text("خرجت اليوم مبكرا"),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          Row(
+                            children: [
+                              Checkbox(
+                                  fillColor: WidgetStatePropertyAll(primaryColor),
+                                  shape: RoundedRectangleBorder(),
+                                  value: !isEarlierWithReason!,
+                                  onChanged: (_) {
+                                    isEarlierWithReason = !_!;
+                                    setstate(() {});
+                                  }),
+                              Text("خروج غير مبرر")
+                            ],
+                          ),
+                          Row(
+                            children: [
+                              Checkbox(
+                                  fillColor: WidgetStatePropertyAll(primaryColor),
+                                  shape: RoundedRectangleBorder(),
+                                  value: isEarlierWithReason,
+                                  onChanged: (_) {
+                                    isEarlierWithReason = _!;
+                                    setstate(() {});
+                                  }),
+                              Text("خروج مبرر"),
+                            ],
+                          ),
+                          CustomTextField(controller: earlierReasonController, title: "سبب التأخر".tr),
+                        ],
+                      );
+                    },
+                  ),
+                ),
+                actions: [
+                  AppButton(
+                      text: "موافق",
+                      onPressed: () {
+                        Get.back();
+                      })
+                ]);
           }
-          user.employeeTime![timeData.formattedTime]!.isEarlierWithReason = true;
+          user.employeeTime![timeData.formattedTime]!.isEarlierWithReason = isEarlierWithReason;
           user.employeeTime![timeData.formattedTime]!.totalEarlier = totalEarlier;
-          user.employeeTime![timeData.formattedTime]!.reasonOfEarlier = '';
+          user.employeeTime![timeData.formattedTime]!.reasonOfEarlier = earlierReasonController.text;
           loginUserPage = "وداعا " + user.userName;
           user.employeeTime![timeData.formattedTime]!.endDate = Timestamp.now().toDate();
           user.employeeTime![timeData.formattedTime]!.isDayEnd = true;
@@ -752,7 +802,7 @@ class EmployeeViewModel extends GetxController {
                   ? 0
                   : accountModel.employeeTime!.values.where(
                         (element) {
-                          return element.isDayOff != true && element.isLateWithReason == false;
+                          return element.isDayOff != true && element.isLateWithReason == false&&element.isEarlierWithReason == false;
                         },
                       ).length /
                       3)
@@ -793,7 +843,7 @@ class EmployeeViewModel extends GetxController {
                   ? 0
                   : accountModel.employeeTime!.values.where(
                         (element) {
-                          return element.isDayOff != true && element.isLateWithReason == false;
+                          return element.isDayOff != true && element.isLateWithReason == false&&element.isEarlierWithReason == false;
                         },
                       ).length /
                       3)

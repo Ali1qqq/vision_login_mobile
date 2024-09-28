@@ -236,7 +236,6 @@ Map<String, String> ar = {
   "salary": "الراتب",
   "serialNFC": "رقم البطاقة",
   "startDate": "تاريخ البداية",
-  "type": "النوع",
   "userName": "اسم المستخدم",
   "body": "الوصف",
   "date": "التاريخ",
@@ -290,7 +289,10 @@ Map<String, String> ar = {
   "توقيت الغياب:": "Append Time",
   "idImages":"صورة الهوية",
   "employeeTime":"دوام الموظف",
-  "LateTime":"وفت التأخير",
+  "LateTime":"وقت التأخير",
   "AppendTime":"وقت الغياب",
-  "OutTime":"وقت الخروج"
+  "OutTime":"وقت الخروج",
+  "FriAppendTime":"وقت الغياب",
+  "FriLateTime":"وقت التأخير",
+  "FriOutTime":"وقت الخروج",
 };

@@ -29,7 +29,7 @@ Future<bool> initNFCWorker(typeNFC type) async {
       if(type==typeNFC.login){
         // accountManagementViewModel.signInUsingNFC(cardId);
       }else if(type==typeNFC.time){
-        accountManagementViewModel.addTime(cardId: cardId);
+        // accountManagementViewModel.addTime(cardId: cardId);
       }else{
         accountManagementViewModel.addCard(cardId: cardId);
       }

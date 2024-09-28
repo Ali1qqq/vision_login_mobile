@@ -348,7 +348,39 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                     controller: controller,
                                   ),
                                 ],
-                              )))
+                              ))),
+                      SizedBox(
+                        width: defaultPadding,
+                      ),
+                      Expanded(
+                          child: InsertShapeWidget(
+                              titleWidget: Text(
+                                "ضبط الدوام ليوم الجمعة".tr,
+                                style: AppStyles.headLineStyle1,
+                              ),
+                              bodyWidget: Wrap(
+                                runSpacing: 20,
+                                alignment: WrapAlignment.start,
+                                crossAxisAlignment: WrapCrossAlignment.end,
+                                spacing: 50,
+                                children: [
+                                  TimeWidget(
+                                    timeName: TimeName.FriLateTime,
+                                    timeController: controller.friLateTimeController,
+                                    controller: controller,
+                                  ),
+                                  TimeWidget(
+                                    timeName: TimeName.FriAppendTime,
+                                    timeController: controller.friAppendTimeController,
+                                    controller: controller,
+                                  ),
+                                  TimeWidget(
+                                    timeName: TimeName.FriOutTime,
+                                    timeController: controller.friOutTimeController,
+                                    controller: controller,
+                                  ),
+                                ],
+                              ))),
                     ],
                   ),
                   SizedBox(
