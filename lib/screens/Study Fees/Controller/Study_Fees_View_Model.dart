@@ -273,7 +273,7 @@ class StudyFeesViewModel extends GetxController {
                                                     parentController.setInstallmentPay(installmentId: installment.installmentId!, parentId: currentId, isPay: true, imageUrl: imageURL!);
                                                     Get.back();
                                                   }
-                                                  Get.snackbar("خطـأ","يرجى وضع صورة السند");
+                                                  Get.snackbar("خطـأ","يرجى رفع صورة السند");
                                                 });
 
                                                 //
@@ -289,7 +289,7 @@ class StudyFeesViewModel extends GetxController {
                                                 text: checkIfPendingDelete(affectedId: installment.installmentId!) ? 'في انتظار الموفقة..'.tr : "تراجع".tr,
                                                 onPressed: () {
                                                   if (checkIfPendingDelete(affectedId: installment.installmentId!))
-                                                    QuickAlert.show(context: context, type: QuickAlertType.info, width: Get.width / 2, title: "مراجعة المسؤول".tr, text: "يرجى مراجعة مسؤول المنصة".tr);
+                                                    QuickAlert.show(context: context, type: QuickAlertType.info, width: Get.width / 2, title: "مراجعة المسؤول".tr, text: "يرجى مراجعة مسؤول المنصة".tr,confirmBtnText: "موافق".tr);
                                                   else
                                                     getConfirmDialog(
                                                       context,
@@ -298,6 +298,7 @@ class StudyFeesViewModel extends GetxController {
                                                             userName: currentEmployee?.userName.toString()??"",
 
                                                             collectionName: installmentCollection, affectedId: installment.installmentId!, relatedId: installmentStudent.keys.elementAt(parentIndex));
+                                                        Get.back();
                                                       },
                                                     );
                                                 },
