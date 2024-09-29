@@ -104,7 +104,7 @@ class StudyFeesViewModel extends GetxController {
     } else if (inkwellIndex == 1) {
       return parent.installmentRecords?.values.any((record) => record.isPay == true) ?? false;
     } else if (inkwellIndex == 2) {
-      return parent.installmentRecords?.values.any((record) => DateTime.parse(record.installmentDate!) .isBefore(Timestamp.now().toDate()) && record.isPay != true) ?? false;
+      return parent.installmentRecords?.values.any((record) => DateTime.parse(record.installmentDate!).isBefore(Timestamp.now().toDate()) && record.isPay != true) ?? false;
     } else {
       return (parent.installmentRecords?.length ?? 0) > 0;
     }
@@ -158,11 +158,12 @@ class StudyFeesViewModel extends GetxController {
                       physics: ClampingScrollPhysics(),
                       itemCount: installmentStudent.length,
                       itemBuilder: (context, parentIndex) {
-                        List<InstallmentModel> installmentList = installmentStudent.values.toList()..sort(
-                          (a, b) {
-                            return a.installmentDate!.compareTo(b.installmentDate!);
-                          },
-                        );
+                        List<InstallmentModel> installmentList = installmentStudent.values.toList()
+                          ..sort(
+                            (a, b) {
+                              return a.installmentDate!.compareTo(b.installmentDate!);
+                            },
+                          );
                         InstallmentModel installment = installmentList[parentIndex];
                         bool isLate = DateTime.parse(installment.installmentDate!).isBefore(Timestamp.now().toDate());
                         Uint8List? _contractsTemp;
@@ -218,7 +219,7 @@ class StudyFeesViewModel extends GetxController {
                                                     if (element.bytes != null) _contractsTemp = element.bytes!;
                                                   },
                                                 );
-                                                setState((){});
+                                                setState(() {});
                                                 update();
                                               }
                                             },
@@ -254,7 +255,7 @@ class StudyFeesViewModel extends GetxController {
                                           ),
                                         if (installment.isPay == true)
                                           ImageOverlay(
-                                            imageUrl: imageURL??'',
+                                            imageUrl: imageURL ?? '',
                                             imageHeight: 50,
                                             imageWidth: max(140, Get.width / 10),
                                           ),
@@ -264,16 +265,14 @@ class StudyFeesViewModel extends GetxController {
                                             child: AppButton(
                                               onPressed: () async {
                                                 await getConfirmDialog(context, onConfirm: () async {
-                                          
-                                              
-                                                  if(_contractsTemp!=null) {
+                                                  if (_contractsTemp != null) {
                                                     await uploadImages([_contractsTemp!], "contracts").then(
-                                                          (value) => imageURL = value.first,
+                                                      (value) => imageURL = value.first,
                                                     );
                                                     parentController.setInstallmentPay(installmentId: installment.installmentId!, parentId: currentId, isPay: true, imageUrl: imageURL!);
                                                     Get.back();
                                                   }
-                                                  Get.snackbar("خطـأ","يرجى رفع صورة السند");
+                                                  Get.snackbar("خطـأ", "يرجى رفع صورة السند");
                                                 });
 
                                                 //
@@ -289,15 +288,13 @@ class StudyFeesViewModel extends GetxController {
                                                 text: checkIfPendingDelete(affectedId: installment.installmentId!) ? 'في انتظار الموفقة..'.tr : "تراجع".tr,
                                                 onPressed: () {
                                                   if (checkIfPendingDelete(affectedId: installment.installmentId!))
-                                                    QuickAlert.show(context: context, type: QuickAlertType.info, width: Get.width / 2, title: "مراجعة المسؤول".tr, text: "يرجى مراجعة مسؤول المنصة".tr,confirmBtnText: "موافق".tr);
+                                                    QuickAlert.show(context: context, type: QuickAlertType.info, width: Get.width / 2, title: "مراجعة المسؤول".tr, text: "يرجى مراجعة مسؤول المنصة".tr, confirmBtnText: "موافق".tr);
                                                   else
                                                     getConfirmDialog(
                                                       context,
                                                       onConfirm: () {
-                                                        addWaitOperation(type: waitingListTypes.returnInstallment,
-                                                            userName: currentEmployee?.userName.toString()??"",
-
-                                                            collectionName: installmentCollection, affectedId: installment.installmentId!, relatedId: installmentStudent.keys.elementAt(parentIndex));
+                                                        addWaitOperation(
+                                                            type: waitingListTypes.returnInstallment, userName: currentEmployee?.userName.toString() ?? "", collectionName: installmentCollection, affectedId: installment.installmentId!, relatedId:currentId);
                                                         Get.back();
                                                       },
                                                     );
