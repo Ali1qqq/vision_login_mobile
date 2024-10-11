@@ -26,8 +26,9 @@ class EmployeeTimeModel{
     dayName = json['dayName'];
     isLateWithReason = json['isLateWithReason'];
     reasonOfLate = json['reasonOfLate'];
-    startDate = json['startDate']==null ?null :json['startDate'].toDate();
-    endDate = json['endDate']==null ?null :json['endDate'].toDate();
+  
+    startDate = json['startDate']==null ?null :DateTime.tryParse(json['startDate'].toString());
+    endDate = json['endDate']==null ?null :DateTime.tryParse(json['endDate'].toString());
     totalDate = json['totalDate'];
     isDayEnd = json['isDayEnd'];
     isDayOff = json['isDayOff'];

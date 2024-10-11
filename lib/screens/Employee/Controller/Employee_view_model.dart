@@ -441,6 +441,8 @@ class EmployeeViewModel extends GetxController {
 
   String? loginUserPage;
   NfcCardViewModel nfcCardViewModel = Get.find<NfcCardViewModel>();
+  bool isLogIn=true;
+
 
   Future<void> addTime({String? cardId, String? userName, String? password,required String appendTime,required String lateTime,required String outTime}) async {
 
@@ -469,214 +471,220 @@ class EmployeeViewModel extends GetxController {
     if (user != null) {
       {
         TimesModel timeData = TimesModel.fromDateTime(Timestamp.now().toDate());
-        if (user.employeeTime![timeData.formattedTime] == null) {
-          /*      if (timeData.isBefore(6, 00)||timeData.isAfter(18, 00)) {
+        if(isLogIn){
+
+          if (user.employeeTime![timeData.formattedTime] == null) {
+            /*      if (timeData.isBefore(6, 00)||timeData.isAfter(18, 00)) {
 
             Get.snackbar("خطأ اثناء التسجيل", "لا يمكن اتسجيل الخروج في هذا الوقت");
             return;
           }*/
-          if (timeData.isAfter(int.parse(appendTime.split(" ")[0]), int.parse(appendTime.split(" ")[1]))) {
-            totalLate = timeData.dateTime.difference(DateTime.now().copyWith(hour: int.parse(appendTime.split(" ")[0]), minute: int.parse(appendTime.split(" ")[1]), second: 0)).inSeconds;
-            isDayOff = true;
-            isLateWithReason = false;
-            await Get.defaultDialog(
-                barrierDismissible: false,
-                backgroundColor: Colors.white,
-                title: "أنت متأخر ",
-                content: Container(
-                  child: StatefulBuilder(
-                    builder: (context, setstate) {
-                      return Column(
-                        children: [
-                          Text("تأخرت اليوم "),
-                          SizedBox(
-                            height: 10,
-                          ),
-                          Row(
-                            children: [
-                              Checkbox(
-                                  fillColor: WidgetStatePropertyAll(primaryColor),
-                                  shape: RoundedRectangleBorder(),
-                                  value: !isLateWithReason!,
-                                  onChanged: (_) {
-                                    isLateWithReason = !_!;
-                                    setstate(() {});
-                                  }),
-                              Text("تأخر غير مبرر")
-                            ],
-                          ),
-                          Row(
-                            children: [
-                              Checkbox(
-                                  fillColor: WidgetStatePropertyAll(primaryColor),
-                                  shape: RoundedRectangleBorder(),
-                                  value: isLateWithReason,
-                                  onChanged: (_) {
-                                    isLateWithReason = _!;
-                                    setstate(() {});
-                                  }),
-                              Text("تأخر مبرر"),
-                            ],
-                          ),
-                          CustomTextField(controller: lateReasonController, title: "سبب التأخر".tr),
-                        ],
-                      );
-                    },
+            if (timeData.isAfter(int.parse(appendTime.split(" ")[0]), int.parse(appendTime.split(" ")[1]))) {
+              totalLate = timeData.dateTime.difference(DateTime.now().copyWith(hour: int.parse(appendTime.split(" ")[0]), minute: int.parse(appendTime.split(" ")[1]), second: 0)).inSeconds;
+              isDayOff = true;
+              isLateWithReason = false;
+              await Get.defaultDialog(
+                  barrierDismissible: false,
+                  backgroundColor: Colors.white,
+                  title: "أنت متأخر ",
+                  content: Container(
+                    child: StatefulBuilder(
+                      builder: (context, setstate) {
+                        return Column(
+                          children: [
+                            Text("تأخرت اليوم "),
+                            SizedBox(
+                              height: 10,
+                            ),
+                            Row(
+                              children: [
+                                Checkbox(
+                                    fillColor: WidgetStatePropertyAll(primaryColor),
+                                    shape: RoundedRectangleBorder(),
+                                    value: !isLateWithReason!,
+                                    onChanged: (_) {
+                                      isLateWithReason = !_!;
+                                      setstate(() {});
+                                    }),
+                                Text("تأخر غير مبرر")
+                              ],
+                            ),
+                            Row(
+                              children: [
+                                Checkbox(
+                                    fillColor: WidgetStatePropertyAll(primaryColor),
+                                    shape: RoundedRectangleBorder(),
+                                    value: isLateWithReason,
+                                    onChanged: (_) {
+                                      isLateWithReason = _!;
+                                      setstate(() {});
+                                    }),
+                                Text("تأخر مبرر"),
+                              ],
+                            ),
+                            CustomTextField(controller: lateReasonController, title: "سبب التأخر".tr),
+                          ],
+                        );
+                      },
+                    ),
                   ),
-                ),
-                actions: [
-                  AppButton(
-                      text: "موافق",
-                      onPressed: () {
-                        Get.back();
-                      })
-                ]);
-          } else if (timeData.isAfter(int.parse(lateTime.split(" ")[0]), (int.parse(lateTime.split(" ")[1])))) {
-            totalLate = timeData.dateTime.difference(DateTime.now().copyWith(hour: int.parse(appendTime.split(" ")[0]), minute: int.parse(appendTime.split(" ")[1]), second: 0)).inSeconds;
-            isDayOff = false;
-            isLateWithReason = false;
-            await Get.defaultDialog(
-                barrierDismissible: false,
-                backgroundColor: Colors.white,
-                title: "أنت متأخر ",
-                content: Container(
-                  child: StatefulBuilder(
-                    builder: (context, setstate) {
-                      return Column(
-                        children: [
-                          Text("تأخرت اليوم "),
-                          SizedBox(
-                            height: 10,
-                          ),
-                          Row(
-                            children: [
-                              Checkbox(
-                                  fillColor: WidgetStatePropertyAll(primaryColor),
-                                  shape: RoundedRectangleBorder(),
-                                  value: !isLateWithReason!,
-                                  onChanged: (_) {
-                                    isLateWithReason = !_!;
-                                    setstate(() {});
-                                  }),
-                              Text("تأخر غير مبرر")
-                            ],
-                          ),
-                          Row(
-                            children: [
-                              Checkbox(
-                                  fillColor: WidgetStatePropertyAll(primaryColor),
-                                  shape: RoundedRectangleBorder(),
-                                  value: isLateWithReason,
-                                  onChanged: (_) {
-                                    isLateWithReason = _!;
-                                    setstate(() {});
-                                  }),
-                              Text("تأخر مبرر"),
-                            ],
-                          ),
-                          CustomTextField(controller: lateReasonController, title: "سبب التأخر".tr),
-                        ],
-                      );
-                    },
+                  actions: [
+                    AppButton(
+                        text: "موافق",
+                        onPressed: () {
+                          Get.back();
+                        })
+                  ]);
+            } else if (timeData.isAfter(int.parse(lateTime.split(" ")[0]), (int.parse(lateTime.split(" ")[1])))) {
+              totalLate = timeData.dateTime.difference(DateTime.now().copyWith(hour: int.parse(appendTime.split(" ")[0]), minute: int.parse(appendTime.split(" ")[1]), second: 0)).inSeconds;
+              isDayOff = false;
+              isLateWithReason = false;
+              await Get.defaultDialog(
+                  barrierDismissible: false,
+                  backgroundColor: Colors.white,
+                  title: "أنت متأخر ",
+                  content: Container(
+                    child: StatefulBuilder(
+                      builder: (context, setstate) {
+                        return Column(
+                          children: [
+                            Text("تأخرت اليوم "),
+                            SizedBox(
+                              height: 10,
+                            ),
+                            Row(
+                              children: [
+                                Checkbox(
+                                    fillColor: WidgetStatePropertyAll(primaryColor),
+                                    shape: RoundedRectangleBorder(),
+                                    value: !isLateWithReason!,
+                                    onChanged: (_) {
+                                      isLateWithReason = !_!;
+                                      setstate(() {});
+                                    }),
+                                Text("تأخر غير مبرر")
+                              ],
+                            ),
+                            Row(
+                              children: [
+                                Checkbox(
+                                    fillColor: WidgetStatePropertyAll(primaryColor),
+                                    shape: RoundedRectangleBorder(),
+                                    value: isLateWithReason,
+                                    onChanged: (_) {
+                                      isLateWithReason = _!;
+                                      setstate(() {});
+                                    }),
+                                Text("تأخر مبرر"),
+                              ],
+                            ),
+                            CustomTextField(controller: lateReasonController, title: "سبب التأخر".tr),
+                          ],
+                        );
+                      },
+                    ),
                   ),
-                ),
-                actions: [
-                  AppButton(
-                      text: "موافق",
-                      onPressed: () {
-                        Get.back();
-                      })
-                ]);
-          }
+                  actions: [
+                    AppButton(
+                        text: "موافق",
+                        onPressed: () {
+                          Get.back();
+                        })
+                  ]);
+            }
 
-          user.employeeTime![timeData.formattedTime] = EmployeeTimeModel(
-              dayName: timeData.formattedTime,
-              startDate: timeData.dateTime.copyWith(hour: timeData.hour, day: timeData.day, minute: timeData.minute),
-              endDate: null,
-              totalDate: null,
-              isDayEnd: false,
-              isDayOff: isDayOff,
-              isLateWithReason: isLateWithReason,
-              reasonOfLate: lateReasonController.text,
-              totalLate: totalLate,
-              isEarlierWithReason: null,
-              reasonOfEarlier: null,
-              totalEarlier: null);
-          loginUserPage = "اهلا بك " + user.userName;
-        } else if (user.employeeTime![timeData.formattedTime]!.isDayEnd!) {
-          loginUserPage = "لقد قمت بالخروج بالفعل " + user.userName;
-          print("You close the day already");
-        } else {
-          if (timeData.isBefore(int.parse(outTime.split(" ")[0]), int.parse(outTime.split(" ")[1]))) {
-            totalEarlier = timeData.dateTime.copyWith(hour: int.parse(outTime.split(" ")[0]), minute: int.parse(outTime.split(" ")[1]), second: 0).difference(timeData.dateTime).inMinutes;
-            isEarlierWithReason = false;
-            await Get.defaultDialog(
-                barrierDismissible: false,
-                backgroundColor: Colors.white,
-                title: "خروج مبكر ",
-                content: Container(
-                  child: StatefulBuilder(
-                    builder: (context, setstate) {
-                      return Column(
-                        children: [
-                          Text("خرجت اليوم مبكرا"),
-                          SizedBox(
-                            height: 10,
-                          ),
-                          Row(
-                            children: [
-                              Checkbox(
-                                  fillColor: WidgetStatePropertyAll(primaryColor),
-                                  shape: RoundedRectangleBorder(),
-                                  value: !isEarlierWithReason!,
-                                  onChanged: (_) {
-                                    isEarlierWithReason = !_!;
-                                    setstate(() {});
-                                  }),
-                              Text("خروج غير مبرر")
-                            ],
-                          ),
-                          Row(
-                            children: [
-                              Checkbox(
-                                  fillColor: WidgetStatePropertyAll(primaryColor),
-                                  shape: RoundedRectangleBorder(),
-                                  value: isEarlierWithReason,
-                                  onChanged: (_) {
-                                    isEarlierWithReason = _!;
-                                    setstate(() {});
-                                  }),
-                              Text("خروج مبرر"),
-                            ],
-                          ),
-                          CustomTextField(controller: earlierReasonController, title: "سبب التأخر".tr),
-                        ],
-                      );
-                    },
-                  ),
-                ),
-                actions: [
-                  AppButton(
-                      text: "موافق",
-                      onPressed: () {
-                        Get.back();
-                      })
-                ]);
+            user.employeeTime![timeData.formattedTime] = EmployeeTimeModel(
+                dayName: timeData.formattedTime,
+                startDate: timeData.dateTime.copyWith(hour: timeData.hour, day: timeData.day, minute: timeData.minute),
+                endDate: null,
+                totalDate: null,
+                isDayEnd: false,
+                isDayOff: isDayOff,
+                isLateWithReason: isLateWithReason,
+                reasonOfLate: lateReasonController.text,
+                totalLate: totalLate,
+                isEarlierWithReason: null,
+                reasonOfEarlier: null,
+                totalEarlier: null);
+            loginUserPage = "اهلا بك " + user.userName;
           }
-          user.employeeTime![timeData.formattedTime]!.isEarlierWithReason = isEarlierWithReason;
-          user.employeeTime![timeData.formattedTime]!.totalEarlier = totalEarlier;
-          user.employeeTime![timeData.formattedTime]!.reasonOfEarlier = earlierReasonController.text;
-          loginUserPage = "وداعا " + user.userName;
-          user.employeeTime![timeData.formattedTime]!.endDate = Timestamp.now().toDate();
-          user.employeeTime![timeData.formattedTime]!.isDayEnd = true;
-          user.employeeTime![timeData.formattedTime]!.totalDate = timeData.dateTime.difference(user.employeeTime![timeData.formattedTime]!.startDate!).inMinutes;
         }
-        accountManagementFireStore.doc(user.id).update({"employeeTime": Map.fromEntries(user.employeeTime!.entries.map((e) => MapEntry(e.key, e.value.toJson())).toList())});
+        if(!isLogIn)     {
+          if (user.employeeTime![timeData.formattedTime]!.isDayEnd!) {
+            loginUserPage = "لقد قمت بالخروج بالفعل " + user.userName;
+            print("You close the day already");
+          } else {
+            if (timeData.isBefore(int.parse(outTime.split(" ")[0]), int.parse(outTime.split(" ")[1]))) {
+              totalEarlier = timeData.dateTime.copyWith(hour: int.parse(outTime.split(" ")[0]), minute: int.parse(outTime.split(" ")[1]), second: 0).difference(timeData.dateTime).inMinutes;
+              isEarlierWithReason = false;
+              await Get.defaultDialog(
+                  barrierDismissible: false,
+                  backgroundColor: Colors.white,
+                  title: "خروج مبكر ",
+                  content: Container(
+                    child: StatefulBuilder(
+                      builder: (context, setstate) {
+                        return Column(
+                          children: [
+                            Text("خرجت اليوم مبكرا"),
+                            SizedBox(
+                              height: 10,
+                            ),
+                            Row(
+                              children: [
+                                Checkbox(
+                                    fillColor: WidgetStatePropertyAll(primaryColor),
+                                    shape: RoundedRectangleBorder(),
+                                    value: !isEarlierWithReason!,
+                                    onChanged: (_) {
+                                      isEarlierWithReason = !_!;
+                                      setstate(() {});
+                                    }),
+                                Text("خروج غير مبرر")
+                              ],
+                            ),
+                            Row(
+                              children: [
+                                Checkbox(
+                                    fillColor: WidgetStatePropertyAll(primaryColor),
+                                    shape: RoundedRectangleBorder(),
+                                    value: isEarlierWithReason,
+                                    onChanged: (_) {
+                                      isEarlierWithReason = _!;
+                                      setstate(() {});
+                                    }),
+                                Text("خروج مبرر"),
+                              ],
+                            ),
+                            CustomTextField(controller: earlierReasonController, title: "سبب التأخر".tr),
+                          ],
+                        );
+                      },
+                    ),
+                  ),
+                  actions: [
+                    AppButton(
+                        text: "موافق",
+                        onPressed: () {
+                          Get.back();
+                        })
+                  ]);
+            }
+            user.employeeTime![timeData.formattedTime]!.isEarlierWithReason = isEarlierWithReason;
+            user.employeeTime![timeData.formattedTime]!.totalEarlier = totalEarlier;
+            user.employeeTime![timeData.formattedTime]!.reasonOfEarlier = earlierReasonController.text;
+            loginUserPage = "وداعا " + user.userName;
+            user.employeeTime![timeData.formattedTime]!.endDate = Timestamp.now().toDate();
+            user.employeeTime![timeData.formattedTime]!.isDayEnd = true;
+            user.employeeTime![timeData.formattedTime]!.totalDate = timeData.dateTime.difference(user.employeeTime![timeData.formattedTime]!.startDate!).inMinutes;
+          }
+          accountManagementFireStore.doc(user.id).update({"employeeTime": Map.fromEntries(user.employeeTime!.entries.map((e) => MapEntry(e.key, e.value.toJson())).toList())});
 
-        update();
-        await Future.delayed(Duration(seconds: 4));
-        loginUserPage = null;
-        update();
+          update();
+          await Future.delayed(Duration(seconds: 4));
+          loginUserPage = null;
+          update();
+        }
       }
     } else {
       print("Not found");

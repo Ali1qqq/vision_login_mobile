@@ -52,7 +52,6 @@ class _EmployeeTimeViewState extends State<EmployeeTimeView> {
         .key;
     dayNameNow = thisTimesModel!.formattedTime;
     selectedDate.text = thisTimesModel!.formattedTime;
-
   }
 
   @override
@@ -113,10 +112,8 @@ class _EmployeeTimeViewState extends State<EmployeeTimeView> {
                                       Expanded(
                                         child: InkWell(
                                           onTap: () {
-
-                                              isShowLogin = true;
-                                              setState(() {});
-
+                                            isShowLogin = true;
+                                            setState(() {});
                                           },
                                           child: Container(
                                             height: 50,
@@ -139,7 +136,7 @@ class _EmployeeTimeViewState extends State<EmployeeTimeView> {
                                       Expanded(
                                         child: InkWell(
                                           onTap: () {
-                                            if(currentEmployee?.type!='مستخدم') {
+                                            if (currentEmployee?.type != 'مستخدم') {
                                               isShowLogin = false;
                                               setState(() {});
                                             }
@@ -175,7 +172,8 @@ class _EmployeeTimeViewState extends State<EmployeeTimeView> {
                             Expanded(
                               child: Container(
                                 width: Get.width,
-alignment: Alignment.center,
+                                alignment: Alignment.center,
+
                                 ///بعد تسجيل دخول الموظف يعرض له اسمه لفترة ومن ثم يختفي
                                 child: controller.loginUserPage != null
                                     ? Center(
@@ -243,7 +241,7 @@ alignment: Alignment.center,
                                         firstChild: Column(
                                           mainAxisAlignment: MainAxisAlignment.center,
                                           children: [
-                                            if (controller.isSupportNfc && enableUpdate)
+                                            if (true /*controller.isSupportNfc && enableUpdate*/)
                                               Column(
                                                 children: [
                                                   Text(
@@ -254,8 +252,35 @@ alignment: Alignment.center,
                                                     height: 50,
                                                   ),
                                                   Text(
-                                                    "سجل الدخول باستخدام بطاقتك".tr,
+                                                    accountManagementViewModel.isLogIn ? "سجل الدخول باستخدام بطاقتك".tr : "سجل الخروج باستخدام بطاقتك".tr,
                                                     style: TextStyle(fontSize: 22),
+                                                  ),
+                                                  SizedBox(
+                                                    height: 50,
+                                                  ),
+                                                  Row(
+                                                    mainAxisAlignment: MainAxisAlignment.center,
+                                                    children: [
+                                                      AppButton(
+                                                        text: "تسجيل دخول",
+                                                        onPressed: () {
+                                                          accountManagementViewModel.isLogIn = true;
+                                                          accountManagementViewModel.update();
+                                                        },
+                                                        color: accountManagementViewModel.isLogIn ? Colors.green : Colors.blue,
+                                                      ),
+                                                      SizedBox(
+                                                        width: 10,
+                                                      ),
+                                                      AppButton(
+                                                        text: "تسجيل خروج",
+                                                        onPressed: () {
+                                                          accountManagementViewModel.isLogIn = false;
+                                                          accountManagementViewModel.update();
+                                                        },
+                                                        color: accountManagementViewModel.isLogIn ? Colors.blue : Colors.green,
+                                                      ),
+                                                    ],
                                                   )
                                                 ],
                                               )
@@ -424,8 +449,7 @@ alignment: Alignment.center,
                                                             Container(
                                                               width: Get.width / 7,
                                                               child: Text(
-                                                                DateFun.minutesToTime(controller.getTotalLateForUserAtMonth(selectedMonth: selectedMonth, userId: entry.value.id))
-                                                                .toString(),
+                                                                DateFun.minutesToTime(controller.getTotalLateForUserAtMonth(selectedMonth: selectedMonth, userId: entry.value.id)).toString(),
                                                                 style: TextStyle(fontSize: Get.width < 700 ? 16 : 20),
                                                                 textAlign: TextAlign.center,
                                                               ),
@@ -518,7 +542,7 @@ alignment: Alignment.center,
                                                                           : j.endDate == null
                                                                               ? "لم يسجل خروج".tr
                                                                               : DateFun.dateToMinAndHour(j.endDate!)),
-                                                                  dataRowItem(size / data.length, j.isDayOff == true ? "غائب".tr : DateFun.minutesToTime(j.endDate?.difference(j.startDate??j.endDate!).inMinutes ?? 0)),
+                                                                  dataRowItem(size / data.length, j.isDayOff == true ? "غائب".tr : DateFun.minutesToTime(j.endDate?.difference(j.startDate ?? j.endDate!).inMinutes ?? 0)),
                                                                   dataRowItem(
                                                                       size / data.length,
                                                                       j.isDayOff == true
@@ -579,10 +603,10 @@ alignment: Alignment.center,
           ? FloatingActionButton(
               backgroundColor: primaryColor,
               onPressed: () {
-                if(currentEmployee?.type!='مستخدم')
-                setState(() {
-                  isCard = !isCard;
-                });
+                if (currentEmployee?.type != 'مستخدم')
+                  setState(() {
+                    isCard = !isCard;
+                  });
               },
               child: Icon(
                 isCard ? Icons.credit_card_off_outlined : Icons.credit_card_outlined,
@@ -638,10 +662,10 @@ alignment: Alignment.center,
                               String friLateTime = settingsController.settingsMap[Const.friLateTime][Const.time];
                               String friAppendTime = settingsController.settingsMap[Const.friAppendTime][Const.time];
                               String friOutTime = settingsController.settingsMap[Const.friOutTime][Const.time];
-                              if ( Timestamp.now().toDate().weekday == DateTime.friday) {
+                              if (Timestamp.now().toDate().weekday == DateTime.friday) {
                                 accountController.addTime(
-                                  appendTime:friAppendTime ,
-                                  lateTime:friLateTime ,
+                                  appendTime: friAppendTime,
+                                  lateTime: friLateTime,
                                   outTime: friOutTime,
                                   userName: employees[index].userName,
                                 );
@@ -653,8 +677,6 @@ alignment: Alignment.center,
                                   userName: employees[index].userName,
                                 );
                               }
-
-
 
                               Get.back();
                             },
