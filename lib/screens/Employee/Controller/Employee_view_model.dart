@@ -468,6 +468,7 @@ class EmployeeViewModel extends GetxController {
           .firstOrNull;
     }
     print(user?.id);
+
     if (user != null) {
       {
         TimesModel timeData = TimesModel.fromDateTime(Timestamp.now().toDate());
@@ -607,6 +608,9 @@ class EmployeeViewModel extends GetxController {
                 reasonOfEarlier: null,
                 totalEarlier: null);
             loginUserPage = "اهلا بك " + user.userName;
+          }
+          else{
+            loginUserPage = "لقد قمت بالدخول بالفعل " + user.userName;
           }
         }
         if(!isLogIn)     {
