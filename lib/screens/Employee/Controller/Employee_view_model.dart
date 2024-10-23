@@ -604,6 +604,7 @@ class EmployeeViewModel extends GetxController {
                 totalEarlier: null);
             loginUserPage = "اهلا بك " + user.userName;
 
+            accountManagementFireStore.doc(user.id).update({"employeeTime": Map.fromEntries(user.employeeTime!.entries.map((e) => MapEntry(e.key, e.value.toJson())).toList())});
 
           }
           else{
@@ -684,10 +685,11 @@ class EmployeeViewModel extends GetxController {
                 .difference(user.employeeTime![timeData.formattedTime]!.startDate!)
                 .inMinutes;
             loginUserPage = "وداعا " + user.userName;
+            accountManagementFireStore.doc(user.id).update({"employeeTime": Map.fromEntries(user.employeeTime!.entries.map((e) => MapEntry(e.key, e.value.toJson())).toList())});
+
           }
         }
       }
-      accountManagementFireStore.doc(user.id).update({"employeeTime": Map.fromEntries(user.employeeTime!.entries.map((e) => MapEntry(e.key, e.value.toJson())).toList())});
 
       update();
       await Future.delayed(Duration(seconds: 4));
