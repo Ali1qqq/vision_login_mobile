@@ -475,11 +475,6 @@ class EmployeeViewModel extends GetxController {
         if(isLogIn){
 
           if (user.employeeTime![timeData.formattedTime] == null) {
-            /*      if (timeData.isBefore(6, 00)||timeData.isAfter(18, 00)) {
-
-            Get.snackbar("خطأ اثناء التسجيل", "لا يمكن اتسجيل الخروج في هذا الوقت");
-            return;
-          }*/
             if (timeData.isAfter(int.parse(appendTime.split(" ")[0]), int.parse(appendTime.split(" ")[1]))) {
               totalLate = timeData.dateTime.difference(DateTime.now().copyWith(hour: int.parse(appendTime.split(" ")[0]), minute: int.parse(appendTime.split(" ")[1]), second: 0)).inSeconds;
               isDayOff = true;
@@ -608,18 +603,24 @@ class EmployeeViewModel extends GetxController {
                 reasonOfEarlier: null,
                 totalEarlier: null);
             loginUserPage = "اهلا بك " + user.userName;
+
+
           }
           else{
             loginUserPage = "لقد قمت بالدخول بالفعل " + user.userName;
+        update();
           }
         }
         if(!isLogIn)     {
           if (user.employeeTime![timeData.formattedTime]!.isDayEnd!&&user.employeeTime![timeData.formattedTime] == null) {
             loginUserPage = "لقد قمت بالخروج بالفعل " + user.userName;
-            print("You close the day already");
+            update();
           } else {
             if (timeData.isBefore(int.parse(outTime.split(" ")[0]), int.parse(outTime.split(" ")[1]))) {
-              totalEarlier = timeData.dateTime.copyWith(hour: int.parse(outTime.split(" ")[0]), minute: int.parse(outTime.split(" ")[1]), second: 0).difference(timeData.dateTime).inMinutes;
+              totalEarlier = timeData.dateTime
+                  .copyWith(hour: int.parse(outTime.split(" ")[0]), minute: int.parse(outTime.split(" ")[1]), second: 0)
+                  .difference(timeData.dateTime)
+                  .inMinutes;
               isEarlierWithReason = false;
               await Get.defaultDialog(
                   barrierDismissible: false,
@@ -677,19 +678,21 @@ class EmployeeViewModel extends GetxController {
             user.employeeTime![timeData.formattedTime]!.isEarlierWithReason = isEarlierWithReason;
             user.employeeTime![timeData.formattedTime]!.totalEarlier = totalEarlier;
             user.employeeTime![timeData.formattedTime]!.reasonOfEarlier = earlierReasonController.text;
-            loginUserPage = "وداعا " + user.userName;
             user.employeeTime![timeData.formattedTime]!.endDate = Timestamp.now().toDate();
             user.employeeTime![timeData.formattedTime]!.isDayEnd = true;
-            user.employeeTime![timeData.formattedTime]!.totalDate = timeData.dateTime.difference(user.employeeTime![timeData.formattedTime]!.startDate!).inMinutes;
+            user.employeeTime![timeData.formattedTime]!.totalDate = timeData.dateTime
+                .difference(user.employeeTime![timeData.formattedTime]!.startDate!)
+                .inMinutes;
+            loginUserPage = "وداعا " + user.userName;
           }
-          accountManagementFireStore.doc(user.id).update({"employeeTime": Map.fromEntries(user.employeeTime!.entries.map((e) => MapEntry(e.key, e.value.toJson())).toList())});
-
-          update();
-          await Future.delayed(Duration(seconds: 4));
-          loginUserPage = null;
-          update();
         }
       }
+      accountManagementFireStore.doc(user.id).update({"employeeTime": Map.fromEntries(user.employeeTime!.entries.map((e) => MapEntry(e.key, e.value.toJson())).toList())});
+
+      update();
+      await Future.delayed(Duration(seconds: 4));
+      loginUserPage = null;
+      update();
     } else {
       print("Not found");
     }

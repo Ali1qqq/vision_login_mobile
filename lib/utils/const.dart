@@ -1,4 +1,6 @@
 
+import 'package:vision_dashboard/models/Installment_model.dart';
+
 abstract class Const {
   static const expensesCollection = "Expenses";
   static const eventCollection = "Events";
@@ -27,24 +29,54 @@ Map<String, Map<String, dynamic>> compareMaps(Map<String, dynamic> newData, Map<
     }
     ///فحص الاقساط
     if (key == "installmentRecords") {
-/// معرفة اذا كان هناك تعديل على الاقساط كلها
+      /// معرفة اذا كان هناك تعديل على الاقساط كلها
       Map<String, Map<String, dynamic>> installmentDeference = compareMaps(newData[key], oldData[key]);
-      print(installmentDeference.length);
-      if (installmentDeference != {}) {
+
+      /// التحقق من الفرق في العدد بين البيانات الجديدة والقديمة
+      if (newData[key].length > oldData[key].length) {
+        // تم إضافة قسط جديد
+        var addedInstallment = newData[key].values.toList().last;
+        print("تمت إضافة القسط: $addedInstallment");
+
+        differences[key] = {
+          'newData': newData[key].length,
+          'oldData': oldData[key].length,
+          'editedInstallment': addedInstallment
+        };
+      }
+      else if (newData[key].length < oldData[key].length) {
+        // تم حذف قسط
+        List<dynamic> oldList = oldData[key].values.toList();
+        List<dynamic> newList = newData[key].values.toList();
+
+        // إيجاد القسط المحذوف
+        var removedInstallment = oldList.where((installment) => !newList.contains(installment)).toList();
+        print("تم حذف القسط: $removedInstallment");
+
+        differences[key] = {
+          'newData': newData[key].length,
+          'oldData': oldData[key].length,
+          'editedInstallment': removedInstallment
+        };
+      }
+
+
+      if (installmentDeference.isNotEmpty) {
         /// الدوران على القسط المتعدل لمعرفة التعديل الحاصل
         installmentDeference.forEach(
-          (key, value) {
+              (key, value) {
             /// التعديلات التي حصلت على القسط
             Map<String, Map<String, dynamic>> installmentDeference2 = compareMaps(value['newData'], value['oldData']);
-            ///الدوران على التعديلات التي حصلت
+
+            /// الدوران على التعديلات التي حصلت
             installmentDeference2.forEach((key, value) {
               differences[key] = {'newData': value['newData'], 'oldData': value['oldData']};
-
-            },);
+            });
           },
         );
       }
     }
+
     if (key == "eventRecords") {
 
       bool eventAdd = newData[key].length!=oldData[key].length;

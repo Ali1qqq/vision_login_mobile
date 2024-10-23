@@ -262,17 +262,26 @@ class ParentsViewModel extends GetxController {
     }
 
     loadingQuickAlert(context);
+
     try {
       // تحميل الصور
       List<String> uploadedContracts = await uploadImages(contractsTemp, "contracts");
+
       for (int index = 0; index < instalmentMap.length; index++) {
+        // print(index);
         instalmentMap[instalmentMap.keys.elementAt(index)] = InstallmentModel(
           installmentCost: costsController[index].text,
           installmentDate: monthsController[index].text,
           installmentId: instalmentMap.keys.elementAt(index),
-          InstallmentImage: parent != null ? parent!.installmentRecords!.values.toList()[index].InstallmentImage! : null,
-          payTime: parent != null ? parent!.installmentRecords!.values.toList()[index].payTime! : null,
-          isPay: parent != null ? parent!.installmentRecords!.values.toList()[index].isPay! : false,
+          InstallmentImage: parent != null && index < parent!.installmentRecords!.values.length
+              ? parent!.installmentRecords!.values.elementAt(index).InstallmentImage
+              : null,
+          payTime: parent != null && index < parent!.installmentRecords!.values.length
+              ? parent!.installmentRecords!.values.elementAt(index).payTime
+              : null,
+          isPay: parent != null && index < parent!.installmentRecords!.values.length
+              ? parent!.installmentRecords!.values.elementAt(index).isPay
+              : false,
         );
       }
       contracts.addAll(uploadedContracts);

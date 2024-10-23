@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:quickalert/models/quickalert_type.dart';
 import 'package:quickalert/widgets/quickalert_dialog.dart';
+import 'package:vision_dashboard/models/Installment_model.dart';
 import 'package:vision_dashboard/screens/Employee/Controller/Employee_view_model.dart';
 import 'package:vision_dashboard/screens/Widgets/Insert_shape_Widget.dart';
 import 'package:vision_dashboard/screens/expenses/Controller/expenses_view_model.dart';
@@ -75,7 +76,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
       body: SingleChildScrollView(
         padding: EdgeInsets.all(16.0),
         child: GetBuilder<HomeViewModel>(builder: (controller) {
-          double size = max(MediaQuery.sizeOf(context).width - (controller.isDrawerOpen ? 240 : 120), 1000) - 60;
+          double size = max(MediaQuery.sizeOf(context).width - (controller.isDrawerOpen ? 240 : 120), 1500) - 60;
           return Padding(
             padding: const EdgeInsets.all(15),
             child: GetBuilder<SettingsViewModel>(builder: (controller) {
@@ -141,25 +142,24 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                   )
                                   .toList()
                                   .reversed)
-
                                 DataRow(cells: [
                                   dataRowItem(size / logData.length, deleteModel.type.toString().tr),
                                   dataRowItem(size / logData.length, formatDateTimeFromString(deleteModel.date.toString())),
                                   deleteModel.type == waitingListTypes.add.name
                                       ? dataRowItem(size / deleteData.length, "عرض".tr, color: primaryColor, onTap: () {
-                                    showEmployeeDialog(context, deleteModel.newData ?? {});
-                                  })
-                                      :  deleteModel.type == waitingListTypes.edite.name
-                                      ? dataRowItem(size / deleteData.length, "عرض".tr,color: Colors.pink, onTap: () {
+                                          showEmployeeDialog(context, deleteModel.newData ?? {});
+                                        })
+                                      : deleteModel.type == waitingListTypes.edite.name
+                                          ? dataRowItem(size / deleteData.length, "عرض".tr, color: Colors.pink, onTap: () {
+                                              Map<String, Map<String, dynamic>> differences = compareMaps(
+                                                deleteModel.newData ?? {},
+                                                deleteModel.oldDate ?? {},
+                                              );
 
-                                    Map<String, Map<String, dynamic>> differences = compareMaps(
-                                      deleteModel.newData ?? {},
-                                      deleteModel.oldDate ?? {},
-                                    );
-
-                                    showData(context, differences, deleteModel,false);
-                                  })
-                                      : dataRowItem(size / deleteData.length, deleteModel.details == '' || deleteModel.details == null ? "لا يوجد".tr : deleteModel.details),                                  dataRowItem(size / logData.length, _getAffectedName(deleteModel)),
+                                              showData(context, differences, deleteModel, false);
+                                            })
+                                          : dataRowItem(size / deleteData.length, deleteModel.details == '' || deleteModel.details == null ? "لا يوجد".tr : deleteModel.details),
+                                  dataRowItem(size / logData.length, _getAffectedName(deleteModel)),
                                   dataRowItem(size / logData.length, deleteModel.collectionName.toString()),
                                   dataRowItem(
                                     size / logData.length,
@@ -454,7 +454,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               showEmployeeDialog(context, model.newData ?? {});
             })
           : dataRowItem(size / deleteData.length, model.details == '' || model.details == null ? "لا يوجد".tr : model.details),
-      dataRowItem(size / deleteData.length,formatDateTimeFromString(model.date.toString())),
+      dataRowItem(size / deleteData.length, formatDateTimeFromString(model.date.toString())),
       dataRowItem(size / deleteData.length, model.userName.toString().tr),
       dataRowItem(size / deleteData.length, affectedName),
       dataRowItem(size / deleteData.length, model.collectionName.toString()),
@@ -466,7 +466,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   model.oldDate ?? {},
                 );
 
-                showData(context, differences, model,true);
+                showData(context, differences, model, true);
               })
             : DataCell(
                 Container(
@@ -601,79 +601,132 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       shrinkWrap: true,
                       itemCount: differences.keys.length,
                       itemBuilder: (context, index) {
-
-                        return Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
+                        InstallmentModel installmentModel = InstallmentModel.fromJson((differences.values.elementAt(index)['editedInstallment'] ?? {}));
+                        return Column(
                           children: [
-                            Container(
-                                width: width / 5,
-                                child: Text(
-                                  differences.keys.elementAt(index).toString().tr,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: AppStyles.headLineStyle3,
-                                )),
-                            Text(":"),
-                            Container(
-                                width: width / 4.1,
-                                child: Text(
-                                  differences.values.elementAt(index)['oldData'].toString(),
-                                  style: AppStyles.headLineStyle3.copyWith(color: primaryColor),
-                                )),
-                            Spacer(),
-                            Container(
-                              width: 1,
-                              color: Colors.grey,
-                              height: 30,
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                Container(
+                                    width: width / 5,
+                                    child: Text(
+                                      differences.keys.elementAt(index).toString().tr,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: AppStyles.headLineStyle3,
+                                    )),
+                                Text(":"),
+                                Container(
+                                    width: width / 4.1,
+                                    child: Text(
+                                      differences.values.elementAt(index)['oldData'].toString(),
+                                      style: AppStyles.headLineStyle3.copyWith(color: primaryColor),
+                                    )),
+                                Spacer(),
+                                Container(
+                                  width: 1,
+                                  color: Colors.grey,
+                                  height: 30,
+                                ),
+                                Spacer(),
+                                Container(
+                                    width: width / 5,
+                                    child: Text(
+                                      differences.keys.elementAt(index).toString().tr,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: AppStyles.headLineStyle3,
+                                    )),
+                                Text(":"),
+                                Container(
+                                    width: width / 4.1,
+                                    child: Text(
+                                      differences.values.elementAt(index)['newData'].toString(),
+                                      style: AppStyles.headLineStyle3.copyWith(color: primaryColor),
+                                    )),
+                              ],
                             ),
-                            Spacer(),
-                            Container(
-                                width: width / 5,
-                                child: Text(
-                                  differences.keys.elementAt(index).toString().tr,
-                                  /* oldDate?.entries
-                                          .where(
-                                            (element) {
-                                              return element.value.toString() !=
-                                                  newDate?.values
-                                                      .elementAtOrNull(oldDate
-                                                          .keys
-                                                          .toList()
-                                                          .indexOf(element.key))
-                                                      .toString();
-                                            },
-                                          )
-                                          .elementAtOrNull(index)
-                                          ?.key
-                                          .toString()
-                                          .tr ??
-                                      '',*/
-                                  overflow: TextOverflow.ellipsis,
-                                  style: AppStyles.headLineStyle3,
-                                )),
-                            Text(":"),
-                            Container(
-                                width: width / 4.1,
-                                child: Text(
-                                  differences.values.elementAt(index)['newData'].toString(),
-                                  /*  oldDate?.entries
-                                          .where(
-                                            (element) {
-                                              return element.value.toString() !=
-                                                  newDate?.values
-                                                      .elementAtOrNull(oldDate
-                                                          .keys
-                                                          .toList()
-                                                          .indexOf(element.key))
-                                                      .toString();
-                                            },
-                                          )
-                                          .elementAtOrNull(index)
-                                          ?.value
-                                          .toString()
-                                          .tr ??
-                                      '',*/
-                                  style: AppStyles.headLineStyle3.copyWith(color: primaryColor),
-                                )),
+                            if (differences.values.elementAt(index)['editedInstallment'] != null) ...[
+
+                             Divider(),
+                              SizedBox(
+                                height: defaultPadding / 2,
+                              ),
+                              SizedBox(
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    SizedBox(
+                                      width: 200,
+                                      child: Text("تاريخ القسط"),
+                                    ),
+                                    Text(":"),
+                                    Expanded(
+                                      child: Text(
+                                        installmentModel.installmentDate.toString(),
+                                        overflow: TextOverflow.ellipsis,
+                                        style: AppStyles.headLineStyle3.copyWith(color: Colors.blue),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              SizedBox(
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    SizedBox(
+                                      width: 200,
+                                      child: Text("قيمة القسط"),
+                                    ),
+                                    Text(":"),
+                                    Expanded(
+                                      child: Text(
+                                        installmentModel.installmentCost.toString(),
+                                        overflow: TextOverflow.ellipsis,
+                                        style: AppStyles.headLineStyle3.copyWith(color: Colors.blue),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              SizedBox(
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    SizedBox(
+                                      width: 200,
+                                      child: Text("مدفوع"),
+                                    ),
+                                    Text(":"),
+                                    Expanded(
+                                      child: Text(
+                                        installmentModel.installmentDate.toString() == "true" ? "نعم" : "لا",
+                                        overflow: TextOverflow.ellipsis,
+                                        style: AppStyles.headLineStyle3.copyWith(color: Colors.blue),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              SizedBox(
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    SizedBox(
+                                      width: 200,
+                                      child: Text("تاريخ دفعة القسط"),
+                                    ),
+                                    Text(":"),
+                                    Expanded(
+                                      child: Text(
+                                        installmentModel.installmentDate.toString(),
+                                        overflow: TextOverflow.ellipsis,
+                                        style: AppStyles.headLineStyle3.copyWith(color: Colors.blue),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ]
                           ],
                         );
                       },
@@ -681,64 +734,64 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     SizedBox(
                       height: defaultPadding,
                     ),
-                    if(withEdit)
-                    Container(
-                      // width: size / deleteData.length,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          _buildIconButton(
-                            Icons.check_circle_outline,
-                            Colors.green,
-                            "قبول".tr,
-                            () {
-                              if (enableUpdate)
-                                QuickAlert.show(
-                                  context: context,
-                                  type: QuickAlertType.confirm,
-                                  text: 'قبول هذه العملية'.tr,
-                                  title: 'هل انت متأكد ؟'.tr,
-                                  onConfirmBtnTap: () {
-                                    // controller.doTheWait(model);
-                                    Get.find<WaitManagementViewModel>().approveEdite(waitModel);
-                                    Get.back();
-                                    Get.back();
-                                  },
-                                  onCancelBtnTap: () => Get.back(),
-                                  confirmBtnText: 'نعم'.tr,
-                                  cancelBtnText: 'لا'.tr,
-                                  confirmBtnColor: Colors.redAccent,
-                                  showCancelBtn: true,
-                                );
-                            },
-                          ),
-                          _buildIconButton(
-                            Icons.remove_circle_outline,
-                            Colors.red,
-                            "رفض".tr,
-                            () {
-                              if (enableUpdate)
-                                QuickAlert.show(
-                                  context: context,
-                                  type: QuickAlertType.confirm,
-                                  text: 'رفض هذه العملية'.tr,
-                                  title: 'هل انت متأكد ؟'.tr,
-                                  onConfirmBtnTap: () async {
-                                    await Get.find<WaitManagementViewModel>().declineEdit(waitModel);
-                                    Get.back();
-                                    Get.back();
-                                  },
-                                  onCancelBtnTap: () => Get.back(),
-                                  confirmBtnText: 'نعم'.tr,
-                                  cancelBtnText: 'لا'.tr,
-                                  confirmBtnColor: Colors.red,
-                                  showCancelBtn: true,
-                                );
-                            },
-                          ),
-                        ],
+                    if (withEdit)
+                      Container(
+                        // width: size / deleteData.length,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            _buildIconButton(
+                              Icons.check_circle_outline,
+                              Colors.green,
+                              "قبول".tr,
+                              () {
+                                if (enableUpdate)
+                                  QuickAlert.show(
+                                    context: context,
+                                    type: QuickAlertType.confirm,
+                                    text: 'قبول هذه العملية'.tr,
+                                    title: 'هل انت متأكد ؟'.tr,
+                                    onConfirmBtnTap: () {
+                                      // controller.doTheWait(model);
+                                      Get.find<WaitManagementViewModel>().approveEdite(waitModel);
+                                      Get.back();
+                                      Get.back();
+                                    },
+                                    onCancelBtnTap: () => Get.back(),
+                                    confirmBtnText: 'نعم'.tr,
+                                    cancelBtnText: 'لا'.tr,
+                                    confirmBtnColor: Colors.redAccent,
+                                    showCancelBtn: true,
+                                  );
+                              },
+                            ),
+                            _buildIconButton(
+                              Icons.remove_circle_outline,
+                              Colors.red,
+                              "رفض".tr,
+                              () {
+                                if (enableUpdate)
+                                  QuickAlert.show(
+                                    context: context,
+                                    type: QuickAlertType.confirm,
+                                    text: 'رفض هذه العملية'.tr,
+                                    title: 'هل انت متأكد ؟'.tr,
+                                    onConfirmBtnTap: () async {
+                                      await Get.find<WaitManagementViewModel>().declineEdit(waitModel);
+                                      Get.back();
+                                      Get.back();
+                                    },
+                                    onCancelBtnTap: () => Get.back(),
+                                    confirmBtnText: 'نعم'.tr,
+                                    cancelBtnText: 'لا'.tr,
+                                    confirmBtnColor: Colors.red,
+                                    showCancelBtn: true,
+                                  );
+                              },
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
                   ],
                 );
               },
@@ -813,8 +866,8 @@ class TimeWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     String time = controller.settingsMap[timeName.name][Const.time];
-int hour=int.parse(time.split(" ")[0]);
-int minute=int.parse(time.split(" ")[1]);
+    int hour = int.parse(time.split(" ")[0]);
+    int minute = int.parse(time.split(" ")[1]);
     return Wrap(
       alignment: WrapAlignment.center,
       crossAxisAlignment: WrapCrossAlignment.end,
@@ -836,7 +889,7 @@ int minute=int.parse(time.split(" ")[1]);
                 sunset: TimeOfDay(hour: 18, minute: 0),
                 duskSpanInMinutes: 120,
                 onChange: (time) {
-                  controller.setTime("${time.hour} ${time.minute}",timeName.name);
+                  controller.setTime("${time.hour} ${time.minute}", timeName.name);
                 },
               ),
             );
@@ -847,19 +900,14 @@ int minute=int.parse(time.split(" ")[1]);
             decoration: BoxDecoration(borderRadius: BorderRadius.circular(5), border: Border.all(color: secondaryColor, width: 2)),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-
               children: [
                 Text(
-                  hour>12?
-                  "PM":
-                  "AM",
+                  hour > 12 ? "PM" : "AM",
                   style: AppStyles.headLineStyle2.copyWith(color: primaryColor),
                   overflow: TextOverflow.ellipsis,
                 ),
                 Text(
-                  hour>12?
-                "${(hour-12).toString().padLeft(2, "0")}:${minute.toString().padLeft(2, "0")}":
-                  "${hour.toString().padLeft(2, "0")}:${minute.toString().padLeft(2, "0")}",
+                  hour > 12 ? "${(hour - 12).toString().padLeft(2, "0")}:${minute.toString().padLeft(2, "0")}" : "${hour.toString().padLeft(2, "0")}:${minute.toString().padLeft(2, "0")}",
                   style: AppStyles.headLineStyle1,
                   overflow: TextOverflow.ellipsis,
                 ),
@@ -875,4 +923,3 @@ int minute=int.parse(time.split(" ")[1]);
     );
   }
 }
-
