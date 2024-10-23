@@ -614,7 +614,7 @@ class EmployeeViewModel extends GetxController {
           }
         }
         if(!isLogIn)     {
-          if (user.employeeTime![timeData.formattedTime]!.isDayEnd!) {
+          if (user.employeeTime![timeData.formattedTime]!.isDayEnd!&&user.employeeTime![timeData.formattedTime] == null) {
             loginUserPage = "لقد قمت بالخروج بالفعل " + user.userName;
             print("You close the day already");
           } else {
