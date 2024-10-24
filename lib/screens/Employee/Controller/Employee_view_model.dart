@@ -443,7 +443,7 @@ class EmployeeViewModel extends GetxController {
   NfcCardViewModel nfcCardViewModel = Get.find<NfcCardViewModel>();
   bool isLogIn=true;
 
-
+bool startAddTime=true;
   Future<void> addTime({String? cardId, String? userName, String? password,required String appendTime,required String lateTime,required String outTime}) async {
 
     bool? isLateWithReason;
@@ -472,8 +472,8 @@ class EmployeeViewModel extends GetxController {
     if (user != null) {
       {
         TimesModel timeData = TimesModel.fromDateTime(Timestamp.now().toDate());
-        if(isLogIn){
-
+        if(isLogIn&&startAddTime){
+startAddTime=false;
           if (user.employeeTime![timeData.formattedTime] == null) {
             if (timeData.isAfter(int.parse(appendTime.split(" ")[0]), int.parse(appendTime.split(" ")[1]))) {
               totalLate = timeData.dateTime.difference(DateTime.now().copyWith(hour: int.parse(appendTime.split(" ")[0]), minute: int.parse(appendTime.split(" ")[1]), second: 0)).inSeconds;
@@ -612,7 +612,8 @@ class EmployeeViewModel extends GetxController {
         update();
           }
         }
-        if(!isLogIn)     {
+        if(!isLogIn&&startAddTime)     {
+          startAddTime=false;
           if (user.employeeTime![timeData.formattedTime]!.isDayEnd!&&user.employeeTime![timeData.formattedTime] == null) {
             loginUserPage = "لقد قمت بالخروج بالفعل " + user.userName;
             update();
@@ -694,6 +695,7 @@ class EmployeeViewModel extends GetxController {
       update();
       await Future.delayed(Duration(seconds: 4));
       loginUserPage = null;
+      startAddTime=true;
       update();
     } else {
       print("Not found");
