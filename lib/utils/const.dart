@@ -32,36 +32,29 @@ Map<String, Map<String, dynamic>> compareMaps(Map<String, dynamic> newData, Map<
       /// معرفة اذا كان هناك تعديل على الاقساط كلها
       Map<String, Map<String, dynamic>> installmentDeference = compareMaps(newData[key], oldData[key]);
 
-      /// التحقق من الفرق في العدد بين البيانات الجديدة والقديمة
-      if (newData[key].length > oldData[key].length) {
-        // تم إضافة قسط جديد
-        var addedInstallment = newData[key].values.toList().last;
-        print("تمت إضافة القسط: $addedInstallment");
+ if (newData[key].length != oldData[key].length) {
 
-        differences[key] = {
-          'newData': newData[key].length,
-          'oldData': oldData[key].length,
-          'editedInstallment': addedInstallment
-        };
-      }
-      else if (newData[key].length < oldData[key].length) {
-        // تم حذف قسط
         List<dynamic> oldList = oldData[key].values.toList();
         List<dynamic> newList = newData[key].values.toList();
 
         // إيجاد القسط المحذوف
-        var removedInstallment = oldList.where((installment) => !newList.contains(installment)).toList();
+        List<dynamic> removedInstallment = oldList.where((oldInstallment) {
+          return !newList.any((newInstallment) => newInstallment['installmentId'] == oldInstallment['installmentId']);
+        }).toList();
+        //ايجاد الاقساط المضافة
+        List<dynamic> addedInstallment = newList.where((oldInstallment) {
+          return !oldList.any((newInstallment) => newInstallment['installmentId'] == oldInstallment['installmentId']);
+        }).toList();
         print("تم حذف القسط: $removedInstallment");
 
         differences[key] = {
           'newData': newData[key].length,
           'oldData': oldData[key].length,
-          'editedInstallment': removedInstallment
+          'removedInstallment': removedInstallment,
+          'addedInstallment': addedInstallment
         };
       }
-
-
-      if (installmentDeference.isNotEmpty) {
+     else if (installmentDeference.isNotEmpty) {
         /// الدوران على القسط المتعدل لمعرفة التعديل الحاصل
         installmentDeference.forEach(
               (key, value) {
@@ -75,8 +68,8 @@ Map<String, Map<String, dynamic>> compareMaps(Map<String, dynamic> newData, Map<
           },
         );
       }
-    }
 
+  }
     if (key == "eventRecords") {
 
       bool eventAdd = newData[key].length!=oldData[key].length;

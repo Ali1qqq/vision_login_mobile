@@ -601,7 +601,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       shrinkWrap: true,
                       itemCount: differences.keys.length,
                       itemBuilder: (context, index) {
-                        InstallmentModel installmentModel = InstallmentModel.fromJson((differences.values.elementAt(index)['editedInstallment'] ?? {}));
+                        List<InstallmentModel> removedInstallmentList = [];
+                        for (var e in (differences.values.elementAt(index)['removedInstallment'] ?? [])) {
+                          removedInstallmentList.add(InstallmentModel.fromJson(e));
+                        }
+                        List<InstallmentModel> addedInstallmentList = [];
+                        for (var e in (differences.values.elementAt(index)['addedInstallment'] ?? [])) {
+                          addedInstallmentList.add(InstallmentModel.fromJson(e));
+                        }
                         return Column(
                           children: [
                             Row(
@@ -644,88 +651,189 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                     )),
                               ],
                             ),
-                            if (differences.values.elementAt(index)['editedInstallment'] != null) ...[
-
-                             Divider(),
-                              SizedBox(
-                                height: defaultPadding / 2,
-                              ),
-                              SizedBox(
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    SizedBox(
-                                      width: 200,
-                                      child: Text("تاريخ القسط"),
-                                    ),
-                                    Text(":"),
-                                    Expanded(
-                                      child: Text(
-                                        installmentModel.installmentDate.toString(),
-                                        overflow: TextOverflow.ellipsis,
-                                        style: AppStyles.headLineStyle3.copyWith(color: Colors.blue),
+                            if (removedInstallmentList .isNotEmpty) ...[
+                              Text("الاقساط المحذوفة",style: AppStyles.headLineStyle1,),
+                              ...List.generate(
+                                removedInstallmentList.length,
+                                (index) {
+                                  return Column(
+                                    children: [
+                                      Divider(),
+                                      SizedBox(
+                                        height: defaultPadding / 2,
                                       ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              SizedBox(
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    SizedBox(
-                                      width: 200,
-                                      child: Text("قيمة القسط"),
-                                    ),
-                                    Text(":"),
-                                    Expanded(
-                                      child: Text(
-                                        installmentModel.installmentCost.toString(),
-                                        overflow: TextOverflow.ellipsis,
-                                        style: AppStyles.headLineStyle3.copyWith(color: Colors.blue),
+                                      SizedBox(
+                                        child: Row(
+                                          mainAxisAlignment: MainAxisAlignment.center,
+                                          children: [
+                                            SizedBox(
+                                              width: 200,
+                                              child: Text("تاريخ القسط"),
+                                            ),
+                                            Text(":"),
+                                            Expanded(
+                                              child: Text(
+                                                removedInstallmentList[index].installmentDate.toString(),
+                                                overflow: TextOverflow.ellipsis,
+                                                style: AppStyles.headLineStyle3.copyWith(color: Colors.blue),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
                                       ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              SizedBox(
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    SizedBox(
-                                      width: 200,
-                                      child: Text("مدفوع"),
-                                    ),
-                                    Text(":"),
-                                    Expanded(
-                                      child: Text(
-                                        installmentModel.installmentDate.toString() == "true" ? "نعم" : "لا",
-                                        overflow: TextOverflow.ellipsis,
-                                        style: AppStyles.headLineStyle3.copyWith(color: Colors.blue),
+                                      SizedBox(
+                                        child: Row(
+                                          mainAxisAlignment: MainAxisAlignment.center,
+                                          children: [
+                                            SizedBox(
+                                              width: 200,
+                                              child: Text("قيمة القسط"),
+                                            ),
+                                            Text(":"),
+                                            Expanded(
+                                              child: Text(
+                                                removedInstallmentList[index].installmentCost.toString(),
+                                                overflow: TextOverflow.ellipsis,
+                                                style: AppStyles.headLineStyle3.copyWith(color: Colors.blue),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
                                       ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              SizedBox(
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    SizedBox(
-                                      width: 200,
-                                      child: Text("تاريخ دفعة القسط"),
-                                    ),
-                                    Text(":"),
-                                    Expanded(
-                                      child: Text(
-                                        installmentModel.installmentDate.toString(),
-                                        overflow: TextOverflow.ellipsis,
-                                        style: AppStyles.headLineStyle3.copyWith(color: Colors.blue),
+                                      SizedBox(
+                                        child: Row(
+                                          mainAxisAlignment: MainAxisAlignment.center,
+                                          children: [
+                                            SizedBox(
+                                              width: 200,
+                                              child: Text("مدفوع"),
+                                            ),
+                                            Text(":"),
+                                            Expanded(
+                                              child: Text(
+                                                removedInstallmentList[index].installmentDate.toString() == "true" ? "نعم" : "لا",
+                                                overflow: TextOverflow.ellipsis,
+                                                style: AppStyles.headLineStyle3.copyWith(color: Colors.blue),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
                                       ),
-                                    ),
-                                  ],
-                                ),
-                              ),
+                                      SizedBox(
+                                        child: Row(
+                                          mainAxisAlignment: MainAxisAlignment.center,
+                                          children: [
+                                            SizedBox(
+                                              width: 200,
+                                              child: Text("تاريخ دفعة القسط"),
+                                            ),
+                                            Text(":"),
+                                            Expanded(
+                                              child: Text(
+                                                removedInstallmentList[index].installmentDate.toString(),
+                                                overflow: TextOverflow.ellipsis,
+                                                style: AppStyles.headLineStyle3.copyWith(color: Colors.blue),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ],
+                                  );
+                                },
+                              )
+                            ],
+                            if (addedInstallmentList .isNotEmpty) ...[
+                              Text("الاقساط المضافة",style: AppStyles.headLineStyle1,),
+                              ...List.generate(
+                                addedInstallmentList.length,
+                                    (index) {
+                                  return Column(
+                                    children: [
+                                      Divider(),
+                                      SizedBox(
+                                        height: defaultPadding / 2,
+                                      ),
+                                      SizedBox(
+                                        child: Row(
+                                          mainAxisAlignment: MainAxisAlignment.center,
+                                          children: [
+                                            SizedBox(
+                                              width: 200,
+                                              child: Text("تاريخ القسط"),
+                                            ),
+                                            Text(":"),
+                                            Expanded(
+                                              child: Text(
+                                                addedInstallmentList[index].installmentDate.toString(),
+                                                overflow: TextOverflow.ellipsis,
+                                                style: AppStyles.headLineStyle3.copyWith(color: Colors.blue),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        child: Row(
+                                          mainAxisAlignment: MainAxisAlignment.center,
+                                          children: [
+                                            SizedBox(
+                                              width: 200,
+                                              child: Text("قيمة القسط"),
+                                            ),
+                                            Text(":"),
+                                            Expanded(
+                                              child: Text(
+                                                addedInstallmentList[index].installmentCost.toString(),
+                                                overflow: TextOverflow.ellipsis,
+                                                style: AppStyles.headLineStyle3.copyWith(color: Colors.blue),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        child: Row(
+                                          mainAxisAlignment: MainAxisAlignment.center,
+                                          children: [
+                                            SizedBox(
+                                              width: 200,
+                                              child: Text("مدفوع"),
+                                            ),
+                                            Text(":"),
+                                            Expanded(
+                                              child: Text(
+                                                addedInstallmentList[index].installmentDate.toString() == "true" ? "نعم" : "لا",
+                                                overflow: TextOverflow.ellipsis,
+                                                style: AppStyles.headLineStyle3.copyWith(color: Colors.blue),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        child: Row(
+                                          mainAxisAlignment: MainAxisAlignment.center,
+                                          children: [
+                                            SizedBox(
+                                              width: 200,
+                                              child: Text("تاريخ دفعة القسط"),
+                                            ),
+                                            Text(":"),
+                                            Expanded(
+                                              child: Text(
+                                                addedInstallmentList[index].installmentDate.toString(),
+                                                overflow: TextOverflow.ellipsis,
+                                                style: AppStyles.headLineStyle3.copyWith(color: Colors.blue),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ],
+                                  );
+                                },
+                              )
                             ]
                           ],
                         );

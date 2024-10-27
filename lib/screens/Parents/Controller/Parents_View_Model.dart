@@ -125,7 +125,7 @@ class ParentsViewModel extends GetxController {
   }
 
   updateParent(ParentModel parentModel) async {
-    await parentCollectionRef.doc(parentModel.id).set(parentModel.toJson(), SetOptions(merge: true));
+    await parentCollectionRef.doc(parentModel.id).update(parentModel.toJson());
     update();
   }
 
@@ -306,9 +306,7 @@ class ParentsViewModel extends GetxController {
         installmentRecords: instalmentMap,
       );
 
-      // إضافة عملية الانتظار إذا كانت العملية تحديث
-      print(parent?.installmentRecords?.values.map((e) => e.toJson(),));
-      print(instalmentMap.values.map((e) => e.toJson(),));
+
       // Get.back();
       // return;
       if (parent != null) {
@@ -322,9 +320,13 @@ class ParentsViewModel extends GetxController {
           oldData: parent!.toJson(),
           details: editController.text,
         );
+        await updateParent(parentModel);
+
+      }else{
+        await addParent(parentModel);
+
       }
 
-      await Get.find<ParentsViewModel>().addParent(parentModel);
 
       clearController();
 
