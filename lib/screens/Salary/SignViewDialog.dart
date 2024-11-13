@@ -84,4 +84,24 @@ AlertDialog buildSignViewDialog(String text, EmployeeModel account,
       )
     ],
   );
+
+}
+
+AlertDialog buildSignImageView(String image) {
+
+  return AlertDialog(
+    backgroundColor: secondaryColor,
+    actions: [
+      GetBuilder<SalaryViewModel>(
+          builder: (controller) {
+            return Container(
+              height: Get.height / 2,
+              width: Get.width / 2,
+              color: secondaryColor,
+              child: Image.network(image),
+            );
+          }
+      )
+    ],
+  );
 }

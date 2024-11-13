@@ -45,6 +45,20 @@ class SalaryViewModel extends GetxController {
     );
     return isPaid;
   }
+
+  String? getSalarySign() {
+    String? image ;
+    salaryMap.entries
+        .where(
+          (element) => element.key.split(" ")[0].split("-")[1] == months[selectedMonth],
+    )
+        .forEach(
+          (element) {
+        if (element.value.employeeId == currentId) image = element.value.signImage;
+      },
+    );
+    return image;
+  }
   final GlobalKey<SfSignaturePadState> signatureGlobalKey = GlobalKey();
   void handleClearButtonPressed() {
     signatureGlobalKey.currentState!.clear();
@@ -73,6 +87,19 @@ receiveSalary({required BuildContext context}){
         "${thisTimesModel!.year}-${months[selectedMonth]}",signatureGlobalKey,context),
   );
 }
+
+getSalaryImage({required BuildContext context}){
+  EmployeeModel  accountModel=employeeController.allAccountManagement[currentId]!;
+  String?  image;
+  print(salaryMap.values.where((element) => element.employeeId==accountModel.id&&element.salaryId!.split(" ")[0]=="${thisTimesModel!.year}-${months[selectedMonth]}",));
+  image=salaryMap.values.where((element) => element.employeeId==accountModel.id&&element.salaryId!.split(" ")[0]=="${thisTimesModel!.year}-${months[selectedMonth]}",).lastOrNull?.signImage;
+
+
+if(image!=null) {
+  print(image);
+      showDialog(context: context, builder: (context) => buildSignImageView(image!));
+    }
+  }
   SalaryViewModel() {
     getColumns();
     getAllSalary();

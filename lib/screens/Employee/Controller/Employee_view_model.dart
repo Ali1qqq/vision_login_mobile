@@ -280,7 +280,7 @@ class EmployeeViewModel extends GetxController {
             employeeId: accountId,
             dilaySalary: dilaySalary,
             paySalary: paySalary,
-            signImage: fileName,
+            signImage: value,
           ));
 
           if (double.parse(paySalary).toInt() != double.parse(dilaySalary).toInt())
@@ -821,7 +821,7 @@ startAddTime=false;
                   ? 0
                   : accountModel.employeeTime!.values.where(
                         (element) {
-                          return element.isDayOff != true && element.isLateWithReason == false&&element.isEarlierWithReason == false;
+                          return element.isDayOff != true && element.isLateWithReason == false&&element.isEarlierWithReason == false&&element.dayName.toString().split("-")[1] == month.padLeft(2, "0").toString();
                         },
                       ).length /
                       3)
@@ -832,7 +832,8 @@ startAddTime=false;
                   ? 0
                   : accountModel.employeeTime!.values.where(
                         (element) {
-                          return element.isDayOff != true && element.endDate == null;
+                          return element.isDayOff != true && element.endDate == null
+                              &&element.dayName.toString().split("-")[1] == month.padLeft(2, "0").toString();
                         },
                       ).length /
                       3)
@@ -843,7 +844,7 @@ startAddTime=false;
               ? 0
               : accountModel.employeeTime!.values.where(
                   (element) {
-                    return element.isDayOff == true;
+                    return element.isDayOff == true&&element.dayName.toString().split("-")[1] == month.padLeft(2, "0").toString();
                   },
                 ).length) *
           ((accountModel.salary ?? 0) / (accountModel.dayOfWork != 0 ? (accountModel.dayOfWork ?? 1) : 1)).round();
