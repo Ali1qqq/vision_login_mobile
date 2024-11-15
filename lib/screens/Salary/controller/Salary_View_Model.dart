@@ -96,7 +96,7 @@ getSalaryImage({required BuildContext context}){
 
 
 if(image!=null) {
-  print(image);
+ 
       showDialog(context: context, builder: (context) => buildSignImageView(image!));
     }
   }
