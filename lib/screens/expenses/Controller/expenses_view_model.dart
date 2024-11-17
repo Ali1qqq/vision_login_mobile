@@ -164,7 +164,7 @@ double imageWidth=200;
     double sub = 0.0;
     allExpenses.forEach(
       (key, value) {
-
+print(value.total);
         if (sub < (value.total ?? 0)) sub = (value.total ?? 0) * 1.0;
       },
     );

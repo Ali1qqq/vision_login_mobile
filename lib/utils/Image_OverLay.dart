@@ -1,6 +1,9 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+
+import '../screens/Widgets/AppButton.dart';
 
 class ImageOverlay extends StatefulWidget {
   const ImageOverlay({super.key, required this.imageUrl,this.imageHeight = 200,this.imageWidth = 200});
@@ -28,11 +31,37 @@ class _ImageOverlayState extends State<ImageOverlay> {
   Widget build(BuildContext context) {
     return GestureDetector(
         onTap: () {
-          setState(() {
-            isOverlayVisible = !isOverlayVisible;
-            imageHeight == 600 ? imageHeight = widget.imageHeight : imageHeight = 600;
-            imageWidth == 600 ? imageWidth = widget.imageWidth : imageWidth = 600;
-          });
+          Get.defaultDialog(
+            title:"عرض الصورة",
+              content: Container(
+                width: Get.width,
+                height: Get.height - 200,
+                child: InteractiveViewer(
+                  panEnabled: true, // يسمح بالسحب
+                  scaleEnabled: true, // يسمح بالتكبير
+                  child:        Container(
+
+                    decoration: BoxDecoration(
+                      image: DecorationImage(
+                        image: NetworkImage(
+                            widget
+                                .imageUrl
+                        ),
+                        fit:BoxFit.contain,
+                      ),
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                  ),
+                ),
+              ),actions: [AppButton(text: "تم", onPressed: (){
+            Get.back();
+          })]
+          );
+          // setState(() {
+          //   isOverlayVisible = !isOverlayVisible;
+          //   imageHeight == 600 ? imageHeight = widget.imageHeight : imageHeight = 600;
+          //   imageWidth == 600 ? imageWidth = widget.imageWidth : imageWidth = 600;
+          // });
         },
         child: Stack(
           children: [

@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class EmployeeTimeModel{
   String? dayName,reasonOfLate ,reasonOfEarlier;
   DateTime? startDate , endDate ;
@@ -26,11 +28,17 @@ class EmployeeTimeModel{
     dayName = json['dayName'];
     isLateWithReason = json['isLateWithReason'];
     reasonOfLate = json['reasonOfLate'];
-  
-    startDate = json['startDate']==null ?null :json['startDate'].toDate();
 
-
-    endDate = json['endDate']==null ?null :json['endDate'].toDate();
+    startDate = json['startDate'] == null
+        ? null
+        : (json['startDate'] is Timestamp
+        ? (json['startDate'] as Timestamp).toDate()
+        : json['startDate']);
+    endDate = json['endDate'] == null
+        ? null
+        : (json['endDate'] is Timestamp
+        ? (json['endDate'] as Timestamp).toDate()
+        : json['endDate']);
 
     totalDate = json['totalDate'];
     isDayEnd = json['isDayEnd'];

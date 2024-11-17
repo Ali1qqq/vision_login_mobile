@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:vision_dashboard/screens/Parents/Controller/Parents_View_Model.dart';
+import 'package:vision_dashboard/screens/Widgets/AppButton.dart';
 
 
 List<Widget> buildParentIdImageList(List<dynamic> imageList, ParentsViewModel controller, bool isTemporary) {
@@ -13,10 +14,33 @@ List<Widget> buildParentIdImageList(List<dynamic> imageList, ParentsViewModel co
           padding: const EdgeInsets.symmetric(horizontal: 8.0),
           child: GestureDetector(
             onTap: () {
-              logic.isOverlayVisible = !logic.isOverlayVisible;
-              logic.imageHeight == 600 ?  logic. imageHeight = 200 :   logic.imageHeight = 600;
-              logic.imageWidth == 600 ?   logic.imageWidth = 200 :   logic.imageWidth = 600;
-              logic.update();
+              Get.defaultDialog(
+                  title:"عرض الصورة",
+                content: Container(
+                  width: Get.width,
+                  height: Get.height - 200,
+                  child: InteractiveViewer(
+                    panEnabled: true, // يسمح بالسحب
+                    scaleEnabled: true, // يسمح بالتكبير
+                    child: isTemporary
+                        ? Image.memory(
+                      imageList[index],
+                      fit: BoxFit.contain,
+                    )
+                        : Image.network(
+                      imageList[index],
+                      fit: BoxFit.contain,
+                    ),
+                  ),
+                ),actions: [AppButton(text: "تم", onPressed: (){
+                  Get.back();
+              })]
+              );
+
+              // logic.isOverlayVisible = !logic.isOverlayVisible;
+              // logic.imageHeight == 600 ?  logic. imageHeight = 200 :   logic.imageHeight = 600;
+              // logic.imageWidth == 600 ?   logic.imageWidth = 200 :   logic.imageWidth = 600;
+              // logic.update();
             },
             child: Container(
               width: logic.imageHeight*1.0,
