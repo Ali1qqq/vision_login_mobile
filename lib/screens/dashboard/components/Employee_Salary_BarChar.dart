@@ -4,7 +4,7 @@ import 'dart:math';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:vision_dashboard/constants.dart';
+import 'package:vision_dashboard/core/constant/constants.dart';
 import 'package:vision_dashboard/models/account_management_model.dart';
 
 import '../../../core/Styling/app_style.dart';

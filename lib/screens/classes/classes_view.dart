@@ -5,7 +5,7 @@ import 'package:vision_dashboard/core/Styling/app_colors.dart';
 import 'package:vision_dashboard/models/ClassModel.dart';
 import 'package:swipe_to/swipe_to.dart';
 import 'package:vision_dashboard/screens/classes/Controller/Class_View_Model.dart';
-import '../../constants.dart';
+import '../../core/constant/constants.dart';
 import '../../controller/Wait_management_view_model.dart';
 import '../../controller/home_controller.dart';
 import '../../core/Styling/app_style.dart';

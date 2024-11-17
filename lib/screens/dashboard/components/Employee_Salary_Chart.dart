@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:vision_dashboard/screens/dashboard/components/Employee_Salary_BarChar.dart';
 
-import '../../../constants.dart';
+import '../../../core/constant/constants.dart';
 import '../../Widgets/Custom_Drop_down.dart';
 
 class EmployeeSalaryChartBox extends StatefulWidget {

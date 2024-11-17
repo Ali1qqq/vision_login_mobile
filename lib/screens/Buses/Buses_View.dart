@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import 'package:vision_dashboard/screens/Buses/buses_screen.dart';
 
 
-import '../../constants.dart';
+import '../../core/constant/constants.dart';
 import 'Buses_Detailes.dart';
 
 class BusesView extends StatefulWidget {

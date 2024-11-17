@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../constants.dart';
+import '../../core/constant/constants.dart';
 
 class ViewShapeWidget extends StatelessWidget {
   const ViewShapeWidget({

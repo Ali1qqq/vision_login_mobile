@@ -7,10 +7,10 @@ import 'package:get/get.dart';
 import 'package:vision_dashboard/screens/Widgets/AppButton.dart';
 import 'package:vision_dashboard/screens/Widgets/Custom_Text_Filed.dart';
 
-import '../../constants.dart';
+import '../../core/constant/constants.dart';
 import '../../controller/home_controller.dart';
 import '../../models/event_model.dart';
-import '../../utils/const.dart';
+import '../../core/constant/const.dart';
 
 class EventInputForm extends StatefulWidget {
   @override

@@ -8,7 +8,7 @@ import 'package:get/get.dart';
 
 import 'package:vision_dashboard/screens/Widgets/AppButton.dart';
 
-import '../../../constants.dart';
+import '../../../core/constant/constants.dart';
 import '../../Widgets/Custom_Text_Filed.dart';
 import '../../Widgets/MultiLine_CustomTextField.dart';
 

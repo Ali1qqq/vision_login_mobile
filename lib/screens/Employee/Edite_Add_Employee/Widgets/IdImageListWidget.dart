@@ -38,8 +38,8 @@ List<Widget> buildIdImageList(List<dynamic> imageList, EmployeeViewModel control
               );
             },
             child: Container(
-              width: logic.imageHeight,
-              height: logic.imageWidth,
+              width: 200,
+              height: 200,
               child: Stack(
                 children: [
                   Container(
@@ -48,19 +48,19 @@ List<Widget> buildIdImageList(List<dynamic> imageList, EmployeeViewModel control
                       color: Colors.grey,
                       borderRadius: BorderRadius.circular(15),
                     ),
-                    width: logic.imageHeight,
-                    height: logic.imageWidth,
+                    width:200,
+                    height: 200,
                     child: isTemporary
                         ? Image.memory(
                       imageList[index],
 
-                 fit: logic.imageWidth == 600 ?BoxFit.contain: BoxFit.cover,
+                 fit:  BoxFit.cover,
 
                     )
                         : Image.network(
                       imageList[index],
 
-                      fit: logic.imageWidth == 600 ?BoxFit.contain: BoxFit.cover,
+                      fit:  BoxFit.cover,
                     ),
                   ),
                   Positioned(

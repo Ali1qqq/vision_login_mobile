@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 
-import '../../../../utils/const.dart';
+import '../../../../core/constant/const.dart';
 import '../../../Widgets/AppButton.dart';
 import '../../../Widgets/Custom_Drop_down_with_value.dart';
 import '../../../Widgets/Custom_Text_Filed.dart';

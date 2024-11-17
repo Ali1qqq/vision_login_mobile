@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import 'package:vision_dashboard/screens/expenses/Controller/expenses_view_model.dart';
 import 'package:vision_dashboard/screens/expenses/Input_Edit_Expenses/expenses_input_form.dart';
 import 'package:vision_dashboard/screens/expenses/View_Expenses/expenses_users_screen.dart';
-import '../../constants.dart';
+import '../../core/constant/constants.dart';
 
 
 class ExpensesViewScreen extends StatefulWidget {
@@ -24,7 +24,7 @@ class _ExpensesViewScreenState extends State<ExpensesViewScreen> {
             duration: Duration(milliseconds: 500),
             firstChild: ConstrainedBox(
               constraints: BoxConstraints(maxHeight: Get.height),
-              // child: AllExp(),
+
               child: ExpensesScreen(),
             ),
             secondChild: ConstrainedBox(

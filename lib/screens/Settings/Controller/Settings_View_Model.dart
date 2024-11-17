@@ -5,13 +5,13 @@ import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:vision_dashboard/screens/Employee/Controller/Employee_view_model.dart';
 import 'package:vision_dashboard/controller/Wait_management_view_model.dart';
-import 'package:vision_dashboard/core/binding.dart';
+import 'package:vision_dashboard/core/binding/binding.dart';
 import 'package:vision_dashboard/screens/login/login_screen.dart';
 
-import '../../../constants.dart';
+import '../../../core/constant/constants.dart';
 import '../../event/Controller/event_view_model.dart';
 import '../../expenses/Controller/expenses_view_model.dart';
-import '../../../utils/const.dart';
+import '../../../core/constant/const.dart';
 import '../../Buses/Controller/Bus_View_Model.dart';
 import '../../Parents/Controller/Parents_View_Model.dart';
 import '../../Salary/controller/Salary_View_Model.dart';

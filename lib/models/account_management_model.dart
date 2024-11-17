@@ -1,9 +1,9 @@
 import 'package:get/get.dart';
 import 'package:vision_dashboard/models/employee_time_model.dart';
 
-import '../constants.dart';
+import '../core/constant/constants.dart';
 import '../screens/Buses/Controller/Bus_View_Model.dart';
-import '../utils/abstract.dart';
+import '../core/Utils/abstract.dart';
 import 'event_record_model.dart';
 
 class EmployeeModel implements Mappable {

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../../constants.dart';
+import '../../../../core/constant/constants.dart';
 import '../../../../controller/Wait_management_view_model.dart';
 import '../../Controller/Parents_View_Model.dart';
 

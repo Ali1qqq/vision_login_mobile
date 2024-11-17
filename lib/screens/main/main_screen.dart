@@ -1,11 +1,11 @@
 import 'dart:math';
-import 'package:vision_dashboard/constants.dart';
+import 'package:vision_dashboard/core/constant/constants.dart';
 import 'package:vision_dashboard/controller/home_controller.dart';
 import 'package:vision_dashboard/core/Styling/app_style.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:tab_container/tab_container.dart';
-import 'package:vision_dashboard/utils/Hive_DataBase.dart';
+import 'package:vision_dashboard/core/Utils/Hive_DataBase.dart';
 
 import 'Widgets/Drawer_List_Tile.dart';
 

@@ -20,8 +20,8 @@ List<Widget> buildImageList(List<dynamic> imageList, ExpensesViewModel controlle
                     width: Get.width,
                     height: Get.height - 200,
                     child: InteractiveViewer(
-                      panEnabled: true, // يسمح بالسحب
-                      scaleEnabled: true, // يسمح بالتكبير
+                      panEnabled: true,
+                      scaleEnabled: true,
                       child: isTemporary
                           ? Image.memory(
                         imageList[index],
@@ -38,8 +38,8 @@ List<Widget> buildImageList(List<dynamic> imageList, ExpensesViewModel controlle
               );
             },
             child: Container(
-              width: logic.imageWidth,
-              height: logic.imageHeight,
+              width: 200,
+              height: 200,
               child: Stack(
                 children: [
                   Container(
@@ -48,16 +48,16 @@ List<Widget> buildImageList(List<dynamic> imageList, ExpensesViewModel controlle
                       color: Colors.grey,
                       borderRadius: BorderRadius.circular(15),
                     ),
-                    width: logic.imageWidth,
-                    height: logic.imageHeight,
+                    width: 200,
+                    height: 200,
                     child: isTemporary
                         ? Image.memory(
                             imageList[index],
-                            fit: logic.imageWidth == 600 ? BoxFit.contain : BoxFit.cover,
+                            fit:  BoxFit.cover,
                           )
                         : Image.network(
                             imageList[index],
-                            fit: logic.imageWidth == 600 ? BoxFit.contain : BoxFit.cover,
+                            fit:  BoxFit.cover,
                           ),
                   ),
                   Positioned(

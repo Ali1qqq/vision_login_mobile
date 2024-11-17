@@ -7,10 +7,10 @@ import 'package:get/get.dart';
 import 'package:pluto_grid/pluto_grid.dart';
 import 'package:vision_dashboard/models/event_model.dart';
 
-import '../../../constants.dart';
+import '../../../core/constant/constants.dart';
 import '../../../controller/Wait_management_view_model.dart';
-import '../../../utils/To_AR.dart';
-import '../../../utils/const.dart';
+import '../../../core/Utils/To_AR.dart';
+import '../../../core/constant/const.dart';
 
 class EventViewModel extends GetxController {
   RxMap<String, EventModel> allEvents = <String, EventModel>{}.obs;

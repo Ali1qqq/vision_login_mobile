@@ -19,11 +19,11 @@ import 'package:vision_dashboard/screens/Widgets/Custom_Drop_down_with_value.dar
 import 'package:vision_dashboard/screens/Widgets/Insert_shape_Widget.dart';
 import 'package:vision_dashboard/screens/Widgets/header.dart';
 import 'package:vision_dashboard/screens/classes/Controller/Class_View_Model.dart';
-import '../../constants.dart';
+import '../../core/constant/constants.dart';
 import '../../core/Utils/service.dart';
 import '../event/Controller/event_view_model.dart';
 import '../../models/event_model.dart';
-import '../../utils/const.dart';
+import '../../core/constant/const.dart';
 import '../Widgets/Custom_Text_Filed.dart';
 
 class StudentInputForm extends StatefulWidget {

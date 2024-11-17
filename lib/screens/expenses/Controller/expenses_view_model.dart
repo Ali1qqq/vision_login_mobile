@@ -9,13 +9,13 @@ import 'package:quickalert/models/quickalert_type.dart';
 import 'package:quickalert/widgets/quickalert_dialog.dart';
 import 'package:vision_dashboard/screens/Employee/Controller/Employee_view_model.dart';
 import 'package:vision_dashboard/models/expenses_model.dart';
-import '../../../constants.dart';
+import '../../../core/constant/constants.dart';
 import '../../../core/Utils/service.dart';
 import '../../Buses/Controller/Bus_View_Model.dart';
 import '../../Widgets/Custom_Text_Filed.dart';
-import '../../../utils/Dialogs.dart';
-import '../../../utils/To_AR.dart';
-import '../../../utils/const.dart';
+import '../../../core/dialogs/Dialogs.dart';
+import '../../../core/Utils/To_AR.dart';
+import '../../../core/constant/const.dart';
 import '../../../controller/Wait_management_view_model.dart';
 
 class ExpensesViewModel extends GetxController {
@@ -140,6 +140,37 @@ double imageWidth=200;
         })).obs;
 
         print("expenses ${allExpenses.length}");
+
+        update();
+      },
+    );
+  }
+  getAllWitOutListenExpenses() {
+    final acc = Get.find<EmployeeViewModel>();
+     expensesFireStore.get().then(
+      (event) {
+        plutoKey = GlobalKey();
+        rows.clear();
+        selectedColor=secondaryColor;
+        allExpenses = Map<String, ExpensesModel>.fromEntries(event.docs.toList().map((i) {
+          rows.add(
+            PlutoRow(
+              cells: {
+                data.keys.elementAt(0): PlutoCell(value: i.id),
+                data.keys.elementAt(1): PlutoCell(value: i.data().title),
+                data.keys.elementAt(2): PlutoCell(value: i.data().total),
+                data.keys.elementAt(3): PlutoCell(value: acc.allAccountManagement[i.data().userId]?.fullName ?? 'No user'),
+                data.keys.elementAt(4): PlutoCell(value: i.data().body),
+                data.keys.elementAt(5): PlutoCell(value: i.data().images?.length ?? 0),
+                data.keys.elementAt(6): PlutoCell(value: i.data().date),
+                data.keys.elementAt(7): PlutoCell(value: i.data().isAccepted == true ? "تمت الموافقة".tr : "في انتظار الموافقة".tr),
+              },
+            ),
+          );
+          return MapEntry(i.id.toString(), i.data());
+        })).obs;
+
+
 
         update();
       },

@@ -9,7 +9,7 @@ import 'package:vision_dashboard/screens/Parents/Edite_Add_Parent/widgets/Parent
 import 'package:vision_dashboard/screens/Widgets/AppButton.dart';
 import 'package:vision_dashboard/screens/Widgets/Insert_shape_Widget.dart';
 import 'package:vision_dashboard/screens/Widgets/header.dart';
-import '../../../constants.dart';
+import '../../../core/constant/constants.dart';
 import '../../../core/Styling/app_style.dart';
 import '../../../core/Utils/Strings.dart';
 import '../../Widgets/Custom_Drop_down.dart';

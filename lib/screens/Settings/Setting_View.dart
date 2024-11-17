@@ -4,7 +4,7 @@ import 'package:vision_dashboard/screens/Employee/Controller/Employee_view_model
 import 'package:vision_dashboard/screens/Settings/Settings_Screen.dart';
 import 'package:vision_dashboard/screens/Employee/Edite_Add_Employee/Employee_user_details.dart';
 
-import '../../constants.dart';
+import '../../core/constant/constants.dart';
 import 'Controller/Settings_View_Model.dart';
 
 class SettingsView extends StatelessWidget {

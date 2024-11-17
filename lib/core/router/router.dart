@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import 'package:vision_dashboard/screens/login/login_screen.dart';
 import 'package:vision_dashboard/screens/main/main_screen.dart';
 
-import 'constants.dart';
+import '../constant/constants.dart';
 
 class AppRoutes {
   static const main = '/';

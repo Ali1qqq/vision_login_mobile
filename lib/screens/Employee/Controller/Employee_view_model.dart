@@ -13,24 +13,24 @@ import 'package:vision_dashboard/controller/Wait_management_view_model.dart';
 
 import 'package:vision_dashboard/models/Salary_Model.dart';
 import 'package:vision_dashboard/models/employee_time_model.dart';
-import 'package:vision_dashboard/router.dart';
+import 'package:vision_dashboard/core/router/router.dart';
 import 'package:vision_dashboard/screens/Buses/Controller/Bus_View_Model.dart';
 
 import 'package:vision_dashboard/screens/Salary/controller/Salary_View_Model.dart';
 
 import 'package:vision_dashboard/screens/Widgets/AppButton.dart';
 import 'package:vision_dashboard/screens/Widgets/Custom_Text_Filed.dart';
-import 'package:vision_dashboard/utils/Dialogs.dart';
+import 'package:vision_dashboard/core/dialogs/Dialogs.dart';
 
-import '../../../constants.dart';
+import '../../../core/constant/constants.dart';
 import '../../../controller/NFC_Card_View_model.dart';
 import '../../../core/Utils/service.dart';
 import '../../../models/TimeModel.dart';
 import '../../../models/account_management_model.dart';
 import '../../../models/event_model.dart';
 import '../../../models/event_record_model.dart';
-import '../../../utils/Hive_DataBase.dart';
-import '../../../utils/To_AR.dart';
+import '../../../core/Utils/Hive_DataBase.dart';
+import '../../../core/Utils/To_AR.dart';
 import '../../../controller/nfc/conditional_import.dart';
 import '../../Buses/Buses_View.dart';
 import '../../Parents/Parents_View.dart';

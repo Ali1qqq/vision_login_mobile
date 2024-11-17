@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:syncfusion_flutter_signaturepad/signaturepad.dart';
 
-import '../../../constants.dart';
+import '../../core/constant/constants.dart';
 import '../Employee/Controller/Employee_view_model.dart';
 import '../../../controller/Wait_management_view_model.dart';
 import '../../../models/account_management_model.dart';

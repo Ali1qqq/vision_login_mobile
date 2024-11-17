@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'package:get/get.dart';
-import 'package:vision_dashboard/constants.dart';
+import 'package:vision_dashboard/core/constant/constants.dart';
 import 'package:vision_dashboard/controller/NFC_Card_View_model.dart';
 import 'package:vision_dashboard/models/account_management_model.dart';
 import 'package:vision_dashboard/screens/Employee/Controller/Employee_view_model.dart';
@@ -16,7 +16,7 @@ import 'package:vision_dashboard/screens/classes/Controller/Class_View_Model.dar
 import '../models/delete_management_model.dart';
 import '../screens/Parents/Controller/Parents_View_Model.dart';
 
-import '../utils/const.dart';
+import '../core/constant/const.dart';
 
 class WaitManagementViewModel extends GetxController {
   ParentsViewModel _parentsViewModel = Get.find<ParentsViewModel>();

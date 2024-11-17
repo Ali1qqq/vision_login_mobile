@@ -11,7 +11,7 @@ import 'package:vision_dashboard/controller/home_controller.dart';
 import 'package:vision_dashboard/screens/Buses/Buses_Detailes.dart';
 import 'package:vision_dashboard/screens/Buses/Controller/Bus_View_Model.dart';
 import 'package:vision_dashboard/screens/Widgets/header.dart';
-import '../../constants.dart';
+import '../../core/constant/constants.dart';
 
 import '../../controller/Wait_management_view_model.dart';
 import '../Student/Controller/Student_View_Model.dart';

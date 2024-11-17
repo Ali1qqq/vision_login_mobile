@@ -4,7 +4,7 @@ import 'package:vision_dashboard/screens/Parents/Controller/Parents_View_Model.d
 import 'package:vision_dashboard/screens/Parents/Edite_Add_Parent/parent_user_details.dart';
 import 'package:vision_dashboard/screens/Parents/Parent_View/parent_users_screen.dart';
 
-import '../../constants.dart';
+import '../../core/constant/constants.dart';
 
 class ParentsView extends StatelessWidget {
   const ParentsView({super.key});

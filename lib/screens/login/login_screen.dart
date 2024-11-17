@@ -2,7 +2,7 @@
 import 'package:vision_dashboard/screens/Employee/Controller/Employee_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../../constants.dart';
+import '../../core/constant/constants.dart';
 import '../../core/Styling/app_style.dart';
 
 

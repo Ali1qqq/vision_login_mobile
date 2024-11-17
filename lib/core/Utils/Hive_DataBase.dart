@@ -1,6 +1,6 @@
 import 'package:hive_flutter/hive_flutter.dart';
 
-import '../models/account_management_model.dart';
+import '../../models/account_management_model.dart';
 
 class HiveDataBase {
   static late Box<String> accountBox;

@@ -4,7 +4,7 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../../../constants.dart';
+import '../../../core/constant/constants.dart';
 
 class InfoBarChart extends StatefulWidget {
    InfoBarChart({

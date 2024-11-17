@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import 'package:syncfusion_flutter_signaturepad/signaturepad.dart';
 import 'package:vision_dashboard/screens/Salary/controller/Salary_View_Model.dart';
 
-import '../../../constants.dart';
+import '../../core/constant/constants.dart';
 import '../../../models/account_management_model.dart';
 import '../../core/Styling/app_style.dart';
 import '../Widgets/Custom_Text_Filed.dart';

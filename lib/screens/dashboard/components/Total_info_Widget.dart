@@ -6,7 +6,7 @@ import 'package:vision_dashboard/core/Styling/app_style.dart';
 import 'package:vision_dashboard/screens/Widgets/Insert_shape_Widget.dart';
 import 'package:vision_dashboard/screens/dashboard/components/Total_Chart.dart';
 
-import '../../../constants.dart';
+import '../../../core/constant/constants.dart';
 
 class TotalBarChartWidget extends StatefulWidget {
   TotalBarChartWidget({

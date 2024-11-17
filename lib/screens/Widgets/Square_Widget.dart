@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:vision_dashboard/core/Styling/app_style.dart';
 
-import '../../constants.dart';
+import '../../core/constant/constants.dart';
 
 class SquareWidget extends StatelessWidget {
   const SquareWidget({super.key, required this.title, required this.body, required this.png, required this.color});

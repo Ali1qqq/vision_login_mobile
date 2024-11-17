@@ -4,7 +4,7 @@ import 'package:universal_html/html.dart';
 import 'package:get/get.dart';
 import '../../screens/Employee/Controller/Employee_view_model.dart';
 import '../../screens/Settings/Controller/Settings_View_Model.dart';
-import '../../utils/const.dart';
+import '../../core/constant/const.dart';
 
 Future<bool> initNFCWorker(typeNFC type) async {
 

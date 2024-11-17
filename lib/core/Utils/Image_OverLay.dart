@@ -3,7 +3,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../screens/Widgets/AppButton.dart';
+import '../../screens/Widgets/AppButton.dart';
 
 class ImageOverlay extends StatefulWidget {
   const ImageOverlay({super.key, required this.imageUrl,this.imageHeight = 200,this.imageWidth = 200});

@@ -3,7 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../../constants.dart';
+import '../../core/constant/constants.dart';
 import '../../core/Styling/app_style.dart';
 
 class CustomDropDown extends StatelessWidget {

@@ -8,9 +8,9 @@ import 'package:pluto_grid/pluto_grid.dart';
 import 'package:vision_dashboard/models/Student_Model.dart';
 import 'package:vision_dashboard/screens/Study%20Fees/Controller/Study_Fees_View_Model.dart';
 
-import '../../../constants.dart';
+import '../../../core/constant/constants.dart';
 
-import '../../../utils/To_AR.dart';
+import '../../../core/Utils/To_AR.dart';
 import '../../Buses/Controller/Bus_View_Model.dart';
 import '../../Parents/Controller/Parents_View_Model.dart';
 

@@ -2,12 +2,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import 'package:vision_dashboard/constants.dart';
+import 'package:vision_dashboard/core/constant/constants.dart';
 import 'package:vision_dashboard/screens/Widgets/AppButton.dart';
 import 'package:vision_dashboard/screens/main/main_screen.dart';
 
 import '../../core/Styling/app_style.dart';
-import '../../utils/Hive_DataBase.dart';
+import '../../core/Utils/Hive_DataBase.dart';
 import '../Widgets/header.dart';
 import '../login/login_screen.dart';
 

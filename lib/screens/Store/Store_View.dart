@@ -4,7 +4,7 @@ import 'package:vision_dashboard/screens/Store/Store_Input.dart';
 import 'package:vision_dashboard/screens/Store/Store_Screen.dart';
 
 
-import '../../constants.dart';
+import '../../core/constant/constants.dart';
 
 class StoreViewPage extends StatefulWidget {
   const StoreViewPage({super.key});

@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import 'package:vision_dashboard/models/ClassModel.dart';
 import 'package:vision_dashboard/screens/classes/Controller/Class_View_Model.dart';
 
-import '../../../constants.dart';
+import '../../../core/constant/constants.dart';
 import '../../Student/Controller/Student_View_Model.dart';
 import 'Build_No_Students_Message.dart';
 import 'Build_Student_List.dart';

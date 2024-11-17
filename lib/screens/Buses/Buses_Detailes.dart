@@ -10,8 +10,8 @@ import 'package:vision_dashboard/screens/Student/Controller/Student_View_Model.d
 import 'package:vision_dashboard/screens/Widgets/AppButton.dart';
 import 'package:vision_dashboard/screens/Widgets/Insert_shape_Widget.dart';
 import 'package:vision_dashboard/screens/Widgets/header.dart';
-import 'package:vision_dashboard/utils/Dialogs.dart';
-import '../../constants.dart';
+import 'package:vision_dashboard/core/dialogs/Dialogs.dart';
+import '../../core/constant/constants.dart';
 import '../../controller/home_controller.dart';
 import '../../core/Styling/app_style.dart';
 import '../../models/Bus_Model.dart';

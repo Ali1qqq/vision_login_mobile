@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:quickalert/models/quickalert_type.dart';
 import 'package:quickalert/widgets/quickalert_dialog.dart';
-import 'package:vision_dashboard/constants.dart';
+import 'package:vision_dashboard/core/constant/constants.dart';
 import 'package:vision_dashboard/core/Styling/app_style.dart';
-import '../screens/Widgets/AppButton.dart';
+import '../../screens/Widgets/AppButton.dart';
 
 getReedOnlyError(BuildContext context, {String title = "هذا العنصر للعرض فقط"}) {
   QuickAlert.show(context: context, type: QuickAlertType.error, title: title.tr, confirmBtnText: "تم".tr);

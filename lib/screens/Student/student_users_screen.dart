@@ -10,9 +10,9 @@ import 'package:vision_dashboard/screens/Parents/Controller/Parents_View_Model.d
 import 'package:vision_dashboard/screens/Student/Controller/Student_View_Model.dart';
 import 'package:vision_dashboard/screens/Student/student_user_details.dart';
 import 'package:vision_dashboard/screens/Widgets/AppButton.dart';
-import 'package:vision_dashboard/utils/Dialogs.dart';
+import 'package:vision_dashboard/core/dialogs/Dialogs.dart';
 
-import '../../constants.dart';
+import '../../core/constant/constants.dart';
 import '../../controller/home_controller.dart';
 import '../../core/Styling/app_style.dart';
 

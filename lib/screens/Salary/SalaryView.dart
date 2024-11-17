@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:vision_dashboard/screens/Salary/controller/Salary_View_Model.dart';
 
-import '../../constants.dart';
+import '../../core/constant/constants.dart';
 import '../../controller/home_controller.dart';
 
 import '../Widgets/Custom_Drop_down.dart';

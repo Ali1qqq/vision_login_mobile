@@ -2,7 +2,7 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:vision_dashboard/screens/Widgets/Filled_Container_Color.dart';
 
-import '../../../constants.dart';
+import '../../../core/constant/constants.dart';
 import '../../../core/Styling/app_style.dart';
 
 class PieChartWidget extends StatefulWidget {

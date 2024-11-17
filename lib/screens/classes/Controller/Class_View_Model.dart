@@ -7,7 +7,7 @@ import 'package:quickalert/models/quickalert_type.dart';
 import 'package:quickalert/widgets/quickalert_dialog.dart';
 import 'package:vision_dashboard/models/ClassModel.dart';
 
-import '../../../constants.dart';
+import '../../../core/constant/constants.dart';
 import '../../../controller/Wait_management_view_model.dart';
 import '../../../core/Styling/app_style.dart';
 import '../../Student/student_user_details.dart';

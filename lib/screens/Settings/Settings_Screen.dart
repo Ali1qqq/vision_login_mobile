@@ -17,15 +17,15 @@ import 'package:vision_dashboard/screens/Widgets/AppButton.dart';
 import 'package:vision_dashboard/screens/Widgets/Custom_Drop_down.dart';
 import 'package:vision_dashboard/screens/Widgets/Custom_Text_Filed.dart';
 import 'package:vision_dashboard/screens/classes/Controller/Class_View_Model.dart';
-import 'package:vision_dashboard/utils/const.dart';
+import 'package:vision_dashboard/core/constant/const.dart';
 
-import '../../constants.dart';
+import '../../core/constant/constants.dart';
 import '../../controller/Wait_management_view_model.dart';
 import '../../controller/home_controller.dart';
 
 import '../../core/Styling/app_style.dart';
 import '../../models/delete_management_model.dart';
-import '../../utils/Dialogs.dart';
+import '../../core/dialogs/Dialogs.dart';
 import '../Widgets/Data_Row.dart';
 import '../Widgets/header.dart';
 import 'Controller/Settings_View_Model.dart';

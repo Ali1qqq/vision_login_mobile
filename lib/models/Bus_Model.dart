@@ -1,6 +1,6 @@
 import 'package:get/get.dart';
 
-import '../utils/abstract.dart';
+import '../core/Utils/abstract.dart';
 import 'event_record_model.dart';
 
 class BusModel implements Mappable {

@@ -38,8 +38,8 @@ List<Widget> StudentImageList(List<dynamic> imageList, StudentViewModel controll
               );
             },
             child: Container(
-              width:   logic.imageHeight*1.0,
-              height:   logic.imageWidth*1.0,
+              width:   200,
+              height:   200,
               child: Stack(
                 children: [
                   Container(
@@ -48,18 +48,18 @@ List<Widget> StudentImageList(List<dynamic> imageList, StudentViewModel controll
                       color: Colors.grey,
                       borderRadius: BorderRadius.circular(15),
                     ),
-                    width:   logic.imageHeight*1.0,
-                    height:   logic.imageWidth*1.0,
+                    width:   200,
+                    height:   200,
                     child: isTemporary
                         ? Image.memory(
                       imageList[index],
 
-                      fit: logic.imageWidth == 600 ?BoxFit.contain: BoxFit.cover,
+                      fit: BoxFit.cover,
                     )
                         : Image.network(
                       imageList[index],
 
-                      fit: logic.imageWidth == 600 ?BoxFit.contain: BoxFit.cover,
+                      fit: BoxFit.cover,
                     ),
                   ),
                   Positioned(

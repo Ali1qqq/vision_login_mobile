@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 
 import 'package:vision_dashboard/screens/dashboard/components/Employee_Time_Chart.dart';
 
-import '../../../constants.dart';
+import '../../../core/constant/constants.dart';
 
 class EmployeeTimeBox extends StatelessWidget {
   const EmployeeTimeBox({

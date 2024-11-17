@@ -3,7 +3,7 @@ import 'package:vision_dashboard/screens/Employee/Controller/Employee_view_model
 import 'package:vision_dashboard/controller/Wait_management_view_model.dart';
 import 'package:vision_dashboard/screens/Parents/Controller/Parents_View_Model.dart';
 import 'package:vision_dashboard/screens/expenses/Controller/expenses_view_model.dart';
-import 'package:vision_dashboard/responsive.dart';
+import 'package:vision_dashboard/core/Styling/responsive.dart';
 import 'package:vision_dashboard/screens/Salary/controller/Salary_View_Model.dart';
 import 'package:vision_dashboard/screens/Student/Controller/Student_View_Model.dart';
 import 'package:vision_dashboard/screens/dashboard/components/Employee_Salary_Chart.dart';
@@ -12,9 +12,9 @@ import 'package:vision_dashboard/screens/dashboard/components/Total_info_Widget.
 import 'package:flutter/material.dart';
 
 
-import '../../constants.dart';
+import '../../core/constant/constants.dart';
 import '../../core/Styling/app_style.dart';
-import '../../utils/Hive_DataBase.dart';
+import '../../core/Utils/Hive_DataBase.dart';
 import '../Widgets/Custom_Drop_down.dart';
 import '../Widgets/header.dart';
 

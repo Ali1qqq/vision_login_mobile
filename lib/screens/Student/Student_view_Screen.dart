@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:vision_dashboard/screens/Student/student_user_details.dart';
 import 'package:vision_dashboard/screens/Student/student_users_screen.dart';
-import '../../constants.dart';
+import '../../core/constant/constants.dart';
 
 
 class StudentView extends StatefulWidget {

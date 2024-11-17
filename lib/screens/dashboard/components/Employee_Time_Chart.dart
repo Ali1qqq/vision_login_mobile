@@ -8,7 +8,7 @@ import 'package:get/get.dart';
 import 'package:vision_dashboard/core/Styling/app_colors.dart';
 import 'package:vision_dashboard/core/Styling/app_style.dart';
 
-import '../../../constants.dart';
+import '../../../core/constant/constants.dart';
 import '../../Employee/Controller/Employee_view_model.dart';
 import '../../Widgets/Custom_Text_Filed.dart';
 

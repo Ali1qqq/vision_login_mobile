@@ -37,14 +37,11 @@ List<Widget> buildParentIdImageList(List<dynamic> imageList, ParentsViewModel co
               })]
               );
 
-              // logic.isOverlayVisible = !logic.isOverlayVisible;
-              // logic.imageHeight == 600 ?  logic. imageHeight = 200 :   logic.imageHeight = 600;
-              // logic.imageWidth == 600 ?   logic.imageWidth = 200 :   logic.imageWidth = 600;
-              // logic.update();
+
             },
             child: Container(
-              width: logic.imageHeight*1.0,
-              height:  logic.imageWidth*1.0,
+              width: 200,
+              height:  200,
               child: Stack(
                 children: [
                   Container(
@@ -53,19 +50,19 @@ List<Widget> buildParentIdImageList(List<dynamic> imageList, ParentsViewModel co
                       color: Colors.grey,
                       borderRadius: BorderRadius.circular(15),
                     ),
-                      width: logic.imageHeight*1.0,
-                      height:  logic.imageWidth*1.0,
+                      width: 200,
+                      height:  200,
                     child: isTemporary
                         ? Image.memory(
                       imageList[index],
 
-                      fit: logic.imageWidth == 600 ?BoxFit.contain: BoxFit.cover,
+                      fit:  BoxFit.cover,
                     )
                         :
                     Image.network(
                       imageList[index],
 
-                      fit: logic.imageWidth == 600 ?BoxFit.contain: BoxFit.cover,
+                      fit:  BoxFit.cover,
                     )
 
 

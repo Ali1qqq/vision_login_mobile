@@ -4,7 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
 import 'package:vision_dashboard/models/NFC_Card_Model.dart';
 
-import '../constants.dart';
+import '../core/constant/constants.dart';
 
 class NfcCardViewModel extends GetxController {
   final nfcCardCollectionRef = FirebaseFirestore.instance.collection(nfcCardCollection);

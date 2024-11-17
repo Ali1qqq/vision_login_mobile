@@ -2,7 +2,7 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../../../constants.dart';
+import '../../../core/constant/constants.dart';
 import '../../Employee/Controller/Employee_view_model.dart';
 import 'InfoBarchart.dart';
 import 'info_card.dart';

@@ -4,12 +4,12 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:pluto_grid/pluto_grid.dart';
-import 'package:vision_dashboard/constants.dart';
+import 'package:vision_dashboard/core/constant/constants.dart';
 
 import '../../../controller/Wait_management_view_model.dart';
 import '../../expenses/Controller/expenses_view_model.dart';
 import '../../../models/Bus_Model.dart';
-import '../../../utils/To_AR.dart';
+import '../../../core/Utils/To_AR.dart';
 
 class BusViewModel extends GetxController {
   final buseCollectionRef =

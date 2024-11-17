@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:vision_dashboard/screens/Widgets/Filled_Container_Color.dart';
 
-import '../../../constants.dart';
+import '../../../core/constant/constants.dart';
 
 class InfoCard extends StatelessWidget {
   const InfoCard({

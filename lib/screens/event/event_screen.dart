@@ -9,12 +9,12 @@ import 'package:vision_dashboard/core/Styling/app_style.dart';
 import 'package:vision_dashboard/screens/Widgets/Insert_shape_Widget.dart';
 import 'package:vision_dashboard/screens/event/Controller/event_view_model.dart';
 
-import '../../constants.dart';
+import '../../core/constant/constants.dart';
 import '../../controller/Wait_management_view_model.dart';
 import '../../controller/home_controller.dart';
 
 import '../../models/event_model.dart';
-import '../../utils/const.dart';
+import '../../core/constant/const.dart';
 import '../Widgets/AppButton.dart';
 import '../Widgets/Custom_Pluto_Grid.dart';
 import '../Widgets/Custom_Text_Filed.dart';

@@ -5,7 +5,7 @@ import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:vision_dashboard/screens/Parents/Controller/Parents_View_Model.dart';
 
-import '../../../../constants.dart';
+import '../../../../core/constant/constants.dart';
 import '../../../../models/Installment_model.dart';
 import '../../../Widgets/Custom_Text_Filed.dart';
 

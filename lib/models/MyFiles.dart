@@ -1,4 +1,4 @@
-import 'package:vision_dashboard/constants.dart';
+import 'package:vision_dashboard/core/constant/constants.dart';
 import 'package:flutter/material.dart';
 
 class CloudStorageInfo {

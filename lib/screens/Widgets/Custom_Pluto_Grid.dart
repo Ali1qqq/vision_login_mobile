@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:pluto_grid/pluto_grid.dart';
-import 'package:vision_dashboard/constants.dart';
+import 'package:vision_dashboard/core/constant/constants.dart';
 
 import '../../controller/Wait_management_view_model.dart';
 import '../../core/Styling/app_style.dart';

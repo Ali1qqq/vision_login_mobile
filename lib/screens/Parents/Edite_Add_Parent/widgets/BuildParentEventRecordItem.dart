@@ -2,7 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:vision_dashboard/models/event_record_model.dart';
 
-import '../../../../constants.dart';
+import '../../../../core/constant/constants.dart';
 import '../../../../core/Styling/app_style.dart';
 
 Widget BuildParentEventRecordItem(EventRecordModel record,VoidCallback onPress) {

@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import 'package:vision_dashboard/screens/Parents/Controller/Parents_View_Model.dart';
 import 'package:vision_dashboard/screens/Widgets/Insert_shape_Widget.dart';
 
-import '../../../../constants.dart';
+import '../../../../core/constant/constants.dart';
 
 import '../../../../core/Styling/app_style.dart';
 import 'BuildParentEventForm.dart';

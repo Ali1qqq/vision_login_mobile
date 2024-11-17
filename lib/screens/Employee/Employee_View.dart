@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:vision_dashboard/screens/Employee/Controller/Employee_view_model.dart';
 import 'package:vision_dashboard/screens/Employee/View_Employee/Employee_Screen.dart';
-import '../../constants.dart';
+import '../../core/constant/constants.dart';
 import 'Edite_Add_Employee/Employee_user_details.dart';
 
 class EmployeeView extends StatelessWidget {

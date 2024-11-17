@@ -6,7 +6,7 @@ import 'package:nfc_manager/nfc_manager.dart';
 import 'package:vision_dashboard/screens/Employee/Controller/Employee_view_model.dart';
 
 import '../../screens/Settings/Controller/Settings_View_Model.dart';
-import '../../utils/const.dart';
+import '../../core/constant/const.dart';
 
 
 Future<bool> initNFCWorker(typeNFC type) async {

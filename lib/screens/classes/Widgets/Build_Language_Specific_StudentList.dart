@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:vision_dashboard/models/ClassModel.dart';
 
-import '../../../constants.dart';
+import '../../../core/constant/constants.dart';
 import '../../../core/Styling/app_colors.dart';
 import '../../../core/Styling/app_style.dart';
 import '../../Student/Controller/Student_View_Model.dart';

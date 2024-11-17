@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../utils/Hive_DataBase.dart';
+import '../core/Utils/Hive_DataBase.dart';
 
 
 class HomeViewModel extends GetxController {

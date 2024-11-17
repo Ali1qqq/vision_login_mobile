@@ -2,7 +2,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:vision_dashboard/screens/Employee/Controller/Employee_view_model.dart';
-import '../../../constants.dart';
+import '../../../core/constant/constants.dart';
 import '../../../controller/Wait_management_view_model.dart';
 import '../../../controller/home_controller.dart';
 import '../../Widgets/Custom_Pluto_Grid.dart';

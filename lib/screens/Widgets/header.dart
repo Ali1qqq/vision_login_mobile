@@ -4,7 +4,7 @@ import 'package:vision_dashboard/controller/home_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:vision_dashboard/core/Styling/app_style.dart';
 
-import '../../constants.dart';
+import '../../core/constant/constants.dart';
 
 
 

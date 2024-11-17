@@ -4,7 +4,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 
-import '../../utils/Dialogs.dart';
+import '../dialogs/Dialogs.dart';
 
 bool validateFields({
   required List<TextEditingController> requiredControllers,

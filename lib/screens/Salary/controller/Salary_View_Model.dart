@@ -7,14 +7,14 @@ import 'package:pluto_grid/pluto_grid.dart';
 import 'package:quickalert/models/quickalert_type.dart';
 import 'package:quickalert/widgets/quickalert_dialog.dart';
 import 'package:syncfusion_flutter_signaturepad/signaturepad.dart';
-import 'package:vision_dashboard/constants.dart';
+import 'package:vision_dashboard/core/constant/constants.dart';
 import 'package:vision_dashboard/models/Salary_Model.dart';
 import 'package:vision_dashboard/screens/Employee/Controller/Employee_view_model.dart';
 import 'dart:ui' as ui;
 
 import '../../../controller/Wait_management_view_model.dart';
 import '../../../models/account_management_model.dart';
-import '../../../utils/To_AR.dart';
+import '../../../core/Utils/To_AR.dart';
 import '../SignViewDialog.dart';
 
 class SalaryViewModel extends GetxController {
@@ -96,7 +96,7 @@ getSalaryImage({required BuildContext context}){
 
 
 if(image!=null) {
- 
+
       showDialog(context: context, builder: (context) => buildSignImageView(image!));
     }
   }

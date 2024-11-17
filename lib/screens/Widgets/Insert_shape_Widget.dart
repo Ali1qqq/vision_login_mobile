@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../constants.dart';
+import '../../core/constant/constants.dart';
 
 class InsertShapeWidget extends StatelessWidget {
   const InsertShapeWidget({super.key, required this.titleWidget, required this.bodyWidget,});
