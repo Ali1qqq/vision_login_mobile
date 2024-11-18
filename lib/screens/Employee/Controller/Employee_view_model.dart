@@ -22,6 +22,7 @@ import 'package:vision_dashboard/screens/Widgets/AppButton.dart';
 import 'package:vision_dashboard/screens/Widgets/Custom_Text_Filed.dart';
 import 'package:vision_dashboard/core/dialogs/Dialogs.dart';
 
+import '../../../controller/nfc/non_web.dart';
 import '../../../core/constant/constants.dart';
 import '../../../controller/NFC_Card_View_model.dart';
 import '../../../core/Utils/service.dart';
@@ -31,7 +32,6 @@ import '../../../models/event_model.dart';
 import '../../../models/event_record_model.dart';
 import '../../../core/Utils/Hive_DataBase.dart';
 import '../../../core/Utils/To_AR.dart';
-import '../../../controller/nfc/conditional_import.dart';
 import '../../Buses/Buses_View.dart';
 import '../../Parents/Parents_View.dart';
 import '../../Salary/SalaryView.dart';
