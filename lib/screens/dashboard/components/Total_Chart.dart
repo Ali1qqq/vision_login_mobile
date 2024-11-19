@@ -211,7 +211,7 @@ class TotalBarChartState extends State<TotalBarChart> {
           ),
         ],
       ),
-      BarChartGroupData(
+      /*BarChartGroupData(
         x: 1,
         barsSpace: barsSpace,
         barRods: [
@@ -219,27 +219,27 @@ class TotalBarChartState extends State<TotalBarChart> {
             toY: widget.index == 0
                 ? expensesViewModel.getExpensesAtMonth("2")
                 : widget.index == 1
-                    ? parentViewModel.getAllReceivePayAtMonth("02")
-                    : parentViewModel.getAllReceivePayAtMonth("02") - managementViewModel.getAllSalariesAtMonth("2") - expensesViewModel.getExpensesAtMonth("2"),
+                ? parentViewModel.getAllReceivePayAtMonth("02")
+                : parentViewModel.getAllReceivePayAtMonth("02") - managementViewModel.getAllSalariesAtMonth("2") - expensesViewModel.getExpensesAtMonth("2"),
             rodStackItems: [
               BarChartRodStackItem(
                   0,
                   widget.index == 0
                       ? expensesViewModel.getExpensesAtMonth("2")
                       : widget.index == 1
-                          ? parentViewModel.getAllReceivePayAtMonth("02")
-                          : parentViewModel.getAllReceivePayAtMonth("02") - managementViewModel.getAllSalariesAtMonth("2") - expensesViewModel.getExpensesAtMonth("2"),
+                      ? parentViewModel.getAllReceivePayAtMonth("02")
+                      : parentViewModel.getAllReceivePayAtMonth("02") - managementViewModel.getAllSalariesAtMonth("2") - expensesViewModel.getExpensesAtMonth("2"),
                   widget.index == 0
                       ? widget.dark
                       : widget.index == 1
-                          ? widget.normal
-                          : widget.light),
+                      ? widget.normal
+                      : widget.light),
             ],
             borderRadius: BorderRadius.circular(4),
             width: barsWidth,
           ),
         ],
-      ),
+      ),*/
       BarChartGroupData(
         x: 2,
         barsSpace: barsSpace,

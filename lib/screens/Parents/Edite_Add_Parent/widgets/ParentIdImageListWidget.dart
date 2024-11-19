@@ -1,6 +1,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:vision_dashboard/core/dialogs/image_view_dialog.dart';
 import 'package:vision_dashboard/screens/Parents/Controller/Parents_View_Model.dart';
 import 'package:vision_dashboard/screens/Widgets/AppButton.dart';
 
@@ -16,23 +17,15 @@ List<Widget> buildParentIdImageList(List<dynamic> imageList, ParentsViewModel co
             onTap: () {
               Get.defaultDialog(
                   title:"عرض الصورة",
-                content: Container(
-                  width: Get.width,
-                  height: Get.height - 200,
-                  child: InteractiveViewer(
-                    panEnabled: true, // يسمح بالسحب
-                    scaleEnabled: true, // يسمح بالتكبير
-                    child: isTemporary
-                        ? Image.memory(
-                      imageList[index],
-                      fit: BoxFit.contain,
-                    )
-                        : Image.network(
-                      imageList[index],
-                      fit: BoxFit.contain,
-                    ),
-                  ),
-                ),actions: [AppButton(text: "تم", onPressed: (){
+                content: ImageViewDialog( child: isTemporary
+                    ? Image.memory(
+                  imageList[index],
+                  fit: BoxFit.contain,
+                )
+                    : Image.network(
+                  imageList[index],
+                  fit: BoxFit.contain,
+                ),),actions: [AppButton(text: "تم", onPressed: (){
                   Get.back();
               })]
               );

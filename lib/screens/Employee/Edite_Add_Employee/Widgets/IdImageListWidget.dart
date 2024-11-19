@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';import 'package:vision_dashboard/screens/Employee/Controller/Employee_view_model.dart';
+import 'package:get/get.dart';
+import 'package:vision_dashboard/core/dialogs/image_view_dialog.dart';import 'package:vision_dashboard/screens/Employee/Controller/Employee_view_model.dart';
 
 import '../../../Widgets/AppButton.dart';
 
@@ -14,23 +15,15 @@ List<Widget> buildIdImageList(List<dynamic> imageList, EmployeeViewModel control
             onTap: (){
               Get.defaultDialog(
                   title:"عرض الصورة",
-                  content: Container(
-                    width: Get.width,
-                    height: Get.height - 200,
-                    child: InteractiveViewer(
-                      panEnabled: true, // يسمح بالسحب
-                      scaleEnabled: true, // يسمح بالتكبير
-                      child: isTemporary
-                          ? Image.memory(
-                        imageList[index],
-                        fit: BoxFit.contain,
-                      )
-                          : Image.network(
-                        imageList[index],
-                        fit: BoxFit.contain,
-                      ),
-                    ),
-                  ),actions: [AppButton(text: "تم", onPressed: (){
+                  content: ImageViewDialog( child: isTemporary
+                      ? Image.memory(
+                    imageList[index],
+                    fit: BoxFit.contain,
+                  )
+                      : Image.network(
+                    imageList[index],
+                    fit: BoxFit.contain,
+                  ),),actions: [AppButton(text: "تم", onPressed: (){
                 Get.back();
               })]
               );

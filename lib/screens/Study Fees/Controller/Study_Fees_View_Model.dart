@@ -158,13 +158,7 @@ class StudyFeesViewModel extends GetxController {
                       physics: ClampingScrollPhysics(),
                       itemCount: installmentStudent.length,
                       itemBuilder: (context, parentIndex) {
-                        List<InstallmentModel> installmentList = installmentStudent.values.toList()
-                          ..sort(
-                            (a, b) {
-                              return a.installmentDate!.compareTo(b.installmentDate!);
-                            },
-                          );
-                        InstallmentModel installment = installmentList[parentIndex];
+                        InstallmentModel installment = installmentStudent.values.toList()[parentIndex];
                         bool isLate = DateTime.parse(installment.installmentDate!).isBefore(Timestamp.now().toDate());
                         Uint8List? _contractsTemp;
                         String? imageURL = installment.InstallmentImage;
@@ -256,8 +250,7 @@ class StudyFeesViewModel extends GetxController {
                                         if (installment.isPay == true)
                                           ImageOverlay(
                                             imageUrl: imageURL ?? '',
-                                            imageHeight: 50,
-                                            imageWidth: max(140, Get.width / 10),
+
                                           ),
                                         if (installment.isPay != true)
                                           Padding(

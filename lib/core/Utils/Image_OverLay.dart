@@ -5,28 +5,9 @@ import 'package:get/get.dart';
 
 import '../../screens/Widgets/AppButton.dart';
 
-class ImageOverlay extends StatefulWidget {
-  const ImageOverlay({super.key, required this.imageUrl,this.imageHeight = 200,this.imageWidth = 200});
-
-  @override
-  _ImageOverlayState createState() => _ImageOverlayState();
-
+class ImageOverlay extends StatelessWidget {
+  const ImageOverlay({super.key, required this.imageUrl});
   final String imageUrl;
-final  double imageHeight,imageWidth ;
-}
-
-class _ImageOverlayState extends State<ImageOverlay> {
-  bool isOverlayVisible = true;
-
-  double imageHeight=200;
-  double imageWidth=200;
-  @override
-  void initState() {
-    super.initState();
-    imageHeight=widget.imageHeight;
-    imageWidth=widget.imageWidth;
-  }
-
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -44,8 +25,7 @@ class _ImageOverlayState extends State<ImageOverlay> {
                     decoration: BoxDecoration(
                       image: DecorationImage(
                         image: NetworkImage(
-                            widget
-                                .imageUrl
+                            imageUrl
                         ),
                         fit:BoxFit.contain,
                       ),
@@ -57,34 +37,29 @@ class _ImageOverlayState extends State<ImageOverlay> {
             Get.back();
           })]
           );
-          // setState(() {
-          //   isOverlayVisible = !isOverlayVisible;
-          //   imageHeight == 600 ? imageHeight = widget.imageHeight : imageHeight = 600;
-          //   imageWidth == 600 ? imageWidth = widget.imageWidth : imageWidth = 600;
-          // });
+
         },
         child: Stack(
           children: [
             Container(
-              height: imageHeight,
-              width:imageWidth,
+              height: 200,
+              width:200,
               decoration: BoxDecoration(
                 image: DecorationImage(
                   image: NetworkImage(
-                    widget
-                        .imageUrl
+                    imageUrl
                   ),
-                  fit:imageHeight==widget.imageHeight? BoxFit.cover:BoxFit.contain,
+                  fit: BoxFit.cover,
                 ),
                 borderRadius: BorderRadius.circular(10),
               ),
             ),
             Positioned(
-              height: imageHeight,
-              width: imageWidth,
+              height: 200,
+              width: 200,
               child: AnimatedOpacity(
                 duration: Durations.short4,
-                opacity: isOverlayVisible ? 1 : 0,
+                opacity:1,
                 child: Container(
                   clipBehavior: Clip.hardEdge,
 
@@ -108,4 +83,7 @@ class _ImageOverlayState extends State<ImageOverlay> {
           ],
         ));
   }
+
+
+
 }

@@ -21,6 +21,7 @@ import 'package:vision_dashboard/screens/Salary/controller/Salary_View_Model.dar
 import 'package:vision_dashboard/screens/Widgets/AppButton.dart';
 import 'package:vision_dashboard/screens/Widgets/Custom_Text_Filed.dart';
 import 'package:vision_dashboard/core/dialogs/Dialogs.dart';
+import 'package:vision_dashboard/screens/expenses/Controller/expenses_view_model.dart';
 
 import '../../../controller/nfc/non_web.dart';
 import '../../../core/constant/constants.dart';
@@ -138,6 +139,9 @@ class EmployeeViewModel extends GetxController {
     getColumns();
     if (currentEmployee?.id != null) getAllEmployee();
     getScreens();
+    Future.delayed(Duration(seconds: 2), () {
+      Get.find<ExpensesViewModel>().getAllWitOutListenExpenses();
+    });
   }
 
   bool getIfDelete() {
@@ -429,6 +433,7 @@ class EmployeeViewModel extends GetxController {
 
           await getScreens();
           getAllEmployee();
+
           Get.offNamed(AppRoutes.DashboardScreen);
         } else if (value.docs.isEmpty) {
           Get.snackbar("error", "not matched");
@@ -441,13 +446,13 @@ class EmployeeViewModel extends GetxController {
 
   String? loginUserPage;
   NfcCardViewModel nfcCardViewModel = Get.find<NfcCardViewModel>();
-  bool isLogIn=true;
+  bool isLogIn = true;
 
-bool startAddTime=true;
-  Future<void> addTime({String? cardId, String? userName, String? password,required String appendTime,required String lateTime,required String outTime}) async {
+  bool startAddTime = true;
 
+  Future<void> addTime({String? cardId, String? userName, String? password, required String appendTime, required String lateTime, required String outTime}) async {
     bool? isLateWithReason;
-    bool? isEarlierWithReason ;
+    bool? isEarlierWithReason;
     bool isDayOff = false;
     int totalLate = 0;
     int totalEarlier = 0;
@@ -472,8 +477,8 @@ bool startAddTime=true;
     if (user != null) {
       {
         TimesModel timeData = TimesModel.fromDateTime(Timestamp.now().toDate());
-        if(isLogIn&&startAddTime){
-startAddTime=false;
+        if (isLogIn && startAddTime) {
+          startAddTime = false;
           if (user.employeeTime![timeData.formattedTime] == null) {
             if (timeData.isAfter(int.parse(appendTime.split(" ")[0]), int.parse(appendTime.split(" ")[1]))) {
               totalLate = timeData.dateTime.difference(DateTime.now().copyWith(hour: int.parse(appendTime.split(" ")[0]), minute: int.parse(appendTime.split(" ")[1]), second: 0)).inSeconds;
@@ -605,24 +610,19 @@ startAddTime=false;
             loginUserPage = "اهلا بك " + user.userName;
 
             accountManagementFireStore.doc(user.id).update({"employeeTime": Map.fromEntries(user.employeeTime!.entries.map((e) => MapEntry(e.key, e.value.toJson())).toList())});
-
-          }
-          else{
+          } else {
             loginUserPage = "لقد قمت بالدخول بالفعل " + user.userName;
-        update();
+            update();
           }
         }
-        if(!isLogIn&&startAddTime)     {
-          startAddTime=false;
-          if (user.employeeTime![timeData.formattedTime]!.isDayEnd!&&user.employeeTime![timeData.formattedTime] == null) {
+        if (!isLogIn && startAddTime) {
+          startAddTime = false;
+          if (user.employeeTime![timeData.formattedTime]!.isDayEnd! && user.employeeTime![timeData.formattedTime] == null) {
             loginUserPage = "لقد قمت بالخروج بالفعل " + user.userName;
             update();
           } else {
             if (timeData.isBefore(int.parse(outTime.split(" ")[0]), int.parse(outTime.split(" ")[1]))) {
-              totalEarlier = timeData.dateTime
-                  .copyWith(hour: int.parse(outTime.split(" ")[0]), minute: int.parse(outTime.split(" ")[1]), second: 0)
-                  .difference(timeData.dateTime)
-                  .inMinutes;
+              totalEarlier = timeData.dateTime.copyWith(hour: int.parse(outTime.split(" ")[0]), minute: int.parse(outTime.split(" ")[1]), second: 0).difference(timeData.dateTime).inMinutes;
               isEarlierWithReason = false;
               await Get.defaultDialog(
                   barrierDismissible: false,
@@ -682,12 +682,9 @@ startAddTime=false;
             user.employeeTime![timeData.formattedTime]!.reasonOfEarlier = earlierReasonController.text;
             user.employeeTime![timeData.formattedTime]!.endDate = Timestamp.now().toDate();
             user.employeeTime![timeData.formattedTime]!.isDayEnd = true;
-            user.employeeTime![timeData.formattedTime]!.totalDate = timeData.dateTime
-                .difference(user.employeeTime![timeData.formattedTime]!.startDate!)
-                .inMinutes;
+            user.employeeTime![timeData.formattedTime]!.totalDate = timeData.dateTime.difference(user.employeeTime![timeData.formattedTime]!.startDate!).inMinutes;
             loginUserPage = "وداعا " + user.userName;
             accountManagementFireStore.doc(user.id).update({"employeeTime": Map.fromEntries(user.employeeTime!.entries.map((e) => MapEntry(e.key, e.value.toJson())).toList())});
-
           }
         }
       }
@@ -695,7 +692,7 @@ startAddTime=false;
       update();
       await Future.delayed(Duration(seconds: 4));
       loginUserPage = null;
-      startAddTime=true;
+      startAddTime = true;
       update();
     } else {
       print("Not found");
@@ -821,7 +818,7 @@ startAddTime=false;
                   ? 0
                   : accountModel.employeeTime!.values.where(
                         (element) {
-                          return element.isDayOff != true && element.isLateWithReason == false&&element.isEarlierWithReason == false&&element.dayName.toString().split("-")[1] == month.padLeft(2, "0").toString();
+                          return element.isDayOff != true && element.isLateWithReason == false && element.isEarlierWithReason == false && element.dayName.toString().split("-")[1] == month.padLeft(2, "0").toString();
                         },
                       ).length /
                       3)
@@ -832,8 +829,7 @@ startAddTime=false;
                   ? 0
                   : accountModel.employeeTime!.values.where(
                         (element) {
-                          return element.isDayOff != true && element.endDate == null
-                              &&element.dayName.toString().split("-")[1] == month.padLeft(2, "0").toString();
+                          return element.isDayOff != true && element.endDate == null && element.dayName.toString().split("-")[1] == month.padLeft(2, "0").toString();
                         },
                       ).length /
                       3)
@@ -844,7 +840,7 @@ startAddTime=false;
               ? 0
               : accountModel.employeeTime!.values.where(
                   (element) {
-                    return element.isDayOff == true&&element.dayName.toString().split("-")[1] == month.padLeft(2, "0").toString();
+                    return element.isDayOff == true && element.dayName.toString().split("-")[1] == month.padLeft(2, "0").toString();
                   },
                 ).length) *
           ((accountModel.salary ?? 0) / (accountModel.dayOfWork != 0 ? (accountModel.dayOfWork ?? 1) : 1)).round();
@@ -863,7 +859,7 @@ startAddTime=false;
                   ? 0
                   : accountModel.employeeTime!.values.where(
                         (element) {
-                          return element.isDayOff != true && element.isLateWithReason == false&&element.isEarlierWithReason == false;
+                          return element.isDayOff != true && element.isLateWithReason == false && element.isEarlierWithReason == false;
                         },
                       ).length /
                       3)
@@ -906,10 +902,7 @@ startAddTime=false;
             .isNotEmpty) {
           double totalTime = (getTotalLateForUserAtDay(selectedDay: day, userId: key) + 0 * 1.0);
 
-          /* if (totalTime > 8)
-            time.add(8);
-          else*/
-          time.add(8 - (totalTime / 60));
+          time.add(6 + (totalTime / 60));
         } else
           time.add(0.0);
       },
@@ -926,32 +919,41 @@ startAddTime=false;
           .employeeTime!
           .values
           .where(
-            (element) => element.dayName!.split("-")[1].split("-")[0] == months[selectedMonth],
-          )
-          .map((e) => e.totalLate ?? 0)
+            (element) => element.dayName!.split("-")[1].split("-")[0] == months[selectedMonth] && element.isDayOff != true&& (element.startDate!=null)&&(element.startDate!.difference(element.startDate!.copyWith(hour: 7, minute: 30)).inMinutes)>0,)
+          .map((e) => e.startDate?.difference(e.startDate!.copyWith(hour: 7, minute: 30)).inSeconds ?? 0)
           .toList();
     else
-      totalLateList = allAccountManagement[userId]!.employeeTime!.values.map((e) => e.totalLate ?? 0).toList();
+      totalLateList = allAccountManagement[userId]!
+          .employeeTime!
+          .values
+          .where(
+            (element) => element.isDayOff != true&&
+        (element.startDate!=null)&&(element.startDate!.difference(element.startDate!.copyWith(hour: 7, minute: 30)).inMinutes)>0,
+          )
+          .map((e) => e.startDate?.difference(e.startDate!.copyWith(hour: 7, minute: 30)).inSeconds ?? 0)
+          .toList();
     if (totalLateList.isNotEmpty) totalLate = totalLateList.reduce((value, element) => value + element);
+
     return totalLate ~/ 60;
+
   }
 
   int getTotalLateForUserAtDay({required String selectedDay, required String userId}) {
     int totalLate = 0;
     List<int> totalLateList = [];
+
     if (selectedDay != 'الكل')
-      totalLateList = allAccountManagement[userId]!
-          .employeeTime!
-          .values
-          .where(
-            (element) {
-              return element.dayName!.split("-")[2] == selectedDay;
-            },
-          )
-          .map((e) => e.totalLate ?? 0)
-          .toList();
+      totalLateList = allAccountManagement[userId]!.employeeTime!.values.where(
+        (element) {
+          return element.dayName! == selectedDay;
+        },
+      ).map((e) {
+        return e.totalLate ?? 0;
+      }).toList();
     else
-      totalLateList = allAccountManagement[userId]!.employeeTime!.values.map((e) => e.totalLate ?? 0).toList();
+      totalLateList = allAccountManagement[userId]!.employeeTime!.values.map((e) {
+        return e.totalLate ?? 0;
+      }).toList();
     if (totalLateList.isNotEmpty) totalLate = totalLateList.reduce((value, element) => value + element);
     return totalLate ~/ 60;
   }

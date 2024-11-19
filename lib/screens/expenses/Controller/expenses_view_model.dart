@@ -147,6 +147,8 @@ double imageWidth=200;
   }
   getAllWitOutListenExpenses() {
     final acc = Get.find<EmployeeViewModel>();
+    print(acc.allAccountManagement.length);
+
      expensesFireStore.get().then(
       (event) {
         plutoKey = GlobalKey();
@@ -193,15 +195,14 @@ double imageWidth=200;
   /// we use this in diagrams for set limit tall of column height
   double getMaxExpenses() {
     double sub = 0.0;
-    allExpenses.forEach(
-      (key, value) {
-print(value.total);
-        if (sub < (value.total ?? 0)) sub = (value.total ?? 0) * 1.0;
-      },
-    );
-    print(sub);
-/// we add 5000 for add more space to max tall
-    return sub + 5000;
+
+    for(int i=1;i<=12;i++){
+      if(sub<getExpensesAtMonth(i.toString())){
+        sub=getExpensesAtMonth(i.toString());
+      }
+    }
+
+    return sub + 15000;
   }
 
   double getExpensesAtMonth(String month) {

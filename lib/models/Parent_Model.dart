@@ -76,7 +76,12 @@ class ParentModel {
         if (installment.installmentCost != null && installment.installmentCost!.isNotEmpty) {
           totalPayment = totalPayment! + (int.tryParse(installment.installmentCost!) ?? 0);
         }
-      });
+      })
+    ;
+      installmentRecords?.values.toList()?..sort(
+              (a, b) {
+            return a.installmentDate!.compareTo(b.installmentDate!);
+          });
       contract = json['contract'] ?? [];
       children = json['children'] ?? [];
       eventRecords = (json['eventRecords'] as List<dynamic>?)

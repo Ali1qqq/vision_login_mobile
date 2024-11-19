@@ -449,7 +449,7 @@ class _EmployeeTimeViewState extends State<EmployeeTimeView> {
                                                             Container(
                                                               width: Get.width / 7,
                                                               child: Text(
-                                                                DateFun.minutesToTime(controller.getTotalLateForUserAtMonth(selectedMonth: selectedMonth, userId: entry.value.id)).toString(),
+                                                                DateFun.minutesToTime(   controller.getTotalLateForUserAtMonth(selectedMonth: selectedMonth, userId: entry.value.id)).toString(),
                                                                 style: TextStyle(fontSize: Get.width < 700 ? 16 : 20),
                                                                 textAlign: TextAlign.center,
                                                               ),
@@ -547,9 +547,9 @@ class _EmployeeTimeViewState extends State<EmployeeTimeView> {
                                                                       size / data.length,
                                                                       j.isDayOff == true
                                                                           ? "غائب".tr
-                                                                          : j.totalLate == null || j.totalLate == 0
-                                                                              ? ""
-                                                                              : DateFun.minutesToTime(j.totalLate!)),
+                                                                          : ((j.startDate?.difference(j.startDate!.copyWith(hour: 7, minute: 30)).inSeconds ?? 0)<0)
+                                                                              ? DateFun.minutesToTime(0)
+                                                                              : DateFun.minutesToTime((j.startDate?.difference(j.startDate!.copyWith(hour: 7, minute: 30)).inSeconds ?? 0)~/60)),
                                                                   dataRowItem(
                                                                       size / data.length,
                                                                       j.isDayOff == true

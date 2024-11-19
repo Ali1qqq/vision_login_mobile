@@ -466,17 +466,11 @@ class ParentsViewModel extends GetxController {
 
   double getAllReceiveMaxPay() {
     double total = 0;
-    _parentMap.values.forEach(
-      (element) {
-        element.installmentRecords!.values.forEach(
-          (element0) {
-            if (element0.isPay == true) {
-              if (int.parse(element0.installmentCost!) > total) total = int.parse(element0.installmentCost!) * 1.0;
-            }
-          },
-        );
-      },
-    );
+    for(int i=1;i<=12;i++){
+      if(total<getAllReceivePayAtMonth(i.toString().padLeft(2,"0"))){
+        total=getAllReceivePayAtMonth(i.toString().padLeft(2,"0"));
+      }
+    }
     return total + 50000;
   }
 

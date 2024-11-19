@@ -241,7 +241,7 @@ else {
                         ),
                         FlDotData(
                           getDotPainter: (spot, percent, barData, index) {
-                            if (spot.y >= 8.0) {
+                            if (spot.y >= 6.0) {
                               return FlDotCirclePainter(
                                 radius: 8,
                                 color: Colors.white,
@@ -255,7 +255,7 @@ else {
                                 color: Colors.redAccent.withOpacity(0.2),
                                 strokeWidth: 5,
                                 strokeColor:
-                                    widget.indicatorTouchedSpotStrokeColor,
+                                Colors.redAccent.withOpacity(0.2),
                               );
                             }
                           },
@@ -264,7 +264,7 @@ else {
                     }).toList();
                   },
                   touchTooltipData: LineTouchTooltipData(
-                    getTooltipColor: (touchedSpot) => touchedSpot.y < 8.0
+                    getTooltipColor: (touchedSpot) => touchedSpot.y < 6.0
                         ? Colors.redAccent.withOpacity(0.2)
                         : widget.tooltipBgColor,
                     getTooltipItems: (List<LineBarSpot> touchedBarSpots) {
@@ -281,7 +281,7 @@ else {
                             fontWeight: FontWeight.bold,
                           ),
                           children: [
-                            if (flSpot.y >= 8)
+                            if (flSpot.y >= 6)
                               TextSpan(
                                 text: " على الوقت المحدد",
                                 style: TextStyle(
@@ -289,9 +289,9 @@ else {
                                   fontWeight: FontWeight.w900,
                                 ),
                               ),
-                            if (flSpot.y < 8)
+                            if (flSpot.y < 6)
                               TextSpan(
-                                text: "داوم ${flSpot.y} ساعة",
+                                text: "داوم ${flSpot.y.toStringAsFixed(2)} ساعة",
                                 style: TextStyle(
                                   color: Colors.white,
                                   fontWeight: FontWeight.w900,
@@ -330,7 +330,7 @@ else {
                 extraLinesData: ExtraLinesData(
                   horizontalLines: [
                     HorizontalLine(
-                      y: 8.0,
+                      y: 6.0,
                       color: widget.averageLineColor,
                       strokeWidth: 3,
                       dashArray: [20, 10],
@@ -343,6 +343,7 @@ else {
                     spots: List.generate(
                       accountManagementViewModel.getUserTimeToday(selectedDayController.text).length,
                           (index) => accountManagementViewModel.getUserTimeToday(selectedDayController.text).asMap().entries.map((e) {
+
                         return FlSpot(index*1.0, e.value);
                       }).toList()[index],
                     ),
@@ -384,7 +385,7 @@ else {
                     dotData: FlDotData(
                       show: true,
                       getDotPainter: (spot, percent, barData, index) {
-                        if (spot.y >= 8) {
+                        if (spot.y >= 6) {
                           return FlDotCirclePainter(
                             radius: 6,
                             color: Colors.white,
@@ -393,10 +394,10 @@ else {
                           );
                         } else {
                           return FlDotSquarePainter(
-                            size: 12,
+                            size: 10,
                             color: Colors.white,
                             strokeWidth: 3,
-                            strokeColor: widget.indicatorSpotStrokeColor,
+                            strokeColor: Colors.redAccent.shade200,
                           );
                         }
                       },
