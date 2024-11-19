@@ -38,9 +38,11 @@ class _EmployeeTimeViewState extends State<EmployeeTimeView> {
       Get.find<AccountManagementViewModel>().allAccountManagement.length,
   (index) => false);*/
   final selectedDate = TextEditingController();
+  final selectedYear = TextEditingController();
 
   @override
   void initState() {
+
     super.initState();
 
     accountManagementViewModel.initNFC(typeNFC.time);
@@ -52,6 +54,8 @@ class _EmployeeTimeViewState extends State<EmployeeTimeView> {
         .key;
     dayNameNow = thisTimesModel!.formattedTime;
     selectedDate.text = thisTimesModel!.formattedTime;
+
+    selectedYear.text = thisTimesModel!.year.toString();
   }
 
   @override
@@ -327,27 +331,49 @@ class _EmployeeTimeViewState extends State<EmployeeTimeView> {
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Padding(
-                                    padding: const EdgeInsets.all(
-                                      defaultPadding,
-                                    ),
-                                    child: CustomDropDown(
-                                      value: selectedMonth.toString().tr,
-                                      listValue: ['الكل'.tr] +
-                                          months.keys
-                                              .map(
-                                                (e) => e.toString().tr,
-                                              )
-                                              .toList(),
-                                      label: "اختر الشهر".tr,
-                                      onChange: (value) {
-                                        if (value != null) {
-                                          selectedMonth = value.tr;
-                                          setState(() {});
-                                        }
-                                      },
-                                      isFullBorder: true,
-                                    ),
+                                  Row(
+                                    children: [
+                                      Padding(
+                                        padding: const EdgeInsets.all(
+                                          defaultPadding,
+                                        ),
+                                        child: CustomDropDown(
+                                          value: selectedMonth.toString().tr,
+                                          listValue: ['الكل'.tr] +
+                                              months.keys
+                                                  .map(
+                                                    (e) => e.toString().tr,
+                                                  )
+                                                  .toList(),
+                                          label: "اختر الشهر".tr,
+                                          onChange: (value) {
+                                            if (value != null) {
+                                              selectedMonth = value.tr;
+                                              setState(() {});
+                                            }
+                                          },
+                                          isFullBorder: true,
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.all(
+                                          defaultPadding,
+                                        ),
+                                        child: CustomDropDown(
+                                          value: selectedYear.text.toString(),
+                                          listValue:
+                                              year,
+                                          label: "اختر السنة".tr,
+                                          onChange: (value) {
+                                            if (value != null) {
+                                              selectedYear.text = value.tr;
+                                              setState(() {});
+                                            }
+                                          },
+                                          isFullBorder: true,
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                   Expanded(
                                     child: Padding(
@@ -449,7 +475,7 @@ class _EmployeeTimeViewState extends State<EmployeeTimeView> {
                                                             Container(
                                                               width: Get.width / 7,
                                                               child: Text(
-                                                                DateFun.minutesToTime(   controller.getTotalLateForUserAtMonth(selectedMonth: selectedMonth, userId: entry.value.id)).toString(),
+                                                                DateFun.minutesToTime(   controller.getTotalLateForUserAtMonth(selectedMonth: selectedMonth, userId: entry.value.id,selectedYear: selectedYear.text)).toString(),
                                                                 style: TextStyle(fontSize: Get.width < 700 ? 16 : 20),
                                                                 textAlign: TextAlign.center,
                                                               ),
@@ -459,7 +485,7 @@ class _EmployeeTimeViewState extends State<EmployeeTimeView> {
                                                               child: Text(
                                                                 selectedMonth == "الكل".tr
                                                                     ? (accountModel.salary! - accountManagementViewModel.getAllUserSalariesAtMonth(accountModel.id)).toString()
-                                                                    : (accountModel.salary! - accountManagementViewModel.getUserSalariesAtMonth(months[selectedMonth]!, accountModel.id)).toString(),
+                                                                    : (accountModel.salary! - accountManagementViewModel.getUserSalariesAtMonth(months[selectedMonth]!, accountModel.id,selectedYear.text)).toString(),
                                                                 style: TextStyle(fontSize: Get.width < 700 ? 16 : 20),
                                                                 textAlign: TextAlign.center,
                                                               ),
@@ -475,7 +501,7 @@ class _EmployeeTimeViewState extends State<EmployeeTimeView> {
                                                             Container(
                                                               width: Get.width / 7,
                                                               child: Text(
-                                                                selectedMonth == "الكل".tr ? (accountManagementViewModel.getAllUserSalariesAtMonth(accountModel.id)).toString() : accountManagementViewModel.getUserSalariesAtMonth(months[selectedMonth]!, accountModel.id).toString(),
+                                                                selectedMonth == "الكل".tr ? (accountManagementViewModel.getAllUserSalariesAtMonth(accountModel.id)).toString() : accountManagementViewModel.getUserSalariesAtMonth(months[selectedMonth]!, accountModel.id,selectedYear.text).toString(),
                                                                 style: TextStyle(fontSize: Get.width < 700 ? 16 : 20),
                                                                 textAlign: TextAlign.center,
                                                               ),

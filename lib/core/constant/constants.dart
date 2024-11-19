@@ -125,7 +125,7 @@ List<String> languageList = [
   "عربي",
   "لغات",
 ];
-
+List<String> year=List.generate(50, (index) => "20${24+index}",);
 Map<String, String> months = {
   "يناير (1)": "01",
   "فبراير (2)": "02",

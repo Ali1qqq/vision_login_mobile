@@ -12,11 +12,13 @@ class TotalBarChartWidget extends StatefulWidget {
   TotalBarChartWidget({
     Key? key,
     required this.index,
+    required this.selectedYear,
   }) : super(key: key);
 
   @override
   State<TotalBarChartWidget> createState() => _TotalBarChartWidgetState();
   int index = 2;
+final  String selectedYear;
 }
 
 class _TotalBarChartWidgetState extends State<TotalBarChartWidget> {
@@ -33,7 +35,7 @@ class _TotalBarChartWidgetState extends State<TotalBarChartWidget> {
             height: 400,
             // width:max(1200,Get.width),
             child: TotalBarChart(
-              index: widget.index,
+              index: widget.index,selectedYear:widget.selectedYear ,
             )),
         SizedBox(
           width: Get.width,

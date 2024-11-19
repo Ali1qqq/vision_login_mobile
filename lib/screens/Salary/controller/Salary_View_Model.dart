@@ -82,7 +82,7 @@ receiveSalary({required BuildContext context}){
   showDialog(
     context: context,
     builder: (context) => buildSignViewDialog(
-        (employeeController.getUserSalariesAtMonth(months[selectedMonth]!, accountModel.id)).toString(),
+        (employeeController.getUserSalariesAtMonth(months[selectedMonth]!, accountModel.id,selectedYear)).toString(),
         accountModel,
         "${thisTimesModel!.year}-${months[selectedMonth]}",signatureGlobalKey,context),
   );
@@ -113,6 +113,7 @@ if(image!=null) {
       )
       .first
       .key;
+  String selectedYear =thisTimesModel!.year.toString();
 
   Map<String, SalaryModel> _salaryMap = {};
 
@@ -162,9 +163,9 @@ if(image!=null) {
             cells: {
               data.keys.elementAt(0): PlutoCell(value: key),
               data.keys.elementAt(1): PlutoCell(value: value.fullName),
-              data.keys.elementAt(2): PlutoCell(value: employeeController.getUserSalariesAtMonth(months[selectedMonth].toString(), key)),
+              data.keys.elementAt(2): PlutoCell(value: employeeController.getUserSalariesAtMonth(months[selectedMonth].toString(), key,selectedYear)),
               data.keys.elementAt(3): PlutoCell(value: value.salary.toString()),
-              data.keys.elementAt(4): PlutoCell(value: getPaidSalaryAtMonth(empId: key, month: months[selectedMonth].toString())),
+              data.keys.elementAt(4): PlutoCell(value: getPaidSalaryAtMonth(empId: key, month: months[selectedMonth].toString(),year: selectedYear)),
               data.keys.elementAt(5): PlutoCell(value: cheekIfEmpHaveSalaryAtMonth(empId: key, month: months[selectedMonth].toString()) ? "تم التسليم".tr : "لم يتم التسليم".tr),
             },
           ),
@@ -231,11 +232,11 @@ if(image!=null) {
     return total;
   }
 
-  String getPaidSalaryAtMonth({required String empId, required String month}) {
+  String getPaidSalaryAtMonth({required String empId, required String month,required String year}) {
     String totalPay = "0";
     salaryMap.entries
         .where(
-      (element) => element.key.split(" ")[0].split("-")[1] == month,
+      (element) => element.key.split(" ")[0].split("-")[1] == month&&element.key.split(" ")[0].split("-")[0] == year,
     )
         .forEach(
       (element) {
@@ -248,6 +249,11 @@ if(image!=null) {
 
   setMothValue(String value) {
     selectedMonth = value;
+    getEmployeeSalaryPluto();
+    update();
+  }
+  setYearValue(String value) {
+    selectedYear = value;
     getEmployeeSalaryPluto();
     update();
   }

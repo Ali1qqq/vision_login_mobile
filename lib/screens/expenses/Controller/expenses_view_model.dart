@@ -197,19 +197,19 @@ double imageWidth=200;
     double sub = 0.0;
 
     for(int i=1;i<=12;i++){
-      if(sub<getExpensesAtMonth(i.toString())){
-        sub=getExpensesAtMonth(i.toString());
+      if(sub<getExpensesAtMonth(i.toString(),thisTimesModel!.year.toString())){
+        sub=getExpensesAtMonth(i.toString(),thisTimesModel!.year.toString());
       }
     }
 
     return sub + 15000;
   }
 
-  double getExpensesAtMonth(String month) {
+  double getExpensesAtMonth(String month,String year) {
     double sub = 0.0;
     allExpenses.forEach(
       (key, value) {
-        if (value.date!.split("-")[1] == month.padLeft(2, "0")) sub += (value.total ?? 0);
+        if (value.date!.split("-")[1] == month.padLeft(2, "0")&&value.date!.split("-")[0] == year) sub += (value.total ?? 0);
       },
     );
 

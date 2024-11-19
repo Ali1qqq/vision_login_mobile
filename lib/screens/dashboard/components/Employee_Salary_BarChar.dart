@@ -11,12 +11,13 @@ import '../../../core/Styling/app_style.dart';
 import '../../Employee/Controller/Employee_view_model.dart';
 
 class EmployeeSalaryBarChart extends StatefulWidget {
-  EmployeeSalaryBarChart({super.key,required this.selectedMonth});
+  EmployeeSalaryBarChart({super.key,required this.selectedMonth,required this.selectedYear});
 
   final Color dark = Colors.black.withBlue(100);
   final Color normal = primaryColor.withAlpha(1);
   final Color light = primaryColor;
   final String selectedMonth;
+  final String selectedYear;
 
   @override
   State<StatefulWidget> createState() => EmployeeSalaryBarChartState();
@@ -159,8 +160,8 @@ class EmployeeSalaryBarChartState extends State<EmployeeSalaryBarChart> {
               toY:account.salary!*1.0,
               rodStackItems: [
 
-                  BarChartRodStackItem(0, accountManageVM.getUserSalariesAtMonth(widget.selectedMonth, account.id), widget.dark,),
-                  BarChartRodStackItem(accountManageVM.getUserSalariesAtMonth(widget.selectedMonth, account.id),account.salary!*1.0, widget.light),
+                  BarChartRodStackItem(0, accountManageVM.getUserSalariesAtMonth(widget.selectedMonth, account.id,widget.selectedYear), widget.dark,),
+                  BarChartRodStackItem(accountManageVM.getUserSalariesAtMonth(widget.selectedMonth, account.id,widget.selectedYear),account.salary!*1.0, widget.light),
 
               ],
               borderRadius: BorderRadius.circular(4),

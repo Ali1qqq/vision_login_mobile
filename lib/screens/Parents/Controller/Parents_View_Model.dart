@@ -467,20 +467,20 @@ class ParentsViewModel extends GetxController {
   double getAllReceiveMaxPay() {
     double total = 0;
     for(int i=1;i<=12;i++){
-      if(total<getAllReceivePayAtMonth(i.toString().padLeft(2,"0"))){
-        total=getAllReceivePayAtMonth(i.toString().padLeft(2,"0"));
+      if(total<getAllReceivePayAtMonth(i.toString().padLeft(2,"0"),thisTimesModel!.year.toString())){
+        total=getAllReceivePayAtMonth(i.toString().padLeft(2,"0"),thisTimesModel!.year.toString());
       }
     }
     return total + 50000;
   }
 
-  double getAllReceivePayAtMonth(String month) {
+  double getAllReceivePayAtMonth(String month,String year) {
     double total = 0;
     _parentMap.values.forEach(
       (element) {
         element.installmentRecords!.values.forEach(
           (element0) {
-            if (element0.installmentDate!.split("-")[1] == month && element0.isPay == true) {
+            if (element0.installmentDate!.split("-")[1] == month && element0.installmentDate!.split("-")[0] == year &&element0.isPay == true) {
               total += int.parse(element0.installmentCost!);
             }
           },

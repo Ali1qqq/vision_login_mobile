@@ -11,12 +11,13 @@ import 'package:vision_dashboard/screens/expenses/Controller/expenses_view_model
 import '../../../core/Styling/app_style.dart';
 
 class TotalBarChart extends StatefulWidget {
-  TotalBarChart({super.key, required this.index});
+  TotalBarChart({super.key, required this.index,required this.selectedYear});
 
   final Color dark = blueColor;
   final Color normal = primaryColor.withAlpha(1);
   final Color light = primaryColor;
   final int index;
+  final String selectedYear;
 
   @override
   State<StatefulWidget> createState() => TotalBarChartState();
@@ -188,18 +189,18 @@ class TotalBarChartState extends State<TotalBarChart> {
         barRods: [
           BarChartRodData(
             toY: widget.index == 0
-                ? expensesViewModel.getExpensesAtMonth("1")
+                ? expensesViewModel.getExpensesAtMonth("1",widget.selectedYear)
                 : widget.index == 1
-                    ? parentViewModel.getAllReceivePayAtMonth("01")
-                    : parentViewModel.getAllReceivePayAtMonth("01") - expensesViewModel.getExpensesAtMonth("1"),
+                    ? parentViewModel.getAllReceivePayAtMonth("01",widget.selectedYear)
+                    : parentViewModel.getAllReceivePayAtMonth("01",widget.selectedYear) - expensesViewModel.getExpensesAtMonth("1",widget.selectedYear),
             rodStackItems: [
               BarChartRodStackItem(
                   0,
                   widget.index == 0
-                      ? expensesViewModel.getExpensesAtMonth("1")
+                      ? expensesViewModel.getExpensesAtMonth("1",widget.selectedYear)
                       : widget.index == 1
-                          ? parentViewModel.getAllReceivePayAtMonth("01")
-                          : parentViewModel.getAllReceivePayAtMonth("01") - managementViewModel.getAllSalariesAtMonth("1") - expensesViewModel.getExpensesAtMonth("1"),
+                          ? parentViewModel.getAllReceivePayAtMonth("01",widget.selectedYear)
+                          : parentViewModel.getAllReceivePayAtMonth("01",widget.selectedYear) - managementViewModel.getAllSalariesAtMonth("1",widget.selectedYear) - expensesViewModel.getExpensesAtMonth("1",widget.selectedYear),
                   widget.index == 0
                       ? widget.dark
                       : widget.index == 1
@@ -246,18 +247,18 @@ class TotalBarChartState extends State<TotalBarChart> {
         barRods: [
           BarChartRodData(
             toY: widget.index == 0
-                ? expensesViewModel.getExpensesAtMonth("3")
+                ? expensesViewModel.getExpensesAtMonth("3",widget.selectedYear)
                 : widget.index == 1
-                    ? parentViewModel.getAllReceivePayAtMonth("03")
-                    : parentViewModel.getAllReceivePayAtMonth("03") - managementViewModel.getAllSalariesAtMonth("3") - expensesViewModel.getExpensesAtMonth("3"),
+                    ? parentViewModel.getAllReceivePayAtMonth("03",widget.selectedYear)
+                    : parentViewModel.getAllReceivePayAtMonth("03",widget.selectedYear) - managementViewModel.getAllSalariesAtMonth("3",widget.selectedYear) - expensesViewModel.getExpensesAtMonth("3",widget.selectedYear),
             rodStackItems: [
               BarChartRodStackItem(
                   0,
                   widget.index == 0
-                      ? expensesViewModel.getExpensesAtMonth("3")
+                      ? expensesViewModel.getExpensesAtMonth("3",widget.selectedYear)
                       : widget.index == 1
-                          ? parentViewModel.getAllReceivePayAtMonth("03")
-                          : parentViewModel.getAllReceivePayAtMonth("03") - managementViewModel.getAllSalariesAtMonth("3") - expensesViewModel.getExpensesAtMonth("3"),
+                          ? parentViewModel.getAllReceivePayAtMonth("03",widget.selectedYear)
+                          : parentViewModel.getAllReceivePayAtMonth("03",widget.selectedYear) - managementViewModel.getAllSalariesAtMonth("3",widget.selectedYear) - expensesViewModel.getExpensesAtMonth("3",widget.selectedYear),
                   widget.index == 0
                       ? widget.dark
                       : widget.index == 1
@@ -275,18 +276,18 @@ class TotalBarChartState extends State<TotalBarChart> {
         barRods: [
           BarChartRodData(
             toY: widget.index == 0
-                ? expensesViewModel.getExpensesAtMonth("4")
+                ? expensesViewModel.getExpensesAtMonth("4",widget.selectedYear)
                 : widget.index == 1
-                    ? parentViewModel.getAllReceivePayAtMonth("04")
-                    : parentViewModel.getAllReceivePayAtMonth("04") - managementViewModel.getAllSalariesAtMonth("4") - expensesViewModel.getExpensesAtMonth("4"),
+                    ? parentViewModel.getAllReceivePayAtMonth("04",widget.selectedYear)
+                    : parentViewModel.getAllReceivePayAtMonth("04",widget.selectedYear) - managementViewModel.getAllSalariesAtMonth("4",widget.selectedYear) - expensesViewModel.getExpensesAtMonth("4",widget.selectedYear),
             rodStackItems: [
               BarChartRodStackItem(
                   0,
                   widget.index == 0
-                      ? expensesViewModel.getExpensesAtMonth("4")
+                      ? expensesViewModel.getExpensesAtMonth("4",widget.selectedYear)
                       : widget.index == 1
-                          ? parentViewModel.getAllReceivePayAtMonth("04")
-                          : parentViewModel.getAllReceivePayAtMonth("04") - managementViewModel.getAllSalariesAtMonth("4") - expensesViewModel.getExpensesAtMonth("4"),
+                          ? parentViewModel.getAllReceivePayAtMonth("04",widget.selectedYear)
+                          : parentViewModel.getAllReceivePayAtMonth("04",widget.selectedYear) - managementViewModel.getAllSalariesAtMonth("4",widget.selectedYear) - expensesViewModel.getExpensesAtMonth("4",widget.selectedYear),
                   widget.index == 0
                       ? widget.dark
                       : widget.index == 1
@@ -304,18 +305,18 @@ class TotalBarChartState extends State<TotalBarChart> {
         barRods: [
           BarChartRodData(
             toY: widget.index == 0
-                ? expensesViewModel.getExpensesAtMonth("5")
+                ? expensesViewModel.getExpensesAtMonth("5",widget.selectedYear)
                 : widget.index == 1
-                    ? parentViewModel.getAllReceivePayAtMonth("05")
-                    : parentViewModel.getAllReceivePayAtMonth("05") - managementViewModel.getAllSalariesAtMonth("5") - expensesViewModel.getExpensesAtMonth("5"),
+                    ? parentViewModel.getAllReceivePayAtMonth("05",widget.selectedYear)
+                    : parentViewModel.getAllReceivePayAtMonth("05",widget.selectedYear) - managementViewModel.getAllSalariesAtMonth("5",widget.selectedYear) - expensesViewModel.getExpensesAtMonth("5",widget.selectedYear),
             rodStackItems: [
               BarChartRodStackItem(
                   0,
                   widget.index == 0
-                      ? expensesViewModel.getExpensesAtMonth("5")
+                      ? expensesViewModel.getExpensesAtMonth("5",widget.selectedYear)
                       : widget.index == 1
-                          ? parentViewModel.getAllReceivePayAtMonth("05")
-                          : parentViewModel.getAllReceivePayAtMonth("05") - managementViewModel.getAllSalariesAtMonth("5") - expensesViewModel.getExpensesAtMonth("5"),
+                          ? parentViewModel.getAllReceivePayAtMonth("05",widget.selectedYear)
+                          : parentViewModel.getAllReceivePayAtMonth("05",widget.selectedYear) - managementViewModel.getAllSalariesAtMonth("5",widget.selectedYear) - expensesViewModel.getExpensesAtMonth("5",widget.selectedYear),
                   widget.index == 0
                       ? widget.dark
                       : widget.index == 1
@@ -333,18 +334,18 @@ class TotalBarChartState extends State<TotalBarChart> {
         barRods: [
           BarChartRodData(
             toY: widget.index == 0
-                ? expensesViewModel.getExpensesAtMonth("6")
+                ? expensesViewModel.getExpensesAtMonth("6",widget.selectedYear)
                 : widget.index == 1
-                    ? parentViewModel.getAllReceivePayAtMonth("06")
-                    : parentViewModel.getAllReceivePayAtMonth("06") - managementViewModel.getAllSalariesAtMonth("6") - expensesViewModel.getExpensesAtMonth("6"),
+                    ? parentViewModel.getAllReceivePayAtMonth("06",widget.selectedYear)
+                    : parentViewModel.getAllReceivePayAtMonth("06",widget.selectedYear) - managementViewModel.getAllSalariesAtMonth("6",widget.selectedYear) - expensesViewModel.getExpensesAtMonth("6",widget.selectedYear),
             rodStackItems: [
               BarChartRodStackItem(
                   0,
                   widget.index == 0
-                      ? expensesViewModel.getExpensesAtMonth("6")
+                      ? expensesViewModel.getExpensesAtMonth("6",widget.selectedYear)
                       : widget.index == 1
-                          ? parentViewModel.getAllReceivePayAtMonth("06")
-                          : parentViewModel.getAllReceivePayAtMonth("06") - managementViewModel.getAllSalariesAtMonth("6") - expensesViewModel.getExpensesAtMonth("6"),
+                          ? parentViewModel.getAllReceivePayAtMonth("06",widget.selectedYear)
+                          : parentViewModel.getAllReceivePayAtMonth("06",widget.selectedYear) - managementViewModel.getAllSalariesAtMonth("6",widget.selectedYear) - expensesViewModel.getExpensesAtMonth("6",widget.selectedYear),
                   widget.index == 0
                       ? widget.dark
                       : widget.index == 1
@@ -362,18 +363,18 @@ class TotalBarChartState extends State<TotalBarChart> {
         barRods: [
           BarChartRodData(
             toY: widget.index == 0
-                ? expensesViewModel.getExpensesAtMonth("7")
+                ? expensesViewModel.getExpensesAtMonth("7",widget.selectedYear)
                 : widget.index == 1
-                    ? parentViewModel.getAllReceivePayAtMonth("07")
-                    : parentViewModel.getAllReceivePayAtMonth("07") - managementViewModel.getAllSalariesAtMonth("7") - expensesViewModel.getExpensesAtMonth("7"),
+                    ? parentViewModel.getAllReceivePayAtMonth("07",widget.selectedYear)
+                    : parentViewModel.getAllReceivePayAtMonth("07",widget.selectedYear) - managementViewModel.getAllSalariesAtMonth("7",widget.selectedYear) - expensesViewModel.getExpensesAtMonth("7",widget.selectedYear),
             rodStackItems: [
               BarChartRodStackItem(
                   0,
                   widget.index == 0
-                      ? expensesViewModel.getExpensesAtMonth("7")
+                      ? expensesViewModel.getExpensesAtMonth("7",widget.selectedYear)
                       : widget.index == 1
-                          ? parentViewModel.getAllReceivePayAtMonth("07")
-                          : parentViewModel.getAllReceivePayAtMonth("07") - managementViewModel.getAllSalariesAtMonth("7") - expensesViewModel.getExpensesAtMonth("7"),
+                          ? parentViewModel.getAllReceivePayAtMonth("07",widget.selectedYear)
+                          : parentViewModel.getAllReceivePayAtMonth("07",widget.selectedYear) - managementViewModel.getAllSalariesAtMonth("7",widget.selectedYear) - expensesViewModel.getExpensesAtMonth("7",widget.selectedYear),
                   widget.index == 0
                       ? widget.dark
                       : widget.index == 1
@@ -391,18 +392,18 @@ class TotalBarChartState extends State<TotalBarChart> {
         barRods: [
           BarChartRodData(
             toY: widget.index == 0
-                ? expensesViewModel.getExpensesAtMonth("8")
+                ? expensesViewModel.getExpensesAtMonth("8",widget.selectedYear)
                 : widget.index == 1
-                    ? parentViewModel.getAllReceivePayAtMonth("08")
-                    : parentViewModel.getAllReceivePayAtMonth("08") - managementViewModel.getAllSalariesAtMonth("8") - expensesViewModel.getExpensesAtMonth("8"),
+                    ? parentViewModel.getAllReceivePayAtMonth("08",widget.selectedYear)
+                    : parentViewModel.getAllReceivePayAtMonth("08",widget.selectedYear) - managementViewModel.getAllSalariesAtMonth("8",widget.selectedYear) - expensesViewModel.getExpensesAtMonth("8",widget.selectedYear),
             rodStackItems: [
               BarChartRodStackItem(
                   0,
                   widget.index == 0
-                      ? expensesViewModel.getExpensesAtMonth("8")
+                      ? expensesViewModel.getExpensesAtMonth("8",widget.selectedYear)
                       : widget.index == 1
-                          ? parentViewModel.getAllReceivePayAtMonth("08")
-                          : parentViewModel.getAllReceivePayAtMonth("08") - managementViewModel.getAllSalariesAtMonth("8") - expensesViewModel.getExpensesAtMonth("8"),
+                          ? parentViewModel.getAllReceivePayAtMonth("08",widget.selectedYear)
+                          : parentViewModel.getAllReceivePayAtMonth("08",widget.selectedYear) - managementViewModel.getAllSalariesAtMonth("8",widget.selectedYear) - expensesViewModel.getExpensesAtMonth("8",widget.selectedYear),
                   widget.index == 0
                       ? widget.dark
                       : widget.index == 1
@@ -420,18 +421,18 @@ class TotalBarChartState extends State<TotalBarChart> {
         barRods: [
           BarChartRodData(
             toY: widget.index == 0
-                ? expensesViewModel.getExpensesAtMonth("9")
+                ? expensesViewModel.getExpensesAtMonth("9",widget.selectedYear)
                 : widget.index == 1
-                    ? parentViewModel.getAllReceivePayAtMonth("09")
-                    : parentViewModel.getAllReceivePayAtMonth("09") - managementViewModel.getAllSalariesAtMonth("9") - expensesViewModel.getExpensesAtMonth("9"),
+                    ? parentViewModel.getAllReceivePayAtMonth("09",widget.selectedYear)
+                    : parentViewModel.getAllReceivePayAtMonth("09",widget.selectedYear) - managementViewModel.getAllSalariesAtMonth("9",widget.selectedYear) - expensesViewModel.getExpensesAtMonth("9",widget.selectedYear),
             rodStackItems: [
               BarChartRodStackItem(
                   0,
                   widget.index == 0
-                      ? expensesViewModel.getExpensesAtMonth("9")
+                      ? expensesViewModel.getExpensesAtMonth("9",widget.selectedYear)
                       : widget.index == 1
-                          ? parentViewModel.getAllReceivePayAtMonth("09")
-                          : parentViewModel.getAllReceivePayAtMonth("09") - managementViewModel.getAllSalariesAtMonth("9") - expensesViewModel.getExpensesAtMonth("9"),
+                          ? parentViewModel.getAllReceivePayAtMonth("09",widget.selectedYear)
+                          : parentViewModel.getAllReceivePayAtMonth("09",widget.selectedYear) - managementViewModel.getAllSalariesAtMonth("9",widget.selectedYear) - expensesViewModel.getExpensesAtMonth("9",widget.selectedYear),
                   widget.index == 0
                       ? widget.dark
                       : widget.index == 1
@@ -449,18 +450,18 @@ class TotalBarChartState extends State<TotalBarChart> {
         barRods: [
           BarChartRodData(
             toY: widget.index == 0
-                ? expensesViewModel.getExpensesAtMonth("10")
+                ? expensesViewModel.getExpensesAtMonth("10",widget.selectedYear)
                 : widget.index == 1
-                    ? parentViewModel.getAllReceivePayAtMonth("10")
-                    : parentViewModel.getAllReceivePayAtMonth("10") - managementViewModel.getAllSalariesAtMonth("10") - expensesViewModel.getExpensesAtMonth("10"),
+                    ? parentViewModel.getAllReceivePayAtMonth("10",widget.selectedYear)
+                    : parentViewModel.getAllReceivePayAtMonth("10",widget.selectedYear) - managementViewModel.getAllSalariesAtMonth("10",widget.selectedYear) - expensesViewModel.getExpensesAtMonth("10",widget.selectedYear),
             rodStackItems: [
               BarChartRodStackItem(
                   0,
                   widget.index == 0
-                      ? expensesViewModel.getExpensesAtMonth("10")
+                      ? expensesViewModel.getExpensesAtMonth("10",widget.selectedYear)
                       : widget.index == 1
-                          ? parentViewModel.getAllReceivePayAtMonth("10")
-                          : parentViewModel.getAllReceivePayAtMonth("10") - managementViewModel.getAllSalariesAtMonth("10") - expensesViewModel.getExpensesAtMonth("10"),
+                          ? parentViewModel.getAllReceivePayAtMonth("10",widget.selectedYear)
+                          : parentViewModel.getAllReceivePayAtMonth("10",widget.selectedYear) - managementViewModel.getAllSalariesAtMonth("10",widget.selectedYear) - expensesViewModel.getExpensesAtMonth("10",widget.selectedYear),
                   widget.index == 0
                       ? widget.dark
                       : widget.index == 1
@@ -478,18 +479,18 @@ class TotalBarChartState extends State<TotalBarChart> {
         barRods: [
           BarChartRodData(
             toY: widget.index == 0
-                ? expensesViewModel.getExpensesAtMonth("11")
+                ? expensesViewModel.getExpensesAtMonth("11",widget.selectedYear)
                 : widget.index == 1
-                    ? parentViewModel.getAllReceivePayAtMonth("11")
-                    : parentViewModel.getAllReceivePayAtMonth("11") - managementViewModel.getAllSalariesAtMonth("11") - expensesViewModel.getExpensesAtMonth("11"),
+                    ? parentViewModel.getAllReceivePayAtMonth("11",widget.selectedYear)
+                    : parentViewModel.getAllReceivePayAtMonth("11",widget.selectedYear) - managementViewModel.getAllSalariesAtMonth("11",widget.selectedYear) - expensesViewModel.getExpensesAtMonth("11",widget.selectedYear),
             rodStackItems: [
               BarChartRodStackItem(
                   0,
                   widget.index == 0
-                      ? expensesViewModel.getExpensesAtMonth("11")
+                      ? expensesViewModel.getExpensesAtMonth("11",widget.selectedYear)
                       : widget.index == 1
-                          ? parentViewModel.getAllReceivePayAtMonth("11")
-                          : parentViewModel.getAllReceivePayAtMonth("11") - managementViewModel.getAllSalariesAtMonth("11") - expensesViewModel.getExpensesAtMonth("11"),
+                          ? parentViewModel.getAllReceivePayAtMonth("11",widget.selectedYear)
+                          : parentViewModel.getAllReceivePayAtMonth("11",widget.selectedYear) - managementViewModel.getAllSalariesAtMonth("11",widget.selectedYear) - expensesViewModel.getExpensesAtMonth("11",widget.selectedYear),
                   widget.index == 0
                       ? widget.dark
                       : widget.index == 1
@@ -507,18 +508,18 @@ class TotalBarChartState extends State<TotalBarChart> {
         barRods: [
           BarChartRodData(
             toY: widget.index == 0
-                ? expensesViewModel.getExpensesAtMonth("12")
+                ? expensesViewModel.getExpensesAtMonth("12",widget.selectedYear)
                 : widget.index == 1
-                    ? parentViewModel.getAllReceivePayAtMonth("12")
-                    : parentViewModel.getAllReceivePayAtMonth("12") - managementViewModel.getAllSalariesAtMonth("12") - expensesViewModel.getExpensesAtMonth("12"),
+                    ? parentViewModel.getAllReceivePayAtMonth("12",widget.selectedYear)
+                    : parentViewModel.getAllReceivePayAtMonth("12",widget.selectedYear) - managementViewModel.getAllSalariesAtMonth("12",widget.selectedYear) - expensesViewModel.getExpensesAtMonth("12",widget.selectedYear),
             rodStackItems: [
               BarChartRodStackItem(
                   0,
                   widget.index == 0
-                      ? expensesViewModel.getExpensesAtMonth("12")
+                      ? expensesViewModel.getExpensesAtMonth("12",widget.selectedYear)
                       : widget.index == 1
-                          ? parentViewModel.getAllReceivePayAtMonth("12")
-                          : parentViewModel.getAllReceivePayAtMonth("12") - managementViewModel.getAllSalariesAtMonth("12") - expensesViewModel.getExpensesAtMonth("12"),
+                          ? parentViewModel.getAllReceivePayAtMonth("12",widget.selectedYear)
+                          : parentViewModel.getAllReceivePayAtMonth("12",widget.selectedYear) - managementViewModel.getAllSalariesAtMonth("12",widget.selectedYear) - expensesViewModel.getExpensesAtMonth("12",widget.selectedYear),
                   widget.index == 0
                       ? widget.dark
                       : widget.index == 1

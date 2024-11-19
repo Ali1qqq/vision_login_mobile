@@ -16,6 +16,7 @@ class EmployeeSalaryChartBox extends StatefulWidget {
 
 class _EmployeeSalaryChartBoxState extends State<EmployeeSalaryChartBox> {
   String selectedMonth = '';
+  String selectedYear = '';
 
   @override
   void initState() {
@@ -30,7 +31,7 @@ class _EmployeeSalaryChartBoxState extends State<EmployeeSalaryChartBox> {
           .first
           .key;
 
-
+selectedYear=thisTimesModel!.year.toString();
   }
 
   @override
@@ -45,21 +46,37 @@ class _EmployeeSalaryChartBoxState extends State<EmployeeSalaryChartBox> {
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          CustomDropDown(
-            value: selectedMonth.toString().tr,
-            listValue: months.keys
-                .map(
-                  (e) => e.toString().tr,
-                )
-                .toList(),
-            label: "اختر الشهر".tr,
-            onChange: (value) {
-              if (value != null) {
-                selectedMonth = value.tr;
-                setState(() {});
-              }
-            },
-            isFullBorder: true,
+          Row(
+            children: [
+              CustomDropDown(
+                value: selectedMonth.toString().tr,
+                listValue: months.keys
+                    .map(
+                      (e) => e.toString().tr,
+                    )
+                    .toList(),
+                label: "اختر الشهر".tr,
+                onChange: (value) {
+                  if (value != null) {
+                    selectedMonth = value.tr;
+                    setState(() {});
+                  }
+                },
+                isFullBorder: true,
+              ),
+              CustomDropDown(
+                value: selectedYear.toString().tr,
+                listValue: year,
+                label: "اختر السنة".tr,
+                onChange: (value) {
+                  if (value != null) {
+                    selectedYear = value.tr;
+                    setState(() {});
+                  }
+                },
+                isFullBorder: true,
+              ),
+            ],
           ),
           SizedBox(
             height: defaultPadding,
@@ -68,7 +85,7 @@ class _EmployeeSalaryChartBoxState extends State<EmployeeSalaryChartBox> {
               height: 400,
               width: double.infinity,
               child: EmployeeSalaryBarChart(
-                  selectedMonth: months[selectedMonth]!)),
+                  selectedMonth: months[selectedMonth]!,selectedYear: selectedYear,)),
           Row(
             children: [
               const Spacer(),

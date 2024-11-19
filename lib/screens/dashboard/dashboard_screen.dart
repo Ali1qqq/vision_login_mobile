@@ -39,6 +39,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
       Get.find<WaitManagementViewModel>();
 
   String selectedMonth = '';
+  String selectedYear = '';
   bool isAll = false;
 
   @override
@@ -52,16 +53,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
         )
         .first
         .key;
-
-/*    Future.delayed(Duration(seconds: 3),() async{
-      _studentViewModel.update();
-      _expensesViewModel.update();
-      _accountManagementViewModel.update();
-      _salaryViewModel.update();
-    },);*/
-/*    WidgetsFlutterBinding.ensureInitialized().waitUntilFirstFrameRasterized.then((value) {
-
-    },);*/
+    selectedYear=thisTimesModel!.year.toString();
   }
 
   @override
@@ -89,27 +81,46 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   child: Wrap(
                     alignment: WrapAlignment.spaceBetween,
                     children: [
-                      CustomDropDown(
-                        value: selectedMonth.toString().tr,
-                        listValue: (months.keys
-                                .map(
-                                  (e) => e.toString().tr,
-                                )
-                                .toList()) +
-                            ["الكل".tr],
-                        label: "اختر الشهر".tr,
-                        onChange: (value) {
-                          if (value != null && value != "الكل") {
-                            // print(value.tr);
-                            selectedMonth = value.tr;
+                      Row(
+                        children: [
+                          CustomDropDown(
+                            value: selectedMonth.toString().tr,
+                            listValue: (months.keys
+                                    .map(
+                                      (e) => e.toString().tr,
+                                    )
+                                    .toList()) +
+                                ["الكل".tr],
+                            label: "اختر الشهر".tr,
+                            onChange: (value) {
+                              if (value != null && value != "الكل") {
+                                // print(value.tr);
+                                selectedMonth = value.tr;
 
-                            isAll = false;
-                          } else {
-                            isAll = true;
-                          }
-                          setState(() {});
-                        },
-                        isFullBorder: true,
+                                isAll = false;
+                              } else {
+                                isAll = true;
+                              }
+                              setState(() {});
+                            },
+                            isFullBorder: true,
+                          ),
+                          SizedBox(width: 10,),
+                          CustomDropDown(
+                            value: selectedYear.toString().tr,
+                            listValue: year,
+                            label: "اختر السنة".tr,
+                            onChange: (value) {
+
+                                // print(value.tr);
+                                selectedYear = value!.tr;
+
+
+                              setState(() {});
+                            },
+                            isFullBorder: true,
+                          ),
+                        ],
                       ),
                       if (_deleteManagementViewModel.allWaiting.values
                           .where(
@@ -187,12 +198,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                           _expensesViewModel.getAllExpensesMoney() -
                                           _salaryViewModel.getAllSalaryPay())
                                       : (_parentsViewModel.getAllReceivePayAtMonth(
-                                                  months[selectedMonth]!) -
+                                                  months[selectedMonth]!,selectedMonth) -
                                               _expensesViewModel.getExpensesAtMonth(
-                                                  months[selectedMonth]!) -
+                                                  months[selectedMonth]!,selectedYear) -
                                               _accountManagementViewModel
                                                   .getAllPaySalaryAtMonth(months[
-                                                      selectedMonth]! /*DateTime.now().month.toString()*/))
+                                                      selectedMonth]! /*DateTime.now().month.toString()*/,selectedYear))
                                           .toString(),
                                   primaryColor,
                                   "assets/budget.png",
@@ -208,7 +219,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                       ? _parentsViewModel.getAllReceivePay()
                                       : _parentsViewModel
                                           .getAllReceivePayAtMonth(
-                                              months[selectedMonth]!)
+                                              months[selectedMonth]!,selectedYear)
                                           .toString(),
                                   Colors.cyan,
                                   "assets/profit.png",
@@ -223,7 +234,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                   isAll
                                       ? _expensesViewModel.getAllExpensesMoney()
                                       : _expensesViewModel
-                                          .getExpensesAtMonth(months[selectedMonth]!)
+                                          .getExpensesAtMonth(months[selectedMonth]!,selectedYear)
                                           .toString(),
                                   blueColor,
                                   "assets/poor.png",
@@ -232,7 +243,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                               "الرواتب المستحقة",
                               _accountManagementViewModel
                                   .getAllSalariesAtMonth(
-                                  months[selectedMonth]!)
+                                  months[selectedMonth]!,selectedYear)
                                   .toString(),
                               Colors.black,
                               "assets/late-payment.png",
@@ -241,7 +252,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                               "الرواتب المستلمة",
                               _accountManagementViewModel
                                   .getAllPaySalaryAtMonth(
-                                  months[selectedMonth]!)
+                                  months[selectedMonth]!,selectedYear)
                                   .toString(),
                               Colors.black,
                               "assets/money-bag.png",
@@ -262,6 +273,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                         children: [
                           TotalBarChartWidget(
                             index: index,
+                            selectedYear: selectedYear,
                           ),
                           SizedBox(height: defaultPadding),
                           EmployeeTimeBox(),

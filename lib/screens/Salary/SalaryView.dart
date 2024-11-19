@@ -30,20 +30,36 @@ class _SalaryViewState extends State<SalaryView> {
             return Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                CustomDropDown(
-                  value: controller.selectedMonth.toString().tr,
-                  listValue: months.keys
-                      .map(
-                        (e) => e.toString().tr,
-                      )
-                      .toList(),
-                  label: "اختر الشهر".tr,
-                  onChange: (value) {
-                    if (value != null) {
-                      controller.setMothValue(value.tr);
-                    }
-                  },
-                  isFullBorder: true,
+                Row(
+                  children: [
+                    CustomDropDown(
+                      value: controller.selectedMonth.toString().tr,
+                      listValue: months.keys
+                          .map(
+                            (e) => e.toString().tr,
+                          )
+                          .toList(),
+                      label: "اختر الشهر".tr,
+                      onChange: (value) {
+                        if (value != null) {
+                          controller.setMothValue(value.tr);
+                        }
+                      },
+                      isFullBorder: true,
+                    ),
+                    SizedBox(width: 10,),
+                    CustomDropDown(
+                      value: controller.selectedYear.toString().tr,
+                      listValue: year,
+                      label: "اختر السنة".tr,
+                      onChange: (value) {
+                        if (value != null) {
+                          controller.setYearValue(value.tr);
+                        }
+                      },
+                      isFullBorder: true,
+                    ),
+                  ],
                 ),
                 SizedBox(
                   height: defaultPadding,
