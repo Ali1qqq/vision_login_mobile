@@ -609,6 +609,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         for (var e in (differences.values.elementAt(index)['addedInstallment'] ?? [])) {
                           addedInstallmentList.add(InstallmentModel.fromJson(e));
                         }
+                        removedInstallmentList.sort((a, b) => (a.installmentDate??"0").compareTo(b.installmentDate??"0"),);
+                        addedInstallmentList.sort((a, b) => (a.installmentDate??"0").compareTo(b.installmentDate??"0"),);
                         return Column(
                           children: [
                             Row(

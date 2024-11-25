@@ -44,7 +44,7 @@ Map<String, Map<String, dynamic>> compareMaps(Map<String, dynamic> newData, Map<
         List<dynamic> addedInstallment = newList.where((oldInstallment) {
           return !oldList.any((newInstallment) => newInstallment['installmentId'] == oldInstallment['installmentId']);
         }).toList();
-        print("تم حذف القسط: $removedInstallment");
+
 
         differences[key] = {
           'newData': newData[key].length,
