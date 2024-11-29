@@ -514,39 +514,46 @@ class ParentsViewModel extends GetxController {
 
   Future<void> showDeleteConfirmationDialog(WaitManagementViewModel _, BuildContext context) async {
     TextEditingController editController = TextEditingController();
-
-    QuickAlert.show(
-      context: context,
-      type: QuickAlertType.confirm,
-      widget: Center(
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: CustomTextField(
-            controller: editController,
-            title: "سبب الحذف".tr,
-            size: Get.width / 4,
+if( parentMap[currentId]!.children!.isEmpty) {
+      QuickAlert.show(
+        context: context,
+        type: QuickAlertType.confirm,
+        widget: Center(
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: CustomTextField(
+              controller: editController,
+              title: "سبب الحذف".tr,
+              size: Get.width / 4,
+            ),
           ),
         ),
-      ),
-      text: 'قبول هذه العملية'.tr,
-      title: 'هل انت متأكد ؟'.tr,
-      onConfirmBtnTap: () async {
-        await addWaitOperation(
-          type: waitingListTypes.delete,
-          collectionName: parentsCollection,
-          affectedId: parentMap[currentId]!.id!,
-          details: editController.text,
-          userName: currentEmployee?.userName.toString()??"",
+        text: 'قبول هذه العملية'.tr,
+        title: 'هل انت متأكد ؟'.tr,
+        onConfirmBtnTap: () async {
+          await addWaitOperation(
+            type: waitingListTypes.delete,
+            collectionName: parentsCollection,
+            affectedId: parentMap[currentId]!.id!,
+            details: editController.text,
+            userName: currentEmployee?.userName.toString() ?? "",
+          );
+          Get.back();
+        },
+        onCancelBtnTap: () => Get.back(),
+        confirmBtnText: 'نعم'.tr,
+        cancelBtnText: 'لا'.tr,
+        confirmBtnColor: Colors.redAccent,
+        showCancelBtn: true,
+      );
+    }
+else if(parentMap[currentId]!.installmentRecords!.values.where((element) => element.isPay==true,).isNotEmpty)
+ {
+   showErrorDialog("خطأ اثناء الحذف", "لا يمكن حذف اب لديه دفعات");
 
-        );
-        Get.back();
-      },
-      onCancelBtnTap: () => Get.back(),
-      confirmBtnText: 'نعم'.tr,
-      cancelBtnText: 'لا'.tr,
-      confirmBtnColor: Colors.redAccent,
-      showCancelBtn: true,
-    );
+ }else {
+    showErrorDialog("خطأ اثناء الحذف", "لا يمكن حذف اب لديه ابناء يرجى حذف الابناء اولا");
+  }
   }
 
   void setCurrentId(value) {
