@@ -91,9 +91,9 @@ class StudentViewModel extends GetxController {
                     value: Get.find<BusViewModel>().busesMap[value.bus]?.name ??
                         value.bus),
                 data.keys.elementAt(8): PlutoCell(
-                    value: Get.find<ParentsViewModel>()
-                        .parentMap[value.parentId]!
-                        .fullName),
+                    value: (Get.find<ParentsViewModel>()
+                        .parentMap[value.parentId]
+                        ?.fullName)??''),
                 data.keys.elementAt(9): PlutoCell(value: value.grade),
                 data.keys.elementAt(10):
                     PlutoCell(value: value.eventRecords?.length ?? "0"),

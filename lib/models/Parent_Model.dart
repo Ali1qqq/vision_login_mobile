@@ -78,10 +78,16 @@ class ParentModel {
         }
       })
     ;
-      installmentRecords?.values.toList()?..sort(
-              (a, b) {
-            return a.installmentDate!.compareTo(b.installmentDate!);
-          });
+if(installmentRecords!=null) {
+        installmentRecords = Map.fromEntries(installmentRecords!.entries.toList()
+          ..sort(
+            (a, b) => a.value.installmentDate!.compareTo(b.value.installmentDate!),
+          ));
+      }
+      // installmentRecords=     installmentRecords?.sort(
+      //         (a, b) {
+      //       return a.installmentDate!.compareTo(b.installmentDate!);
+      //     });
       contract = json['contract'] ?? [];
       children = json['children'] ?? [];
       eventRecords = (json['eventRecords'] as List<dynamic>?)
