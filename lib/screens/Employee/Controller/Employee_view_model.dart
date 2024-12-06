@@ -1088,6 +1088,7 @@ class EmployeeViewModel extends GetxController {
   /// when press delete
   void showDeleteConfirmationDialog(BuildContext context) {
     TextEditingController editController = TextEditingController();
+    if(currentEmployee?.salaryReceived?.isNotEmpty??true)
     QuickAlert.show(
       context: context,
       type: QuickAlertType.confirm,
