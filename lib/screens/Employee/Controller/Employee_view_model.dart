@@ -1088,38 +1088,42 @@ class EmployeeViewModel extends GetxController {
   /// when press delete
   void showDeleteConfirmationDialog(BuildContext context) {
     TextEditingController editController = TextEditingController();
-    if(currentEmployee?.salaryReceived?.isNotEmpty??true)
-    QuickAlert.show(
-      context: context,
-      type: QuickAlertType.confirm,
-      widget: Center(
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: CustomTextField(
-            controller: editController,
-            title: "سبب الحذف".tr,
-            size: Get.width / 4,
+    if(currentEmployee?.salaryReceived?.isNotEmpty??true) {
+      QuickAlert.show(
+        context: context,
+        type: QuickAlertType.confirm,
+        widget: Center(
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: CustomTextField(
+              controller: editController,
+              title: "سبب الحذف".tr,
+              size: Get.width / 4,
+            ),
           ),
         ),
-      ),
-      text: 'قبول هذه العملية'.tr,
-      title: 'هل انت متأكد ؟'.tr,
-      onConfirmBtnTap: () async {
-        addWaitOperation(
-          userName: currentEmployee?.userName.toString() ?? "",
-          details: editController.text,
-          collectionName: accountManagementCollection,
-          affectedId: allAccountManagement[currentId]?.id ?? '',
-          type: waitingListTypes.delete,
-        );
-        Get.back();
-      },
-      onCancelBtnTap: () => Get.back(),
-      confirmBtnText: 'نعم'.tr,
-      cancelBtnText: 'لا'.tr,
-      confirmBtnColor: Colors.redAccent,
-      showCancelBtn: true,
-    );
+        text: 'قبول هذه العملية'.tr,
+        title: 'هل انت متأكد ؟'.tr,
+        onConfirmBtnTap: () async {
+          addWaitOperation(
+            userName: currentEmployee?.userName.toString() ?? "",
+            details: editController.text,
+            collectionName: accountManagementCollection,
+            affectedId: allAccountManagement[currentId]?.id ?? '',
+            type: waitingListTypes.delete,
+          );
+          Get.back();
+        },
+        onCancelBtnTap: () => Get.back(),
+        confirmBtnText: 'نعم'.tr,
+        cancelBtnText: 'لا'.tr,
+        confirmBtnColor: Colors.redAccent,
+        showCancelBtn: true,
+      );
+    }
+    else{
+      showErrorDialog("خطأ اثناء الحذف", "لا يمكن حذف هذا الموظف");
+    }
   }
 
   /// when add or edite Employee
