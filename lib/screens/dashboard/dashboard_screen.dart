@@ -241,7 +241,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                   true)),
                           SquareWidget(
                               "الرواتب المستحقة",
-                              _accountManagementViewModel
+                            isAll?_accountManagementViewModel.getAllRequiredSalaries():  _accountManagementViewModel
                                   .getAllSalariesAtMonth(
                                   months[selectedMonth]!,selectedYear)
                                   .toString(),
@@ -250,7 +250,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                               false),
                           SquareWidget(
                               "الرواتب المستلمة",
-                              _accountManagementViewModel
+                           isAll?_salaryViewModel.getAllSalaryPay():   _accountManagementViewModel
                                   .getAllPaySalaryAtMonth(
                                   months[selectedMonth]!,selectedYear)
                                   .toString(),

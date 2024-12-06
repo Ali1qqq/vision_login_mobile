@@ -736,13 +736,15 @@ class EmployeeViewModel extends GetxController {
     );
   }
 
-  double getAllSalariesAtMonth(String month,String year) {
+  double getAllSalariesAtMonth(String month, String year) {
     double pay = 0.0;
+
     allAccountManagement.forEach(
       (key, value) {
-        if (value.employeeTime!.entries.where(
+        pay +=getUserSalariesAtMonth(month,key,year);
+      /*  if (value.employeeTime!.entries.where(
           (element) {
-            return element.key.toString().split("-")[1] == month.padLeft(2, "0")&&element.key.toString().split("-")[0] == year;
+            return element.key.toString().split("-")[1] == month.padLeft(2, "0") && element.key.toString().split("-")[0] == year;
           },
         ).isNotEmpty) {
           EmployeeModel accountModel = value;
@@ -776,13 +778,14 @@ class EmployeeViewModel extends GetxController {
               (accountModel.salary! / (accountModel.dayOfWork != 0 ? (accountModel.dayOfWork ?? 1) : 1)).round();
 
           pay += accountModel.salary! - totalDayOff - totalLateAndEarlier;
-        }
+        }*/
       },
     );
+
     return pay;
   }
 
-  double getAllPaySalaryAtMonth(String month,String year) {
+  double getAllPaySalaryAtMonth(String month, String year) {
     double pay = 0.0;
 
     pay = Get.find<SalaryViewModel>()
@@ -790,8 +793,7 @@ class EmployeeViewModel extends GetxController {
         .values
         .where(
           (element) {
-
-            return element.salaryId!.split(" ")[0].split("-")[1] == month&&element.salaryId!.split(" ")[0].split("-")[0] == year;
+            return element.salaryId!.split(" ")[0].split("-")[1] == month && element.salaryId!.split(" ")[0].split("-")[0] == year;
           },
         )
         .map(
@@ -805,13 +807,13 @@ class EmployeeViewModel extends GetxController {
     return pay;
   }
 
-  double getUserSalariesAtMonth(String month, String user,String year) {
+  double getUserSalariesAtMonth(String month, String user, String year) {
     double pay = 0.0;
     if (allAccountManagement[user]!
         .employeeTime!
         .entries
         .where(
-          (element) => element.key.toString().split("-")[1] == month.padLeft(2, "0").toString()&&element.key.toString().split("-")[0] == year,
+          (element) => element.key.toString().split("-")[1] == month.padLeft(2, "0").toString() && element.key.toString().split("-")[0] == year,
         )
         .isNotEmpty) {
       EmployeeModel accountModel = allAccountManagement[user]!;
@@ -847,6 +849,59 @@ class EmployeeViewModel extends GetxController {
           ((accountModel.salary ?? 0) / (accountModel.dayOfWork != 0 ? (accountModel.dayOfWork ?? 1) : 1)).round();
 
       pay += accountModel.salary! - totalDayOff - totalLateAndEarlier;
+    }
+
+    return pay;
+  }
+  double getAllRequiredSalaries() {
+    double pay = 0.0;
+    for (var accountModel in allAccountManagement.values) {
+      List monthCount=[];
+      for (var month in accountModel.employeeTime?.keys??[]){
+        monthCount.addIf(!(monthCount.contains(month.toString().split("-")[0]+"-"+month.toString().split("-")[1])),month.toString().split("-")[0]+"-"+month.toString().split("-")[1]);
+
+      }
+      int totalLateAndEarlier = (accountModel.employeeTime!.isEmpty
+          ? 0
+          : accountModel.employeeTime!
+          .values
+          .where(
+            (element) {
+          return element.isDayOff != true && element.isLateWithReason == false && element.isEarlierWithReason == false ;
+        },
+      )
+          .length /
+          3)
+          .floor() *
+          75;
+
+      totalLateAndEarlier += (accountModel.employeeTime!.isEmpty
+          ? 0
+          : accountModel.employeeTime!
+          .values
+          .where(
+            (element) {
+          return element.isDayOff != true && element.endDate == null;
+        },
+      )
+          .length /
+          3)
+          .floor() *
+          75;
+
+      int totalDayOff = (accountModel.employeeTime!.isEmpty
+          ? 0
+          : accountModel.employeeTime!
+          .values
+          .where(
+            (element) {
+          return element.isDayOff == true ;
+        },
+      )
+          .length) *
+          ((accountModel.salary ?? 0) / (accountModel.dayOfWork != 0 ? (accountModel.dayOfWork ?? 1) : 1)).round();
+
+      pay += (accountModel.salary!*monthCount.length) - totalDayOff - totalLateAndEarlier;
     }
 
     return pay;
@@ -912,7 +967,7 @@ class EmployeeViewModel extends GetxController {
     return time;
   }
 
-  int getTotalLateForUserAtMonth({required String selectedMonth,required String selectedYear, required String userId}) {
+  int getTotalLateForUserAtMonth({required String selectedMonth, required String selectedYear, required String userId}) {
     int totalLate = 0;
     List<int> totalLateList = [];
     if (selectedMonth != 'الكل')
@@ -921,8 +976,9 @@ class EmployeeViewModel extends GetxController {
           .values
           .where(
             (element) {
-              return element.dayName!.split("-")[1] == months[selectedMonth] && element.dayName!.split("-")[0] == selectedYear &&element.isDayOff != true&& (element.startDate!=null)&&(element.startDate!.difference(element.startDate!.copyWith(hour: 7, minute: 30)).inMinutes)>0;
-            },)
+              return element.dayName!.split("-")[1] == months[selectedMonth] && element.dayName!.split("-")[0] == selectedYear && element.isDayOff != true && (element.startDate != null) && (element.startDate!.difference(element.startDate!.copyWith(hour: 7, minute: 30)).inMinutes) > 0;
+            },
+          )
           .map((e) => e.startDate?.difference(e.startDate!.copyWith(hour: 7, minute: 30)).inSeconds ?? 0)
           .toList();
     else
@@ -930,15 +986,13 @@ class EmployeeViewModel extends GetxController {
           .employeeTime!
           .values
           .where(
-            (element) => element.isDayOff != true&&
-        (element.startDate!=null)&&(element.startDate!.difference(element.startDate!.copyWith(hour: 7, minute: 30)).inMinutes)>0,
+            (element) => element.isDayOff != true && (element.startDate != null) && (element.startDate!.difference(element.startDate!.copyWith(hour: 7, minute: 30)).inMinutes) > 0,
           )
           .map((e) => e.startDate?.difference(e.startDate!.copyWith(hour: 7, minute: 30)).inSeconds ?? 0)
           .toList();
     if (totalLateList.isNotEmpty) totalLate = totalLateList.reduce((value, element) => value + element);
 
     return totalLate ~/ 60;
-
   }
 
   int getTotalLateForUserAtDay({required String selectedDay, required String userId}) {
