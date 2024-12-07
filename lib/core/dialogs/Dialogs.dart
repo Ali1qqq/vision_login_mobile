@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:quickalert/models/quickalert_type.dart';
@@ -9,6 +8,10 @@ import '../../screens/Widgets/AppButton.dart';
 
 getReedOnlyError(BuildContext context, {String title = "هذا العنصر للعرض فقط"}) {
   QuickAlert.show(context: context, type: QuickAlertType.error, title: title.tr, confirmBtnText: "تم".tr);
+}
+
+getInfoDialog(BuildContext context, String info) {
+  QuickAlert.show( confirmBtnText: "موافق",context: context, type: QuickAlertType.info, title: "التفاصيل", text: info);
 }
 
 loadingQuickAlert(
@@ -24,7 +27,6 @@ loadingQuickAlert(
   );
 }
 
-
 getConfirmDialog(BuildContext context, {String title = "هل انت متأكد؟", required VoidCallback onConfirm}) {
   QuickAlert.show(context: context, type: QuickAlertType.confirm, title: title.tr, onCancelBtnTap: () => Get.back(), onConfirmBtnTap: onConfirm, confirmBtnText: "نعم".tr, cancelBtnText: "لا".tr, cancelBtnTextStyle: AppStyles.headLineStyle2);
 }
@@ -39,8 +41,6 @@ getSuccessDialog(
     confirmBtnText: "تم".tr,
   );
 }
-
-
 
 void showErrorDialog(String title, String message) {
   Get.defaultDialog(
@@ -62,6 +62,3 @@ void showErrorDialog(String title, String message) {
     barrierDismissible: false,
   );
 }
-
-
-

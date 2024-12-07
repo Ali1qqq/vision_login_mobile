@@ -50,13 +50,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     "التصنيف المتأثر",
     "العمليات",
   ];
-  List<String> editeData = [
-    "البيانات القديمة",
-    "البيانات الجديدة",
-    "التفاصيل",
-    "التصنيف المتأثر",
-    "العمليات",
-  ];
+
   List logData = [
     "نوع العملية",
     "التاريخ",
@@ -158,7 +152,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
                                               showData(context, differences, deleteModel, false);
                                             })
-                                          : dataRowItem(size / deleteData.length, deleteModel.details == '' || deleteModel.details == null ? "لا يوجد".tr : deleteModel.details),
+                                          : dataRowItem(size / deleteData.length, deleteModel.details == '' || deleteModel.details == null ? "لا يوجد".tr : deleteModel.details,onTap: (){
+
+                                    if( !(deleteModel.details == '' || deleteModel.details == null)) {
+                                      getInfoDialog(context, deleteModel.details!);
+                                    }
+                                  }),
                                   dataRowItem(size / logData.length, _getAffectedName(deleteModel)),
                                   dataRowItem(size / logData.length, deleteModel.collectionName.toString()),
                                   dataRowItem(
@@ -451,9 +450,15 @@ class _SettingsScreenState extends State<SettingsScreen> {
       dataRowItem(size / deleteData.length, model.type.toString().tr),
       model.type == waitingListTypes.add.name
           ? dataRowItem(size / deleteData.length, "عرض".tr, color: primaryColor, onTap: () {
+
               showEmployeeDialog(context, model.newData ?? {});
             })
-          : dataRowItem(size / deleteData.length, model.details == '' || model.details == null ? "لا يوجد".tr : model.details),
+          : dataRowItem(size / deleteData.length, model.details == '' || model.details == null ? "لا يوجد".tr : model.details,onTap: (){
+
+        if( !(model.details == '' || model.details == null)) {
+                getInfoDialog(context, model.details!);
+              }
+            }),
       dataRowItem(size / deleteData.length, formatDateTimeFromString(model.date.toString())),
       dataRowItem(size / deleteData.length, model.userName.toString().tr),
       dataRowItem(size / deleteData.length, affectedName),
