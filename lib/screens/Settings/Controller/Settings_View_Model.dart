@@ -38,6 +38,7 @@ class SettingsViewModel extends GetxController {
     "FriOutTime": {"Time": "11 45"},
   };
 
+
   TextEditingController lateTimeController = TextEditingController()..text = "0 0";
   TextEditingController appendTimeController = TextEditingController()..text = "0 0";
   TextEditingController outTimeController = TextEditingController()..text = "0 0";
@@ -67,6 +68,9 @@ class SettingsViewModel extends GetxController {
           settingsMap[element.id] = element.data();
         }
         update();
+
+
+
       },
     );
   }

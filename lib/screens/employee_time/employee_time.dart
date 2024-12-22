@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:vision_dashboard/models/employee_time_model.dart';
 import 'package:vision_dashboard/screens/Employee/Controller/Employee_view_model.dart';
 
 import 'package:flutter/material.dart';
@@ -56,6 +57,8 @@ class _EmployeeTimeViewState extends State<EmployeeTimeView> {
     selectedDate.text = thisTimesModel!.formattedTime;
 
     selectedYear.text = thisTimesModel!.year.toString();
+
+
   }
 
   @override
@@ -484,7 +487,7 @@ class _EmployeeTimeViewState extends State<EmployeeTimeView> {
                                                               width: Get.width / 7,
                                                               child: Text(
                                                                 selectedMonth == "الكل".tr
-                                                                    ? (accountModel.salary! - accountManagementViewModel.getAllUserSalariesAtMonth(accountModel.id)).toString()
+                                                                    ? (accountModel.salary! - accountManagementViewModel.getUserSalariesAllMonth(accountModel.id)).toString()
                                                                     : (accountModel.salary! - accountManagementViewModel.getUserSalariesAtMonth(months[selectedMonth]!, accountModel.id,selectedYear.text)).toString(),
                                                                 style: TextStyle(fontSize: Get.width < 700 ? 16 : 20),
                                                                 textAlign: TextAlign.center,
@@ -493,7 +496,7 @@ class _EmployeeTimeViewState extends State<EmployeeTimeView> {
                                                             Container(
                                                               width: Get.width / 7,
                                                               child: Text(
-                                                                (accountModel.salary!).toString(),
+                                                                selectedMonth == "الكل".tr ?(accountModel.salary!*controller.monthCount.toSet().length).toString():  (accountModel.salary!).toString(),
                                                                 style: TextStyle(fontSize: Get.width < 700 ? 16 : 20),
                                                                 textAlign: TextAlign.center,
                                                               ),
@@ -501,7 +504,7 @@ class _EmployeeTimeViewState extends State<EmployeeTimeView> {
                                                             Container(
                                                               width: Get.width / 7,
                                                               child: Text(
-                                                                selectedMonth == "الكل".tr ? (accountManagementViewModel.getAllUserSalariesAtMonth(accountModel.id)).toString() : accountManagementViewModel.getUserSalariesAtMonth(months[selectedMonth]!, accountModel.id,selectedYear.text).toString(),
+                                                                selectedMonth == "الكل".tr ? ((accountModel.salary!*controller.monthCount.toSet().length)-(accountModel.salary! - accountManagementViewModel.getUserSalariesAllMonth(accountModel.id))).toString() : accountManagementViewModel.getUserSalariesAtMonth(months[selectedMonth]!, accountModel.id,selectedYear.text).toString(),
                                                                 style: TextStyle(fontSize: Get.width < 700 ? 16 : 20),
                                                                 textAlign: TextAlign.center,
                                                               ),

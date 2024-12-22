@@ -6,10 +6,12 @@ import 'package:firebase_storage/firebase_storage.dart';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:pluto_grid/pluto_grid.dart';
 import 'package:quickalert/models/quickalert_type.dart';
 import 'package:quickalert/widgets/quickalert_dialog.dart';
 import 'package:vision_dashboard/controller/Wait_management_view_model.dart';
+import 'package:vision_dashboard/core/constant/const.dart';
 
 import 'package:vision_dashboard/models/Salary_Model.dart';
 import 'package:vision_dashboard/models/employee_time_model.dart';
@@ -84,6 +86,46 @@ class EmployeeViewModel extends GetxController {
   final userPassController = TextEditingController();
   double imageHeight = 150;
   double imageWidth = 150;
+  String? userName;
+  String? password;
+  String? serialNFC;
+  EmployeeModel? myUserModel;
+
+  /// we use this for fold Screen
+  bool isAdd = false;
+
+  /// current row selected
+  String currentId = '';
+
+  /// card id selected
+  String selectedCardId = '';
+
+  /// bus id selected
+  String busValue = '';
+
+  /// user role selected
+  String role = '';
+
+  /// event selected when add event
+  EventModel? selectedEvent = null;
+
+  /// previous events
+  List<EventRecordModel> eventRecords = [];
+
+  /// Edite Employee model
+  EmployeeModel? employeeModel = null;
+
+  /// we need this for Refresh pluto grid
+  GlobalKey plutoKey = GlobalKey();
+  String? loginUserPage;
+  NfcCardViewModel nfcCardViewModel = Get.find<NfcCardViewModel>();
+  bool isLogIn = true;
+
+  bool startAddTime = true;
+
+  /// we use this for cancel listener
+  late StreamSubscription<QuerySnapshot<EmployeeModel>> listener;
+  Color selectedColor = secondaryColor;
 
   /// when scan NFC Card
   TextEditingController nfcController = TextEditingController();
@@ -93,12 +135,6 @@ class EmployeeViewModel extends GetxController {
 
   /// we use this in Employee time when expand employee time details
   List<bool> isOpen = [];
-  RxMap<String, EmployeeModel> allAccountManagement = <String, EmployeeModel>{}.obs;
-  final accountManagementFireStore = FirebaseFirestore.instance.collection(accountManagementCollection).withConverter<EmployeeModel>(
-        fromFirestore: (snapshot, _) => EmployeeModel.fromJson(snapshot.data()!),
-        toFirestore: (account, _) => account.toJson(),
-      );
-  final FirebaseStorage _storage = FirebaseStorage.instance;
 
   ///pluto header
   List<PlutoColumn> columns = [];
@@ -111,6 +147,17 @@ class EmployeeViewModel extends GetxController {
 
   /// pluto data
   List<PlutoRow> rows = [];
+
+  bool isSupportNfc = false;
+
+  bool enableEdit = false;
+  RxMap<String, EmployeeModel> allAccountManagement = <String, EmployeeModel>{}.obs;
+  final accountManagementFireStore = FirebaseFirestore.instance.collection(accountManagementCollection).withConverter<EmployeeModel>(
+        fromFirestore: (snapshot, _) => EmployeeModel.fromJson(snapshot.data()!),
+        toFirestore: (account, _) => account.toJson(),
+      );
+  final FirebaseStorage _storage = FirebaseStorage.instance;
+  final settingFireStore = FirebaseFirestore.instance.collection(Const.settingsCollection);
 
   Map<String, PlutoColumnType> data = {
     "الرقم التسلسلي": PlutoColumnType.text(),
@@ -132,9 +179,6 @@ class EmployeeViewModel extends GetxController {
     "موافقة المدير": PlutoColumnType.text(),
   };
 
-  /// we need this for Refresh pluto grid
-  GlobalKey plutoKey = GlobalKey();
-
   EmployeeViewModel() {
     getColumns();
     if (currentEmployee?.id != null) getAllEmployee();
@@ -155,10 +199,6 @@ class EmployeeViewModel extends GetxController {
     columns.addAll(toAR(data));
   }
 
-  /// we use this for cancel listener
-  late StreamSubscription<QuerySnapshot<EmployeeModel>> listener;
-  Color selectedColor = secondaryColor;
-
   getAllEmployee() {
     listener = accountManagementFireStore.snapshots().listen(
       (event) async {
@@ -170,6 +210,8 @@ class EmployeeViewModel extends GetxController {
         rows.clear();
         int index = 4;
         allAccountManagement = Map<String, EmployeeModel>.fromEntries(event.docs.toList().map((i) {
+
+
           if (currentEmployee!.type != 'مالك') {
             if (i.data().type == "مالك") return MapEntry(i.id.toString(), i.data());
           }
@@ -253,10 +295,6 @@ class EmployeeViewModel extends GetxController {
     accountManagementFireStore.doc(accountModelId).delete();
   }
 
-  toggleStatusAccount(EmployeeModel accountModel) {
-    accountManagementFireStore.doc(accountModel.id).update({"isActive": !accountModel.isActive});
-  }
-
   Future<String> uploadImage(bytes, fileName) async {
     try {
       await _storage.ref(fileName).putData(bytes!.buffer.asUint8List());
@@ -296,8 +334,6 @@ class EmployeeViewModel extends GetxController {
     );
   }
 
-  bool isSupportNfc = false;
-
   initNFC(typeNFC type) async {
     initNFCWorker(type).then(
       (value) {
@@ -308,11 +344,6 @@ class EmployeeViewModel extends GetxController {
       },
     );
   }
-
-  String? userName;
-  String? password;
-  String? serialNFC;
-  EmployeeModel? myUserModel;
 
   getScreens() async {
     if (currentEmployee?.type == "مستخدم") {
@@ -443,12 +474,6 @@ class EmployeeViewModel extends GetxController {
       Get.snackbar("error", "not matched");
     }
   }
-
-  String? loginUserPage;
-  NfcCardViewModel nfcCardViewModel = Get.find<NfcCardViewModel>();
-  bool isLogIn = true;
-
-  bool startAddTime = true;
 
   Future<void> addTime({String? cardId, String? userName, String? password, required String appendTime, required String lateTime, required String outTime}) async {
     bool? isLateWithReason;
@@ -685,6 +710,9 @@ class EmployeeViewModel extends GetxController {
             user.employeeTime![timeData.formattedTime]!.totalDate = timeData.dateTime.difference(user.employeeTime![timeData.formattedTime]!.startDate!).inMinutes;
             loginUserPage = "وداعا " + user.userName;
             accountManagementFireStore.doc(user.id).update({"employeeTime": Map.fromEntries(user.employeeTime!.entries.map((e) => MapEntry(e.key, e.value.toJson())).toList())});
+            settingFireStore.doc(Const.time).set({
+              Const.time: FieldValue.arrayUnion([timeData.formattedTime])
+            });
           }
         }
       }
@@ -738,47 +766,9 @@ class EmployeeViewModel extends GetxController {
 
   double getAllSalariesAtMonth(String month, String year) {
     double pay = 0.0;
-
     allAccountManagement.forEach(
       (key, value) {
-        pay +=getUserSalariesAtMonth(month,key,year);
-      /*  if (value.employeeTime!.entries.where(
-          (element) {
-            return element.key.toString().split("-")[1] == month.padLeft(2, "0") && element.key.toString().split("-")[0] == year;
-          },
-        ).isNotEmpty) {
-          EmployeeModel accountModel = value;
-          int totalLateAndEarlier = (accountModel.employeeTime!.isEmpty
-                      ? 0
-                      : accountModel.employeeTime!.values.where(
-                            (element) {
-                              return element.isDayOff != true && element.isLateWithReason != true;
-                            },
-                          ).length /
-                          3)
-                  .floor() *
-              75;
-          totalLateAndEarlier += (accountModel.employeeTime!.isEmpty
-                      ? 0
-                      : accountModel.employeeTime!.values.where(
-                            (element) {
-                              return element.isDayOff != true && element.endDate == null;
-                            },
-                          ).length /
-                          3)
-                  .floor() *
-              75;
-          int totalDayOff = (accountModel.employeeTime!.isEmpty
-                  ? 0
-                  : accountModel.employeeTime!.values.where(
-                      (element) {
-                        return element.isDayOff == true;
-                      },
-                    ).length) *
-              (accountModel.salary! / (accountModel.dayOfWork != 0 ? (accountModel.dayOfWork ?? 1) : 1)).round();
-
-          pay += accountModel.salary! - totalDayOff - totalLateAndEarlier;
-        }*/
+        pay += getUserSalariesAtMonth(month, key, year);
       },
     );
 
@@ -841,11 +831,7 @@ class EmployeeViewModel extends GetxController {
 
       int totalDayOff = (accountModel.employeeTime!.isEmpty
               ? 0
-              : accountModel.employeeTime!.values.where(
-                  (element) {
-                    return element.isDayOff == true && element.dayName.toString().split("-")[1] == month.padLeft(2, "0").toString();
-                  },
-                ).length) *
+              : getAbsentDaysForEmployee(accountModel.id, int.parse(year), int.parse(month)).length) *
           ((accountModel.salary ?? 0) / (accountModel.dayOfWork != 0 ? (accountModel.dayOfWork ?? 1) : 1)).round();
 
       pay += accountModel.salary! - totalDayOff - totalLateAndEarlier;
@@ -853,64 +839,93 @@ class EmployeeViewModel extends GetxController {
 
     return pay;
   }
+
+  List<String> generateDaysInMonth(int year, int month) {
+    int daysInMonth = DateTime(year, month + 1, 0).day;
+    List<String> days = [];
+    for (int day = 1; day <= daysInMonth; day++) {
+      days.add(DateFormat('yyyy-MM-dd').format(DateTime(year, month, day)));
+    }
+    return days;
+  }
+
+  Map<String, List<String>> getAbsentDaysForEmployees(int year, int month) {
+    List<String> daysInMonth = generateDaysInMonth(year, month);
+    List<String> holidays = getHolidaysForMonth(year, month);
+
+    daysInMonth.removeWhere(
+      (element) => holidays.contains(element),
+    );
+
+    Map<String, List<String>> absentDays = {};
+
+    for (var employee in allAccountManagement.values) {
+      List<String> employeeAbsentDays = daysInMonth.where((day) => !employee.employeeTime!.containsKey(day)).toList();
+      absentDays[employee.userName] = employeeAbsentDays;
+    }
+
+    return absentDays;
+  }
+
+  List<String> getAbsentDaysForEmployee(String empId, int year, int month) {
+    List<String> daysInMonth = generateDaysInMonth(year, month);
+    List<String> holidays = getHolidaysForMonth(year, month);
+
+    daysInMonth.removeWhere(
+      (element) => holidays.contains(element),
+    );
+
+    EmployeeModel employeeModel = allAccountManagement[empId]!;
+    List<String> employeeAbsentDays = daysInMonth.where((day) => !employeeModel.employeeTime!.containsKey(day)).toList();
+
+    return employeeAbsentDays;
+  }
+
+  List<String> getHolidaysForMonth(int year, int month) {
+    List<String> daysInMonth = generateDaysInMonth(year, month);
+
+    Set<String> holidays = daysInMonth.toSet();
+
+    for (var employee in allAccountManagement.values) {
+      holidays.removeWhere((day) => employee.employeeTime!.containsKey(day));
+    }
+
+    return holidays.toList();
+  }
+
+/*  List<String> getMissedWorkDays(
+      Map<String, Map<String, Map<String, dynamic>>> allEmployeesTime,
+      String employeeId,
+      DateTime startDate,
+      DateTime endDate,
+      ) {
+    List<String> missedDays = [];
+    DateFormat formatter = DateFormat('yyyy-MM-dd');
+
+    for (DateTime date = startDate; date.isBefore(endDate.add(Duration(days: 1))); date = date.add(Duration(days: 1))) {
+      String dateString = formatter.format(date);
+
+      // التحقق مما إذا كان اليوم عطلة
+      bool isHoliday = allEmployeesTime.values.every(
+            (employeeTime) => !employeeTime.containsKey(dateString),
+      );
+
+      // إذا لم يكن اليوم عطلة وكان الموظف المحدد لم يداوم
+      if (!isHoliday && !allEmployeesTime[employeeId]!.containsKey(dateString)) {
+        missedDays.add(dateString);
+      }
+    }
+
+    return missedDays;
+  }*/
+  List<String> monthCount = [];
   double getAllRequiredSalaries() {
     double pay = 0.0;
     for (var accountModel in allAccountManagement.values) {
-      List monthCount=[];
-      for (var month in accountModel.employeeTime?.keys??[]){
-        monthCount.addIf(!(monthCount.contains(month.toString().split("-")[0]+"-"+month.toString().split("-")[1])),month.toString().split("-")[0]+"-"+month.toString().split("-")[1]);
 
+      for (var month in accountModel.employeeTime?.keys ?? []) {
+        monthCount.add(month.toString().split("-")[0] + "-" + month.toString().split("-")[1]);
       }
-      int totalLateAndEarlier = (accountModel.employeeTime!.isEmpty
-          ? 0
-          : accountModel.employeeTime!
-          .values
-          .where(
-            (element) {
-          return element.isDayOff != true && element.isLateWithReason == false && element.isEarlierWithReason == false ;
-        },
-      )
-          .length /
-          3)
-          .floor() *
-          75;
-
-      totalLateAndEarlier += (accountModel.employeeTime!.isEmpty
-          ? 0
-          : accountModel.employeeTime!
-          .values
-          .where(
-            (element) {
-          return element.isDayOff != true && element.endDate == null;
-        },
-      )
-          .length /
-          3)
-          .floor() *
-          75;
-
-      int totalDayOff = (accountModel.employeeTime!.isEmpty
-          ? 0
-          : accountModel.employeeTime!
-          .values
-          .where(
-            (element) {
-          return element.isDayOff == true ;
-        },
-      )
-          .length) *
-          ((accountModel.salary ?? 0) / (accountModel.dayOfWork != 0 ? (accountModel.dayOfWork ?? 1) : 1)).round();
-
-      pay += (accountModel.salary!*monthCount.length) - totalDayOff - totalLateAndEarlier;
-    }
-
-    return pay;
-  }
-
-  double getAllUserSalariesAtMonth(String user) {
-    double pay = 0.0;
-    if (allAccountManagement[user]!.employeeTime!.entries.isNotEmpty) {
-      EmployeeModel accountModel = allAccountManagement[user]!;
       int totalLateAndEarlier = (accountModel.employeeTime!.isEmpty
                   ? 0
                   : accountModel.employeeTime!.values.where(
@@ -921,6 +936,7 @@ class EmployeeViewModel extends GetxController {
                       3)
               .floor() *
           75;
+
       totalLateAndEarlier += (accountModel.employeeTime!.isEmpty
                   ? 0
                   : accountModel.employeeTime!.values.where(
@@ -931,14 +947,47 @@ class EmployeeViewModel extends GetxController {
                       3)
               .floor() *
           75;
-      int totalDayOff = (accountModel.employeeTime!.isEmpty
-              ? 0
-              : accountModel.employeeTime!.values.where(
-                  (element) {
-                    return element.isDayOff == true;
-                  },
-                ).length) *
-          (accountModel.salary! / (accountModel.dayOfWork != 0 ? (accountModel.dayOfWork ?? 1) : 1)).round();
+
+      int totalDayOff = 0;
+      for (var days in monthCount.toSet()) {
+        totalDayOff += (getAbsentDaysForEmployee(accountModel.id, int.parse(days.split("-")[0]), int.parse(days.split("-")[1])).length) * ((accountModel.salary ?? 0) / (accountModel.dayOfWork != 0 ? (accountModel.dayOfWork ?? 1) : 1)).round();
+      }
+
+      pay += (accountModel.salary! * monthCount.toSet().length) - totalDayOff - totalLateAndEarlier;
+    }
+
+    return pay;
+  }
+
+  double getUserSalariesAllMonth(String user) {
+    double pay = 0.0;
+
+    EmployeeModel accountModel = allAccountManagement[user]!;
+    for (var month in accountModel.employeeTime?.keys ?? []) {
+      monthCount.add(month.toString().split("-")[0] + "-" + month.toString().split("-")[1]);
+    }
+    if (accountModel.employeeTime!.entries.isNotEmpty) {
+      int totalLateAndEarlier = (accountModel.employeeTime!.values.where(
+                    (element) {
+                      return element.isDayOff != true && element.isLateWithReason == false && element.isEarlierWithReason == false;
+                    },
+                  ).length /
+                  3)
+              .floor() *
+          75;
+      totalLateAndEarlier += (accountModel.employeeTime!.values.where(
+                    (element) {
+                      return element.isDayOff != true && element.endDate == null;
+                    },
+                  ).length /
+                  3)
+              .floor() *
+          75;
+      int totalDayOff = 0;
+      print("monthCount "+ monthCount.toSet().length.toString());
+      for (var days in monthCount.toSet()) {
+        totalDayOff += (getAbsentDaysForEmployee(accountModel.id, int.parse(days.split("-")[0]), int.parse(days.split("-")[1])).length) * ((accountModel.salary ?? 0) / (accountModel.dayOfWork != 0 ? (accountModel.dayOfWork ?? 1) : 1)).round();
+      }
 
       pay += accountModel.salary! - totalDayOff - totalLateAndEarlier;
     }
@@ -1045,37 +1094,11 @@ class EmployeeViewModel extends GetxController {
     accountManagementFireStore.doc(userId).update({"employeeTime": Map.fromEntries(allAccountManagement[userId]!.employeeTime!.entries.map((e) => MapEntry(e.key, e.value.toJson())).toList())});
   }
 
-  /// we use this for fold Screen
-  bool isAdd = false;
-
-  /// current row selected
-  String currentId = '';
-
-  /// card id selected
-  String selectedCardId = '';
-
-  /// bus id selected
-  String busValue = '';
-
-  /// user role selected
-  String role = '';
-
-  /// event selected when add event
-  EventModel? selectedEvent = null;
-
-  /// previous events
-  List<EventRecordModel> eventRecords = [];
-
-  /// Edite Employee model
-  EmployeeModel? employeeModel = null;
-
   /// change current selected id
   void setCurrentId(value) {
     currentId = value;
     update();
   }
-
-  bool enableEdit = false;
 
   /// use this to change view screen
   foldScreen() {
@@ -1088,7 +1111,7 @@ class EmployeeViewModel extends GetxController {
   /// when press delete
   void showDeleteConfirmationDialog(BuildContext context) {
     TextEditingController editController = TextEditingController();
-    if(currentEmployee?.salaryReceived?.isNotEmpty??true) {
+    if (currentEmployee?.salaryReceived?.isNotEmpty ?? true) {
       QuickAlert.show(
         context: context,
         type: QuickAlertType.confirm,
@@ -1120,8 +1143,7 @@ class EmployeeViewModel extends GetxController {
         confirmBtnColor: Colors.redAccent,
         showCancelBtn: true,
       );
-    }
-    else{
+    } else {
       showErrorDialog("خطأ اثناء الحذف", "لا يمكن حذف هذا الموظف");
     }
   }
