@@ -210,8 +210,6 @@ class EmployeeViewModel extends GetxController {
         rows.clear();
         int index = 4;
         allAccountManagement = Map<String, EmployeeModel>.fromEntries(event.docs.toList().map((i) {
-
-
           if (currentEmployee!.type != 'مالك') {
             if (i.data().type == "مالك") return MapEntry(i.id.toString(), i.data());
           }
@@ -245,6 +243,7 @@ class EmployeeViewModel extends GetxController {
         Get.find<SalaryViewModel>().getEmployeeSalaryPluto();
 
         update();
+        getAllUserAppend();
         print("listener from user");
       },
     );
@@ -831,7 +830,11 @@ class EmployeeViewModel extends GetxController {
 
       int totalDayOff = (accountModel.employeeTime!.isEmpty
               ? 0
-              : getAbsentDaysForEmployee(accountModel.id, int.parse(year), int.parse(month)).length) *
+              : accountModel.employeeTime!.values.where(
+                  (element) {
+                    return element.isDayOff == true && element.dayName.toString().split("-")[1] == month.padLeft(2, "0").toString();
+                  },
+                ).length) *
           ((accountModel.salary ?? 0) / (accountModel.dayOfWork != 0 ? (accountModel.dayOfWork ?? 1) : 1)).round();
 
       pay += accountModel.salary! - totalDayOff - totalLateAndEarlier;
@@ -919,13 +922,35 @@ class EmployeeViewModel extends GetxController {
     return missedDays;
   }*/
   List<String> monthCount = [];
-  double getAllRequiredSalaries() {
-    double pay = 0.0;
-    for (var accountModel in allAccountManagement.values) {
 
+  getAllUserAppend() {
+    for (var accountModel in allAccountManagement.values) {
       for (var month in accountModel.employeeTime?.keys ?? []) {
         monthCount.add(month.toString().split("-")[0] + "-" + month.toString().split("-")[1]);
       }
+      for (var days in monthCount.toSet()) {
+        for (var empTime in getAbsentDaysForEmployee(accountModel.id, int.parse(days.split("-")[0]), int.parse(days.split("-")[1]))
+            .map((e) =>
+                MapEntry(e, EmployeeTimeModel(dayName: e, startDate: DateTime.now(), endDate: DateTime.now(), totalDate: 0, isDayEnd: true, isLateWithReason: null, reasonOfLate: null, isEarlierWithReason: null, reasonOfEarlier: "reasonOfEarlier", isDayOff: true, totalLate: 0, totalEarlier: 0)))
+            .toList()) {
+          accountModel.employeeTime?[empTime.key] = empTime.value;
+        }
+      }
+
+      var sortedEmployeeTime = Map.fromEntries(
+        accountModel.employeeTime!.entries.toList()..sort((a, b) => a.key.compareTo(b.key)),
+      );
+
+
+      accountModel.employeeTime = sortedEmployeeTime;
+    }
+  }
+
+
+
+  double getAllRequiredSalaries() {
+    double pay = 0.0;
+    for (var accountModel in allAccountManagement.values) {
       int totalLateAndEarlier = (accountModel.employeeTime!.isEmpty
                   ? 0
                   : accountModel.employeeTime!.values.where(
@@ -948,10 +973,14 @@ class EmployeeViewModel extends GetxController {
               .floor() *
           75;
 
-      int totalDayOff = 0;
-      for (var days in monthCount.toSet()) {
-        totalDayOff += (getAbsentDaysForEmployee(accountModel.id, int.parse(days.split("-")[0]), int.parse(days.split("-")[1])).length) * ((accountModel.salary ?? 0) / (accountModel.dayOfWork != 0 ? (accountModel.dayOfWork ?? 1) : 1)).round();
-      }
+      int totalDayOff = (accountModel.employeeTime!.isEmpty
+              ? 0
+              : accountModel.employeeTime!.values.where(
+                  (element) {
+                    return element.isDayOff == true;
+                  },
+                ).length) *
+          ((accountModel.salary ?? 0) / (accountModel.dayOfWork != 0 ? (accountModel.dayOfWork ?? 1) : 1)).round();
 
       pay += (accountModel.salary! * monthCount.toSet().length) - totalDayOff - totalLateAndEarlier;
     }
@@ -983,11 +1012,14 @@ class EmployeeViewModel extends GetxController {
                   3)
               .floor() *
           75;
-      int totalDayOff = 0;
-      print("monthCount "+ monthCount.toSet().length.toString());
-      for (var days in monthCount.toSet()) {
-        totalDayOff += (getAbsentDaysForEmployee(accountModel.id, int.parse(days.split("-")[0]), int.parse(days.split("-")[1])).length) * ((accountModel.salary ?? 0) / (accountModel.dayOfWork != 0 ? (accountModel.dayOfWork ?? 1) : 1)).round();
-      }
+      int totalDayOff = (accountModel.employeeTime!.isEmpty
+              ? 0
+              : accountModel.employeeTime!.values.where(
+                  (element) {
+                    return element.isDayOff == true;
+                  },
+                ).length) *
+          ((accountModel.salary ?? 0) / (accountModel.dayOfWork != 0 ? (accountModel.dayOfWork ?? 1) : 1)).round();
 
       pay += accountModel.salary! - totalDayOff - totalLateAndEarlier;
     }
