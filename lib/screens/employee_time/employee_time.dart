@@ -452,7 +452,12 @@ class _EmployeeTimeViewState extends State<EmployeeTimeView> {
                                               children: controller.allAccountManagement.values.toList().asMap().entries.map<ExpansionPanel>((entry) {
                                                 int indexKey = entry.key;
 
-                                                var accountModel = entry.value;
+                                                EmployeeModel accountModel = entry.value;
+                                                for(var empTime in controller.getAbsentDaysForEmployee(entry.value.id, int.parse(selectedYear.text), int.parse(months[selectedMonth]!)).map((e)=> MapEntry(e, EmployeeTimeModel(dayName: e, startDate:DateTime.now(), endDate: DateTime.now(), totalDate:0, isDayEnd: true, isLateWithReason: null, reasonOfLate: null, isEarlierWithReason: null, reasonOfEarlier: "reasonOfEarlier", isDayOff: true, totalLate: 0, totalEarlier: 0))  ).toList())
+                                                  {
+                                                    accountModel.employeeTime?[empTime.key]=empTime.value!;
+
+                                                  }
 
                                                 return ExpansionPanel(
                                                   headerBuilder: (BuildContext context, bool isExpanded) {
@@ -560,7 +565,7 @@ class _EmployeeTimeViewState extends State<EmployeeTimeView> {
                                                                 return element.dayName.toString().split("-")[2] == selectedDay;
                                                             }))
                                                               DataRow(
-                                                                color: WidgetStatePropertyAll((j.isLateWithReason == false || j.endDate == null) ? Colors.red.withOpacity(0.07) : Colors.transparent),
+                                                                color: WidgetStatePropertyAll((j.isLateWithReason == false || j.endDate == null) ? Colors.red.withOpacity(0.3) : Colors.transparent),
                                                                 cells: [
                                                                   dataRowItem(size / data.length, j.dayName.toString()),
                                                                   dataRowItem(size / data.length, j.isDayOff == true ? "غائب".tr : DateFun.dateToMinAndHour(j.startDate??DateTime.now())),

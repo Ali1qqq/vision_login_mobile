@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:vision_dashboard/core/dialogs/image_view_dialog.dart';import 'package:vision_dashboard/screens/Employee/Controller/Employee_view_model.dart';
+import 'package:vision_dashboard/core/dialogs/image_view_dialog.dart';
+import 'package:vision_dashboard/screens/Employee/Controller/Employee_view_model.dart';
 
 import '../../../Widgets/AppButton.dart';
 
