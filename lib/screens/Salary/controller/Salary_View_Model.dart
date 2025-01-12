@@ -36,7 +36,7 @@ class SalaryViewModel extends GetxController {
     bool isPaid = false;
     salaryMap.entries
         .where(
-      (element) => element.key.split(" ")[0].split("-")[1] == months[selectedMonth]&& element.key.split(" ")[0].split("-")[0] == year,
+      (element) => element.key.split(" ")[0].split("-")[1] == months[selectedMonth]&& element.key.split(" ")[0].split("-")[0] == selectedYear,
     )
         .forEach(
       (element) {
