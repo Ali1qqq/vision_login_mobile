@@ -464,11 +464,11 @@ class ParentsViewModel extends GetxController {
     return total;
   }
 
-  double getAllReceiveMaxPay() {
+  double getAllReceiveMaxPay(String selectedYear) {
     double total = 0;
     for(int i=1;i<=12;i++){
-      if(total<getAllReceivePayAtMonth(i.toString().padLeft(2,"0"),thisTimesModel!.year.toString())){
-        total=getAllReceivePayAtMonth(i.toString().padLeft(2,"0"),thisTimesModel!.year.toString());
+      if(total<getAllReceivePayAtMonth(i.toString().padLeft(2,"0"),selectedYear.toString())){
+        total=getAllReceivePayAtMonth(i.toString().padLeft(2,"0"),selectedYear.toString());
       }
     }
     return total + 50000;

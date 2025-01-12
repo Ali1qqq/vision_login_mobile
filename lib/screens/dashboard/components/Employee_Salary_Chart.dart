@@ -31,7 +31,7 @@ class _EmployeeSalaryChartBoxState extends State<EmployeeSalaryChartBox> {
           .first
           .key;
 
-selectedYear=thisTimesModel!.year.toString();
+selectedYear=selectedYear.toString();
   }
 
   @override

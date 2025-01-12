@@ -53,7 +53,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
         )
         .first
         .key;
-    selectedYear=thisTimesModel!.year.toString();
+    selectedYear=selectedYear.toString();
   }
 
   @override

@@ -110,13 +110,13 @@ class TotalBarChartState extends State<TotalBarChart> {
                 return BarChart(
                   BarChartData(
                     minY:  widget.index == 2
-                        ? -parentViewModel.getAllReceiveMaxPay()/2
+                        ? -parentViewModel.getAllReceiveMaxPay(widget.selectedYear)/2
                         : 0,
                     maxY: widget.index == 0
                         ? expensesViewModel.getMaxExpenses()
                         : widget.index == 1
-                            ? parentViewModel.getAllReceiveMaxPay()
-                            : parentViewModel.getAllReceiveMaxPay(),
+                            ? parentViewModel.getAllReceiveMaxPay(widget.selectedYear)
+                            : parentViewModel.getAllReceiveMaxPay(widget.selectedYear),
                     alignment: BarChartAlignment.center,
                     barTouchData: BarTouchData(
                       enabled: true,
