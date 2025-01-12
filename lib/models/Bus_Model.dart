@@ -55,10 +55,9 @@ class BusModel implements Mappable {
       expense: List<String>.from(json['expense'] ?? []),
       eventRecords: (json['eventRecords'] as List<dynamic>?)?.map((event) => EventRecordModel.fromJson(event)).toList()
         ?..sort((a, b) {
-          // افترض أن لديك حقل `date` أو `timestamp` في `EventRecordModel`
-          DateTime dateA = DateTime.parse(a.date); // استبدل `date` بالحقل المناسب
-          DateTime dateB = DateTime.parse(b.date); // استبدل `date` بالحقل المناسب
-          return dateA.compareTo(dateB); // ترتيب تصاعدي
+          DateTime dateA = DateTime.parse(a.date);
+          DateTime dateB = DateTime.parse(b.date);
+          return dateA.compareTo(dateB);
         }),
     );
   }

@@ -17,7 +17,7 @@ class TotalBarChartWidget extends StatefulWidget {
 
   @override
   State<TotalBarChartWidget> createState() => _TotalBarChartWidgetState();
-  int index = 2;
+  int index ;
 final  String selectedYear;
 }
 

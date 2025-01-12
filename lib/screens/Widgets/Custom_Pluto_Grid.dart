@@ -7,14 +7,14 @@ import '../../controller/Wait_management_view_model.dart';
 import '../../core/Styling/app_style.dart';
 
 class CustomPlutoGrid extends StatefulWidget {
-  CustomPlutoGrid({super.key, required this.onSelected, this.controller, this.idName, this.onRowDoubleTap, this.isEmp = false, this.selectedColor = secondaryColor});
+ const CustomPlutoGrid({super.key, required this.onSelected, this.controller, this.idName, this.onRowDoubleTap, this.isEmp = false, this.selectedColor = secondaryColor});
 
   @override
   State<CustomPlutoGrid> createState() => _CustomPlutoGridState();
   final Function(PlutoGridOnSelectedEvent) onSelected;
   final Function(PlutoGridOnRowDoubleTapEvent)? onRowDoubleTap;
   final controller, idName;
-  Color selectedColor;
+ final Color selectedColor;
   final bool isEmp;
 }
 

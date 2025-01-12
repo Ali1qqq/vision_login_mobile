@@ -5,6 +5,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
 import 'package:vision_dashboard/core/constant/constants.dart';
 import 'package:vision_dashboard/controller/NFC_Card_View_model.dart';
+import 'package:vision_dashboard/models/Salary_Model.dart';
 import 'package:vision_dashboard/models/account_management_model.dart';
 import 'package:vision_dashboard/screens/Employee/Controller/Employee_view_model.dart';
 import 'package:vision_dashboard/models/Bus_Model.dart';
@@ -22,13 +23,9 @@ class WaitManagementViewModel extends GetxController {
   ParentsViewModel _parentsViewModel = Get.find<ParentsViewModel>();
 
   BusViewModel _busViewModel = Get.find<BusViewModel>();
-  RxMap<String, WaitManagementModel> allWaiting =
-      <String, WaitManagementModel>{}.obs;
-  final waitManagementFireStore = FirebaseFirestore.instance
-      .collection(Const.waitManagementCollection)
-      .withConverter<WaitManagementModel>(
-        fromFirestore: (snapshot, _) =>
-            WaitManagementModel.fromJson(snapshot.data()!),
+  RxMap<String, WaitManagementModel> allWaiting = <String, WaitManagementModel>{}.obs;
+  final waitManagementFireStore = FirebaseFirestore.instance.collection(Const.waitManagementCollection).withConverter<WaitManagementModel>(
+        fromFirestore: (snapshot, _) => WaitManagementModel.fromJson(snapshot.data()!),
         toFirestore: (account, _) => account.toJson(),
       );
 
@@ -41,9 +38,7 @@ class WaitManagementViewModel extends GetxController {
   getAllDeleteModel() {
     listener = waitManagementFireStore.snapshots().listen(
       (event) {
-        allWaiting = Map<String, WaitManagementModel>.fromEntries(event.docs
-            .toList()
-            .map((i) => MapEntry(i.id.toString(), i.data()))).obs;
+        allWaiting = Map<String, WaitManagementModel>.fromEntries(event.docs.toList().map((i) => MapEntry(i.id.toString(), i.data()))).obs;
         update();
       },
     );
@@ -53,14 +48,11 @@ class WaitManagementViewModel extends GetxController {
     await setAcceptedDeleteOperation(waitModel, true);
     if (waitModel.type == waitingListTypes.delete.name)
       doDelete(waitModel);
-    else if (waitModel.type == waitingListTypes.returnInstallment.name)
-      doReturnInstallment(waitModel);
+    else if (waitModel.type == waitingListTypes.returnInstallment.name) doReturnInstallment(waitModel);
     if (waitModel.type == waitingListTypes.add.name) doAdd(waitModel);
     if (waitModel.type == waitingListTypes.waitDiscounts.name) clearDiscount(waitModel);
 
     update();
-
-
   }
 
   doAdd(WaitManagementModel waitModel) async {
@@ -68,22 +60,19 @@ class WaitManagementViewModel extends GetxController {
   }
 
   doReturnInstallment(WaitManagementModel waitModel) async {
-    await Get.find<ParentsViewModel>().setInstallmentPay(
-       installmentId:  waitModel.affectedId,parentId:  waitModel.relatedId.toString(),isPay:  false,imageUrl: '');
+    await Get.find<ParentsViewModel>()
+        .setInstallmentPay(installmentId: waitModel.affectedId, parentId: waitModel.relatedId.toString(), isPay: false, imageUrl: '');
   }
 
   doDelete(WaitManagementModel waitModel) async {
-
     switch (waitModel.collectionName) {
       case Const.expensesCollection:
         if (waitModel.relatedId != null) {
-          await deleteExpenseFromBus(
-              waitModel.relatedId.toString(), waitModel.affectedId);
+          await deleteExpenseFromBus(waitModel.relatedId.toString(), waitModel.affectedId);
         }
         break;
       case studentCollection:
-        await deleteStudentFromParentsAndBus(
-            waitModel.affectedId, waitModel.relatedId!);
+        await deleteStudentFromParentsAndBus(waitModel.affectedId, waitModel.relatedId!);
         break;
       case classCollection:
         await deleteClassFromStudent(waitModel.affectedId);
@@ -97,44 +86,63 @@ class WaitManagementViewModel extends GetxController {
       case accountManagementCollection:
         await makeCardAvailable(waitModel.affectedId);
         break;
+
+      case salaryCollection:
+        await removeDiscountAndSalaryFromUser(waitModel);
+        break;
     }
-    await FirebaseFirestore.instance
-        .collection(waitModel.collectionName)
-        .doc(waitModel.affectedId)
-        .delete();
+    await FirebaseFirestore.instance.collection(waitModel.collectionName).doc(waitModel.affectedId).delete();
+  }
+
+  removeDiscountAndSalaryFromUser(WaitManagementModel waitModel) async {
+    SalaryModel salaryModel = SalaryModel.fromJson(waitModel.newData!);
+
+    final docRef = FirebaseFirestore.instance.collection(accountManagementCollection).doc(salaryModel.employeeId);
+
+    try {
+      await FirebaseFirestore.instance.runTransaction((transaction) async {
+        final snapshot = await transaction.get(docRef);
+
+        if (!snapshot.exists) {
+          throw Exception("المستند غير موجود.");
+        }
+
+        final currentDiscount = snapshot.data()?['discounts'] ?? 0;
+        final calculatedValue = (double.parse(salaryModel.paySalary!) - double.parse(salaryModel.dilaySalary!)).toInt();
+        final newDiscount = currentDiscount > 0 ? currentDiscount - calculatedValue : 0;
+
+        transaction.update(docRef, {
+          'discounts': newDiscount,
+          "salaryReceived": FieldValue.arrayRemove([waitModel.id])
+        });
+      });
+    } catch (e) {
+      print("حدث خطأ: $e");
+    }
   }
 
   deleteStudentFromParentsAndBus(String studentId, String relatedId) async {
     _parentsViewModel.parentMap[relatedId]!.children!.remove(studentId);
-    await _parentsViewModel.updateParent(ParentModel(
-        id: relatedId,
-        children: _parentsViewModel.parentMap[relatedId]!.children!));
-
+    await _parentsViewModel.updateParent(ParentModel(id: relatedId, children: _parentsViewModel.parentMap[relatedId]!.children!));
   }
 
   deleteExpenseFromBus(String busId, String expensesId) {
     _busViewModel.busesMap[busId]!.expense!.remove(expensesId);
-    _busViewModel.updateBus(BusModel(
-        busId: busId, expense: _busViewModel.busesMap[busId]!.expense!));
+    _busViewModel.updateBus(BusModel(busId: busId, expense: _busViewModel.busesMap[busId]!.expense!));
   }
 
   undoTheDelete(WaitManagementModel waitModel) {
     setAcceptedDeleteOperation(waitModel, false);
-    if (waitModel.type == waitingListTypes.add.name)
-      Get.find<EmployeeViewModel>()
-          .deleteUnAcceptedAccount(waitModel.affectedId);
+    if (waitModel.type == waitingListTypes.add.name) Get.find<EmployeeViewModel>().deleteUnAcceptedAccount(waitModel.affectedId);
     if (waitModel.type == waitingListTypes.edite) {}
 
     update();
   }
 
-  addDeleteOperation(WaitManagementModel waitModel)async {
-
-    await  waitManagementFireStore.doc(waitModel.id).set(
-        waitModel..date = DateTime.now().toIso8601String(),
-      );
-
-
+  addDeleteOperation(WaitManagementModel waitModel) async {
+    await waitManagementFireStore.doc(waitModel.id).set(
+          waitModel..date = DateTime.now().toIso8601String(),
+        );
 
     update();
   }
@@ -144,32 +152,22 @@ class WaitManagementViewModel extends GetxController {
   }
 
   setAcceptedDeleteOperation(WaitManagementModel waitModel, bool isAccepted) {
-    waitManagementFireStore
-        .doc(waitModel.id)
-        .set(waitModel..isAccepted = isAccepted);
+    waitManagementFireStore.doc(waitModel.id).set(waitModel..isAccepted = isAccepted);
   }
 
   returnDeleteOperation({required String affectedId}) {
     WaitManagementViewModel controller = Get.find<WaitManagementViewModel>();
-    WaitManagementModel deleteManagementModel =
-        controller.allWaiting.values.lastWhere(
+    WaitManagementModel deleteManagementModel = controller.allWaiting.values.lastWhere(
       (element) => element.affectedId == affectedId,
     );
     waitManagementFireStore.doc(deleteManagementModel.id).delete();
   }
 
   getOldData(String value) {
-    FirebaseFirestore.instance
-        .collection(archiveCollection)
-        .doc(value)
-        .collection(Const.waitManagementCollection)
-        .get()
-        .then(
+    FirebaseFirestore.instance.collection(archiveCollection).doc(value).collection(Const.waitManagementCollection).get().then(
       (event) {
-        allWaiting = Map<String, WaitManagementModel>.fromEntries(event.docs
-            .toList()
-            .map((i) => MapEntry(
-                i.id.toString(), WaitManagementModel.fromJson(i.data())))).obs;
+        allWaiting = Map<String, WaitManagementModel>.fromEntries(
+            event.docs.toList().map((i) => MapEntry(i.id.toString(), WaitManagementModel.fromJson(i.data())))).obs;
       },
     );
     listener.cancel();
@@ -177,8 +175,7 @@ class WaitManagementViewModel extends GetxController {
   }
 
   deleteClassFromStudent(String affectedId) {
-    String className =
-        Get.find<ClassViewModel>().classMap[affectedId]?.className ?? '';
+    String className = Get.find<ClassViewModel>().classMap[affectedId]?.className ?? '';
     Get.find<StudentViewModel>().studentMap.forEach(
       (key, value) {
         if (value.stdClass == className) {
@@ -206,28 +203,20 @@ class WaitManagementViewModel extends GetxController {
 
   declineEdit(WaitManagementModel waitModel) async {
     if (waitModel.collectionName == busesCollection) {
-      await Get.find<StudentViewModel>()
-          .setBus("بدون حافلة", waitModel.newData?['students'] ?? []);
-      await Get.find<EmployeeViewModel>()
-          .setBus("بدون حافلة", waitModel.newData?['employees'] ?? []);
-      await Get.find<StudentViewModel>()
-          .setBus(waitModel.affectedId, waitModel.oldDate?['students'] ?? []);
-      await Get.find<EmployeeViewModel>()
-          .setBus(waitModel.affectedId, waitModel.oldDate?['employees'] ?? []);
+      await Get.find<StudentViewModel>().setBus("بدون حافلة", waitModel.newData?['students'] ?? []);
+      await Get.find<EmployeeViewModel>().setBus("بدون حافلة", waitModel.newData?['employees'] ?? []);
+      await Get.find<StudentViewModel>().setBus(waitModel.affectedId, waitModel.oldDate?['students'] ?? []);
+      await Get.find<EmployeeViewModel>().setBus(waitModel.affectedId, waitModel.oldDate?['employees'] ?? []);
     }
 
-    if (waitModel.collectionName == accountManagementCollection)
-      {
-        EmployeeModel newEMP=EmployeeModel.fromJson(waitModel.newData!);
-        EmployeeModel oldEMP=EmployeeModel.fromJson(waitModel.oldDate!);
-        if(newEMP.serialNFC!=oldEMP.serialNFC)
-          {
-
-            Get.find<NfcCardViewModel>().deleteUserCard(newEMP.serialNFC);
-            Get.find<NfcCardViewModel>().setCardForEMP(oldEMP.serialNFC!,waitModel.affectedId);
-          }
-
+    if (waitModel.collectionName == accountManagementCollection) {
+      EmployeeModel newEMP = EmployeeModel.fromJson(waitModel.newData!);
+      EmployeeModel oldEMP = EmployeeModel.fromJson(waitModel.oldDate!);
+      if (newEMP.serialNFC != oldEMP.serialNFC) {
+        Get.find<NfcCardViewModel>().deleteUserCard(newEMP.serialNFC);
+        Get.find<NfcCardViewModel>().setCardForEMP(oldEMP.serialNFC!, waitModel.affectedId);
       }
+    }
     await FirebaseFirestore.instance
         .collection(waitModel.collectionName)
         .doc(waitModel.affectedId)
@@ -235,41 +224,43 @@ class WaitManagementViewModel extends GetxController {
     setAcceptedDeleteOperation(waitModel, false);
   }
 
-   clearDiscount(WaitManagementModel waitModel) {
-     Get.find<EmployeeViewModel>().clearDiscount(waitModel.affectedId);
-   }
-
-  makeCardAvailable(String affectedId) {
-   String cardId=
-    Get.find<NfcCardViewModel>().nfcCardMap.values.where((element) => element.userId==affectedId,).firstOrNull?.nfcUid??'';
-    FirebaseFirestore.instance
-        .collection(nfcCardCollection)
-        .doc(cardId)
-        .set({"userId":null}, SetOptions(merge: true));
+  clearDiscount(WaitManagementModel waitModel) {
+    Get.find<EmployeeViewModel>().clearDiscount(waitModel.affectedId);
   }
 
+  makeCardAvailable(String affectedId) {
+    String cardId = Get.find<NfcCardViewModel>()
+            .nfcCardMap
+            .values
+            .where(
+              (element) => element.userId == affectedId,
+            )
+            .firstOrNull
+            ?.nfcUid ??
+        '';
+    FirebaseFirestore.instance.collection(nfcCardCollection).doc(cardId).set({"userId": null}, SetOptions(merge: true));
+  }
 }
 
 addWaitOperation({
   required String collectionName,
   required String affectedId,
   required String userName,
-
   String? details,
   String? relatedId,
   Map<String, dynamic>? oldData,
   Map<String, dynamic>? newData,
   List<String>? relatedList,
   required waitingListTypes type,
-})async {
-await  Get.find<WaitManagementViewModel>().addDeleteOperation(WaitManagementModel(
+}) async {
+  await Get.find<WaitManagementViewModel>().addDeleteOperation(WaitManagementModel(
     id: generateId("Wait"),
     affectedId: affectedId,
     collectionName: collectionName,
     newData: newData,
     oldDate: oldData,
     details: details,
-  userName:userName,
+    userName: userName,
     type: type.name,
     relatedId: relatedId,
   ));
@@ -284,9 +275,7 @@ bool checkIfPendingAdd({required String affectedId}) {
             (element) =>
                 element.affectedId == affectedId &&
                 element.isAccepted != false &&
-                (element.type ==
-                    waitingListTypes.add
-                        .name) /*||(element.isAccepted == null||element.isAccepted == false)*/,
+                (element.type == waitingListTypes.add.name) /*||(element.isAccepted == null||element.isAccepted == false)*/,
           )
           .length >
       0;
@@ -302,8 +291,7 @@ bool checkIfPendingDelete({required String affectedId}) {
                 element.isAccepted == null &&
                 (element.type == waitingListTypes.delete.name ||
                     element.type ==
-                        waitingListTypes.returnInstallment
-                            .name) /*||(element.isAccepted == null||element.isAccepted == false)*/,
+                        waitingListTypes.returnInstallment.name) /*||(element.isAccepted == null||element.isAccepted == false)*/,
           )
           .length >
       0;
@@ -311,8 +299,7 @@ bool checkIfPendingDelete({required String affectedId}) {
 
 returnPendingDelete({required String affectedId}) {
   WaitManagementViewModel controller = Get.find<WaitManagementViewModel>();
-  WaitManagementModel deleteManagementModel =
-      controller.allWaiting.values.lastWhere(
+  WaitManagementModel deleteManagementModel = controller.allWaiting.values.lastWhere(
     (element) => element.affectedId == affectedId,
   );
   controller.undoTheDelete(deleteManagementModel);

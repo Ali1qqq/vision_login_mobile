@@ -36,7 +36,7 @@ class SalaryViewModel extends GetxController {
     bool isPaid = false;
     salaryMap.entries
         .where(
-      (element) => element.key.split(" ")[0].split("-")[1] == months[selectedMonth],
+      (element) => element.key.split(" ")[0].split("-")[1] == months[selectedMonth]&& element.key.split(" ")[0].split("-")[0] == year,
     )
         .forEach(
       (element) {
@@ -47,59 +47,78 @@ class SalaryViewModel extends GetxController {
   }
 
   String? getSalarySign() {
-    String? image ;
+    String? image;
     salaryMap.entries
         .where(
-          (element) => element.key.split(" ")[0].split("-")[1] == months[selectedMonth],
+      (element) => element.key.split(" ")[0].split("-")[1] == months[selectedMonth],
     )
         .forEach(
-          (element) {
+      (element) {
         if (element.value.employeeId == currentId) image = element.value.signImage;
       },
     );
     return image;
   }
+
   final GlobalKey<SfSignaturePadState> signatureGlobalKey = GlobalKey();
+
   void handleClearButtonPressed() {
     signatureGlobalKey.currentState!.clear();
   }
+
   void handleSaveButtonPressed(
-     String paySalary,
-     String id,
-     String date,
-     String constSalary,
-     String dilaySalary,
-     BuildContext context,
-      String nots,
+    String paySalary,
+    String id,
+    String date,
+    String constSalary,
+    String dilaySalary,
+    BuildContext context,
+    String nots,
   ) async {
-    QuickAlert.show(width: Get.width / 2, context: context, type: QuickAlertType.loading, title: 'جاري التحميل'.tr, text: 'يتم العمل على الطلب'.tr, barrierDismissible: false);
+    QuickAlert.show(
+        width: Get.width / 2,
+        context: context,
+        type: QuickAlertType.loading,
+        title: 'جاري التحميل'.tr,
+        text: 'يتم العمل على الطلب'.tr,
+        barrierDismissible: false);
     final data = await signatureGlobalKey.currentState!.toImage(pixelRatio: 3.0);
     final bytes = await data.toByteData(format: ui.ImageByteFormat.png);
-    await employeeController.adReceiveSalary(id, paySalary, date, constSalary, dilaySalary, bytes,nots);
+    await employeeController.addReceiveSalary(id, paySalary, date, constSalary, dilaySalary, bytes, nots);
   }
-receiveSalary({required BuildContext context}){
- EmployeeModel  accountModel=employeeController.allAccountManagement[currentId]!;
-  showDialog(
-    context: context,
-    builder: (context) => buildSignViewDialog(
-        (employeeController.getUserSalariesAtMonth(months[selectedMonth]!, accountModel.id,selectedYear)).toString(),
-        accountModel,
-        "${thisTimesModel!.year}-${months[selectedMonth]}",signatureGlobalKey,context),
-  );
-}
 
-getSalaryImage({required BuildContext context}){
-  EmployeeModel  accountModel=employeeController.allAccountManagement[currentId]!;
-  String?  image;
-  print(salaryMap.values.where((element) => element.employeeId==accountModel.id&&element.salaryId!.split(" ")[0]=="${thisTimesModel!.year}-${months[selectedMonth]}",));
-  image=salaryMap.values.where((element) => element.employeeId==accountModel.id&&element.salaryId!.split(" ")[0]=="${thisTimesModel!.year}-${months[selectedMonth]}",).lastOrNull?.signImage;
+  receiveSalary({required BuildContext context}) {
+    EmployeeModel accountModel = employeeController.allAccountManagement[currentId]!;
+    showDialog(
+      context: context,
+      builder: (context) => buildSignViewDialog(
+          text: (employeeController.getUserSalariesAtMonth(months[selectedMonth]!, accountModel.id, selectedYear)).toString(),
+          account: accountModel,
+          date: "${selectedYear}-${months[selectedMonth]}",
+          signatureGlobalKey: signatureGlobalKey,
+          context: context),
+    );
+  }
 
+  getSalaryImage({required BuildContext context}) {
+    EmployeeModel accountModel = employeeController.allAccountManagement[currentId]!;
 
-if(image!=null) {
+    SalaryModel? salaryModel = salaryMap.values
+        .where(
+          (element) =>
+              element.employeeId == accountModel.id && element.salaryId!.split(" ")[0] == "${selectedYear}-${months[selectedMonth]}",
+        )
+        .lastOrNull;
 
-      showDialog(context: context, builder: (context) => buildSignImageView(image!));
+    if (salaryModel != null) {
+      showDialog(
+          context: context,
+          builder: (context) => buildSignImageView(salaryModel.signImage!, () {
+                deleteSalary(salaryModel.salaryId!, accountModel.userName, "${selectedYear}-${months[selectedMonth]}");
+              }, salaryModel.salaryId!));
     }
   }
+
   SalaryViewModel() {
     getColumns();
     getAllSalary();
@@ -113,7 +132,7 @@ if(image!=null) {
       )
       .first
       .key;
-  String selectedYear =thisTimesModel!.year.toString();
+  String selectedYear = thisTimesModel!.year.toString();
 
   Map<String, SalaryModel> _salaryMap = {};
 
@@ -150,12 +169,12 @@ if(image!=null) {
   }
 
   EmployeeViewModel employeeController = Get.find<EmployeeViewModel>();
-  Color selectedColor=secondaryColor;
+  Color selectedColor = secondaryColor;
 
   getEmployeeSalaryPluto() async {
     rows.clear();
     plutoKey = GlobalKey();
-    selectedColor=secondaryColor;
+    selectedColor = secondaryColor;
     employeeController.allAccountManagement.forEach(
       (key, value) {
         rows.add(
@@ -163,10 +182,15 @@ if(image!=null) {
             cells: {
               data.keys.elementAt(0): PlutoCell(value: key),
               data.keys.elementAt(1): PlutoCell(value: value.fullName),
-              data.keys.elementAt(2): PlutoCell(value: employeeController.getUserSalariesAtMonth(months[selectedMonth].toString(), key,selectedYear)),
+              data.keys.elementAt(2):
+                  PlutoCell(value: employeeController.getUserSalariesAtMonth(months[selectedMonth].toString(), key, selectedYear)),
               data.keys.elementAt(3): PlutoCell(value: value.salary.toString()),
-              data.keys.elementAt(4): PlutoCell(value: getPaidSalaryAtMonth(empId: key, month: months[selectedMonth].toString(),year: selectedYear)),
-              data.keys.elementAt(5): PlutoCell(value: cheekIfEmpHaveSalaryAtMonth(empId: key, month: months[selectedMonth].toString()) ? "تم التسليم".tr : "لم يتم التسليم".tr),
+              data.keys.elementAt(4):
+                  PlutoCell(value: getPaidSalaryAtMonth(empId: key, month: months[selectedMonth].toString(), year: selectedYear)),
+              data.keys.elementAt(5): PlutoCell(
+                  value: cheekIfEmpHaveSalaryAtMonth(empId: key, month: months[selectedMonth].toString(), year: selectedYear)
+                      ? "تم التسليم".tr
+                      : "لم يتم التسليم".tr),
             },
           ),
         );
@@ -175,11 +199,11 @@ if(image!=null) {
     update();
   }
 
-  bool cheekIfEmpHaveSalaryAtMonth({required String empId, required String month}) {
+  bool cheekIfEmpHaveSalaryAtMonth({required String empId, required String month, required String year}) {
     bool isPaid = false;
     salaryMap.entries
         .where(
-      (element) => element.key.split(" ")[0].split("-")[1] == month,
+      (element) => element.key.split(" ")[0].split("-")[1] == month && element.key.split(" ")[0].split("-")[0] == year,
     )
         .forEach(
       (element) {
@@ -199,13 +223,14 @@ if(image!=null) {
     update();
   }
 
-  deleteSalary(String salaryId) async {
-    await addWaitOperation(type: waitingListTypes.delete,
-
-        userName: currentEmployee?.userName.toString()??"",
-        collectionName: salaryCollection, affectedId: salaryId
-
-    );
+  deleteSalary(String salaryId, String userName, String date) async {
+    await addWaitOperation(
+        type: waitingListTypes.delete,
+        userName: currentEmployee?.userName.toString() ?? "",
+        collectionName: salaryCollection,
+        affectedId: salaryId,
+        details: 'حذف راتب ممنوح ل ${userName} عن شهر ${date}',
+        newData: _salaryMap[salaryId]!.toJson());
     update();
   }
 
@@ -232,11 +257,11 @@ if(image!=null) {
     return total;
   }
 
-  String getPaidSalaryAtMonth({required String empId, required String month,required String year}) {
+  String getPaidSalaryAtMonth({required String empId, required String month, required String year}) {
     String totalPay = "0";
     salaryMap.entries
         .where(
-      (element) => element.key.split(" ")[0].split("-")[1] == month&&element.key.split(" ")[0].split("-")[0] == year,
+      (element) => element.key.split(" ")[0].split("-")[1] == month && element.key.split(" ")[0].split("-")[0] == year,
     )
         .forEach(
       (element) {
@@ -252,6 +277,7 @@ if(image!=null) {
     getEmployeeSalaryPluto();
     update();
   }
+
   setYearValue(String value) {
     selectedYear = value;
     getEmployeeSalaryPluto();

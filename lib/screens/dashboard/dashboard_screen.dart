@@ -82,6 +82,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     alignment: WrapAlignment.spaceBetween,
                     children: [
                       Row(
+                         mainAxisSize: MainAxisSize.min,
                         children: [
                           CustomDropDown(
                             value: selectedMonth.toString().tr,
