@@ -53,7 +53,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
         )
         .first
         .key;
-    selectedYear=selectedYear.toString();
+    selectedYear=thisTimesModel!.year.toString();
   }
 
   @override
@@ -198,13 +198,14 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                       ? (_parentsViewModel.getAllReceivePay() -
                                           _expensesViewModel.getAllExpensesMoney() -
                                           _salaryViewModel.getAllSalaryPay())
-                                      : (_parentsViewModel.getAllReceivePayAtMonth(
-                                                  months[selectedMonth]!,selectedMonth) -
+                                      : (_parentsViewModel
+                                      .getAllReceivePayAtMonth(
+                                      months[selectedMonth]!,selectedYear)-
                                               _expensesViewModel.getExpensesAtMonth(
-                                                  months[selectedMonth]!,selectedYear) -
+                                                  months[selectedMonth]!,selectedYear) /*-
                                               _accountManagementViewModel
                                                   .getAllPaySalaryAtMonth(months[
-                                                      selectedMonth]! /*DateTime.now().month.toString()*/,selectedYear))
+                                                      selectedMonth]!,selectedYear)*/)
                                           .toString(),
                                   primaryColor,
                                   "assets/budget.png",
