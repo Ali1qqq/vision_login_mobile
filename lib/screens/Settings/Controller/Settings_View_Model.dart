@@ -1,5 +1,3 @@
-
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
@@ -38,7 +36,6 @@ class SettingsViewModel extends GetxController {
     "FriOutTime": {"Time": "11 45"},
   };
 
-
   TextEditingController lateTimeController = TextEditingController()..text = "0 0";
   TextEditingController appendTimeController = TextEditingController()..text = "0 0";
   TextEditingController outTimeController = TextEditingController()..text = "0 0";
@@ -68,9 +65,6 @@ class SettingsViewModel extends GetxController {
           settingsMap[element.id] = element.data();
         }
         update();
-
-
-
       },
     );
   }
@@ -112,7 +106,12 @@ class SettingsViewModel extends GetxController {
   archive(String yearName) async {
     fireStoreInstance.collection(archiveCollection).doc(yearName).set({"Year": yearName}, SetOptions(merge: true));
     for (var arr in _accountManagementViewModel.allAccountManagement.values.toList()) {
-      await fireStoreInstance.collection(archiveCollection).doc(yearName).collection(accountManagementCollection).doc(arr.id).set(arr.toJson());
+      await fireStoreInstance
+          .collection(archiveCollection)
+          .doc(yearName)
+          .collection(accountManagementCollection)
+          .doc(arr.id)
+          .set(arr.toJson());
       print("Finished allAccountManagement");
     }
     for (var arr in _salaryViewModel.salaryMap.values.toList()) {
@@ -124,7 +123,12 @@ class SettingsViewModel extends GetxController {
       print("Finished EventViewModel");
     }
     for (var arr in _studentViewModel.studentMap.values.toList()) {
-      await fireStoreInstance.collection(archiveCollection).doc(yearName).collection(studentCollection).doc(arr.studentID).set(arr.toJson());
+      await fireStoreInstance
+          .collection(archiveCollection)
+          .doc(yearName)
+          .collection(studentCollection)
+          .doc(arr.studentID)
+          .set(arr.toJson());
       print("Finished StudentViewModel");
     }
     for (var arr in _parentsViewModel.parentMap.values.toList()) {
@@ -132,7 +136,12 @@ class SettingsViewModel extends GetxController {
       print("Finished ParentsViewModel");
     }
     for (var arr in _expensesViewModel.allExpenses.values.toList()) {
-      await fireStoreInstance.collection(archiveCollection).doc(yearName).collection(Const.expensesCollection).doc(arr.id).set(arr.toJson());
+      await fireStoreInstance
+          .collection(archiveCollection)
+          .doc(yearName)
+          .collection(Const.expensesCollection)
+          .doc(arr.id)
+          .set(arr.toJson());
       print("Finished ExpensesViewModel");
     }
     for (var arr in _storeViewModel.storeMap.values.toList()) {
@@ -140,7 +149,12 @@ class SettingsViewModel extends GetxController {
       print("Finished StoreViewModel");
     }
     for (var arr in _deleteManagementViewModel.allWaiting.values.toList()) {
-      await fireStoreInstance.collection(archiveCollection).doc(yearName).collection(Const.waitManagementCollection).doc(arr.id).set(arr.toJson());
+      await fireStoreInstance
+          .collection(archiveCollection)
+          .doc(yearName)
+          .collection(Const.waitManagementCollection)
+          .doc(arr.id)
+          .set(arr.toJson());
       print("Finished deleteManagementCollection");
     }
     for (var arr in _busViewModel.busesMap.values.toList()) {
@@ -164,22 +178,29 @@ class SettingsViewModel extends GetxController {
     }
   }
 
-   deleteCurrentData() async {
+  deleteCurrentData() async {
     for (var arr in _accountManagementViewModel.allAccountManagement.values.toList()) {
       await fireStoreInstance.collection(accountManagementCollection).doc(arr.id).set({
         "employeeTime": {},
         "salaryReceived": [],
-        "bus":"بدون حافلة",
-        "eventRecords":[],
+        "bus": "بدون حافلة",
+        "eventRecords": [],
       }, SetOptions(merge: true));
       print("Finished allAccountManagement");
+    }
+    for (var parent in _parentsViewModel.parentMap.values.toList()) {
+      await fireStoreInstance.collection(parentsCollection).doc(parent.id).set({
+        'installmentRecords': {},
+        "eventRecords": [],
+      }, SetOptions(merge: true));
+      print("Finished parentsCollection");
     }
 
     await deleteAllDocumentsInCollection(Const.expensesCollection);
     await deleteAllDocumentsInCollection(Const.eventCollection);
     await deleteAllDocumentsInCollection(salaryCollection);
-    await deleteAllDocumentsInCollection(studentCollection);
-    await deleteAllDocumentsInCollection(parentsCollection);
+    // await deleteAllDocumentsInCollection(studentCollection);
+    // await deleteAllDocumentsInCollection(parentsCollection);
     await deleteAllDocumentsInCollection(busesCollection);
     await deleteAllDocumentsInCollection(storeCollection);
     await deleteAllDocumentsInCollection(Const.waitManagementCollection);
@@ -187,7 +208,6 @@ class SettingsViewModel extends GetxController {
     print("Finished deleting documents in all collections");
 
     update();
-
   }
 
   void getOldData(String value) async {
