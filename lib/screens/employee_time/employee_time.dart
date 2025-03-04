@@ -43,7 +43,6 @@ class _EmployeeTimeViewState extends State<EmployeeTimeView> {
 
   @override
   void initState() {
-
     super.initState();
 
     accountManagementViewModel.initNFC(typeNFC.time);
@@ -57,8 +56,6 @@ class _EmployeeTimeViewState extends State<EmployeeTimeView> {
     selectedDate.text = thisTimesModel!.formattedTime;
 
     selectedYear.text = thisTimesModel!.year.toString();
-
-
   }
 
   @override
@@ -234,7 +231,14 @@ class _EmployeeTimeViewState extends State<EmployeeTimeView> {
                                                   Scrollbar(
                                                     controller: scrollController,
                                                     child: SingleChildScrollView(
-                                                        physics: ClampingScrollPhysics(), controller: scrollController, scrollDirection: Axis.horizontal, child: DataTable(columnSpacing: 0, dividerThickness: 0.3, columns: _buildDataColumns(size), rows: _buildDataRows(controller, size))),
+                                                        physics: ClampingScrollPhysics(),
+                                                        controller: scrollController,
+                                                        scrollDirection: Axis.horizontal,
+                                                        child: DataTable(
+                                                            columnSpacing: 0,
+                                                            dividerThickness: 0.3,
+                                                            columns: _buildDataColumns(size),
+                                                            rows: _buildDataRows(controller, size))),
                                                   )
                                                 ],
                                               );
@@ -248,7 +252,7 @@ class _EmployeeTimeViewState extends State<EmployeeTimeView> {
                                         firstChild: Column(
                                           mainAxisAlignment: MainAxisAlignment.center,
                                           children: [
-                                            if (true /*controller.isSupportNfc && enableUpdate*/)
+                                            if (controller.isSupportNfc && enableUpdate)
                                               Column(
                                                 children: [
                                                   Text(
@@ -259,7 +263,9 @@ class _EmployeeTimeViewState extends State<EmployeeTimeView> {
                                                     height: 50,
                                                   ),
                                                   Text(
-                                                    accountManagementViewModel.isLogIn ? "سجل الدخول باستخدام بطاقتك".tr : "سجل الخروج باستخدام بطاقتك".tr,
+                                                    accountManagementViewModel.isLogIn
+                                                        ? "سجل الدخول باستخدام بطاقتك".tr
+                                                        : "سجل الخروج باستخدام بطاقتك".tr,
                                                     style: TextStyle(fontSize: 22),
                                                   ),
                                                   SizedBox(
@@ -299,7 +305,8 @@ class _EmployeeTimeViewState extends State<EmployeeTimeView> {
                                               Center(
                                                 child: Container(
                                                   width: size / 2,
-                                                  decoration: BoxDecoration(color: Colors.grey.shade300, borderRadius: BorderRadius.circular(8)),
+                                                  decoration:
+                                                      BoxDecoration(color: Colors.grey.shade300, borderRadius: BorderRadius.circular(8)),
                                                   padding: EdgeInsets.all(8),
                                                   child: Center(
                                                     child: Text(
@@ -313,7 +320,8 @@ class _EmployeeTimeViewState extends State<EmployeeTimeView> {
                                               )
                                             else
                                               Container(
-                                                decoration: BoxDecoration(color: Colors.grey.shade300, borderRadius: BorderRadius.circular(8)),
+                                                decoration:
+                                                    BoxDecoration(color: Colors.grey.shade300, borderRadius: BorderRadius.circular(8)),
                                                 padding: EdgeInsets.all(8),
                                                 child: Center(
                                                   child: Text(
@@ -364,8 +372,7 @@ class _EmployeeTimeViewState extends State<EmployeeTimeView> {
                                         ),
                                         child: CustomDropDown(
                                           value: selectedYear.text.toString(),
-                                          listValue:
-                                              year,
+                                          listValue: year,
                                           label: "اختر السنة".tr,
                                           onChange: (value) {
                                             if (value != null) {
@@ -449,7 +456,11 @@ class _EmployeeTimeViewState extends State<EmployeeTimeView> {
                                                   controller.isOpen[index] = !controller.isOpen[index];
                                                 });
                                               },
-                                              children: controller.allAccountManagement.values.toList().asMap().entries.map<ExpansionPanel>((entry) {
+                                              children: controller.allAccountManagement.values
+                                                  .toList()
+                                                  .asMap()
+                                                  .entries
+                                                  .map<ExpansionPanel>((entry) {
                                                 int indexKey = entry.key;
 
                                                 EmployeeModel accountModel = entry.value;
@@ -484,7 +495,11 @@ class _EmployeeTimeViewState extends State<EmployeeTimeView> {
                                                             Container(
                                                               width: Get.width / 7,
                                                               child: Text(
-                                                                DateFun.minutesToTime(   controller.getTotalLateForUserAtMonth(selectedMonth: selectedMonth, userId: entry.value.id,selectedYear: selectedYear.text)).toString(),
+                                                                DateFun.minutesToTime(controller.getTotalLateForUserAtMonth(
+                                                                        selectedMonth: selectedMonth,
+                                                                        userId: entry.value.id,
+                                                                        selectedYear: selectedYear.text))
+                                                                    .toString(),
                                                                 style: TextStyle(fontSize: Get.width < 700 ? 16 : 20),
                                                                 textAlign: TextAlign.center,
                                                               ),
@@ -493,8 +508,14 @@ class _EmployeeTimeViewState extends State<EmployeeTimeView> {
                                                               width: Get.width / 7,
                                                               child: Text(
                                                                 selectedMonth == "الكل".tr
-                                                                    ? (accountModel.salary! - accountManagementViewModel.getUserSalariesAllMonth(accountModel.id)).toString()
-                                                                    : (accountModel.salary! - accountManagementViewModel.getUserSalariesAtMonth(months[selectedMonth]!, accountModel.id,selectedYear.text)).toString(),
+                                                                    ? (accountModel.salary! -
+                                                                            accountManagementViewModel
+                                                                                .getUserSalariesAllMonth(accountModel.id))
+                                                                        .toString()
+                                                                    : (accountModel.salary! -
+                                                                            accountManagementViewModel.getUserSalariesAtMonth(
+                                                                                months[selectedMonth]!, accountModel.id, selectedYear.text))
+                                                                        .toString(),
                                                                 style: TextStyle(fontSize: Get.width < 700 ? 16 : 20),
                                                                 textAlign: TextAlign.center,
                                                               ),
@@ -502,7 +523,10 @@ class _EmployeeTimeViewState extends State<EmployeeTimeView> {
                                                             Container(
                                                               width: Get.width / 7,
                                                               child: Text(
-                                                                selectedMonth == "الكل".tr ?(accountModel.salary!*controller.monthCount.toSet().length).toString():  (accountModel.salary!).toString(),
+                                                                selectedMonth == "الكل".tr
+                                                                    ? (accountModel.salary! * controller.monthCount.toSet().length)
+                                                                        .toString()
+                                                                    : (accountModel.salary!).toString(),
                                                                 style: TextStyle(fontSize: Get.width < 700 ? 16 : 20),
                                                                 textAlign: TextAlign.center,
                                                               ),
@@ -510,7 +534,16 @@ class _EmployeeTimeViewState extends State<EmployeeTimeView> {
                                                             Container(
                                                               width: Get.width / 7,
                                                               child: Text(
-                                                                selectedMonth == "الكل".tr ? ((accountModel.salary!*controller.monthCount.toSet().length)-(accountModel.salary! - accountManagementViewModel.getUserSalariesAllMonth(accountModel.id))).toString() : accountManagementViewModel.getUserSalariesAtMonth(months[selectedMonth]!, accountModel.id,selectedYear.text).toString(),
+                                                                selectedMonth == "الكل".tr
+                                                                    ? ((accountModel.salary! * controller.monthCount.toSet().length) -
+                                                                            (accountModel.salary! -
+                                                                                accountManagementViewModel
+                                                                                    .getUserSalariesAllMonth(accountModel.id)))
+                                                                        .toString()
+                                                                    : accountManagementViewModel
+                                                                        .getUserSalariesAtMonth(
+                                                                            months[selectedMonth]!, accountModel.id, selectedYear.text)
+                                                                        .toString(),
                                                                 style: TextStyle(fontSize: Get.width < 700 ? 16 : 20),
                                                                 textAlign: TextAlign.center,
                                                               ),
@@ -556,20 +589,29 @@ class _EmployeeTimeViewState extends State<EmployeeTimeView> {
                                                           ),
                                                           rows: [
                                                             for (var j in accountModel.employeeTime!.values.where((element) {
-                                                              if (selectedMonth != 'الكل'.tr) if (selectedDay == '' || selectedDay == 'الكل'.tr)
+                                                              if (selectedMonth != 'الكل'.tr) if (selectedDay == '' ||
+                                                                  selectedDay == 'الكل'.tr)
                                                                 return element.dayName.toString().split("-")[1] == months[selectedMonth];
                                                               else
-                                                                return element.dayName.toString().split("-")[1] == months[selectedMonth] && element.dayName.toString().split("-")[2] == selectedDay;
+                                                                return element.dayName.toString().split("-")[1] == months[selectedMonth] &&
+                                                                    element.dayName.toString().split("-")[2] == selectedDay;
                                                               else if (selectedDay == '' || selectedDay == 'الكل'.tr)
                                                                 return true;
                                                               else
                                                                 return element.dayName.toString().split("-")[2] == selectedDay;
                                                             }))
                                                               DataRow(
-                                                                color: WidgetStatePropertyAll((j.isLateWithReason == false || j.endDate == null || j.isDayOff == true) ? Colors.red.withOpacity(0.3) : Colors.transparent),
+                                                                color: WidgetStatePropertyAll(
+                                                                    (j.isLateWithReason == false || j.endDate == null || j.isDayOff == true)
+                                                                        ? Colors.red.withOpacity(0.3)
+                                                                        : Colors.transparent),
                                                                 cells: [
                                                                   dataRowItem(size / data.length, j.dayName.toString()),
-                                                                  dataRowItem(size / data.length, j.isDayOff == true ? "غائب".tr : DateFun.dateToMinAndHour(j.startDate??DateTime.now())),
+                                                                  dataRowItem(
+                                                                      size / data.length,
+                                                                      j.isDayOff == true
+                                                                          ? "غائب".tr
+                                                                          : DateFun.dateToMinAndHour(j.startDate ?? DateTime.now())),
                                                                   dataRowItem(
                                                                       size / data.length,
                                                                       j.isDayOff == true
@@ -577,21 +619,38 @@ class _EmployeeTimeViewState extends State<EmployeeTimeView> {
                                                                           : j.endDate == null
                                                                               ? "لم يسجل خروج".tr
                                                                               : DateFun.dateToMinAndHour(j.endDate!)),
-                                                                  dataRowItem(size / data.length, j.isDayOff == true ? "غائب".tr : DateFun.minutesToTime(j.endDate?.difference(j.startDate ?? j.endDate!).inMinutes ?? 0)),
                                                                   dataRowItem(
                                                                       size / data.length,
                                                                       j.isDayOff == true
                                                                           ? "غائب".tr
-                                                                          : ((j.startDate?.difference(j.startDate!.copyWith(hour: 7, minute: 30)).inSeconds ?? 0)<0)
+                                                                          : DateFun.minutesToTime(
+                                                                              j.endDate?.difference(j.startDate ?? j.endDate!).inMinutes ??
+                                                                                  0)),
+                                                                  dataRowItem(
+                                                                      size / data.length,
+                                                                      j.isDayOff == true
+                                                                          ? "غائب".tr
+                                                                          : ((j.startDate
+                                                                                          ?.difference(
+                                                                                              j.startDate!.copyWith(hour: 7, minute: 30))
+                                                                                          .inSeconds ??
+                                                                                      0) <
+                                                                                  0)
                                                                               ? DateFun.minutesToTime(0)
-                                                                              : DateFun.minutesToTime((j.startDate?.difference(j.startDate!.copyWith(hour: 7, minute: 30)).inSeconds ?? 0)~/60)),
+                                                                              : DateFun.minutesToTime((j.startDate
+                                                                                          ?.difference(
+                                                                                              j.startDate!.copyWith(hour: 7, minute: 30))
+                                                                                          .inSeconds ??
+                                                                                      0) ~/
+                                                                                  60)),
                                                                   dataRowItem(
                                                                       size / data.length,
                                                                       j.isDayOff == true
                                                                           ? "غائب".tr
                                                                           : j.isLateWithReason == null
                                                                               ? ""
-                                                                              : (j.isLateWithReason! ? "مع مبرر".tr : "بدون مبرر".tr), onTap: () {
+                                                                              : (j.isLateWithReason! ? "مع مبرر".tr : "بدون مبرر".tr),
+                                                                      onTap: () {
                                                                     if (j.isLateWithReason != false && j.isLateWithReason != null)
                                                                       Get.defaultDialog(
                                                                         title: "المبرر".tr,
@@ -602,7 +661,8 @@ class _EmployeeTimeViewState extends State<EmployeeTimeView> {
                                                                             width: Get.height / 2,
                                                                             child: Text(
                                                                               j.reasonOfLate.toString(),
-                                                                              style: AppStyles.headLineStyle2.copyWith(color: AppColors.textColor),
+                                                                              style: AppStyles.headLineStyle2
+                                                                                  .copyWith(color: AppColors.textColor),
                                                                             ),
                                                                           ),
                                                                         ),
@@ -669,6 +729,7 @@ class _EmployeeTimeViewState extends State<EmployeeTimeView> {
     List<EmployeeModel> employees = accountController.allAccountManagement.values.toList();
 
     return List.generate(employees.length, (index) {
+      final currentUser = employees[index];
       return DataRow(cells: [
         dataRowItem(size / 3, employees[index].fullName.toString(), color: Colors.white),
         DataCell(Center(
@@ -677,16 +738,22 @@ class _EmployeeTimeViewState extends State<EmployeeTimeView> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                if (employees[index].employeeTime!.values.where((element) => element.dayName == selectedDate.text && element.endDate != null).isNotEmpty)
+                if (currentUser.employeeTime!.values.where((element) {
+                  return element.dayName == selectedDate.text && element.endDate != null;
+                }).isNotEmpty)
                   Text(
                     "تم الانتهاء".tr,
                     style: AppStyles.headLineStyle3.copyWith(color: AppColors.textColor),
                   )
                 else if (selectedDate.text == dayNameNow)
                   AppButton(
-                      text: employees[index].employeeTime!.values.where((element) => element.dayName == dayNameNow.split(' ')[0]).isNotEmpty ? "الخروج".tr : "الدخول".tr,
+                      text: currentUser.employeeTime!.values.where((element) => element.dayName == dayNameNow.split(' ')[0]).isNotEmpty
+                          ? "الخروج".tr
+                          : "الدخول".tr,
                       onPressed: () {
-                        if (employees[index].employeeTime!.values.where((element) => element.dayName == dayNameNow.split(' ')[0] && element.endDate != null).isEmpty)
+                        if (currentUser.employeeTime!.values
+                            .where((element) => element.dayName == dayNameNow.split(' ')[0] && element.endDate != null)
+                            .isEmpty)
                           getConfirmDialog(
                             context,
                             onConfirm: () {
@@ -702,14 +769,14 @@ class _EmployeeTimeViewState extends State<EmployeeTimeView> {
                                   appendTime: friAppendTime,
                                   lateTime: friLateTime,
                                   outTime: friOutTime,
-                                  userName: employees[index].userName,
+                                  userName: currentUser.userName,
                                 );
                               } else {
                                 accountController.addTime(
                                   appendTime: appendTime,
                                   lateTime: lateTime,
                                   outTime: outTime,
-                                  userName: employees[index].userName,
+                                  userName: currentUser.userName,
                                 );
                               }
 
@@ -719,7 +786,7 @@ class _EmployeeTimeViewState extends State<EmployeeTimeView> {
                       })
                 else
                   Text(
-                    "لم يسجل الخروج".tr,
+                    "لم يسجل ".tr,
                     style: AppStyles.headLineStyle3.copyWith(color: AppColors.textColor),
                   ),
                 if (employees[index].employeeTime!.values.where((element) => element.dayName == selectedDate.text.split(' ')[0]).isEmpty)
@@ -741,5 +808,3 @@ class _EmployeeTimeViewState extends State<EmployeeTimeView> {
     });
   }
 }
-
-

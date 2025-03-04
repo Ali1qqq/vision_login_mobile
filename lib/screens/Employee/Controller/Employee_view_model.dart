@@ -917,7 +917,9 @@ class EmployeeViewModel extends GetxController {
     );
 
     EmployeeModel employeeModel = allAccountManagement[empId]!;
-    List<String> employeeAbsentDays = daysInMonth.where((day) => !employeeModel.employeeTime!.containsKey(day)).toList();
+    List<String> employeeAbsentDays = daysInMonth
+        .where((day) => !employeeModel.employeeTime!.containsKey(day) && employeeModel.employeeTime?[day]?.isDayEnd == true)
+        .toList();
 
     return employeeAbsentDays;
   }
@@ -972,17 +974,17 @@ class EmployeeViewModel extends GetxController {
                 e,
                 EmployeeTimeModel(
                     dayName: e,
-                    startDate: DateTime.now(),
-                    endDate: DateTime.now(),
-                    totalDate: 0,
+                    startDate:null,
+                    endDate:null,
+                    totalDate: null,
                     isDayEnd: true,
                     isLateWithReason: null,
                     reasonOfLate: null,
                     isEarlierWithReason: null,
-                    reasonOfEarlier: "reasonOfEarlier",
+                    reasonOfEarlier: null,
                     isDayOff: true,
-                    totalLate: 0,
-                    totalEarlier: 0)))
+                    totalLate: null,
+                    totalEarlier: null)))
             .toList()) {
           accountModel.employeeTime?[empTime.key] = empTime.value;
         }
