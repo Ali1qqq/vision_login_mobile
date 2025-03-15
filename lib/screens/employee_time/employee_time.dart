@@ -1,7 +1,6 @@
 import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:vision_dashboard/models/employee_time_model.dart';
 import 'package:vision_dashboard/screens/Employee/Controller/Employee_view_model.dart';
 
 import 'package:flutter/material.dart';
@@ -765,13 +764,16 @@ class _EmployeeTimeViewState extends State<EmployeeTimeView> {
                               String friAppendTime = settingsController.settingsMap[Const.friAppendTime][Const.time];
                               String friOutTime = settingsController.settingsMap[Const.friOutTime][Const.time];
                               if (Timestamp.now().toDate().weekday == DateTime.friday) {
+                                accountController.isLogIn=true;
                                 accountController.addTime(
+
                                   appendTime: friAppendTime,
                                   lateTime: friLateTime,
                                   outTime: friOutTime,
                                   userName: currentUser.userName,
                                 );
                               } else {
+                                accountController.isLogIn=false;
                                 accountController.addTime(
                                   appendTime: appendTime,
                                   lateTime: lateTime,
