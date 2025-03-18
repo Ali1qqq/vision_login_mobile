@@ -631,14 +631,14 @@ class _EmployeeTimeViewState extends State<EmployeeTimeView> {
                                                                           ? "غائب".tr
                                                                           : ((j.startDate
                                                                                           ?.difference(
-                                                                                              j.startDate!.copyWith(hour: 7, minute: 30))
+                                                                                              j.startDate!.copyWith(hour: int.parse(Get.find<EmployeeViewModel>().getLateTime(j.dayName!).split(" ")[0]), minute: int.parse(Get.find<EmployeeViewModel>().getLateTime(j.dayName!).split(" ")[1]), second: 0))
                                                                                           .inSeconds ??
                                                                                       0) <
                                                                                   0)
                                                                               ? DateFun.minutesToTime(0)
                                                                               : DateFun.minutesToTime((j.startDate
                                                                                           ?.difference(
-                                                                                              j.startDate!.copyWith(hour: 7, minute: 30))
+                                                                                              j.startDate!.copyWith(hour: int.parse(Get.find<EmployeeViewModel>().getLateTime(j.dayName!).split(" ")[0]), minute: int.parse(Get.find<EmployeeViewModel>().getLateTime(j.dayName!).split(" ")[1]), second: 0))
                                                                                           .inSeconds ??
                                                                                       0) ~/
                                                                                   60)),

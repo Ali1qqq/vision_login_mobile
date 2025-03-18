@@ -38,6 +38,7 @@ import '../../../core/Utils/To_AR.dart';
 import '../../Buses/Buses_View.dart';
 import '../../Parents/Parents_View.dart';
 import '../../Salary/SalaryView.dart';
+import '../../Settings/Controller/Settings_View_Model.dart';
 import '../../Settings/Setting_View.dart';
 import '../../Store/Store_View.dart';
 import '../../Student/Student_view_Screen.dart';
@@ -487,6 +488,18 @@ class EmployeeViewModel extends GetxController {
     }
   }
 
+ String getLateTime(String date) {
+    SettingsViewModel settingsController = Get.find<SettingsViewModel>();
+    String lateTime = settingsController.settingsMap[Const.lateTime][Const.time];
+    String friLateTime = settingsController.settingsMap[Const.friLateTime][Const.time];
+    if (DateTime.parse(date).weekday == DateTime.friday) {
+      return friLateTime;
+    } else {
+
+      return lateTime;
+    }
+  }
+
   Future<void> addTime(
       {String? cardId,
       String? userName,
@@ -917,9 +930,7 @@ class EmployeeViewModel extends GetxController {
     );
 
     EmployeeModel employeeModel = allAccountManagement[empId]!;
-    List<String> employeeAbsentDays = daysInMonth
-        .where((day) => !employeeModel.employeeTime!.containsKey(day) && employeeModel.employeeTime?[day]?.isDayEnd == true)
-        .toList();
+    List<String> employeeAbsentDays = daysInMonth.where((day) => !employeeModel.employeeTime!.containsKey(day)).toList();
 
     return employeeAbsentDays;
   }
@@ -974,8 +985,8 @@ class EmployeeViewModel extends GetxController {
                 e,
                 EmployeeTimeModel(
                     dayName: e,
-                    startDate:null,
-                    endDate:null,
+                    startDate: null,
+                    endDate: null,
                     totalDate: null,
                     isDayEnd: true,
                     isLateWithReason: null,
@@ -1111,10 +1122,10 @@ class EmployeeViewModel extends GetxController {
                   element.dayName!.split("-")[0] == selectedYear &&
                   element.isDayOff != true &&
                   (element.startDate != null) &&
-                  (element.startDate!.difference(element.startDate!.copyWith(hour: 7, minute: 30)).inMinutes) > 0;
+                  (element.startDate!.difference(element.startDate!.copyWith(hour: int.parse(getLateTime(element.dayName!).split(" ")[0]), minute: int.parse(getLateTime(element.dayName!).split(" ")[1]), second: 0)).inMinutes) > 0;
             },
           )
-          .map((e) => e.startDate?.difference(e.startDate!.copyWith(hour: 7, minute: 30)).inSeconds ?? 0)
+          .map((element) => element.startDate?.difference(element.startDate!.copyWith(hour: int.parse(getLateTime(element.dayName!).split(" ")[0]), minute: int.parse(getLateTime(element.dayName!).split(" ")[1]), second: 0)).inSeconds ?? 0)
           .toList();
     else
       totalLateList = allAccountManagement[userId]!
@@ -1124,9 +1135,9 @@ class EmployeeViewModel extends GetxController {
             (element) =>
                 element.isDayOff != true &&
                 (element.startDate != null) &&
-                (element.startDate!.difference(element.startDate!.copyWith(hour: 7, minute: 30)).inMinutes) > 0,
+                (element.startDate!.difference(element.startDate!.copyWith(hour: int.parse(getLateTime(element.dayName!).split(" ")[0]), minute: int.parse(getLateTime(element.dayName!).split(" ")[1]), second: 0)).inMinutes) > 0,
           )
-          .map((e) => e.startDate?.difference(e.startDate!.copyWith(hour: 7, minute: 30)).inSeconds ?? 0)
+          .map((element) => element.startDate?.difference(element.startDate!.copyWith(hour: int.parse(getLateTime(element.dayName!).split(" ")[0]), minute: int.parse(getLateTime(element.dayName!).split(" ")[1]), second: 0)).inSeconds ?? 0)
           .toList();
     if (totalLateList.isNotEmpty) totalLate = totalLateList.reduce((value, element) => value + element);
 
