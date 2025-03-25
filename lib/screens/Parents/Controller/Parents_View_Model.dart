@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 import 'dart:typed_data';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -497,6 +498,13 @@ class ParentsViewModel extends GetxController {
     installmentRecords![installmentId]!.isPay = isPay;
     installmentRecords[installmentId]!.InstallmentImage = imageUrl;
     installmentRecords[installmentId]!.payTime = timesModel.dateTime.toString();
+    /// enable this if you want to check installment map before save
+/*    installmentRecords.forEach((key, value){
+
+      log('key: $key, value: ${value.toJson()}');
+
+    });
+    return;*/
     parentCollectionRef.doc(parentId).set(ParentModel(installmentRecords: installmentRecords).toJson(), SetOptions(merge: true));
   }
 

@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'dart:math';
 import 'dart:typed_data';
 
@@ -86,7 +87,10 @@ class StudyFeesViewModel extends GetxController {
           cells: {
             data.keys.elementAt(0): PlutoCell(value: parent.id.toString()),
             data.keys.elementAt(1): PlutoCell(value: parent.fullName.toString()),
-            data.keys.elementAt(2): PlutoCell(value: parent.children!.isEmpty ? "لا يوجد" : parent.children?.map((e) => studentController.studentMap[e]?.studentName).toList()),
+            data.keys.elementAt(2): PlutoCell(
+                value: parent.children!.isEmpty
+                    ? "لا يوجد"
+                    : parent.children?.map((e) => studentController.studentMap[e]?.studentName).toList()),
             data.keys.elementAt(3): PlutoCell(value: "$payment درهم"),
             data.keys.elementAt(4): PlutoCell(value: "$latPayment درهم"),
             data.keys.elementAt(5): PlutoCell(value: "${totalPayment - payment} درهم"),
@@ -104,7 +108,9 @@ class StudyFeesViewModel extends GetxController {
     } else if (inkwellIndex == 1) {
       return parent.installmentRecords?.values.any((record) => record.isPay == true) ?? false;
     } else if (inkwellIndex == 2) {
-      return parent.installmentRecords?.values.any((record) => DateTime.parse(record.installmentDate!).isBefore(Timestamp.now().toDate()) && record.isPay != true) ?? false;
+      return parent.installmentRecords?.values
+              .any((record) => DateTime.parse(record.installmentDate!).isBefore(Timestamp.now().toDate()) && record.isPay != true) ??
+          false;
     } else {
       return (parent.installmentRecords?.length ?? 0) > 0;
     }
@@ -115,7 +121,10 @@ class StudyFeesViewModel extends GetxController {
   }
 
   int calculatePayment(ParentModel parent) {
-    return parent.installmentRecords?.values.where((record) => record.isPay == true).fold(0, (sum, record) => (sum ?? 0) + int.parse(record.installmentCost.toString())) ?? 0;
+    return parent.installmentRecords?.values
+            .where((record) => record.isPay == true)
+            .fold(0, (sum, record) => (sum ?? 0) + int.parse(record.installmentCost.toString())) ??
+        0;
     // return parent.children?.expand((child) => parent.installmentRecords?.values.where((record) => record.isPay == true) ?? [InstallmentModel(installmentCost: "0")]).fold(0, (sum, record) => (sum ?? 0) + int.parse(record.installmentCost.toString())) ?? 0;
   }
 
@@ -206,21 +215,31 @@ class StudyFeesViewModel extends GetxController {
                                         if (installment.isPay != true)
                                           InkWell(
                                             onTap: () async {
-                                              FilePickerResult? _ = await FilePicker.platform.pickFiles(type: FileType.image, allowMultiple: false);
-                                              if (_ != null) {
-                                                _.files.forEach(
-                                                  (element) async {
-                                                    if (element.bytes != null) _contractsTemp = element.bytes!;
-                                                  },
-                                                );
+                                              FilePickerResult? result = await FilePicker.platform.pickFiles(
+                                                type: FileType.image,
+                                                allowMultiple: false,
+                                                withData: true, // تأكد من تعيين هذه الخاصية لتحميل بيانات الملف
+                                              );
+
+                                              if (result != null && result.files.isNotEmpty) {
+                                                final file = result.files.first;
+                                                if (file.bytes != null) {
+
+                                                  _contractsTemp = file.bytes!;
+                                                } else if (file.path != null) {
+                                                  final bytes = await File(file.path!).readAsBytes();
+                                                  _contractsTemp = bytes;
+                                                }
                                                 setState(() {});
                                                 update();
+                                                print(_contractsTemp != null);
                                               }
                                             },
                                             child: Padding(
                                               padding: const EdgeInsets.symmetric(horizontal: 8.0),
                                               child: Container(
-                                                decoration: BoxDecoration(color: secondaryColor.withOpacity(0.8), borderRadius: BorderRadius.circular(15)),
+                                                decoration: BoxDecoration(
+                                                    color: secondaryColor.withOpacity(0.8), borderRadius: BorderRadius.circular(15)),
                                                 height: 50,
                                                 width: max(140, Get.width / 10),
                                                 child: _contractsTemp == null
@@ -239,7 +258,8 @@ class StudyFeesViewModel extends GetxController {
                                                       )
                                                     : Container(
                                                         clipBehavior: Clip.hardEdge,
-                                                        decoration: BoxDecoration(color: Colors.grey, borderRadius: BorderRadius.circular(15)),
+                                                        decoration:
+                                                            BoxDecoration(color: Colors.grey, borderRadius: BorderRadius.circular(15)),
                                                         child: Image.memory(
                                                           (_contractsTemp!),
                                                           fit: BoxFit.cover,
@@ -247,10 +267,13 @@ class StudyFeesViewModel extends GetxController {
                                               ),
                                             ),
                                           ),
+                                        // if (_contractsTemp != null)
+                                        //   ImageOverlay(
+                                        //     imageData: _contractsTemp,
+                                        //   ),
                                         if (installment.isPay == true)
                                           ImageOverlay(
                                             imageUrl: imageURL ?? '',
-
                                           ),
                                         if (installment.isPay != true)
                                           Padding(
@@ -262,7 +285,11 @@ class StudyFeesViewModel extends GetxController {
                                                     await uploadImages([_contractsTemp!], "contracts").then(
                                                       (value) => imageURL = value.first,
                                                     );
-                                                    parentController.setInstallmentPay(installmentId: installment.installmentId!, parentId: currentId, isPay: true, imageUrl: imageURL!);
+                                                    parentController.setInstallmentPay(
+                                                        installmentId: installment.installmentId!,
+                                                        parentId: currentId,
+                                                        isPay: true,
+                                                        imageUrl: imageURL!);
                                                     Get.back();
                                                   }
                                                   Get.snackbar("خطـأ", "يرجى رفع صورة السند");
@@ -278,16 +305,28 @@ class StudyFeesViewModel extends GetxController {
                                             return Padding(
                                               padding: const EdgeInsets.all(8.0),
                                               child: AppButton(
-                                                text: checkIfPendingDelete(affectedId: installment.installmentId!) ? 'في انتظار الموفقة..'.tr : "تراجع".tr,
+                                                text: checkIfPendingDelete(affectedId: installment.installmentId!)
+                                                    ? 'في انتظار الموفقة..'.tr
+                                                    : "تراجع".tr,
                                                 onPressed: () {
                                                   if (checkIfPendingDelete(affectedId: installment.installmentId!))
-                                                    QuickAlert.show(context: context, type: QuickAlertType.info, width: Get.width / 2, title: "مراجعة المسؤول".tr, text: "يرجى مراجعة مسؤول المنصة".tr, confirmBtnText: "موافق".tr);
+                                                    QuickAlert.show(
+                                                        context: context,
+                                                        type: QuickAlertType.info,
+                                                        width: Get.width / 2,
+                                                        title: "مراجعة المسؤول".tr,
+                                                        text: "يرجى مراجعة مسؤول المنصة".tr,
+                                                        confirmBtnText: "موافق".tr);
                                                   else
                                                     getConfirmDialog(
                                                       context,
                                                       onConfirm: () {
                                                         addWaitOperation(
-                                                            type: waitingListTypes.returnInstallment, userName: currentEmployee?.userName.toString() ?? "", collectionName: installmentCollection, affectedId: installment.installmentId!, relatedId:currentId);
+                                                            type: waitingListTypes.returnInstallment,
+                                                            userName: currentEmployee?.userName.toString() ?? "",
+                                                            collectionName: installmentCollection,
+                                                            affectedId: installment.installmentId!,
+                                                            relatedId: currentId);
                                                         Get.back();
                                                       },
                                                     );
