@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 import 'dart:typed_data';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -533,9 +534,9 @@ class EmployeeViewModel extends GetxController {
     if (user != null) {
       {
         TimesModel timeData = TimesModel.fromDateTime(Timestamp.now().toDate());
-        if (isLogIn && startAddTime) {
-          startAddTime = false;
-          if (user.employeeTime![timeData.formattedTime] == null) {
+        if (isLogIn ) {
+
+          if (user.employeeTime![timeData.formattedTime]?.startDate==null) {
             if (timeData.isAfter(int.parse(appendTime.split(" ")[0]), int.parse(appendTime.split(" ")[1]))) {
               totalLate = timeData.dateTime
                   .difference(DateTime.now()
@@ -903,6 +904,7 @@ class EmployeeViewModel extends GetxController {
     return days;
   }
 
+/*
   Map<String, List<String>> getAbsentDaysForEmployees(int year, int month) {
     List<String> daysInMonth = generateDaysInMonth(year, month);
     List<String> holidays = getHolidaysForMonth(year, month);
@@ -920,6 +922,7 @@ class EmployeeViewModel extends GetxController {
 
     return absentDays;
   }
+*/
 
   List<String> getAbsentDaysForEmployee(String empId, int year, int month) {
     List<String> daysInMonth = generateDaysInMonth(year, month);
@@ -930,8 +933,18 @@ class EmployeeViewModel extends GetxController {
     );
 
     EmployeeModel employeeModel = allAccountManagement[empId]!;
-    List<String> employeeAbsentDays = daysInMonth.where((day) => !employeeModel.employeeTime!.containsKey(day)).toList();
+    log('da' + daysInMonth.toString());
+    log("emo time"+(employeeModel.employeeTime?.keys).toString());
+// تحويل مفاتيح employeeTime إلى مجموعة من السلاسل النصية بعد تطبيعها
+    final normalizedEmployeeTimeKeys = employeeModel.employeeTime!.keys
+        .map((key) => key.toString().trim())
+        .toSet();
 
+// استخدام المجموعة للبحث عن الأيام الغائبة
+    List<String> employeeAbsentDays = daysInMonth.where((day) {
+      return !normalizedEmployeeTimeKeys.contains(day.trim());
+    }).toList();
+    log('employeeAbsentDays' + employeeAbsentDays.toString());
     return employeeAbsentDays;
   }
 
@@ -941,7 +954,7 @@ class EmployeeViewModel extends GetxController {
     Set<String> holidays = daysInMonth.toSet();
 
     for (var employee in allAccountManagement.values) {
-      holidays.removeWhere((day) => employee.employeeTime!.containsKey(day));
+      holidays.removeWhere((day) => employee.employeeTime!.containsKey(day) && employee.employeeTime![day]!.isDayEnd == true);
     }
 
     return holidays.toList();
@@ -974,40 +987,74 @@ class EmployeeViewModel extends GetxController {
   }*/
   List<String> monthCount = [];
 
-  getAllUserAppend() {
-    for (var accountModel in allAccountManagement.values) {
-      for (var month in accountModel.employeeTime?.keys ?? []) {
-        monthCount.add(month.toString().split("-")[0] + "-" + month.toString().split("-")[1]);
-      }
-      for (var days in monthCount.toSet()) {
-        for (var empTime in getAbsentDaysForEmployee(accountModel.id, int.parse(days.split("-")[0]), int.parse(days.split("-")[1]))
-            .map((e) => MapEntry(
-                e,
-                EmployeeTimeModel(
-                    dayName: e,
-                    startDate: null,
-                    endDate: null,
-                    totalDate: null,
-                    isDayEnd: true,
-                    isLateWithReason: null,
-                    reasonOfLate: null,
-                    isEarlierWithReason: null,
-                    reasonOfEarlier: null,
-                    isDayOff: true,
-                    totalLate: null,
-                    totalEarlier: null)))
-            .toList()) {
-          accountModel.employeeTime?[empTime.key] = empTime.value;
+  /// تُرجع خريطة حيث المفتاح هو الشهر بالشكل "yyyy-MM" والقيمة هي مجموعة من الأيام (بتنسيق "yyyy-MM-dd")
+  /// التي تعتبر دوام، أي أنها مسجلة عند أي موظف وكان لديه سجل خروج (endDate != null).
+  Map<String, Set<String>> getUniqueWorkingDaysByMonth(List<EmployeeModel> employees) {
+    final Map<String, Set<String>> workingDaysByMonth = {};
+
+    for (final employee in employees) {
+      if (employee.employeeTime == null) continue;
+
+      for (final entry in employee.employeeTime!.entries) {
+        final dayKey = entry.key.toString();
+        final timeRecord = entry.value;
+        // اعتبار اليوم دوام إذا كان الموظف سجل خروج (endDate غير null)
+        if (timeRecord.endDate != null) {
+          final parts = dayKey.split("-");
+          if (parts.length < 3) continue; // تأكد من تنسيق "yyyy-MM-dd"
+          final monthKey = '${parts[0]}-${parts[1]}';
+          workingDaysByMonth.putIfAbsent(monthKey, () => <String>{});
+          workingDaysByMonth[monthKey]!.add(dayKey);
         }
       }
+    }
+    return workingDaysByMonth;
+  }
 
-      var sortedEmployeeTime = Map.fromEntries(
-        accountModel.employeeTime!.entries.toList()..sort((a, b) => a.key.compareTo(b.key)),
+  /// تقوم الدالة بتحديث سجلات كل موظف بحيث تُضاف سجلات الغياب للأيام التي تعتبر دوام
+  /// (أي أنها موجودة عند أي موظف مع تسجيل خروج) ولكنها غير موجودة في سجل الموظف الحالي.
+  void getAllUserAppend() {
+    // الحصول على قائمة الموظفين من allAccountManagement
+    final List<EmployeeModel> allEmployees = allAccountManagement.values.toList();
+
+    // جمع الأيام التي تعتبر دوام عبر جميع الموظفين
+    final Map<String, Set<String>> workingDaysByMonth = getUniqueWorkingDaysByMonth(allEmployees);
+
+    // لكل موظف، يتم إضافة سجلات الغياب للأيام المفقودة التي تعتبر دوام
+    for (var accountModel in allEmployees) {
+      workingDaysByMonth.forEach((monthKey, workingDays) {
+        for (var day in workingDays) {
+          if (!accountModel.employeeTime!.containsKey(day)) {
+            accountModel.employeeTime?[day] = EmployeeTimeModel(
+              dayName: day,
+              startDate: null,
+              endDate: DateTime.now(), // يمكنك تعديل القيمة حسب الحاجة
+              totalDate: null,
+              isDayEnd: true,
+              isLateWithReason: true,
+              reasonOfLate: null,
+              isEarlierWithReason: null,
+              reasonOfEarlier: null,
+              isDayOff: true,
+              totalLate: null,
+              totalEarlier: null,
+            );
+          }
+        }
+      });
+
+      // ترتيب employeeTime حسب المفاتيح (أي التواريخ) لضمان تسلسل زمني صحيح
+      final sortedEmployeeTime = Map.fromEntries(
+        accountModel.employeeTime!.entries.toList()
+          ..sort((a, b) => a.key.compareTo(b.key)),
       );
-
       accountModel.employeeTime = sortedEmployeeTime;
     }
   }
+
+
+
+
 
   double getAllRequiredSalaries() {
     double pay = 0.0;

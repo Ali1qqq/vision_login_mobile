@@ -725,88 +725,152 @@ class _EmployeeTimeViewState extends State<EmployeeTimeView> {
   }
 
   List<DataRow> _buildDataRows(EmployeeViewModel accountController, double size) {
+    // الحصول على قائمة الموظفين
     List<EmployeeModel> employees = accountController.allAccountManagement.values.toList();
 
-    return List.generate(employees.length, (index) {
-      final currentUser = employees[index];
+    return employees.map((employee) {
       return DataRow(cells: [
-        dataRowItem(size / 3, employees[index].fullName.toString(), color: Colors.white),
-        DataCell(Center(
-          child: Container(
-            width: size / 3,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                if (currentUser.employeeTime!.values.where((element) {
-                  return element.dayName == selectedDate.text && element.endDate != null;
-                }).isNotEmpty)
-                  Text(
-                    "تم الانتهاء".tr,
-                    style: AppStyles.headLineStyle3.copyWith(color: AppColors.textColor),
-                  )
-                else if (selectedDate.text == dayNameNow)
-                  AppButton(
-                      text: currentUser.employeeTime!.values.where((element) => element.dayName == dayNameNow.split(' ')[0]).isNotEmpty
-                          ? "الخروج".tr
-                          : "الدخول".tr,
-                      onPressed: () {
-                        if (currentUser.employeeTime!.values
-                            .where((element) => element.dayName == dayNameNow.split(' ')[0] && element.endDate != null)
-                            .isEmpty)
-                          getConfirmDialog(
-                            context,
-                            onConfirm: () {
-                              SettingsViewModel settingsController = Get.find<SettingsViewModel>();
-                              String lateTime = settingsController.settingsMap[Const.lateTime][Const.time];
-                              String appendTime = settingsController.settingsMap[Const.appendTime][Const.time];
-                              String outTime = settingsController.settingsMap[Const.outTime][Const.time];
-                              String friLateTime = settingsController.settingsMap[Const.friLateTime][Const.time];
-                              String friAppendTime = settingsController.settingsMap[Const.friAppendTime][Const.time];
-                              String friOutTime = settingsController.settingsMap[Const.friOutTime][Const.time];
-                              if (Timestamp.now().toDate().weekday == DateTime.friday) {
-                                accountController.isLogIn=true;
-                                accountController.addTime(
-
-                                  appendTime: friAppendTime,
-                                  lateTime: friLateTime,
-                                  outTime: friOutTime,
-                                  userName: currentUser.userName,
-                                );
-                              } else {
-                                accountController.isLogIn=false;
-                                accountController.addTime(
-                                  appendTime: appendTime,
-                                  lateTime: lateTime,
-                                  outTime: outTime,
-                                  userName: currentUser.userName,
-                                );
-                              }
-
-                              Get.back();
-                            },
-                          );
-                      })
-                else
-                  Text(
-                    "لم يسجل ".tr,
-                    style: AppStyles.headLineStyle3.copyWith(color: AppColors.textColor),
-                  ),
-                if (employees[index].employeeTime!.values.where((element) => element.dayName == selectedDate.text.split(' ')[0]).isEmpty)
-                  AppButton(
-                    text: "غائب",
-                    onPressed: () {
-                      getConfirmDialog(context, onConfirm: () {
-                        accountController.setAppend(employees[index].id, selectedDate.text);
-                        Get.back();
-                      });
-                    },
-                    color: Colors.redAccent.withOpacity(0.5),
-                  )
-              ],
+        _buildNameCell(employee, size),
+        DataCell(
+          Center(
+            child: Container(
+              width: size / 3,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  _buildAttendanceStatus(employee, accountController),
+                  // عرض زر "غائب" إذا لم يُسجّل الموظف اليوم المحدد
+                  if (_isAbsent(employee))
+                    _buildAbsentButton(employee, accountController),
+                ],
+              ),
             ),
           ),
-        ))
+        ),
       ]);
+    }).toList();
+  }
+
+  /// بناء خلية الاسم للموظف
+  DataCell _buildNameCell(EmployeeModel employee, double size) {
+    return dataRowItem(size / 3, employee.fullName.toString(), color: Colors.white);
+  }
+
+  /// بناء عرض حالة الحضور للموظف بناءً على الشروط المختلفة
+  Widget _buildAttendanceStatus(EmployeeModel employee, EmployeeViewModel accountController) {
+    // إذا تم الانتهاء من تسجيل الحضور لهذا اليوم
+    if (_hasCompletedAttendance(employee)) {
+      return Text(
+        "تم الانتهاء".tr,
+        style: AppStyles.headLineStyle3.copyWith(color: AppColors.textColor),
+      );
+    }
+    // إذا كان اليوم هو اليوم الحالي (dayNameNow) في العرض
+    else if (selectedDate.text == dayNameNow) {
+      final bool isLoggedIn = _isLoggedInForDay(employee);
+      return AppButton(
+        text: isLoggedIn ? "الخروج".tr : "الدخول".tr,
+        onPressed: () => _handleAttendancePress(employee, accountController),
+        color:isLoggedIn ?Colors.red:primaryColor,
+      );
+    }
+    // في حالة عدم تسجيل الحضور
+    else {
+      return Text(
+        "لم يسجل ".tr,
+        style: AppStyles.headLineStyle3.copyWith(color: AppColors.textColor),
+      );
+    }
+  }
+
+  /// تحقق مما إذا كان الموظف قد أنهى تسجيل حضوره لهذا اليوم
+  bool _hasCompletedAttendance(EmployeeModel employee) {
+    return employee.employeeTime!.values.any(
+          (time) => time.dayName == selectedDate.text && time.isDayOff==true && time.endDate != null,
+    );
+  }
+
+  /// تحقق مما إذا كان للموظف سجل للحضور في اليوم الحالي (مقارنة باليوم الموجود في dayNameNow)
+  bool _isLoggedInForDay(EmployeeModel employee) {
+    // نفترض أن dayNameNow يحتوي على نص اليوم مثل "الاثنين ..." لذا نقسم النص للحصول على الجزء الأول
+    String currentDayName = dayNameNow.split(' ')[0];
+
+
+    return employee.employeeTime!.values.any((time) {
+
+      return time.dayName == currentDayName && time.startDate != null;
     });
+  }
+
+  /// التعامل مع الضغط على زر "الدخول/الخروج"
+  void _handleAttendancePress(EmployeeModel employee, EmployeeViewModel accountController) {
+    // التأكد من عدم انتهاء تسجيل الحضور بالفعل لهذا اليوم
+    String currentDayName = dayNameNow.split(' ')[0];
+    bool hasEndedAttendance = employee.employeeTime!.values.any(
+          (time) => time.dayName == currentDayName && time.endDate != null,
+    );
+
+    if (!hasEndedAttendance) {
+      getConfirmDialog(
+        context,
+        onConfirm: () {
+          final SettingsViewModel settingsController = Get.find<SettingsViewModel>();
+          // استرجاع إعدادات الوقت
+          String lateTime = settingsController.settingsMap[Const.lateTime][Const.time];
+          String appendTime = settingsController.settingsMap[Const.appendTime][Const.time];
+          String outTime = settingsController.settingsMap[Const.outTime][Const.time];
+          String friLateTime = settingsController.settingsMap[Const.friLateTime][Const.time];
+          String friAppendTime = settingsController.settingsMap[Const.friAppendTime][Const.time];
+          String friOutTime = settingsController.settingsMap[Const.friOutTime][Const.time];
+
+          // تغيير حالة تسجيل الدخول بناءً على حالة الحضور الحالية
+          accountController.isLogIn = _isLoggedInForDay(employee) ? false : true;
+
+          // التحقق مما إذا كان اليوم هو الجمعة لاستخدام إعدادات الوقت الخاصة بالجمعة
+          if (Timestamp.now().toDate().weekday == DateTime.friday) {
+            accountController.addTime(
+              appendTime: friAppendTime,
+              lateTime: friLateTime,
+              outTime: friOutTime,
+              userName: employee.userName,
+            );
+          } else {
+            accountController.addTime(
+              appendTime: appendTime,
+              lateTime: lateTime,
+              outTime: outTime,
+              userName: employee.userName,
+            );
+          }
+
+          Get.back();
+        },
+      );
+    }
+  }
+
+  /// بناء زر "غائب" للموظف
+  Widget _buildAbsentButton(EmployeeModel employee, EmployeeViewModel accountController) {
+    return AppButton(
+      text: "غائب",
+      onPressed: () {
+        getConfirmDialog(context, onConfirm: () {
+          accountController.setAppend(employee.id, selectedDate.text);
+          Get.back();
+        });
+      },
+      color: Colors.redAccent.withOpacity(0.5),
+    );
+  }
+
+  /// التحقق مما إذا كان الموظف لم يقم بتسجيل حضور اليوم المحدد (من خلال مقارنة اليوم في السجل)
+  bool _isAbsent(EmployeeModel employee) {
+    String currentDay = selectedDate.text.split(' ')[0];
+
+    return employee.employeeTime!.values.where((time) {
+
+
+      return time.dayName == currentDay&&time.startDate!=null;
+    }).isEmpty;
   }
 }
