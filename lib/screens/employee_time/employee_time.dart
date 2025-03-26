@@ -740,8 +740,11 @@ class _EmployeeTimeViewState extends State<EmployeeTimeView> {
                 children: [
                   _buildAttendanceStatus(employee, accountController),
                   // عرض زر "غائب" إذا لم يُسجّل الموظف اليوم المحدد
-                  if (_isAbsent(employee))
+                  if (_isAbsent(employee)&&!_hasCompletedAttendance(employee))
                     _buildAbsentButton(employee, accountController),
+
+
+
                 ],
               ),
             ),
@@ -825,7 +828,7 @@ class _EmployeeTimeViewState extends State<EmployeeTimeView> {
 
           // تغيير حالة تسجيل الدخول بناءً على حالة الحضور الحالية
           accountController.isLogIn = _isLoggedInForDay(employee) ? false : true;
-
+          Get.back();
           // التحقق مما إذا كان اليوم هو الجمعة لاستخدام إعدادات الوقت الخاصة بالجمعة
           if (Timestamp.now().toDate().weekday == DateTime.friday) {
             accountController.addTime(
@@ -843,7 +846,7 @@ class _EmployeeTimeViewState extends State<EmployeeTimeView> {
             );
           }
 
-          Get.back();
+
         },
       );
     }
