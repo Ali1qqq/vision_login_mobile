@@ -1,10 +1,11 @@
 import 'dart:js' as js;
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:universal_html/html.dart';
 import 'package:get/get.dart';
-import '../../screens/Employee/Controller/Employee_view_model.dart';
 import '../../screens/Settings/Controller/Settings_View_Model.dart';
 import '../../core/constant/const.dart';
+import '../../screens/employee_time/Controller/Employee_view_model.dart';
 
 Future<bool> initNFCWorker(typeNFC type) async {
 

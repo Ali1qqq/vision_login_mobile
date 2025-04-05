@@ -4,7 +4,7 @@ import 'package:intl/intl.dart';
 
 abstract class DateFun{
   static String minutesToTime(int time){
-    return  printDuration(Duration(minutes:time),locale:ArabicDurationLocale(),delimiter: " و " );
+    return   prettyDuration(Duration(minutes:time),locale:ArabicDurationLocale(),delimiter: " و " );
   }
   static String dateToMinAndHour(DateTime dateTime) {
     final format = DateFormat('hh:mm a');

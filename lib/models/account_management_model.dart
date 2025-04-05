@@ -2,9 +2,7 @@ import 'package:get/get.dart';
 import 'package:vision_dashboard/models/employee_time_model.dart';
 
 import '../core/constant/constants.dart';
-import '../screens/Buses/Controller/Bus_View_Model.dart';
 import '../core/Utils/abstract.dart';
-import 'event_record_model.dart';
 
 class EmployeeModel implements Mappable {
   late String id, userName, password, type;
@@ -17,7 +15,6 @@ class EmployeeModel implements Mappable {
   List<dynamic>? salaryReceived;
   List<dynamic>? idImages;
   bool? available = false;
-  List<EventRecordModel>? eventRecords;
 
   EmployeeModel({
     required this.id,
@@ -37,7 +34,6 @@ class EmployeeModel implements Mappable {
     this.contract,
     this.bus,
     this.startDate,
-    this.eventRecords,
     this.salaryReceived,
     this.salaryWithDelay,
     this.fullName,
@@ -76,15 +72,7 @@ class EmployeeModel implements Mappable {
     contract = json['contract'] ?? '';
     bus = json['bus'] ?? '';
     startDate = json['startDate'] ?? '';
-    eventRecords = (json['eventRecords'] as List<dynamic>?)
-        ?.map((event) => EventRecordModel.fromJson(event))
-        .toList()
-      ?..sort((a, b) {
-        // افترض أن لديك حقل `date` في `EventRecordModel`
-        DateTime dateA = DateTime.parse(a.date); // استبدل `date` بالحقل المناسب
-        DateTime dateB = DateTime.parse(b.date); // استبدل `date` بالحقل المناسب
-        return dateA.compareTo(dateB); // ترتيب تصاعدي
-      });
+
     var tempEmployeeTime = <String, EmployeeTimeModel>{};
     (json['employeeTime'] ?? {}).forEach((k, v) {
       tempEmployeeTime[k] = EmployeeTimeModel.fromJson(v);
@@ -127,7 +115,6 @@ class EmployeeModel implements Mappable {
       if (contract != null) 'contract': contract,
       if (bus != null) 'bus': bus,
       if (startDate != null) 'startDate': startDate!,
-      'eventRecords': eventRecords!.isNotEmpty ? eventRecords!.map((event) => event.toJson()).toList() : [],
     };
   }
 
@@ -147,9 +134,8 @@ class EmployeeModel implements Mappable {
       "العمر": age,
       "الوظيفة": jobTitle,
       "العقد": contract,
-      "الحافلة": Get.find<BusViewModel>().busesMap[bus]?.name ?? bus,
+      "الحافلة": '',
       "تاريخ البداية": startDate,
-      "سجل الاحداث": eventRecords?.length,
       "موافقة المدير": isAccepted == true ? "تمت الموافقة".tr : "في انتظار الموافقة".tr,
     };
   }

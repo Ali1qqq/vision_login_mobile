@@ -1,23 +1,9 @@
-import 'dart:math';
-
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:vision_dashboard/screens/Employee/Controller/Employee_view_model.dart';
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:vision_dashboard/screens/Widgets/AppButton.dart';
-import 'package:vision_dashboard/core/dialogs/Dialogs.dart';
 import '../../core/constant/constants.dart';
-import '../../controller/home_controller.dart';
-import '../../core/Styling/app_colors.dart';
 import '../../core/Styling/app_style.dart';
-import '../../models/account_management_model.dart';
-import '../../core/constant/const.dart';
-import '../../core/Utils/minutesToTime.dart';
-import '../Settings/Controller/Settings_View_Model.dart';
-import '../Widgets/Custom_Drop_down.dart';
-import '../Widgets/Custom_Text_Filed.dart';
-import '../Widgets/Data_Row.dart';
+import 'Controller/Employee_view_model.dart';
 
 class EmployeeTimeView extends StatefulWidget {
   @override
@@ -74,806 +60,82 @@ class _EmployeeTimeViewState extends State<EmployeeTimeView> {
     "عرض المبرر",
   ];
   List<String> empData = ["الموظف", "الخيارات"];
-  bool isCard = true;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: GetBuilder<EmployeeViewModel>(builder: (controller) {
-        return !controller.isLoading
+        return controller.isLoading
             ? Center(
                 child: CircularProgressIndicator(),
               )
-            : SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                physics: ClampingScrollPhysics(),
-                child: GetBuilder<HomeViewModel>(builder: (hController) {
-                  double size = max(Get.width - (hController.isDrawerOpen ? 240 : 100), 1000) - 60;
-                  return SizedBox(
-                    width: size + 60,
-                    child: Center(
-                      child: Column(
-                        children: [
-                          SizedBox(
-                            height: 30,
-                          ),
-                          Container(
-                            height: 50,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(8),
-                              color: Colors.grey.shade300,
+            : Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  if (controller.isSupportNfc && enableUpdate)
+                    Column(
+                      children: [
+                        Text(
+                          "تسجيل الدوام".tr,
+                          style: AppStyles.headLineStyle1,
+                        ),
+                        SizedBox(
+                          height: 50,
+                        ),
+                        Text(
+                          accountManagementViewModel.isLogIn ? "سجل الدخول باستخدام بطاقتك".tr : "سجل الخروج باستخدام بطاقتك".tr,
+                          style: TextStyle(fontSize: 22),
+                        ),
+                        SizedBox(
+                          height: 50,
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            AppButton(
+                              text: "تسجيل دخول",
+                              onPressed: () {
+                                accountManagementViewModel.isLogIn = true;
+                                accountManagementViewModel.update();
+                              },
+                              color: accountManagementViewModel.isLogIn ? Colors.green : Colors.blue,
                             ),
-                            width: size * 0.8,
-                            child: Stack(
-                              children: [
-                                Align(
-                                  alignment: Alignment.center,
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      ///عرض دوام الموظفين
-                                      Expanded(
-                                        child: InkWell(
-                                          onTap: () {
-                                            isShowLogin = true;
-                                            setState(() {});
-                                          },
-                                          child: Container(
-                                            height: 50,
-                                            decoration: BoxDecoration(
-                                                color: isShowLogin ? primaryColor : Colors.transparent,
-                                                borderRadius: BorderRadius.only(
-                                                  topRight: Radius.circular(15),
-                                                  bottomRight: Radius.circular(15),
-                                                )),
-                                            child: Center(
-                                                child: Text(
-                                              "تسجيل دخول الموظف".tr,
-                                              style: TextStyle(color: isShowLogin ? Colors.white : Colors.black),
-                                            )),
-                                          ),
-                                        ),
-                                      ),
-
-                                      ///عرض تسجيل الموظفين
-                                      Expanded(
-                                        child: InkWell(
-                                          onTap: () {
-                                            if (currentEmployee?.type != 'مستخدم') {
-                                              isShowLogin = false;
-                                              setState(() {});
-                                            }
-                                          },
-                                          child: Container(
-                                            height: 50,
-                                            decoration: BoxDecoration(
-                                                color: isShowLogin ? Colors.transparent : primaryColor,
-                                                borderRadius: BorderRadius.only(
-                                                  topLeft: Radius.circular(15),
-                                                  bottomLeft: Radius.circular(15),
-                                                )),
-                                            child: Center(
-                                                child: Text(
-                                              "عرض تفاصيل دوام الموظفين".tr,
-                                              style: TextStyle(color: isShowLogin ? Colors.black : Colors.white),
-                                            )),
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                )
-                              ],
+                            SizedBox(
+                              width: 10,
                             ),
-                          ),
-                          SizedBox(
-                            height: 10,
-                          ),
-                          if (isShowLogin)
-
-                            ///تسجيل الدوام
-                            Expanded(
-                              child: Container(
-                                width: Get.width,
-                                alignment: Alignment.center,
-
-                                ///بعد تسجيل دخول الموظف يعرض له اسمه لفترة ومن ثم يختفي
-                                child: controller.loginUserPage != null
-                                    ? Center(
-                                        child: Text(
-                                          controller.loginUserPage.toString(),
-                                          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 22),
-                                        ),
-                                      )
-                                    : AnimatedCrossFade(
-                                        ///تسجيل الدخول ب اسم وكلمة مرور
-                                        secondChild: Center(
-                                          child: Container(
-                                            width: size / 1.3,
-                                            height: Get.height * 0.8,
-                                            padding: EdgeInsets.all(defaultPadding),
-                                            decoration: BoxDecoration(
-                                              color: secondaryColor,
-                                              borderRadius: const BorderRadius.all(Radius.circular(10)),
-                                            ),
-                                            child: GetBuilder<EmployeeViewModel>(builder: (controller) {
-                                              return ListView(
-                                                shrinkWrap: true,
-                                                // mainAxisSize: MainAxisSize.min,
-                                                // crossAxisAlignment: CrossAxisAlignment.start,
-                                                children: [
-                                                  InkWell(
-                                                    onTap: () {
-                                                      showDatePicker(
-                                                        context: context,
-                                                        firstDate: DateTime(2010),
-                                                        lastDate: DateTime(2100),
-                                                      ).then((date) {
-                                                        if (date != null) {
-                                                          selectedDate.text = date.toString().split(" ")[0];
-                                                          setState(() {});
-                                                        }
-                                                      });
-                                                    },
-                                                    child: CustomTextField(
-                                                      controller: selectedDate,
-                                                      title: 'تاريخ العرض'.tr,
-                                                      enable: false,
-                                                      keyboardType: TextInputType.datetime,
-                                                      icon: Icon(
-                                                        Icons.date_range_outlined,
-                                                        color: primaryColor,
-                                                      ),
-                                                    ),
-                                                  ),
-                                                  // CustomDropDown(value: '', listValue: [], label: 'اختر اليوم', onChange: onChange)
-                                                  Scrollbar(
-                                                    controller: scrollController,
-                                                    child: SingleChildScrollView(
-                                                        physics: ClampingScrollPhysics(),
-                                                        controller: scrollController,
-                                                        scrollDirection: Axis.horizontal,
-                                                        child: DataTable(
-                                                            columnSpacing: 0,
-                                                            dividerThickness: 0.3,
-                                                            columns: _buildDataColumns(size),
-                                                            rows: _buildDataRows(controller, size))),
-                                                  )
-                                                ],
-                                              );
-                                            }),
-                                          ),
-                                        ),
-                                        duration: Durations.short1,
-                                        crossFadeState: isCard ? CrossFadeState.showFirst : CrossFadeState.showSecond,
-
-                                        ///تسجيل الدخول بالبطاقة
-                                        firstChild: Column(
-                                          mainAxisAlignment: MainAxisAlignment.center,
-                                          children: [
-                                            if (controller.isSupportNfc && enableUpdate)
-                                              Column(
-                                                children: [
-                                                  Text(
-                                                    "تسجيل الدوام".tr,
-                                                    style: AppStyles.headLineStyle1,
-                                                  ),
-                                                  SizedBox(
-                                                    height: 50,
-                                                  ),
-                                                  Text(
-                                                    accountManagementViewModel.isLogIn
-                                                        ? "سجل الدخول باستخدام بطاقتك".tr
-                                                        : "سجل الخروج باستخدام بطاقتك".tr,
-                                                    style: TextStyle(fontSize: 22),
-                                                  ),
-                                                  SizedBox(
-                                                    height: 50,
-                                                  ),
-                                                  Row(
-                                                    mainAxisAlignment: MainAxisAlignment.center,
-                                                    children: [
-                                                      AppButton(
-                                                        text: "تسجيل دخول",
-                                                        onPressed: () {
-                                                          accountManagementViewModel.isLogIn = true;
-                                                          accountManagementViewModel.update();
-                                                        },
-                                                        color: accountManagementViewModel.isLogIn ? Colors.green : Colors.blue,
-                                                      ),
-                                                      SizedBox(
-                                                        width: 10,
-                                                      ),
-                                                      AppButton(
-                                                        text: "تسجيل خروج",
-                                                        onPressed: () {
-                                                          accountManagementViewModel.isLogIn = false;
-                                                          accountManagementViewModel.update();
-                                                        },
-                                                        color: accountManagementViewModel.isLogIn ? Colors.blue : Colors.green,
-                                                      ),
-                                                    ],
-                                                  )
-                                                ],
-                                              )
-
-                                            ///اذا لم يكن في وضع الارشفة
-                                            else if (enableUpdate)
-
-                                              ///الجهاز لا يدعم البطاقة
-                                              Center(
-                                                child: Container(
-                                                  width: size / 2,
-                                                  decoration:
-                                                      BoxDecoration(color: Colors.grey.shade300, borderRadius: BorderRadius.circular(8)),
-                                                  padding: EdgeInsets.all(8),
-                                                  child: Center(
-                                                    child: Text(
-                                                      overflow: TextOverflow.ellipsis,
-                                                      "هذا الجهاز لا يحتوي قارئ NFC".tr,
-                                                      textAlign: TextAlign.center,
-                                                      style: TextStyle(fontSize: 22),
-                                                    ),
-                                                  ),
-                                                ),
-                                              )
-                                            else
-                                              Container(
-                                                decoration:
-                                                    BoxDecoration(color: Colors.grey.shade300, borderRadius: BorderRadius.circular(8)),
-                                                padding: EdgeInsets.all(8),
-                                                child: Center(
-                                                  child: Text(
-                                                    "لا يمكن تسجيل دوام اثناء عرض السنة المؤشفة".tr,
-                                                    style: TextStyle(fontSize: 22),
-                                                  ),
-                                                ),
-                                              )
-                                          ],
-                                        ),
-                                      ),
-                              ),
-                            )
-                          else
-
-                            /// عرض دوام الموظفين
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Row(
-                                    children: [
-                                      Padding(
-                                        padding: const EdgeInsets.all(
-                                          defaultPadding,
-                                        ),
-                                        child: CustomDropDown(
-                                          value: selectedMonth.toString().tr,
-                                          listValue: ['الكل'.tr] +
-                                              months.keys
-                                                  .map(
-                                                    (e) => e.toString().tr,
-                                                  )
-                                                  .toList(),
-                                          label: "اختر الشهر".tr,
-                                          onChange: (value) {
-                                            if (value != null) {
-                                              selectedMonth = value.tr;
-                                              setState(() {});
-                                            }
-                                          },
-                                          isFullBorder: true,
-                                        ),
-                                      ),
-                                      Padding(
-                                        padding: const EdgeInsets.all(
-                                          defaultPadding,
-                                        ),
-                                        child: CustomDropDown(
-                                          value: selectedYear.text.toString(),
-                                          listValue: year,
-                                          label: "اختر السنة".tr,
-                                          onChange: (value) {
-                                            if (value != null) {
-                                              selectedYear.text = value.tr;
-                                              setState(() {});
-                                            }
-                                          },
-                                          isFullBorder: true,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  Expanded(
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: Container(
-                                        decoration: BoxDecoration(color: Colors.grey.shade300, borderRadius: BorderRadius.circular(8)),
-                                        child: ListView(
-                                          shrinkWrap: true,
-                                          // padding: EdgeInsets.only(bottom: defaultPadding*3),
-                                          physics: ClampingScrollPhysics(),
-                                          children: [
-                                            SizedBox(
-                                              height: 10,
-                                            ),
-                                            Row(
-                                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                              children: [
-                                                Container(
-                                                    width: Get.width / 7,
-                                                    child: Text(
-                                                      "الموظف".tr,
-                                                      style: TextStyle(fontSize: Get.width < 700 ? 16 : 20),
-                                                      textAlign: TextAlign.center,
-                                                    )),
-                                                Container(
-                                                  width: Get.width / 7,
-                                                  child: Text(
-                                                    "اجمالي التأخير".tr,
-                                                    style: TextStyle(fontSize: Get.width < 700 ? 16 : 20),
-                                                    textAlign: TextAlign.center,
-                                                  ),
-                                                ),
-                                                Container(
-                                                  width: Get.width / 7,
-                                                  child: Text(
-                                                    "اجمالي الخصم".tr,
-                                                    style: TextStyle(fontSize: Get.width < 700 ? 16 : 20),
-                                                    textAlign: TextAlign.center,
-                                                  ),
-                                                ),
-                                                Container(
-                                                  width: Get.width / 7,
-                                                  child: Text(
-                                                    "الراتب المقطوع".tr,
-                                                    style: TextStyle(fontSize: Get.width < 700 ? 16 : 20),
-                                                    textAlign: TextAlign.center,
-                                                  ),
-                                                ),
-                                                Container(
-                                                  width: Get.width / 7,
-                                                  child: Text(
-                                                    "الراتب المستحق".tr,
-                                                    style: TextStyle(fontSize: Get.width < 700 ? 16 : 20),
-                                                    textAlign: TextAlign.center,
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                            SizedBox(
-                                              height: 10,
-                                            ),
-                                            Container(
-                                              height: 5,
-                                              color: Colors.white,
-                                            ),
-                                            ExpansionPanelList(
-                                              dividerColor: secondaryColor,
-                                              expansionCallback: (int index, bool isExpanded) {
-                                                setState(() {
-                                                  controller.isOpen[index] = !controller.isOpen[index];
-                                                });
-                                              },
-                                              children: controller.allAccountManagement.values
-                                                  .toList()
-                                                  .asMap()
-                                                  .entries
-                                                  .map<ExpansionPanel>((entry) {
-                                                int indexKey = entry.key;
-
-                                                EmployeeModel accountModel = entry.value;
-                                                // for(var empTime in controller.getAbsentDaysForEmployee(entry.value.id, int.parse(selectedYear.text), int.parse(months[selectedMonth]!)).map((e)=> MapEntry(e, EmployeeTimeModel(dayName: e, startDate:DateTime.now(), endDate: DateTime.now(), totalDate:0, isDayEnd: true, isLateWithReason: null, reasonOfLate: null, isEarlierWithReason: null, reasonOfEarlier: "reasonOfEarlier", isDayOff: true, totalLate: 0, totalEarlier: 0))  ).toList())
-                                                //   {
-                                                //     print(empTime.key);
-                                                //     accountModel.employeeTime?[empTime.key]=empTime.value;
-                                                //
-                                                //   }
-
-                                                return ExpansionPanel(
-                                                  headerBuilder: (BuildContext context, bool isExpanded) {
-                                                    return InkWell(
-                                                      onTap: () {
-                                                        setState(() {
-                                                          controller.isOpen[indexKey] = !controller.isOpen[indexKey];
-                                                        });
-                                                      },
-                                                      child: Padding(
-                                                        padding: const EdgeInsets.all(16.0),
-                                                        child: Row(
-                                                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                                          children: [
-                                                            Container(
-                                                              width: Get.width / 7,
-                                                              child: Text(
-                                                                accountModel.userName,
-                                                                style: TextStyle(fontSize: Get.width < 700 ? 16 : 20),
-                                                                textAlign: TextAlign.center,
-                                                              ),
-                                                            ),
-                                                            Container(
-                                                              width: Get.width / 7,
-                                                              child: Text(
-                                                                DateFun.minutesToTime(controller.getTotalLateForUserAtMonth(
-                                                                        selectedMonth: selectedMonth,
-                                                                        userId: entry.value.id,
-                                                                        selectedYear: selectedYear.text))
-                                                                    .toString(),
-                                                                style: TextStyle(fontSize: Get.width < 700 ? 16 : 20),
-                                                                textAlign: TextAlign.center,
-                                                              ),
-                                                            ),
-                                                            Container(
-                                                              width: Get.width / 7,
-                                                              child: Text(
-                                                                selectedMonth == "الكل".tr
-                                                                    ? (accountModel.salary! -
-                                                                            accountManagementViewModel
-                                                                                .getUserSalariesAllMonth(accountModel.id))
-                                                                        .toString()
-                                                                    : (accountModel.salary! -
-                                                                            accountManagementViewModel.getUserSalariesAtMonth(
-                                                                                months[selectedMonth]!, accountModel.id, selectedYear.text))
-                                                                        .toString(),
-                                                                style: TextStyle(fontSize: Get.width < 700 ? 16 : 20),
-                                                                textAlign: TextAlign.center,
-                                                              ),
-                                                            ),
-                                                            Container(
-                                                              width: Get.width / 7,
-                                                              child: Text(
-                                                                selectedMonth == "الكل".tr
-                                                                    ? (accountModel.salary! * controller.monthCount.toSet().length)
-                                                                        .toString()
-                                                                    : (accountModel.salary!).toString(),
-                                                                style: TextStyle(fontSize: Get.width < 700 ? 16 : 20),
-                                                                textAlign: TextAlign.center,
-                                                              ),
-                                                            ),
-                                                            Container(
-                                                              width: Get.width / 7,
-                                                              child: Text(
-                                                                selectedMonth == "الكل".tr
-                                                                    ? ((accountModel.salary! * controller.monthCount.toSet().length) -
-                                                                            (accountModel.salary! -
-                                                                                accountManagementViewModel
-                                                                                    .getUserSalariesAllMonth(accountModel.id)))
-                                                                        .toString()
-                                                                    : accountManagementViewModel
-                                                                        .getUserSalariesAtMonth(
-                                                                            months[selectedMonth]!, accountModel.id, selectedYear.text)
-                                                                        .toString(),
-                                                                style: TextStyle(fontSize: Get.width < 700 ? 16 : 20),
-                                                                textAlign: TextAlign.center,
-                                                              ),
-                                                            ),
-                                                          ],
-                                                        ),
-                                                      ),
-                                                    );
-                                                  },
-                                                  body: SingleChildScrollView(
-                                                    physics: ClampingScrollPhysics(),
-                                                    padding: EdgeInsets.only(bottom: defaultPadding * 3),
-                                                    scrollDirection: Axis.horizontal,
-                                                    child: Column(
-                                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                                      children: [
-                                                        SizedBox(
-                                                          height: defaultPadding,
-                                                        ),
-                                                        CustomDropDown(
-                                                          value: selectedDay,
-                                                          listValue: ['الكل'.tr] + List.generate(30, (index) => index.toString()).toList(),
-                                                          label: "اختر اليوم".tr,
-                                                          onChange: (value) {
-                                                            if (value != null) {
-                                                              selectedDay = value;
-                                                              setState(() {});
-                                                            }
-                                                          },
-                                                          isFullBorder: true,
-                                                        ),
-                                                        SizedBox(height: defaultPadding),
-                                                        DataTable(
-                                                          columnSpacing: 0,
-                                                          columns: List.generate(
-                                                            data.length,
-                                                            (index) => DataColumn(
-                                                              label: Container(
-                                                                width: size / data.length,
-                                                                child: Center(child: Text(data[index].toString().tr)),
-                                                              ),
-                                                            ),
-                                                          ),
-                                                          rows: [
-                                                            for (var j in accountModel.employeeTime!.values.where((element) {
-                                                              if (selectedMonth != 'الكل'.tr) if (selectedDay == '' ||
-                                                                  selectedDay == 'الكل'.tr)
-                                                                return element.dayName.toString().split("-")[1] == months[selectedMonth];
-                                                              else
-                                                                return element.dayName.toString().split("-")[1] == months[selectedMonth] &&
-                                                                    element.dayName.toString().split("-")[2] == selectedDay;
-                                                              else if (selectedDay == '' || selectedDay == 'الكل'.tr)
-                                                                return true;
-                                                              else
-                                                                return element.dayName.toString().split("-")[2] == selectedDay;
-                                                            }))
-                                                              DataRow(
-                                                                color: WidgetStatePropertyAll(
-                                                                    (j.isLateWithReason == false || j.endDate == null || j.isDayOff == true)
-                                                                        ? Colors.red.withOpacity(0.3)
-                                                                        : Colors.transparent),
-                                                                cells: [
-                                                                  dataRowItem(size / data.length, j.dayName.toString()),
-                                                                  dataRowItem(
-                                                                      size / data.length,
-                                                                      j.isDayOff == true
-                                                                          ? "غائب".tr
-                                                                          : DateFun.dateToMinAndHour(j.startDate ?? DateTime.now())),
-                                                                  dataRowItem(
-                                                                      size / data.length,
-                                                                      j.isDayOff == true
-                                                                          ? "غائب".tr
-                                                                          : j.endDate == null
-                                                                              ? "لم يسجل خروج".tr
-                                                                              : DateFun.dateToMinAndHour(j.endDate!)),
-                                                                  dataRowItem(
-                                                                      size / data.length,
-                                                                      j.isDayOff == true
-                                                                          ? "غائب".tr
-                                                                          : DateFun.minutesToTime(
-                                                                              j.endDate?.difference(j.startDate ?? j.endDate!).inMinutes ??
-                                                                                  0)),
-                                                                  dataRowItem(
-                                                                      size / data.length,
-                                                                      j.isDayOff == true
-                                                                          ? "غائب".tr
-                                                                          : ((j.startDate
-                                                                                          ?.difference(
-                                                                                              j.startDate!.copyWith(hour: int.parse(Get.find<EmployeeViewModel>().getLateTime(j.dayName!).split(" ")[0]), minute: int.parse(Get.find<EmployeeViewModel>().getLateTime(j.dayName!).split(" ")[1]), second: 0))
-                                                                                          .inSeconds ??
-                                                                                      0) <
-                                                                                  0)
-                                                                              ? DateFun.minutesToTime(0)
-                                                                              : DateFun.minutesToTime((j.startDate
-                                                                                          ?.difference(
-                                                                                              j.startDate!.copyWith(hour: int.parse(Get.find<EmployeeViewModel>().getLateTime(j.dayName!).split(" ")[0]), minute: int.parse(Get.find<EmployeeViewModel>().getLateTime(j.dayName!).split(" ")[1]), second: 0))
-                                                                                          .inSeconds ??
-                                                                                      0) ~/
-                                                                                  60)),
-                                                                  dataRowItem(
-                                                                      size / data.length,
-                                                                      j.isDayOff == true
-                                                                          ? "غائب".tr
-                                                                          : j.isLateWithReason == null
-                                                                              ? ""
-                                                                              : (j.isLateWithReason! ? "مع مبرر".tr : "بدون مبرر".tr),
-                                                                      onTap: () {
-                                                                    if (j.isLateWithReason != false && j.isLateWithReason != null)
-                                                                      Get.defaultDialog(
-                                                                        title: "المبرر".tr,
-                                                                        backgroundColor: Colors.white,
-                                                                        content: Center(
-                                                                          child: Container(
-                                                                            alignment: Alignment.center,
-                                                                            width: Get.height / 2,
-                                                                            child: Text(
-                                                                              j.reasonOfLate.toString(),
-                                                                              style: AppStyles.headLineStyle2
-                                                                                  .copyWith(color: AppColors.textColor),
-                                                                            ),
-                                                                          ),
-                                                                        ),
-                                                                      );
-                                                                  }, color: Colors.teal),
-                                                                ],
-                                                              ),
-                                                          ],
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  ),
-                                                  isExpanded: controller.isOpen[indexKey],
-                                                );
-                                              }).toList(),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
+                            AppButton(
+                              text: "تسجيل خروج",
+                              onPressed: () {
+                                accountManagementViewModel.isLogIn = false;
+                                accountManagementViewModel.update();
+                              },
+                              color: accountManagementViewModel.isLogIn ? Colors.blue : Colors.green,
                             ),
-                        ],
+                          ],
+                        )
+                      ],
+                    )
+                  else
+
+                    ///الجهاز لا يدعم البطاقة
+                    Center(
+                      child: Container(
+                        width: Get.width / 2,
+                        decoration: BoxDecoration(color: Colors.grey.shade300, borderRadius: BorderRadius.circular(8)),
+                        padding: EdgeInsets.all(8),
+                        child: Center(
+                          child: Text(
+                            overflow: TextOverflow.ellipsis,
+                            "هذا الجهاز لا يحتوي قارئ NFC".tr,
+                            textAlign: TextAlign.center,
+                            style: TextStyle(fontSize: 22),
+                          ),
+                        ),
                       ),
-                    ),
-                  );
-                }),
+                    )
+                ],
               );
       }),
-      floatingActionButton: enableUpdate && isShowLogin
-          ? FloatingActionButton(
-              backgroundColor: primaryColor,
-              onPressed: () {
-                if (currentEmployee?.type != 'مستخدم')
-                  setState(() {
-                    isCard = !isCard;
-                  });
-              },
-              child: Icon(
-                isCard ? Icons.credit_card_off_outlined : Icons.credit_card_outlined,
-                color: Colors.white,
-              ),
-            )
-          : Container(),
     );
-  }
-
-  List<DataColumn> _buildDataColumns(double size) {
-    return List.generate(
-        empData.length,
-        (index) => DataColumn(
-            label: Container(
-                width: size / 3,
-                child: Center(
-                    child: Text(
-                  empData[index].toString().tr,
-                  style: AppStyles.headLineStyle1,
-                )))));
-  }
-
-  List<DataRow> _buildDataRows(EmployeeViewModel accountController, double size) {
-    // الحصول على قائمة الموظفين
-    List<EmployeeModel> employees = accountController.allAccountManagement.values.toList();
-
-    return employees.map((employee) {
-      return DataRow(cells: [
-        _buildNameCell(employee, size),
-        DataCell(
-          Center(
-            child: Container(
-              width: size / 3,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  _buildAttendanceStatus(employee, accountController),
-                  // عرض زر "غائب" إذا لم يُسجّل الموظف اليوم المحدد
-                  if (_isAbsent(employee)&&!_hasCompletedAttendance(employee))
-                    _buildAbsentButton(employee, accountController),
-
-
-
-                ],
-              ),
-            ),
-          ),
-        ),
-      ]);
-    }).toList();
-  }
-
-  /// بناء خلية الاسم للموظف
-  DataCell _buildNameCell(EmployeeModel employee, double size) {
-    return dataRowItem(size / 3, employee.fullName.toString(), color: Colors.white);
-  }
-
-  /// بناء عرض حالة الحضور للموظف بناءً على الشروط المختلفة
-  Widget _buildAttendanceStatus(EmployeeModel employee, EmployeeViewModel accountController) {
-    // إذا تم الانتهاء من تسجيل الحضور لهذا اليوم
-    if (_hasCompletedAttendance(employee)) {
-      return Text(
-        "تم الانتهاء".tr,
-        style: AppStyles.headLineStyle3.copyWith(color: AppColors.textColor),
-      );
-    }
-    // إذا كان اليوم هو اليوم الحالي (dayNameNow) في العرض
-    else if (selectedDate.text == dayNameNow) {
-      final bool isLoggedIn = _isLoggedInForDay(employee);
-      return AppButton(
-        text: isLoggedIn ? "الخروج".tr : "الدخول".tr,
-        onPressed: () => _handleAttendancePress(employee, accountController),
-        color:isLoggedIn ?Colors.red:primaryColor,
-      );
-    }
-    // في حالة عدم تسجيل الحضور
-    else {
-      return Text(
-        "لم يسجل ".tr,
-        style: AppStyles.headLineStyle3.copyWith(color: AppColors.textColor),
-      );
-    }
-  }
-
-  /// تحقق مما إذا كان الموظف قد أنهى تسجيل حضوره لهذا اليوم
-  bool _hasCompletedAttendance(EmployeeModel employee) {
-    return employee.employeeTime!.values.any(
-          (time) => time.dayName == selectedDate.text && time.isDayOff==true && time.endDate != null,
-    );
-  }
-
-  /// تحقق مما إذا كان للموظف سجل للحضور في اليوم الحالي (مقارنة باليوم الموجود في dayNameNow)
-  bool _isLoggedInForDay(EmployeeModel employee) {
-    // نفترض أن dayNameNow يحتوي على نص اليوم مثل "الاثنين ..." لذا نقسم النص للحصول على الجزء الأول
-    String currentDayName = dayNameNow.split(' ')[0];
-
-
-    return employee.employeeTime!.values.any((time) {
-
-      return time.dayName == currentDayName && time.startDate != null;
-    });
-  }
-
-  /// التعامل مع الضغط على زر "الدخول/الخروج"
-  void _handleAttendancePress(EmployeeModel employee, EmployeeViewModel accountController) {
-    // التأكد من عدم انتهاء تسجيل الحضور بالفعل لهذا اليوم
-    String currentDayName = dayNameNow.split(' ')[0];
-    bool hasEndedAttendance = employee.employeeTime!.values.any(
-          (time) => time.dayName == currentDayName && time.endDate != null,
-    );
-
-    if (!hasEndedAttendance) {
-      getConfirmDialog(
-        context,
-        onConfirm: () {
-          final SettingsViewModel settingsController = Get.find<SettingsViewModel>();
-          // استرجاع إعدادات الوقت
-          String lateTime = settingsController.settingsMap[Const.lateTime][Const.time];
-          String appendTime = settingsController.settingsMap[Const.appendTime][Const.time];
-          String outTime = settingsController.settingsMap[Const.outTime][Const.time];
-          String friLateTime = settingsController.settingsMap[Const.friLateTime][Const.time];
-          String friAppendTime = settingsController.settingsMap[Const.friAppendTime][Const.time];
-          String friOutTime = settingsController.settingsMap[Const.friOutTime][Const.time];
-
-          // تغيير حالة تسجيل الدخول بناءً على حالة الحضور الحالية
-          accountController.isLogIn = _isLoggedInForDay(employee) ? false : true;
-          Get.back();
-          // التحقق مما إذا كان اليوم هو الجمعة لاستخدام إعدادات الوقت الخاصة بالجمعة
-          if (Timestamp.now().toDate().weekday == DateTime.friday) {
-            accountController.addTime(
-              appendTime: friAppendTime,
-              lateTime: friLateTime,
-              outTime: friOutTime,
-              userName: employee.userName,
-            );
-          } else {
-            accountController.addTime(
-              appendTime: appendTime,
-              lateTime: lateTime,
-              outTime: outTime,
-              userName: employee.userName,
-            );
-          }
-
-
-        },
-      );
-    }
-  }
-
-  /// بناء زر "غائب" للموظف
-  Widget _buildAbsentButton(EmployeeModel employee, EmployeeViewModel accountController) {
-    return AppButton(
-      text: "غائب",
-      onPressed: () {
-        getConfirmDialog(context, onConfirm: () {
-          accountController.setAppend(employee.id, selectedDate.text);
-          Get.back();
-        });
-      },
-      color: Colors.redAccent.withOpacity(0.5),
-    );
-  }
-
-  /// التحقق مما إذا كان الموظف لم يقم بتسجيل حضور اليوم المحدد (من خلال مقارنة اليوم في السجل)
-  bool _isAbsent(EmployeeModel employee) {
-    String currentDay = selectedDate.text.split(' ')[0];
-
-    return employee.employeeTime!.values.where((time) {
-
-
-      return time.dayName == currentDay&&time.startDate!=null;
-    }).isEmpty;
   }
 }

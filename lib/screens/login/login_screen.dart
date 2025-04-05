@@ -1,9 +1,9 @@
 
-import 'package:vision_dashboard/screens/Employee/Controller/Employee_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../core/constant/constants.dart';
 import '../../core/Styling/app_style.dart';
+import '../employee_time/Controller/Employee_view_model.dart';
 
 
 class LoginScreen extends StatefulWidget {
@@ -52,13 +52,13 @@ class _LoginScreenState extends State<LoginScreen> {
 
                         Get.width<500?AppStyles.headLineStyle2:  AppStyles.headLineStyle1,textAlign: TextAlign.center,),
                           SizedBox(height: 50,),
-                          if(false/*controller.isSupportNfc*/)
+                    /*      if(accountManagementViewModel.isSupportNfc)
                             Column(
                               children: [
                                Text("Login Using Your Card",style: TextStyle(fontSize: 22),)
                               ],
                             )
-                          else
+                          else*/
                             Column(
                               children: [
                                 TextField(

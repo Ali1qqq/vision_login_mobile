@@ -3,10 +3,10 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
 import 'package:nfc_manager/nfc_manager.dart';
-import 'package:vision_dashboard/screens/Employee/Controller/Employee_view_model.dart';
 
 import '../../screens/Settings/Controller/Settings_View_Model.dart';
 import '../../core/constant/const.dart';
+import '../../screens/employee_time/Controller/Employee_view_model.dart';
 
 
 Future<bool> initNFCWorker(typeNFC type) async {

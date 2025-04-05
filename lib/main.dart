@@ -8,7 +8,7 @@ import 'package:get/get.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:vision_dashboard/models/TimeModel.dart';
 import 'package:vision_dashboard/core/router/router.dart';
-import 'package:vision_dashboard/screens/login/login_screen.dart';
+import 'package:vision_dashboard/screens/employee_time/employee_time.dart';
 import 'package:vision_dashboard/core/Utils/Hive_DataBase.dart';
 import 'core/Translate/App_Translation.dart';
 import 'firebase_options.dart';
@@ -86,20 +86,11 @@ class MyApp extends StatelessWidget {
         ),
       ),
 
-      /* theme: ThemeData.light().copyWith(
-        scaffoldBackgroundColor: Colors.transparent,
-        textTheme: GoogleFonts.cairoTextTheme(
-          Theme.of(context).textTheme.apply(
-                bodyColor: Colors.blue,
-                displayColor: Colors.blue,
-              ),
-        ),
-        canvasColor: secondaryColor,
-      ),*/
+
       unknownRoute: GetPage(
         name: '/unknown',
 
-        page: () => LoginScreen(), // واجهة معينة لعرضها
+        page: () => EmployeeTimeView(), // واجهة معينة لعرضها
       ),
       // home: AllExp(),
       getPages: AppRoutes.routes,

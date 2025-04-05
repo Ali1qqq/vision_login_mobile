@@ -1,7 +1,7 @@
 import 'package:get/get.dart';
+import 'package:vision_dashboard/screens/employee_time/employee_time.dart';
 
 import 'package:vision_dashboard/screens/login/login_screen.dart';
-import 'package:vision_dashboard/screens/main/main_screen.dart';
 
 import '../constant/constants.dart';
 
@@ -11,7 +11,7 @@ class AppRoutes {
   static const parentView = '/ParentsView';
   static const StudentView = '/StudentView';
   static const ClassesView = '/ClassesView';
-  static const EmployeeTimeView = '/EmployeeTimeView';
+  static const employeeTimeView = '/EmployeeTimeView';
   static const ExamView = '/ExamView';
   static const SalaryView = '/SalaryView';
   static const BusesView = '/BusesView';
@@ -27,7 +27,7 @@ class AppRoutes {
         name: main,
         page: () {
           if (currentEmployee?.id != null) {
-            return MainScreen();
+            return EmployeeTimeView();
           } else
             return LoginScreen();
         }),
@@ -35,7 +35,7 @@ class AppRoutes {
       name: DashboardScreen,
       page: () {
         // HiveDataBase.setCurrentScreen("0");
-        return MainScreen();
+        return EmployeeTimeView();
       },
       transition: Transition.topLevel,
     ),

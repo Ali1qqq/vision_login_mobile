@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:vision_dashboard/models/TimeModel.dart';
 import 'package:vision_dashboard/models/account_management_model.dart';
 
-import 'package:vision_dashboard/screens/logout/logout_View.dart';
 String formatDateTimeFromString(String isoString) {
   DateTime dateTime = DateTime.parse(isoString);
 
@@ -110,11 +109,6 @@ List<String> jobList = [
 
 List<({String name, String img, Widget widget})> allData =  [
 
-  (
-  name: "تسجيل الخروج",
-  img: "assets/dashIcon/logout.png",
-  widget: LogoutView(),
-  ),
 ];
 
 initDashboard(List<({String name, String img, Widget widget})> ourData){
