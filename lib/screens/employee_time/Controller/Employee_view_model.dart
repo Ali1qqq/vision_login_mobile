@@ -204,9 +204,11 @@ class EmployeeViewModel extends GetxController {
     int totalEarlier = 0;
     bool isDayOff = false;
 
-    // البحث عن المستخدم
-    EmployeeModel? user = cardId != null
-        ? allAccountManagement[nfcCardViewModel.nfcCardMap[cardId]?.userId]
+    String? userId = nfcCardViewModel.nfcCardMap[cardId]?.userId;
+
+    log('cardId $cardId');
+    EmployeeModel? user = cardId != null && userId != null
+        ? allAccountManagement[userId]
         : allAccountManagement.values.where((e) => e.userName == userName).firstOrNull;
 
     if (user == null) {
