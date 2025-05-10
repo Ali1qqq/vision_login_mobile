@@ -129,14 +129,21 @@ class EmployeeViewModel extends GetxController {
     }
   }
 
-  Future<bool?> showReasonDialog({
+  showReasonDialog({
     required String title,
     required String message,
-    required TextEditingController reasonController,
-    required ValueNotifier<bool?> withReasonNotifier,
   }) {
+    Get.showSnackbar( GetSnackBar(
+      duration: Duration(seconds: 5),
+      dismissDirection: DismissDirection.down,
+      message:message,
+      title:title ,
+      backgroundColor: Colors.redAccent,
+      icon: Icon(Icons.error_outline_rounded),
+    ));
+/*
     return Get.defaultDialog(
-      barrierDismissible: false,
+      barrierDismissible: true,
       backgroundColor: Colors.white,
       title: title,
       content: StatefulBuilder(
@@ -145,35 +152,7 @@ class EmployeeViewModel extends GetxController {
             children: [
               Text(message),
               const SizedBox(height: 10),
-              Row(
-                children: [
-                  Checkbox(
-                    fillColor: const WidgetStatePropertyAll(primaryColor),
-                    shape: const RoundedRectangleBorder(),
-                    value: withReasonNotifier.value == false,
-                    onChanged: (_) {
-                      withReasonNotifier.value = false;
-                      setState(() {});
-                    },
-                  ),
-                  const Text("غير مبرر")
-                ],
-              ),
-              Row(
-                children: [
-                  Checkbox(
-                    fillColor: const WidgetStatePropertyAll(primaryColor),
-                    shape: const RoundedRectangleBorder(),
-                    value: withReasonNotifier.value == true,
-                    onChanged: (_) {
-                      withReasonNotifier.value = true;
-                      setState(() {});
-                    },
-                  ),
-                  const Text("مبرر"),
-                ],
-              ),
-              CustomTextField(controller: reasonController, title: "سبب".tr),
+
             ],
           );
         },
@@ -185,6 +164,7 @@ class EmployeeViewModel extends GetxController {
         ),
       ],
     );
+*/
   }
 
   Future<void> addTime({
@@ -195,10 +175,6 @@ class EmployeeViewModel extends GetxController {
     required String lateTime,
     required String outTime,
   }) async {
-    final lateReasonController = TextEditingController();
-    final earlierReasonController = TextEditingController();
-    final isLateWithReason = ValueNotifier<bool?>(false);
-    final isEarlierWithReason = ValueNotifier<bool?>(false);
 
     int totalLate = 0;
     int totalEarlier = 0;
@@ -237,16 +213,12 @@ class EmployeeViewModel extends GetxController {
           await showReasonDialog(
             title: "أنت متأخر",
             message: "تأخرت اليوم",
-            reasonController: lateReasonController,
-            withReasonNotifier: isLateWithReason,
           );
         } else if (timeData.isAfter(lateHour, lateMin)) {
           totalLate = timeData.dateTime.difference(now.copyWith(hour: startHour, minute: startMin)).inSeconds;
           await showReasonDialog(
             title: "أنت متأخر",
             message: "تأخرت اليوم",
-            reasonController: lateReasonController,
-            withReasonNotifier: isLateWithReason,
           );
         }
 
@@ -254,8 +226,8 @@ class EmployeeViewModel extends GetxController {
           dayName: timeKey,
           startDate: timeData.dateTime,
           isDayOff: isDayOff,
-          isLateWithReason: isLateWithReason.value,
-          reasonOfLate: lateReasonController.text,
+          isLateWithReason:null,
+          reasonOfLate: '',
           totalLate: totalLate,
           endDate: null,
           totalDate: null,
@@ -265,38 +237,70 @@ class EmployeeViewModel extends GetxController {
           totalEarlier: null,
         );
 
-        Get.snackbar("تم تسجيل الدخول بنجاح", "أهلاً بك ${user.userName}",
-            backgroundColor: Colors.green.shade400, icon: const Icon(Icons.done));
+
+        Get.showSnackbar( GetSnackBar(
+          duration: Duration(seconds: 5),
+          dismissDirection: DismissDirection.down,
+          message:'تم تسجيل الدخول بنجاح${user.userName}',
+          title:'  اهلا بك',
+          backgroundColor: Colors.green,
+          icon: Icon(Icons.done),
+        ));
+
+        // Get.snackbar("تم تسجيل الدخول بنجاح", "أهلاً بك ${user.userName}",
+        //     backgroundColor: Colors.green.shade400, icon: const Icon(Icons.done));
       } else {
-        Get.snackbar("فشل تسجيل الدخول", "لقد قمت بالدخول بالفعل ${user.userName}",
-            backgroundColor: Colors.red.shade400, icon: const Icon(Icons.error_outline_rounded));
+
+        Get.showSnackbar(const GetSnackBar(
+          duration: Duration(seconds: 5),
+          dismissDirection: DismissDirection.down,
+          message: "لقد قمت بالدخول بالفعل",
+          backgroundColor: Colors.red,
+          icon: Icon(Icons.error_outline_rounded),
+        )
+            // "فشل تسجيل الدخول", "لقد قمت بالدخول بالفعل ${user.userName}",
+            /* backgroundColor: Colors.red.shade400, icon: const Icon(Icons.error_outline_rounded)*/);
       }
     } else {
       final todayEntry = employeeTime[timeKey];
       if (todayEntry?.isDayEnd == true) {
-        Get.snackbar("فشل تسجيل الخروج", "لقد قمت بالخروج بالفعل ${user.userName}",
-            backgroundColor: Colors.red.shade400, icon: const Icon(Icons.error_outline_rounded));
+        Get.showSnackbar(const GetSnackBar(
+          duration: Duration(seconds: 5),
+          dismissDirection: DismissDirection.down,
+          message: "لقد قمت بالخروج بالفعل",
+          backgroundColor: Colors.red,
+          icon: Icon(Icons.error_outline_rounded),
+        ));
+
+        /*    Get.snackbar("فشل تسجيل الخروج", "لقد قمت بالخروج بالفعل ${user.userName}",
+            backgroundColor: Colors.red.shade400, icon: const Icon(Icons.error_outline_rounded));*/
       } else {
         if (timeData.isBefore(outHour, outMin)) {
           totalEarlier = now.copyWith(hour: outHour, minute: outMin).difference(now).inMinutes;
+
           await showReasonDialog(
             title: "خروج مبكر",
             message: "خرجت اليوم مبكراً",
-            reasonController: earlierReasonController,
-            withReasonNotifier: isEarlierWithReason,
           );
         }
 
         todayEntry!
-          ..isEarlierWithReason = isEarlierWithReason.value
+          ..isEarlierWithReason = null
           ..totalEarlier = totalEarlier
-          ..reasonOfEarlier = earlierReasonController.text
+          ..reasonOfEarlier = ''
           ..endDate = now
           ..isDayEnd = true
           ..totalDate = now.difference(todayEntry.startDate!).inMinutes;
-
-        Get.snackbar("تم تسجيل الخروج بنجاح", "وداعاً ${user.userName}",
-            backgroundColor: Colors.green.shade400, icon: const Icon(Icons.done));
+        Get.showSnackbar( GetSnackBar(
+          duration: Duration(seconds: 5),
+          dismissDirection: DismissDirection.down,
+          message:'تم تسجيل الخروج بنجاح${user.userName}',
+          title:'وداعاً' ,
+          backgroundColor: Colors.green,
+          icon: Icon(Icons.done),
+        ));
+        // Get.snackbar("تم تسجيل الخروج بنجاح", "وداعاً ${user.userName}",
+        //     backgroundColor: Colors.green.shade400, icon: const Icon(Icons.done));
       }
     }
 
@@ -390,10 +394,10 @@ class EmployeeViewModel extends GetxController {
               dayName: day,
               startDate: null,
               endDate: DateTime.now(),
-              // يمكنك تعديل القيمة حسب الحاجة
+
               totalDate: null,
               isDayEnd: true,
-              isLateWithReason: true,
+              isLateWithReason: null,
               reasonOfLate: null,
               isEarlierWithReason: null,
               reasonOfEarlier: null,
@@ -426,7 +430,7 @@ class EmployeeViewModel extends GetxController {
         totalDate: null,
         isDayEnd: false,
         isDayOff: true,
-        isLateWithReason: false,
+        isLateWithReason: null,
         reasonOfLate: "",
         totalLate: 0,
         isEarlierWithReason: null,
